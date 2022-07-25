@@ -1,0 +1,48 @@
+server:
+  port: 80
+logging:
+  level:
+    ROOT: INFO
+    web: INFO
+  file:
+    name: application.log
+    path: ./logs
+spring:
+  application:
+    name: "Rowing Product"
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://[db_url]:3306/[db_schema]?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useUnicode=true&useSSL=false&allowMultiQueries=true
+    username: [db_username]
+    password: [db_password]
+  redis:
+    client-type: lettuce
+    database: 0
+    host: [redis_host]
+    password: [redis_password]
+    connect-timeout: 10s
+  kaptcha:
+    enabled: true
+    config:
+      kaptcha:
+        border: "no"
+        image:
+          width: "150"
+          height: "40"
+        textproducer:
+          font:
+            color: "black"
+            size: "30"
+          char:
+            space: "5"
+            length: 4
+    parameter: "kaptcha"
+  # 账号中心是需要会话的，但不需要 Cookie 自动登录
+  session:
+    # 1 hours
+    timeout: 3600s
+api:
+  cache-path: ${user.dir}/.cache
+  cache-max-size: 1GB
+  call-timeout: 5s
+  logging-level: BASIC

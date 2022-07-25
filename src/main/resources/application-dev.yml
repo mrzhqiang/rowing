@@ -1,0 +1,53 @@
+server:
+  port: 80
+logging:
+  level:
+    # 通过包名来自定义显示的日志级别，可以是前缀包含
+    # 比如 com.github 包含所有的 com.github.** 包名
+    org.springframework.security: DEBUG
+    rowing: DEBUG
+  logback:
+    rollingpolicy:
+      # 开发环境下，每次启动清理历史日志
+      clean-history-on-start: true
+# 开启调试模式，则 LoggingApplicationListener 会开启 web、sql 以及 org.springframework.boot 日志的调试模式
+debug: true
+# 开启跟踪模式，则 LoggingApplicationListener 会开启以下日志的跟踪模式：
+# org.springframework
+# org.apache.tomcat
+# org.apache.catalina
+# org.eclipse.jetty
+# org.hibernate.tool.hbm2ddl
+# 由于信息太多，一般情况下不开启跟踪模式，除非遇到疑难杂症无法定位问题
+#trace: true
+spring:
+  application:
+    name: "Rowing Develop"
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/rowing?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useUnicode=true&useSSL=false&allowMultiQueries=true
+    username: root
+    password: 123456
+  # 开发环境下，打印 SQL 细节
+  jpa:
+    show-sql: true
+  redis:
+    client-type: lettuce
+    database: 0
+    host: localhost
+    password: 123456
+    connect-timeout: 10s
+  codec:
+    # 在 DEBUG 级别记录请求的表单数据；在 TRACE 级别记录请求的 Header 信息
+    log-request-details: true
+  session:
+    # 5 minutes
+    timeout: 300s
+  kaptcha:
+    # 开发环境下屏蔽，线上建议打开
+    enabled: false
+api:
+  cache-path: ${user.dir}/.cache
+  cache-max-size: 100MB
+  call-timeout: 5s
+  logging-level: BODY

@@ -1,1 +1,44 @@
-
+spring:
+  profiles:
+    active: dev
+  messages:
+    basename: i18n.messages,org.springframework.security.messages
+    fallback-to-system-locale: false
+  jpa:
+    hibernate:
+      ddl-auto: update
+  sql:
+    init:
+      mode: always
+  datasource:
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 15
+      auto-commit: true
+      idle-timeout: 30000
+      pool-name: hikariCP
+      max-lifetime: 30000
+      connection-timeout: 30000
+      connection-test-query: SELECT 1
+security:
+  public-path:
+    - "/"
+    - "/register"
+    - "/error/**"
+  login-path: "/login"
+  login-failed-path: "/login?error"
+  register-path: "/register"
+  register-failed-path: "/register?error"
+  default-success-url: "/home"
+  # 若超过最大登录失败次数，账户将被锁定一段时间
+  max-login-failed: 5
+  # 在锁定区间内，无法进行登录操作
+  locked-duration: 5m
+  # 正常账户在首次登录失败时，将记录一个时间戳
+  # 再次登录失败时，如果位于设定的区间时长内，则累加失败次数
+  # 在账户未锁定时，登录成功将清除首次失败时间戳，并重置失败次数
+  first-failed-duration: 1h
+website:
+  author: "287431404@qq.com"
+  favicon: "/favicon.ico"
+  title: "行舟在线考试系统"
