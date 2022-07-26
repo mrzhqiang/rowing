@@ -41,6 +41,11 @@ spring:
   session:
     # 1 hours
     timeout: 3600s
+security:
+  remember-me: false
+session:
+  # 会话过期重定向地址
+  expired-path: "/login?expired"
 api:
   cache-path: ${user.dir}/.cache
   cache-max-size: 1GB

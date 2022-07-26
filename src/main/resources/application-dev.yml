@@ -46,6 +46,11 @@ spring:
   kaptcha:
     # 开发环境下屏蔽，线上建议打开
     enabled: false
+security:
+  remember-me: false
+session:
+  # 会话过期重定向地址
+  expired-path: "/login?expired"
 api:
   cache-path: ${user.dir}/.cache
   cache-max-size: 100MB

@@ -4,6 +4,10 @@ spring:
   messages:
     basename: i18n.messages,org.springframework.security.messages
     fallback-to-system-locale: false
+  cache:
+    redis:
+      key-prefix: "rowing"
+      enable-statistics: true
   jpa:
     hibernate:
       ddl-auto: update
