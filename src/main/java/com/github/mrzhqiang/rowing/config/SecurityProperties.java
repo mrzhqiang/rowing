@@ -1,5 +1,6 @@
 package com.github.mrzhqiang.rowing.config;
 
+import com.github.mrzhqiang.helper.Environments;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -20,13 +21,16 @@ public class SecurityProperties {
     private static final String DEF_LOGIN_FAILED_PATH = DEF_LOGIN_PATH + ERROR_SUFFIX;
     private static final String DEF_REGISTER_PATH = "/register";
     private static final String DEF_REGISTER_FAILED_PATH = DEF_REGISTER_PATH + ERROR_SUFFIX;
-    private static final String DEF_ERROR_PATH = "/error/**";
-    private static final String[] DEF_IGNORE_PATH = {};
+    private static final String DEF_ERROR_PATH = "/error";
+    private static final String DEF_ERROR_CHILDREN_PATH = "/error/**";
+    private static final String[] DEF_IGNORE_PATH = {"/fontawesome/**"};
     private static final String[] DEF_PUBLIC_PATH = {
             DEF_HOME_PATH,
             DEF_INDEX_PATH,
-            DEF_ERROR_PATH
+            DEF_ERROR_PATH,
+            DEF_ERROR_CHILDREN_PATH,
     };
+    private static final boolean DEF_REMEMBER_ME = !Environments.debug();
     private static final int DEF_MAX_LOGIN_FAILED = 5;
     private static final Duration DEF_LOCKED_DURATION = Duration.ofMinutes(5);
     private static final Duration DEF_FIRST_FAILED_DURATION = Duration.ofHours(1);
@@ -61,6 +65,10 @@ public class SecurityProperties {
      * 无需认证的公开路径。
      */
     private String[] publicPath = DEF_PUBLIC_PATH;
+    /**
+     * 是否展示记住我按钮，并开启记住我功能（cookie）。
+     */
+    private Boolean rememberMe = DEF_REMEMBER_ME;
     /**
      * 最大登录失败次数。
      * <p>

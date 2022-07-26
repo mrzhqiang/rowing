@@ -2,11 +2,15 @@ package com.github.mrzhqiang.rowing.config;
 
 import com.github.mrzhqiang.kaptcha.autoconfigure.KaptchaAuthenticationConverter;
 import com.github.mrzhqiang.kaptcha.autoconfigure.KaptchaProperties;
-import com.github.mrzhqiang.rowing.core.account.LoginFailureHandler;
+import com.github.mrzhqiang.rowing.core.handler.LoginFailureHandler;
+import com.github.mrzhqiang.rowing.core.account.Roles;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.access.AccessDecisionVoter;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
+import org.springframework.security.access.vote.RoleHierarchyVoter;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -48,6 +52,13 @@ public class SecurityConfiguration {
     }
 
     @Bean
+    public AccessDecisionVoter<?> hierarchyVoter() {
+        RoleHierarchyImpl hierarchy = new RoleHierarchyImpl();
+        hierarchy.setHierarchy(Roles.HIERARCHY);
+        return new RoleHierarchyVoter(hierarchy);
+    }
+
+    @Bean
     public WebSecurityCustomizer ignoring() {
         return web -> web.ignoring()
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
@@ -71,9 +82,12 @@ public class SecurityConfiguration {
                         .anyRequest().authenticated())
                 .formLogin(configurer -> configurer
                         .loginPage(properties.getLoginPath())
+                        .defaultSuccessUrl(properties.getDefaultSuccessUrl())
                         .failureHandler(failureHandler).permitAll())
-                .csrf().disable()
                 .logout().permitAll();
+        if (properties.getRememberMe()) {
+            http.rememberMe();
+        }
         return http.build();
     }
 }
