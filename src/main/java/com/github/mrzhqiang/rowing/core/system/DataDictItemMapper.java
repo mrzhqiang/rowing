@@ -15,5 +15,5 @@ public interface DataDictItemMapper {
     @Mapping(target = "group", ignore = true)
     @Mapping(target = "createdBy", ignore = true)
     @Mapping(target = "created", ignore = true)
-    DataDictItem toEntity(DataDictItemData data);
+    DataDictItem toEntity(DataDictItemForm form);
 }

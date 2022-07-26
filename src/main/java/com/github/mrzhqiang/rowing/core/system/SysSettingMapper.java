@@ -16,5 +16,5 @@ public interface SysSettingMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "createdBy", ignore = true)
     @Mapping(target = "created", ignore = true)
-    SysSetting toEntity(SysSettingData data);
+    SysSetting toEntity(SysSettingForm form);
 }

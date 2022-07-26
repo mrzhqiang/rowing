@@ -1,6 +1,6 @@
 package com.github.mrzhqiang.rowing.core.init;
 
-import hellgate.common.system.OrderStep;
+import com.github.mrzhqiang.rowing.core.system.OrderStep;
 
 import javax.servlet.Filter;
 import java.util.HashMap;

@@ -1,14 +1,14 @@
 package com.github.mrzhqiang.rowing.core.init;
 
+import com.github.mrzhqiang.rowing.core.system.DataDictGroup;
+import com.github.mrzhqiang.rowing.core.system.DataDictGroupForm;
+import com.github.mrzhqiang.rowing.core.system.DataDictGroupMapper;
+import com.github.mrzhqiang.rowing.core.system.DataDictGroupRepository;
+import com.github.mrzhqiang.rowing.core.system.DataDictItem;
+import com.github.mrzhqiang.rowing.core.system.DataDictItemMapper;
+import com.github.mrzhqiang.rowing.core.system.DataDictItemRepository;
+import com.github.mrzhqiang.rowing.util.Jsons;
 import com.google.common.base.Stopwatch;
-import hellgate.common.system.DataDictGroup;
-import hellgate.common.system.DataDictGroupData;
-import hellgate.common.system.DataDictGroupMapper;
-import hellgate.common.system.DataDictGroupRepository;
-import hellgate.common.system.DataDictItem;
-import hellgate.common.system.DataDictItemMapper;
-import hellgate.common.system.DataDictItemRepository;
-import hellgate.common.util.Jsons;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -55,13 +55,13 @@ public class DataDictAutoInitializer extends BaseAutoInitializer {
         }
 
         File dataFile = resource.getFile();
-        List<DataDictGroupData> groups = Jsons.listFromFile(dataFile, DataDictGroupData.class);
+        List<DataDictGroupForm> groups = Jsons.listFromFile(dataFile, DataDictGroupForm.class);
         if (CollectionUtils.isEmpty(groups)) {
             log.warn("数据字典 json 文件没有解析到数据，跳过初始化过程，耗时：{}", stopwatch.stop());
             return false;
         }
 
-        for (DataDictGroupData group : groups) {
+        for (DataDictGroupForm group : groups) {
             log.debug("保存数据字典数据 {}", group);
 
             DataDictGroup groupEntity = groupMapper.toEntity(group);

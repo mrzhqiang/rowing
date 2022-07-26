@@ -9,6 +9,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import java.util.List;
 
@@ -39,6 +40,8 @@ public class DataDictGroup extends AuditableEntity {
     private String code;
     /**
      * 分组类型。
+     * <p>
+     * 允许为 null 值，表示内置类型，数据来自于类路径的 Excel 文件。
      */
     @Enumerated(EnumType.STRING)
     private Type type;
@@ -55,7 +58,7 @@ public class DataDictGroup extends AuditableEntity {
      * 字典项列表。
      */
     @ToString.Exclude
-    @OneToMany(mappedBy = "group")
+    @OneToMany(mappedBy = "group", fetch = FetchType.LAZY)
     private List<DataDictItem> items;
 
     /**
@@ -63,28 +66,16 @@ public class DataDictGroup extends AuditableEntity {
      */
     public enum Type {
         /**
-         * DB 字典。
+         * DB 字典分组。
          * <p>
-         * 默认情况下的字典项。
+         * 通过系统手动添加或修改，则被设置为此类型。
          */
         DB,
         /**
-         * API 接口字典。
+         * API 字典分组。
          * <p>
-         * 通常使用 JSON 解析为对应的字典项。
+         * 从第三方 API 接口获取的数据字典，则被设置为此类型。
          */
         API,
-        /**
-         * Excel 文件字典。
-         * <p>
-         * 通常是单页 Sheet 内容，列名对应字典项字段名称。
-         */
-        EXCEL,
-        /**
-         * 纯文本字典。
-         * <p>
-         * 一般以英文逗号(,)分割，对应字典项中的字段。
-         */
-        TXT
     }
 }

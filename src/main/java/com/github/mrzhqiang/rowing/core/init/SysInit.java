@@ -1,6 +1,6 @@
 package com.github.mrzhqiang.rowing.core.init;
 
-import hellgate.common.domain.BaseEntity;
+import com.github.mrzhqiang.rowing.domain.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -14,6 +14,18 @@ import javax.persistence.Enumerated;
 @ToString(callSuper = true)
 @Entity
 public class SysInit extends BaseEntity {
+
+    @Enumerated
+    private Type type;
+    @Column(unique = true, nullable = false)
+    private String name;
+    @Enumerated
+    private Status status;
+    private Integer ordered;
+
+    public boolean hasFinished() {
+        return Status.FINISHED.equals(status);
+    }
 
     /**
      * 系统初始化类型。
@@ -53,17 +65,5 @@ public class SysInit extends BaseEntity {
          * 表示任务已完成，过程是艰难的，但结果是极好的。
          */
         FINISHED,
-    }
-
-    @Enumerated
-    private Type type;
-    @Column(unique = true, nullable = false)
-    private String name;
-    @Enumerated
-    private Status status;
-    private Integer ordered;
-
-    public boolean hasFinished() {
-        return Status.FINISHED.equals(status);
     }
 }

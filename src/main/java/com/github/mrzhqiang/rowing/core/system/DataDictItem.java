@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 
 /**
@@ -37,6 +38,7 @@ public class DataDictItem extends AuditableEntity {
      * <p>
      * 当前字典项所在分组。
      */
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @ToString.Exclude
     private DataDictGroup group;
 }

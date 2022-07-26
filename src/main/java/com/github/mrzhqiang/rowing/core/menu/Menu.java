@@ -1,6 +1,6 @@
 package com.github.mrzhqiang.rowing.core.menu;
 
-import hellgate.common.domain.AuditableEntity;
+import com.github.mrzhqiang.rowing.domain.AuditableEntity;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -15,7 +15,7 @@ import java.util.List;
 @Setter
 @ToString(callSuper = true)
 @Entity
-public class AdminMenu extends AuditableEntity {
+public class Menu extends AuditableEntity {
 
     @Column(nullable = false)
     private String name;
@@ -25,11 +25,11 @@ public class AdminMenu extends AuditableEntity {
     private String icon;
 
     @ManyToOne
-    private AdminMenu parent;
+    private Menu parent;
 
     @OneToMany(mappedBy = "parent")
     @ToString.Exclude
-    private List<AdminMenu> children;
+    private List<Menu> children;
 
     /**
      * 菜单类型。

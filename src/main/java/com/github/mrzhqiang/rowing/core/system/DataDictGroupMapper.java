@@ -16,5 +16,5 @@ public interface DataDictGroupMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "createdBy", ignore = true)
     @Mapping(target = "created", ignore = true)
-    DataDictGroup toEntity(DataDictGroupData data);
+    DataDictGroup toEntity(DataDictGroupForm form);
 }
