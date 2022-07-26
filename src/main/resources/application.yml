@@ -21,15 +21,16 @@ spring:
       connection-timeout: 30000
       connection-test-query: SELECT 1
 security:
-  public-path:
-    - "/"
-    - "/register"
-    - "/error/**"
   login-path: "/login"
   login-failed-path: "/login?error"
   register-path: "/register"
   register-failed-path: "/register?error"
-  default-success-url: "/home"
+  default-success-url: "/dashboard"
+  ignore-path:
+  public-path:
+    - "/"
+    - "/index"
+    - "/error/**"
   # 若超过最大登录失败次数，账户将被锁定一段时间
   max-login-failed: 5
   # 在锁定区间内，无法进行登录操作
