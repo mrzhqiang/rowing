@@ -1,0 +1,18 @@
+[
+  {
+    "label": "一般",
+    "key": "normal",
+    "children": [
+      {
+        "label": "网页标题",
+        "key": "web-title",
+        "value": "行舟在线考试系统"
+      },
+      {
+        "label": "欢迎文字",
+        "key": "web-welcome",
+        "value": "欢迎使用行舟在线考试系统"
+      }
+    ]
+  }
+]
