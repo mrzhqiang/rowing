@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh_CN" xmlns:th="http://www.thymeleaf.org"
+      th:replace="layout::admin('4xx', ~{::#wrapper})">
+<div id="wrapper">
+    <div th:replace="components/sidebar::admin(_)"></div>
+    <div id="content-wrapper">
+        <div class="container-fluid">
+            <h3 th:text="#{error-4xx.head}"></h3>
+            <p class="text-danger">[[${status}]] - [[${error}]]</p>
+            <!--/*@thymesVar id="timestamp" type="String"*/-->
+            <p class="text-info" th:text="|#{error.timestamp} - ${timestamp}|"></p>
+            <!--/*@thymesVar id="message" type="String"*/-->
+            <p th:text="|#{error-4xx.message.prefix}${message}|"></p>
+            <p class="lead" th:text="#{error.message.lead.label}"></p>
+            <a href="javascript:history.back()" th:text="#{error.message.lead.back}"></a>
+            <p th:text="#{error.message.lead.else}"></p>
+            <a href="#" th:href="@{/static}" th:text="#{error.message.lead.back.home}"></a>
+            <footer th:replace="components/footer::copyRight"></footer>
+        </div>
+    </div>
+</div>
+</html>

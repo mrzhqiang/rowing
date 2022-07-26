@@ -1,0 +1,28 @@
+<html lang="zh_CN" xmlns:th="http://www.thymeleaf.org">
+
+<!--
+侧边栏
+
+使用方法：
+<div th:replace="components/sidebar::admin('user')"></div>
+
+注意：这里需要手动调整菜单，未来可能提供菜单数据，自动初始化这边的内容。
+-->
+<ul class="sidebar navbar-nav" th:fragment="admin(page)">
+    <!--/*@thymesVar id="index" type=""*/-->
+    <li class="nav-item" th:classappend="${#strings.equals('', page)} ? 'active'">
+        <a class="nav-link" href="#" th:href="@{/static}">
+            <i class="fas fa-fw fa-home"></i>
+            <span th:text="#{admin.sidebar.home}"></span>
+        </a>
+    </li>
+    <!--/*@thymesVar id="index" type=""*/-->
+    <li class="nav-item" th:classappend="${#strings.equals('user', page)} ? 'active'">
+        <a class="nav-link" href="#" th:href="@{/users}">
+            <i class="fas fa-fw fa-user-alt"></i>
+            <span th:text="#{admin.sidebar.user}"></span>
+        </a>
+    </li>
+</ul>
+
+</html>

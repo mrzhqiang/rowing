@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="components/header::style(title)">
+    <!--/*@thymesVar id="website" type="hellgate.manage.config.WebsiteProperties"*/-->
+    <title th:replace="|初始化管理员 - ${website.title}|"></title>
+    <link th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/login.css}" rel="stylesheet">
+</head>
+
+<body>
+<div class="container">
+    <div class="card card-login mx-auto mt-4">
+        <div class="card-header text-center h3">第一步：初始化管理员</div>
+        <div class="card-body">
+            <p class="alert-danger text-center my-1" th:if="${param.error}">[[${message}]]</p>
+            <form class="form-login" method="post" th:action="@{/init/admin}">
+                <label for="onlyReadUsername" class="sr-only">账号</label>
+                <input id="onlyReadUsername" class="form-control mb-3" maxlength="15"
+                       type="text" name="username" value="admin" placeholder="账号" readonly>
+                <label for="inputPassword" class="sr-only">设置密码</label>
+                <input id="inputPassword" class="form-control mb-3" maxlength="15" minlength="6"
+                       type="password" name="password" placeholder="设置密码" required>
+                <label for="confirmPassword" class="sr-only">确认密码</label>
+                <input id="confirmPassword" class="form-control mb-3" maxlength="15" minlength="6"
+                       type="password" name="password" placeholder="确认密码" required>
+                <button class="btn btn-lg btn-primary btn-block mt-4" type="submit">创建&下一步</button>
+            </form>
+        </div>
+    </div>
+</div>
+<script th:src="@{/webjars/jquery/dist/jquery.slim.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/dist/js/bootstrap.min.js}"></script>
+</body>
+
+</html>

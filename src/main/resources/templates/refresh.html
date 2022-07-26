@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="zh_CN" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="components/fragments::commonHead(~{::title},_)">
+    <!--/*@thymesVar id="website" type="hellgate.server.config.CoreProperties"*/-->
+    <title th:text="|#{refresh.label} - ${website.title}|"></title>
+</head>
+<body>
+<div>
+    <br>
+    <p th:text="#{refresh.tips}"></p>
+    <div th:replace="components/fragments::refresh"></div>
+</div>
+</body>
+</html>

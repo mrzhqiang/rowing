@@ -1,0 +1,23 @@
+<html lang="zh_CN" xmlns:th="http://www.thymeleaf.org">
+
+<!--
+管理后台--版权声明
+
+使用方式：
+<footer th:replace="components/footer::copyRight"></footer>
+-->
+
+<div th:fragment="copyRight">
+    <footer class="sticky-footer">
+        <div class="container my-auto">
+            <div class="copyright text-center my-auto">
+                <!--/*@thymesVar id="website" type="hellgate.manage.config.WebsiteProperties"*/-->
+                <span th:text="${website.copyRight}" th:unless="${#strings.isEmpty(website.copyRight)}">
+                    粤ICP备xxxxxxxx号 Copyright &copy; 2020 - 2022 [[${website.author}]] 版权所有
+                </span>
+            </div>
+        </div>
+    </footer>
+</div>
+
+</html>

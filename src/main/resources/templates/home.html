@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh_CN" xmlns:th="http://www.thymeleaf.org"
+      th:replace="layout::admin(#{admin.title}, ~{::#wrapper})">
+<div id="wrapper">
+    <div th:replace="components/sidebar::admin('')"></div>
+    <div id="content-wrapper">
+        <div class="container-fluid">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/static" th:href="@{/static}">主页</a></li>
+                <li class="breadcrumb-item active">审核认证</li>
+            </ol>
+            <!--/*@thymesVar id="alert" type=""*/-->
+            <div th:replace="components/alert::success"></div>
+            <div th:replace="components/card::content(~{::#card-header},~{::#card-body})">
+                <div class="card-header" id="card-header">
+                    <i class="fas fa-fw fa-mobile-alt"></i>
+                    认证列表
+                </div>
+                <div class="card-body" id="card-body">
+                    <div th:replace="components/table::data(~{::#table-head},~{::#table-body})">
+                        <tr id="table-head">
+                            <th scope="col">#</th>
+                            <th scope="col">用户</th>
+                            <th scope="col">真实姓名</th>
+                            <th scope="col">身份证号</th>
+                            <th scope="col">审核状态</th>
+                            <th scope="col">创建时间</th>
+                            <th scope="col">更新时间</th>
+                            <th scope="col">操作</th>
+                        </tr>
+                        <tr id="table-body" th:each="auth : ${authentications}">
+                            <th scope="row">
+                                [[${auth.id}]]
+                            </th>
+                            <td th:text="${auth.userId}"></td>
+                            <td th:text="${auth.realName}"></td>
+                            <td th:text="${auth.identity}"></td>
+                            <td th:text="${auth.state}"></td>
+                            <td th:text="${auth.created}"></td>
+                            <td th:text="${auth.updated}"></td>
+                            <td>
+                                <a class="btn btn-outline-info btn-sm" href="#"
+                                   th:href="@{|/person/authentication/${auth.id}/positive/${auth.taskId}|}">通过</a>
+                                <a class="btn btn-outline-info btn-sm" href="#"
+                                   th:href="@{|/person/authentication/${auth.id}/negative/${auth.taskId}|}">拒绝</a>
+                                <button type="button" class="btn btn-outline-danger btn-sm"
+                                        data-toggle="modal" data-target="#deleteModal"
+                                        th:data-uri="@{|/person/authentication/${auth.id}|}"
+                                        th:data-name="${auth.userId}">删除
+                                </button>
+                            </td>
+                        </tr>
+                    </div>
+                </div>
+            </div>
+            <footer th:replace="components/footer::copyRight"></footer>
+        </div>
+    </div>
+    <div th:replace="components/modal::delete"></div>
+</div>
+</html>
