@@ -15,7 +15,7 @@
 
 ## 主要框架
 
-本系统基于 `Spring Boot` 框架，选择 `Redis` 和 `MySQL` 中间件，通过 `Webjars` 内置静态资源，使用 `Thymeleaf` 模板引擎渲染页面。
+本系统基于 `Spring Boot` 框架，使用 `Redis` 和 `MySQL` 中间件，前端则选择 `Vue2` + `Element-ui` 框架，构建静态文件存放于 static 目录。
 
 | 框架                                                                           | 备注                 |
 |------------------------------------------------------------------------------|--------------------|
@@ -25,7 +25,6 @@
 | [Spring Session Redis](https://spring.io/projects/spring-session-data-redis) | Redis 会话           |
 | [Spring Data JPA](https://spring.io/projects/spring-data-jpa)                | 关系型数据库 ORM         |
 | [MySQL Connector Java](https://dev.mysql.com/doc/connector-j/8.0/en/)        | MySQL 驱动           |
-| [Thymeleaf](https://www.thymeleaf.org/)                                      | Web 渲染模板           |
 | [Spring Validation](https://beanvalidation.org/)                             | 参数校验               |
 | [Lombok](https://projectlombok.org/)                                         | 便捷方法               |
 | [UserAgentUtils](https://www.bitwalker.eu/software/user-agent-utils)         | 用户代理解析             |
@@ -35,13 +34,6 @@
 | [Rxjava](https://github.com/ReactiveX/RxJava)                                | 可观察序列的异步调用框架       |
 | [Okhttp](https://github.com/square/okhttp)                                   | 最好用的 HTTP Java 客户端 |
 | [Retrofit](https://github.com/square/retrofit)                               | 声明式 RESTful        |
-| [Webjars Locator](https://github.com/mwanji/webjars-locator)                 | 前端资源加载器（免版本号）      |
-| [Webjars Bootstrap](https://github.com/webjars/bootstrap)                    | HTML + CSS         |
-| [Webjars Datatables](https://github.com/webjars/datatables)                  | JS 数据表格及相关扩展和插件    |
-| [Webjars Swiper](https://github.com/webjars/swiper)                          | 动态刷新图片             |
-| [Webjars Jquery](https://github.com/webjars/jquery)                          | 兼容式 JS 框架          |
-| [Webjars Font-awesome](https://github.com/webjars/font-awesome)              | 免费图标库              |
-| [Webjars Html5shiv](https://github.com/webjars/html5shiv)                    | IE 开启 HTML5        |
 
 ## 开发规范
 
