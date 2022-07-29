@@ -1,7 +1,7 @@
 package com.github.mrzhqiang.rowing.core.account;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.github.mrzhqiang.rowing.domain.AuditableEntity;
+import com.github.mrzhqiang.rowing.core.domain.AuditableEntity;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
