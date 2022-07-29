@@ -24,8 +24,8 @@ import org.springframework.security.web.authentication.AuthenticationFilter;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-@EnableConfigurationProperties({SecurityProperties.class})
 @EnableWebSecurity
+@EnableConfigurationProperties({SecurityProperties.class})
 public class SecurityConfiguration {
 
     private final SecurityProperties properties;
