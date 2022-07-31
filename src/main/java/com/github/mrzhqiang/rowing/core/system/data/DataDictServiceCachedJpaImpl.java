@@ -1,6 +1,5 @@
 package com.github.mrzhqiang.rowing.core.system.data;
 
-import com.github.mrzhqiang.rowing.core.system.exception.ResourceNotFoundException;
 import com.github.mrzhqiang.rowing.util.Cells;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
@@ -12,72 +11,24 @@ import org.apache.poi.openxml4j.opc.PackageAccess;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-public class CachedJpaDataDictGroupService implements DataDictGroupService {
+public class DataDictServiceCachedJpaImpl implements DataDictService {
 
     private final DataDictGroupMapper mapper;
     private final DataDictGroupRepository repository;
 
-    public CachedJpaDataDictGroupService(DataDictGroupMapper mapper,
-                                         DataDictGroupRepository repository) {
+    public DataDictServiceCachedJpaImpl(DataDictGroupMapper mapper,
+                                        DataDictGroupRepository repository) {
         this.mapper = mapper;
         this.repository = repository;
-    }
-
-    @Override
-    public DataDictGroup create(DataDictGroupForm form) {
-        return repository.save(mapper.toEntity(form));
-    }
-
-    @Override
-    public void deleteByCode(String code) {
-        repository.deleteByCode(code);
-    }
-
-    @Override
-    public void deleteAll() {
-        repository.deleteAll();
-    }
-
-    @Override
-    public DataDictGroup update(String code, DataDictGroupForm form) {
-        return repository.findByCode(code)
-                .map(it -> mapper.update(form, it))
-                .map(repository::save)
-                .orElseThrow(() -> ResourceNotFoundException.of(
-                        Strings.lenientFormat("更新失败！不存在代码为 %s 的数据字典", code)));
-    }
-
-    @Override
-    public DataDictGroupData findByCode(String code) {
-        return repository.findByCode(code)
-                .map(mapper::toData)
-                .orElseThrow(() -> ResourceNotFoundException.of(
-                        Strings.lenientFormat("找不到代码为 %s 的数据字典", code)));
-    }
-
-    @Override
-    public List<DataDictGroupData> list() {
-        return repository.findAll().stream()
-                .map(mapper::toData)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public Page<DataDictGroupData> page(Pageable pageable) {
-        return repository.findAll(pageable).map(mapper::toData);
     }
 
     @Override
@@ -94,7 +45,30 @@ public class CachedJpaDataDictGroupService implements DataDictGroupService {
                 return Collections.emptyMap();
             }
 
-            return attemptCraeteGroup(group);
+            // 数据字典文件有效，那么我们清理所有旧数据
+
+
+            Map<String, DataDictGroup> createGroup = attemptCreateGroup(group, excelFile.getName());
+            XSSFSheet item = workbook.getSheet("item");
+            if (item == null) {
+                log.warn("未找到名为 item 的 Sheet 页");
+                return createGroup;
+            }
+
+            for (Row cells : item) {
+                String parent = Cells.ofString(cells.getCell(0));
+                String label = Cells.ofString(cells.getCell(1));
+                String value = Cells.ofString(cells.getCell(2));
+
+                DataDictGroup dictGroup = createGroup.get(parent);
+                if (dictGroup == null) {
+                    log.warn("错误的字典项，指定的 parent {} 在 group 中不存在", parent);
+                    continue;
+                }
+
+
+            }
+            return createGroup;
         } catch (InvalidFormatException | IOException e) {
             String message = Strings.lenientFormat("读取 Excel 文件 %s 出错", excelFile);
             log.error(message, e);
@@ -102,7 +76,7 @@ public class CachedJpaDataDictGroupService implements DataDictGroupService {
         }
     }
 
-    private Map<String, DataDictGroup> attemptCraeteGroup(XSSFSheet group) {
+    private Map<String, DataDictGroup> attemptCreateGroup(XSSFSheet group, String filename) {
         Map<String, DataDictGroup> groupMap = Maps.newHashMapWithExpectedSize(group.getPhysicalNumberOfRows());
         boolean skipCurrentRow = true;
         for (Row cells : group) {

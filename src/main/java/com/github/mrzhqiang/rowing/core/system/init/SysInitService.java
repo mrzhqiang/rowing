@@ -19,4 +19,19 @@ public interface SysInitService {
      * @return 已保存到数据库的系统初始化数据列表。
      */
     List<SysInit> check(List<AutoInitializer> initializerList);
+
+    /**
+     * 根据指定名称判断是否已完成初始化。
+     *
+     * @param name 名称字符串，一般是自动初始化实现类的全限定名称。
+     * @return true 表示指定名称所代表的自动初始化器已执行完成，否则表示未完成。
+     */
+    boolean isFinishedBy(String name);
+
+    /**
+     * 更新指定名称的实体状态为已完成。
+     *
+     * @param name 名称字符串。
+     */
+    void updateFinishedBy(String name);
 }

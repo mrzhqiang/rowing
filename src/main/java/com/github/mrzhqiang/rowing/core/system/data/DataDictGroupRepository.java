@@ -1,5 +1,6 @@
 package com.github.mrzhqiang.rowing.core.system.data;
 
+import org.springframework.data.domain.Example;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

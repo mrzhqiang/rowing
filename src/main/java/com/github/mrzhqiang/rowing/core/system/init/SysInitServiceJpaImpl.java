@@ -36,4 +36,19 @@ public class SysInitServiceJpaImpl implements SysInitService {
 
         return repository.saveAll(sysInits);
     }
+
+    @Override
+    public boolean isFinishedBy(String name) {
+        return repository.findByName(name)
+                .map(SysInit::hasFinished)
+                .orElse(false);
+    }
+
+    @Override
+    public void updateFinishedBy(String name) {
+        repository.findByName(name).ifPresent(it -> {
+            it.setStatus(SysInit.Status.FINISHED);
+            repository.save(it);
+        });
+    }
 }
