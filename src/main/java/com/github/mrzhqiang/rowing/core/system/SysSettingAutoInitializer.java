@@ -1,6 +1,10 @@
-package com.github.mrzhqiang.rowing.core.system.setting;
+package com.github.mrzhqiang.rowing.core.system;
 
 import com.github.mrzhqiang.rowing.core.system.BaseAutoInitializer;
+import com.github.mrzhqiang.rowing.core.system.setting.SysSetting;
+import com.github.mrzhqiang.rowing.core.system.setting.SysSettingForm;
+import com.github.mrzhqiang.rowing.core.system.setting.SysSettingMapper;
+import com.github.mrzhqiang.rowing.core.system.setting.SysSettingRepository;
 import com.github.mrzhqiang.rowing.util.Jsons;
 import com.google.common.base.Stopwatch;
 import lombok.extern.slf4j.Slf4j;
@@ -31,25 +35,24 @@ public class SysSettingAutoInitializer extends BaseAutoInitializer {
     }
 
     @Override
-    public boolean attemptInitialize(Stopwatch stopwatch) throws Exception {
+    public void attemptInitialize() throws Exception {
         log.info("开始自动初始化系统设置...");
         Stopwatch stopwatch = Stopwatch.createStarted();
 
         if (resource == null) {
             log.warn("系统设置 json 文件不存在，跳过初始化过程，耗时：{}", stopwatch.stop());
-            return false;
+            return;
         }
 
         File dataFile = resource.getFile();
         List<SysSettingForm> settings = Jsons.listFromFile(dataFile, SysSettingForm.class);
         if (CollectionUtils.isEmpty(settings)) {
             log.warn("系统设置 json 文件没有解析到数据，跳过初始化过程，耗时：{}", stopwatch.stop());
-            return false;
+            return;
         }
 
         handleSettingList(settings, null);
         log.info("数据字典自动初始化完成，耗时：{}", stopwatch.stop());
-        return true;
     }
 
     private void handleSettingList(List<SysSettingForm> settings, @Nullable SysSetting parent) {

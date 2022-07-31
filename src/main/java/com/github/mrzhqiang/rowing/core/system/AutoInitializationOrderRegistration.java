@@ -1,8 +1,5 @@
 package com.github.mrzhqiang.rowing.core.system;
 
-import com.github.mrzhqiang.rowing.core.system.data.DataDictAutoInitializer;
-import com.github.mrzhqiang.rowing.core.system.setting.SysSettingAutoInitializer;
-
 import javax.servlet.Filter;
 import java.util.HashMap;
 import java.util.Map;

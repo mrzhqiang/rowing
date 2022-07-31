@@ -1,6 +1,8 @@
-package com.github.mrzhqiang.rowing.core.system.data;
+package com.github.mrzhqiang.rowing.core.system;
 
 import com.github.mrzhqiang.rowing.core.system.BaseAutoInitializer;
+import com.github.mrzhqiang.rowing.core.system.data.DataDictGroup;
+import com.github.mrzhqiang.rowing.core.system.data.DataDictGroupService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
