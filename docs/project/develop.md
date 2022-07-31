@@ -1,21 +1,29 @@
 开发设计
 ======
 
-主要描述开发环境和主要框架，以及对于本仓库的一些简单开发规范。
+文本档主要讨论开发中的一些设计思路。
 
 ---
 
 ## 环境准备
 
-- git version 2.27.0.windows.1
-- java version "1.8.0_301"
-- IntelliJ IDEA 2022.1.3 (Ultimate Edition)
-- redis_version:6.0.16
-- DBMS: MySQL (ver. 5.7.37-log)
+- `git version 2.27.0.windows.1`
+- `java version "1.8.0_301"`
+- `IntelliJ IDEA 2022.1.3 (Ultimate Edition)`
+- `redis_version:6.0.16`
+- `DBMS: MySQL (ver. 5.7.37-log)`
+
+## 设计文档
+
+- [x] [1.数据字典](1.data-dict.md)
+- [x] [2.系统设置](2.sys-setting.md)
+- [x] [3.系统初始化](3.sys-init.md)
+- [x] [4.账户](4.account.md)
+- [ ] [5.菜单](5.menu.md)
 
 ## 主要框架
 
-本系统基于 `Spring Boot` 框架，使用 `Redis` 和 `MySQL` 中间件，前端则选择 `Vue2` + `Element-ui` 框架，构建静态文件存放于 static 目录。
+本系统基于 `Spring Boot` 框架，使用 `Redis` 和 `MySQL` 中间件，前端则选择 `Vue2` + `Element-ui` 框架，构建静态文件存放于 `resources/static` 目录。
 
 | 框架                                                                           | 备注                 |
 |------------------------------------------------------------------------------|--------------------|
@@ -29,11 +37,11 @@
 | [Lombok](https://projectlombok.org/)                                         | 便捷方法               |
 | [UserAgentUtils](https://www.bitwalker.eu/software/user-agent-utils)         | 用户代理解析             |
 | [Kaptcha](https://github.com/mrzhqiang/kaptcha-spring-boot-starter)          | 验证码                |
-| [Helper](https://github.com/mrzhqiang/helper)                                | 辅助方法               |
+| [Helper](https://github.com/mrzhqiang/helper)                                | Java 常用的辅助工具       |
 | [Geoip2](https://dev.maxmind.com/geoip?lang=en)                              | IP 转地理位置           |
 | [Rxjava](https://github.com/ReactiveX/RxJava)                                | 可观察序列的异步调用框架       |
 | [Okhttp](https://github.com/square/okhttp)                                   | 最好用的 HTTP Java 客户端 |
-| [Retrofit](https://github.com/square/retrofit)                               | 声明式 RESTful        |
+| [Retrofit](https://github.com/square/retrofit)                               | 声明式 RESTFUL 框架     |
 
 ## 开发规范
 
@@ -43,15 +51,15 @@
 
 基本命名一律使用小写字母，包括项目名称和包名称，非必要情况下，只能使用一个单词，允许使用缩写精简命名，但必须有相应的说明文字。
 
-类名称一律使用驼峰命名，且遵循动词在前名词在后的原则，另可参考 RestFul 在命名上的相关规范。
+类名称一律使用驼峰命名，且遵循动词在前名词在后的原则，另可参考 RESTFUL 在命名上的相关规范。
 
 文件名称一律使用小写字母，允许使用 - _ . 三种特殊符号进行连接。
 
 其他命名根据使用场景灵活应用，但总的来说，不应脱离以上三种命名方式的范围。
 
-### 目录规范
+### 结构规范
 
-公共的抽象概念为一等公民，具体的业务对象为二等公民，同时如果业务对象过多，可以归纳到一个子集，则此子集为二等公民，所包含的业务对象为三等公民。
+公共的抽象概念为一等公民，具体的业务集合为二等公民，同时如果业务集合过多，可以归纳到一个子集，则此子集为二等公民，所包含的业务集合为三等公民。
 
 简单示例：
 
@@ -64,11 +72,15 @@
 ├─├─main                                  ——Maven 主目录
 ├─├─├─java                                  ——java 源代码
 ├─├─├─├─com.github.mrzhqiang.rowing             ——代码根目录
-├─├─├─├─├─config                                    ——配置包
-├─├─├─├─├─core                                      ——核心包
-├─├─├─├─├─util                                      ——工具包
-├─├─├─├─├─RowingApplication                       ——启动类
+├─├─├─├─├─config                                    ——配置包[1]
+├─├─├─├─├─core                                      ——核心包[1]
+├─├─├─├─├─├─account                                      ——账户包[2]
+├─├─├─├─├─├─session                                      ——会话包[2]
+├─├─├─├─├─├─system                                       ——系统包[2]
+├─├─├─├─├─├─├─init                                          ——初始化包[3]
+├─├─├─├─├─util                                      ——工具包[1]
+├─├─├─├─├─RowingApplication                         ——启动类[1]
 ├─├─├─resources                             ——项目资源
 ├─├─test                                  ——单元测试
-其他不再列出...
+...
 ```
