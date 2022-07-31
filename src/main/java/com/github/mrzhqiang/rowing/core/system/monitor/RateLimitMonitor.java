@@ -1,6 +1,7 @@
-package com.github.mrzhqiang.rowing.core.system;
+package com.github.mrzhqiang.rowing.core.system.monitor;
 
 import com.github.mrzhqiang.rowing.core.system.session.SessionProperties;
+import com.google.common.util.concurrent.RateLimiter;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -19,7 +20,9 @@ import javax.servlet.http.HttpSession;
 /**
  * 限流监视器。
  * <p>
- * 利用 {@link com.google.common.util.concurrent.RateLimiter 谷歌限流器} 进行限流处理，即每 N 秒钟只允许执行一次。
+ * 利用 {@link RateLimiter 谷歌限流器} 进行限流处理，即每个会话每秒钟只放行 N 个请求。
+ *
+ * todo 前后端分离应该基于当前登录用户而不是会话进行处理。
  */
 @SuppressWarnings("UnstableApiUsage")
 @Slf4j
@@ -64,10 +67,10 @@ public class RateLimitMonitor {
         }
 
         String rateLimiterKey = properties.getRateLimiter().getKeyName();
-        com.google.common.util.concurrent.RateLimiter rateLimiter = (com.google.common.util.concurrent.RateLimiter) session.getAttribute(rateLimiterKey);
+        RateLimiter rateLimiter = (RateLimiter) session.getAttribute(rateLimiterKey);
         if (rateLimiter == null) {
             double permits = properties.getRateLimiter().getPermits();
-            rateLimiter = com.google.common.util.concurrent.RateLimiter.create(permits);
+            rateLimiter = RateLimiter.create(permits);
             session.setAttribute(rateLimiterKey, rateLimiter);
         }
         boolean acquire = rateLimiter.tryAcquire();
