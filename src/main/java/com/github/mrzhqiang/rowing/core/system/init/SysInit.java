@@ -7,6 +7,7 @@ import lombok.ToString;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 
 @Getter
@@ -15,11 +16,11 @@ import javax.persistence.Enumerated;
 @Entity
 public class SysInit extends BaseEntity {
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private Type type;
     @Column(unique = true, nullable = false)
     private String name;
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private Status status;
     private Integer ordered;
 

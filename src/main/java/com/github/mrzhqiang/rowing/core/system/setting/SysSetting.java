@@ -16,7 +16,7 @@ import java.util.List;
 @Entity
 public class SysSetting extends AuditableEntity {
 
-    private String key;
+    private String name;
     private String value;
 
     @ManyToOne

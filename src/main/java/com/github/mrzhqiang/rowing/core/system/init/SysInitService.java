@@ -26,7 +26,7 @@ public interface SysInitService {
      * @param name 名称字符串，一般是自动初始化实现类的全限定名称。
      * @return true 表示指定名称所代表的自动初始化器已执行完成，否则表示未完成。
      */
-    boolean isFinishedBy(String name);
+    boolean checkFinishedBy(String name);
 
     /**
      * 更新指定名称的实体状态为已完成。

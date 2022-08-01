@@ -50,7 +50,11 @@ public final class AutoInitializationCheckRunner implements ApplicationRunner, A
         List<AutoInitializer> initializers = Lists.newArrayList(initializerMap.values());
         AnnotationAwareOrderComparator.sort(initializers);
         List<SysInit> check = service.check(initializers);
-        log.info("检测完毕！发现 {} 个新的自动初始化器，已记录到数据库", check.size());
+        if (check.isEmpty()) {
+            log.info("检测完毕！未发现有新的自动初始化器");
+        } else {
+            log.info("检测完毕！发现有 {} 个新的自动初始化器，已记录到数据库", check.size());
+        }
     }
 
     @Override

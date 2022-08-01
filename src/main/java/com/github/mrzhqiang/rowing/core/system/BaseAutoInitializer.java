@@ -1,10 +1,8 @@
 package com.github.mrzhqiang.rowing.core.system;
 
 import com.github.mrzhqiang.rowing.core.system.init.SysInitService;
-import com.google.common.base.Strings;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Nonnull;
 
@@ -43,27 +41,17 @@ public abstract class BaseAutoInitializer implements AutoInitializer {
 
     @Override
     public final boolean hasInitialized() {
-        String name = getName();
-        return sysInitService.isFinishedBy(name);
+        return sysInitService.checkFinishedBy(getName());
     }
 
-    @Transactional
     @Override
     public void run(String... args) {
         if (hasInitialized()) {
             return;
         }
 
-        String name = getName();
-        try {
-            this.attemptInitialize();
-        } catch (Exception e) {
-            String message = Strings.lenientFormat("执行失败！%s 初始化出现问题", name);
-            log.error(message, e);
-            throw new RuntimeException(e);
-        }
-
-        sysInitService.updateFinishedBy(name);
+        attemptInitialize();
+        sysInitService.updateFinishedBy(getName());
     }
 
     @Override

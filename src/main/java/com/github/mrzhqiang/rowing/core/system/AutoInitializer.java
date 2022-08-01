@@ -34,8 +34,8 @@ public interface AutoInitializer extends CommandLineRunner, Ordered {
 
     /**
      * 尝试进行初始化操作。
-     *
-     * @throws Exception 执行过程中抛出的所有异常。
+     * <p>
+     * 注意：一般这个方法调用 service 进行处理，由 service 管理事务。
      */
-    void attemptInitialize() throws Exception;
+    void attemptInitialize();
 }

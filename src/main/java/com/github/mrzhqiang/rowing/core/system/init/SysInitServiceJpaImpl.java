@@ -38,7 +38,7 @@ public class SysInitServiceJpaImpl implements SysInitService {
     }
 
     @Override
-    public boolean isFinishedBy(String name) {
+    public boolean checkFinishedBy(String name) {
         return repository.findByName(name)
                 .map(SysInit::hasFinished)
                 .orElse(false);

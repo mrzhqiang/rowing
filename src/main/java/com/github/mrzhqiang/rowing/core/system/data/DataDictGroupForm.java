@@ -12,6 +12,8 @@ public class DataDictGroupForm {
     private String name;
     @NotBlank
     private String code;
+    private String source;
+    private String serialNo;
     @NotNull
     private DataDictGroup.Type type;
 }

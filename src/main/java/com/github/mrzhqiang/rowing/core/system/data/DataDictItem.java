@@ -44,15 +44,19 @@ public class DataDictItem extends AuditableEntity {
     private String value;
     /**
      * 序列号。
+     * <p>
+     * 以 yyyyMMddHHmmss 格式作为序列号。
+     * <p>
+     * 通常序列号来自组序列号，除非是通过系统新增的字典项。
      */
     private String serialNo;
 
     /**
-     * 分组。
+     * 字典组。
      * <p>
-     * 当前字典项所在分组。
+     * 当前字典项所在组。
      */
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @ToString.Exclude
     private DataDictGroup group;
 }

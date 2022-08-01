@@ -11,7 +11,6 @@ public interface DataDictGroupMapper {
 
     @Mapping(target = "items", ignore = true)
     @Mapping(target = "version", ignore = true)
-    @Mapping(target = "source", ignore = true)
     @Mapping(target = "lastModifiedBy", ignore = true)
     @Mapping(target = "lastModified", ignore = true)
     @Mapping(target = "id", ignore = true)
@@ -20,7 +19,6 @@ public interface DataDictGroupMapper {
     DataDictGroup toEntity(DataDictGroupForm form);
 
     @Mapping(target = "version", ignore = true)
-    @Mapping(target = "source", ignore = true)
     @Mapping(target = "lastModifiedBy", ignore = true)
     @Mapping(target = "lastModified", ignore = true)
     @Mapping(target = "items", ignore = true)

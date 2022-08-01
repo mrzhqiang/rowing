@@ -8,6 +8,8 @@ public interface DataDictItemMapper {
 
     DataDictItemData toData(DataDictItem entity);
 
+    @Mapping(target = "serialNo", ignore = true)
+    @Mapping(target = "icon", ignore = true)
     @Mapping(target = "version", ignore = true)
     @Mapping(target = "lastModifiedBy", ignore = true)
     @Mapping(target = "lastModified", ignore = true)

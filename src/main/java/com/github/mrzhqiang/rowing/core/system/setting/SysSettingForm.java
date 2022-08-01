@@ -9,7 +9,7 @@ import java.util.List;
 public class SysSettingForm {
 
     @NotBlank
-    private String key;
+    private String name;
     @NotBlank
     private String value;
 

@@ -16,10 +16,11 @@ import org.springframework.util.ResourceUtils;
 
 import javax.annotation.Nullable;
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 @Slf4j
-@Service
+//@Service
 public class SysSettingAutoInitializer extends BaseAutoInitializer {
 
     private final SysSettingMapper mapper;
@@ -35,7 +36,7 @@ public class SysSettingAutoInitializer extends BaseAutoInitializer {
     }
 
     @Override
-    public void attemptInitialize() throws Exception {
+    public void attemptInitialize() {
         log.info("开始自动初始化系统设置...");
         Stopwatch stopwatch = Stopwatch.createStarted();
 
@@ -44,21 +45,26 @@ public class SysSettingAutoInitializer extends BaseAutoInitializer {
             return;
         }
 
-        File dataFile = resource.getFile();
-        List<SysSettingForm> settings = Jsons.listFromFile(dataFile, SysSettingForm.class);
-        if (CollectionUtils.isEmpty(settings)) {
-            log.warn("系统设置 json 文件没有解析到数据，跳过初始化过程，耗时：{}", stopwatch.stop());
-            return;
-        }
+        File dataFile = null;
+        try {
+            dataFile = resource.getFile();
+            List<SysSettingForm> settings = Jsons.listFromFile(dataFile, SysSettingForm.class);
+            if (CollectionUtils.isEmpty(settings)) {
+                log.warn("系统设置 json 文件没有解析到数据，跳过初始化过程，耗时：{}", stopwatch.stop());
+                return;
+            }
 
-        handleSettingList(settings, null);
-        log.info("数据字典自动初始化完成，耗时：{}", stopwatch.stop());
+            handleSettingList(settings, null);
+            log.info("数据字典自动初始化完成，耗时：{}", stopwatch.stop());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void handleSettingList(List<SysSettingForm> settings, @Nullable SysSetting parent) {
         if (CollectionUtils.isEmpty(settings)) {
             if (parent != null) {
-                log.debug("系统设置 {} 的子设置为空", parent.getKey());
+                log.debug("系统设置 {} 的子设置为空", parent.getName());
             }
             return;
         }

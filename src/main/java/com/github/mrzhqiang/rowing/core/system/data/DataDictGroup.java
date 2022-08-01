@@ -25,33 +25,22 @@ import java.util.List;
 @Entity
 public class DataDictGroup extends AuditableEntity {
 
-    /**
-     * 分组名称。
-     * <p>
-     * 即 Label 元素的文字内容。
-     */
     @Column(nullable = false)
     private String name;
-    /**
-     * 分组代码。
-     * <p>
-     * 通过代码可以获得具体的字典项，填充到对应 Radio 或 Select 元素中。
-     */
     @Column(unique = true, nullable = false)
     private String code;
-    /**
-     * 分组类型。
-     * <p>
-     * 允许为 null 值，表示内置类型，数据来自于类路径的 Excel 文件。
-     */
     @Enumerated(EnumType.STRING)
     private Type type;
     /**
-     * 字典来源。
+     * 字典组来源。
      * <p>
-     * 当分组类型为数据库时，来源一般为 null 值。
+     * 1. 内置的默认类型，来源是 classpath 上的内置数据字典 Excel 文件绝对路径。
      * <p>
-     * 其他类型则是 URL 地址，一般是 http api、file: 或 classpath: 链接。
+     * 2. 系统管理的 DB 类型，来源是操作用户的用户名。
+     * <p>
+     * 3. 第三方 API 类型，来源是对应的 URL 地址。
+     * <p>
+     * 来源仅作为数据参考，不具备使用价值。
      */
     private String source;
     /**
@@ -62,7 +51,7 @@ public class DataDictGroup extends AuditableEntity {
     private String serialNo;
 
     /**
-     * 字典项列表。
+     * 组内的字典项列表。
      */
     @ToString.Exclude
     @OneToMany(mappedBy = "group", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -78,7 +67,6 @@ public class DataDictGroup extends AuditableEntity {
          * 通过系统资源中的 Excel 文件加载的内置数据字典。
          */
         DEFAULT,
-
         /**
          * DB 字典组。
          * <p>

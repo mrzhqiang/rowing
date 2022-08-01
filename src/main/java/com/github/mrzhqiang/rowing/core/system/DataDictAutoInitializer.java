@@ -1,14 +1,15 @@
 package com.github.mrzhqiang.rowing.core.system;
 
-import com.github.mrzhqiang.rowing.core.system.data.DataDictGroup;
 import com.github.mrzhqiang.rowing.core.system.data.DataDictService;
+import com.google.common.base.Strings;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;
 
-import java.util.Map;
+import java.io.File;
+import java.io.IOException;
 
 @Slf4j
 @Component
@@ -24,28 +25,13 @@ public class DataDictAutoInitializer extends BaseAutoInitializer {
     }
 
     @Override
-    public void attemptInitialize() throws Exception {
-        Map<String, DataDictGroup> groupMap = groupService.importExcel(resource.getFile());
-
-        /*for (DataDictGroupForm group : groups) {
-            log.debug("保存数据字典数据 {}", group);
-
-            DataDictGroup groupEntity = groupMapper.toEntity(group);
-            groupEntity.setType(DataDictGroup.Type.DB);
-            log.debug("保存数据字典组 {}", groupEntity);
-            DataDictGroup dataDictGroup = groupRepository.save(groupEntity);
-
-            if (CollectionUtils.isEmpty(group.getItems())) {
-                log.warn("数据字典组 {} 的字典项为空", groupEntity.getName());
-                continue;
-            }
-
-            List<DataDictItem> itemList = group.getItems().stream()
-                    .map(itemMapper::toEntity)
-                    .peek(it -> it.setGroup(dataDictGroup))
-                    .collect(Collectors.toList());
-            log.debug("保存字典项 {} 到字典组 {}", itemList, groupEntity.getName());
-            itemRepository.saveAll(itemList);
-        }*/
+    public void attemptInitialize() {
+        try {
+            File excelFile = resource.getFile();
+            groupService.importExcel(excelFile);
+        } catch (IOException e) {
+            String message = Strings.lenientFormat("获取内置的数据字典文件出错");
+            throw new RuntimeException(message, e);
+        }
     }
 }
