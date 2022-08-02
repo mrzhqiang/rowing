@@ -1,5 +1,6 @@
 package com.github.mrzhqiang.rowing.api.system.init;
 
+import com.github.mrzhqiang.rowing.api.domain.TaskStatus;
 import com.github.mrzhqiang.rowing.api.system.AutoInitializer;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -47,7 +48,7 @@ public class SysInitServiceJpaImpl implements SysInitService {
     @Override
     public void updateFinishedBy(String name) {
         repository.findByName(name).ifPresent(it -> {
-            it.setStatus(SysInit.Status.FINISHED);
+            it.setStatus(TaskStatus.FINISHED);
             repository.save(it);
         });
     }
