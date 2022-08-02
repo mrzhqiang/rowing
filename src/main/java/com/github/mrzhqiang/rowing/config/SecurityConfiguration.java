@@ -2,8 +2,7 @@ package com.github.mrzhqiang.rowing.config;
 
 import com.github.mrzhqiang.kaptcha.autoconfigure.KaptchaAuthenticationConverter;
 import com.github.mrzhqiang.kaptcha.autoconfigure.KaptchaProperties;
-import com.github.mrzhqiang.rowing.core.account.LoginFailureHandler;
-import com.github.mrzhqiang.rowing.core.account.Roles;
+import com.github.mrzhqiang.rowing.api.account.Roles;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
