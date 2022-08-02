@@ -55,8 +55,7 @@ public class DataDictServiceCachedJpaImpl implements DataDictService {
             }
 
             // 数据字典文件有效，那么我们清理所有旧数据
-            // deleteAllInBatch 使用原生 SQL 删除语句，比先查询再删除效率高
-            groupRepository.deleteAllInBatch();
+            groupRepository.deleteAll();
 
             // 根据 group 页数据解析组映射
             Map<String, DataDictGroup> groupMap = attemptHandleGroup(group, excelFile.getAbsolutePath());
