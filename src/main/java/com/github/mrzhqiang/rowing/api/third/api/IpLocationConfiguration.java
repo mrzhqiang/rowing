@@ -6,9 +6,9 @@ import com.maxmind.geoip2.DatabaseReader;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.Resource;
+import org.springframework.util.ResourceUtils;
 import retrofit2.Retrofit;
-
-import java.io.InputStream;
 
 /**
  * 地点配置项。
@@ -18,10 +18,11 @@ import java.io.InputStream;
 @Configuration
 public class IpLocationConfiguration {
 
+    public static final String DB_FILE = ResourceUtils.CLASSPATH_URL_PREFIX + "GeoLite2-City.mmdb";
+
     @Bean
-    public DatabaseReader geoDatabaseReader(@Value("classpath:GeoLite2-City.mmdb")
-                                            InputStream geoInputStream) throws Exception {
-        return new DatabaseReader.Builder(geoInputStream)
+    public DatabaseReader geoDatabaseReader(@Value(DB_FILE) Resource geoResource) throws Exception {
+        return new DatabaseReader.Builder(geoResource.getInputStream())
                 // 按照喜欢程度排序的语言列表，从最喜欢到最不喜欢。
                 .locales(Lists.newArrayList("zh_CN", "en"))
                 // CHM 即支持并发的 Map 实现——ConcurrentHashMap

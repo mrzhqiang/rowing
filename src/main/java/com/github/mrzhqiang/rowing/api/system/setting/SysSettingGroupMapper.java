@@ -4,17 +4,16 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
-public interface SysSettingMapper {
+public interface SysSettingGroupMapper {
 
-    SysSettingData toData(SysSetting entity);
+    SysSettingGroupData toData(SysSettingGroup entity);
 
+    @Mapping(target = "items", ignore = true)
     @Mapping(target = "version", ignore = true)
-    @Mapping(target = "parent", ignore = true)
-    @Mapping(target = "children", ignore = true)
     @Mapping(target = "lastModifiedBy", ignore = true)
     @Mapping(target = "lastModified", ignore = true)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "createdBy", ignore = true)
     @Mapping(target = "created", ignore = true)
-    SysSetting toEntity(SysSettingForm form);
+    SysSettingGroup toEntity(SysSettingGroupForm form);
 }

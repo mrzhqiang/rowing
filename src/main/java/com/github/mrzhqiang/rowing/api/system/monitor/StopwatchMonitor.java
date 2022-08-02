@@ -23,7 +23,7 @@ public class StopwatchMonitor {
     private static final String BEFORE_TEMPLATE = "{}-{} 秒表开始计时";
     private static final String AFTER_TEMPLATE = "{}-{} 秒表结束计时！耗时：{}";
 
-    @Pointcut("@within(org.springframework.stereotype.Service) && execution(public * *())")
+    @Pointcut("@within(org.springframework.stereotype.Service) && execution(public * *(..))")
     public void businessService() {
         // 切中所有使用 @Service 标记的类中的所有 public 方法
     }

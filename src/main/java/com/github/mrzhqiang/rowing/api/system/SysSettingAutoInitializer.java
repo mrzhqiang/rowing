@@ -1,79 +1,33 @@
 package com.github.mrzhqiang.rowing.api.system;
 
-import com.github.mrzhqiang.rowing.api.system.setting.SysSetting;
-import com.github.mrzhqiang.rowing.api.system.setting.SysSettingForm;
-import com.github.mrzhqiang.rowing.api.system.setting.SysSettingMapper;
-import com.github.mrzhqiang.rowing.api.system.setting.SysSettingRepository;
-import com.github.mrzhqiang.rowing.util.Jsons;
-import com.google.common.base.Stopwatch;
+import com.github.mrzhqiang.rowing.api.system.setting.SysSettingService;
+import com.google.common.base.Strings;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
-import org.springframework.util.CollectionUtils;
+import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;
 
-import javax.annotation.Nullable;
 import java.io.File;
-import java.io.IOException;
-import java.util.List;
 
 @Slf4j
-//@Service
+@Component
 public class SysSettingAutoInitializer extends BaseAutoInitializer {
 
-    private final SysSettingMapper mapper;
-    private final SysSettingRepository repository;
+    private static final String EXCEL_FILE_LOCATION = ResourceUtils.CLASSPATH_URL_PREFIX + "data/sys-setting.xlsx";
 
-    @Value(ResourceUtils.CLASSPATH_URL_PREFIX + "data/sys-setting.json")
-    private Resource resource;
+    private final SysSettingService service;
 
-    public SysSettingAutoInitializer(SysSettingMapper mapper,
-                                     SysSettingRepository repository) {
-        this.mapper = mapper;
-        this.repository = repository;
+    public SysSettingAutoInitializer(SysSettingService service) {
+        this.service = service;
     }
 
     @Override
     public void attemptInitialize() {
-        log.info("开始自动初始化系统设置...");
-        Stopwatch stopwatch = Stopwatch.createStarted();
-
-        if (resource == null) {
-            log.warn("系统设置 json 文件不存在，跳过初始化过程，耗时：{}", stopwatch.stop());
-            return;
-        }
-
-        File dataFile = null;
         try {
-            dataFile = resource.getFile();
-            List<SysSettingForm> settings = Jsons.listFromFile(dataFile, SysSettingForm.class);
-            if (CollectionUtils.isEmpty(settings)) {
-                log.warn("系统设置 json 文件没有解析到数据，跳过初始化过程，耗时：{}", stopwatch.stop());
-                return;
-            }
-
-            handleSettingList(settings, null);
-            log.info("数据字典自动初始化完成，耗时：{}", stopwatch.stop());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private void handleSettingList(List<SysSettingForm> settings, @Nullable SysSetting parent) {
-        if (CollectionUtils.isEmpty(settings)) {
-            if (parent != null) {
-                log.debug("系统设置 {} 的子设置为空", parent.getName());
-            }
-            return;
-        }
-
-        for (SysSettingForm setting : settings) {
-            SysSetting entity = mapper.toEntity(setting);
-            entity.setParent(parent);
-            log.debug("保存系统设置数据 {}", entity);
-            repository.save(entity);
-
-            handleSettingList(setting.getChildren(), entity);
+            File excelFile = ResourceUtils.getFile(EXCEL_FILE_LOCATION);
+            service.importExcel(excelFile);
+        } catch (Exception e) {
+            String message = Strings.lenientFormat("初始化系统设置 %s 失败", EXCEL_FILE_LOCATION);
+            throw new RuntimeException(message, e);
         }
     }
 }

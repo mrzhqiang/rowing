@@ -1,4 +1,4 @@
-package com.github.mrzhqiang.rowing.api.system.data;
+package com.github.mrzhqiang.rowing.api.system.setting;
 
 import com.github.mrzhqiang.rowing.util.Cells;
 import com.google.common.base.CharMatcher;
@@ -17,26 +17,28 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
 @Slf4j
 @Service
 @Transactional
-public class DataDictServiceCachedJpaImpl implements DataDictService {
+public class SysSettingServiceCachedJpaImpl implements SysSettingService {
 
     private static final String GROUP_SHEET_NAME = "group";
     private static final String ITEM_SHEET_NAME = "item";
-    private static final DateTimeFormatter SERIAL_NO_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
 
-    private final DataDictGroupRepository groupRepository;
+    private final SysSettingGroupMapper groupMapper;
+    private final SysSettingGroupRepository groupRepository;
+    private final SysSettingItemMapper itemMapper;
+    private final SysSettingItemRepository itemRepository;
 
-    private final DataDictItemRepository itemRepository;
-
-    public DataDictServiceCachedJpaImpl(DataDictGroupRepository groupRepository,
-                                        DataDictItemRepository itemRepository) {
+    public SysSettingServiceCachedJpaImpl(SysSettingGroupMapper groupMapper,
+                                          SysSettingGroupRepository groupRepository,
+                                          SysSettingItemMapper itemMapper,
+                                          SysSettingItemRepository itemRepository) {
+        this.groupMapper = groupMapper;
         this.groupRepository = groupRepository;
+        this.itemMapper = itemMapper;
         this.itemRepository = itemRepository;
     }
 
@@ -58,7 +60,7 @@ public class DataDictServiceCachedJpaImpl implements DataDictService {
             groupRepository.deleteAll();
 
             // 根据 group 页数据解析组映射
-            Map<String, DataDictGroup> groupMap = attemptHandleGroup(group, excelFile.getAbsolutePath());
+            Map<String, SysSettingGroup> groupMap = attemptHandleGroup(group, excelFile.getAbsolutePath());
             if (groupMap.isEmpty()) {
                 String message = Strings.lenientFormat("Excel %s 文件无效，将撤销当前改动", excelFile);
                 throw new RuntimeException(message);
@@ -77,10 +79,9 @@ public class DataDictServiceCachedJpaImpl implements DataDictService {
         }
     }
 
-    private Map<String, DataDictGroup> attemptHandleGroup(XSSFSheet group, String filename) {
+    private Map<String, SysSettingGroup> attemptHandleGroup(XSSFSheet group, String absolutePath) {
         boolean skipHeader = true;
-        String serialNo = LocalDateTime.now().format(SERIAL_NO_FORMATTER);
-        Map<String, DataDictGroup> groupMap = Maps.newHashMapWithExpectedSize(group.getPhysicalNumberOfRows());
+        Map<String, SysSettingGroup> groupMap = Maps.newHashMapWithExpectedSize(group.getPhysicalNumberOfRows());
 
         for (Row cells : group) {
             if (skipHeader) {
@@ -101,18 +102,15 @@ public class DataDictServiceCachedJpaImpl implements DataDictService {
                 break;
             }
 
-            DataDictGroup entity = new DataDictGroup();
+            SysSettingGroup entity = new SysSettingGroup();
             entity.setName(name);
             entity.setCode(code);
-            entity.setSource(filename);
-            entity.setSerialNo(serialNo);
-            entity.setType(DataDictGroup.Type.DEFAULT);
             groupMap.put(code, groupRepository.save(entity));
         }
         return groupMap;
     }
 
-    private void attemptHandleItem(Map<String, DataDictGroup> groupMap, XSSFSheet item) {
+    private void attemptHandleItem(Map<String, SysSettingGroup> groupMap, XSSFSheet item) {
         boolean skipHeader = true;
 
         for (Row cells : item) {
@@ -127,9 +125,9 @@ public class DataDictServiceCachedJpaImpl implements DataDictService {
                 log.warn("发现第 {} 行 parent 列包含空字符串，判断为结束行，终止解析", cells.getRowNum());
                 break;
             }
-            DataDictGroup dictGroup = groupMap.get(parent);
-            if (dictGroup == null) {
-                log.warn("错误的字典项，指定的 parent {} 在 group 中不存在", parent);
+            SysSettingGroup settingGroup = groupMap.get(parent);
+            if (settingGroup == null) {
+                log.warn("错误的设置项，指定的 parent {} 在 group 页中不存在", parent);
                 continue;
             }
 
@@ -139,20 +137,23 @@ public class DataDictServiceCachedJpaImpl implements DataDictService {
                 break;
             }
 
-            String value = Cells.ofString(cells.getCell(2));
+            String name = Cells.ofString(cells.getCell(2));
+            if (Strings.isNullOrEmpty(name) || CharMatcher.whitespace().matchesAnyOf(name)) {
+                log.warn("发现第 {} 行 name 列包含空字符串，判断为结束行，终止解析", cells.getRowNum());
+                break;
+            }
+
+            String value = Cells.ofString(cells.getCell(3));
             if (Strings.isNullOrEmpty(value) || CharMatcher.whitespace().matchesAnyOf(value)) {
                 log.warn("发现第 {} 行 value 列包含空字符串，判断为结束行，终止解析", cells.getRowNum());
                 break;
             }
 
-            DataDictItem entity = new DataDictItem();
+            SysSettingItem entity = new SysSettingItem();
             entity.setLabel(label);
+            entity.setName(name);
             entity.setValue(value);
-            entity.setGroup(dictGroup);
-            entity.setSerialNo(dictGroup.getSerialNo());
-            // save 方法本身带有事务，然后当前 service public 方法也带有事务
-            // 根据默认传播规则，save 会自动加入 service 的当前事务
-            // 因此如果保存出现异常，会自动回滚事务
+            entity.setGroup(settingGroup);
             itemRepository.save(entity);
         }
     }

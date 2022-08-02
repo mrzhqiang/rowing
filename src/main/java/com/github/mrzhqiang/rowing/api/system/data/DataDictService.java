@@ -5,11 +5,11 @@ import java.io.File;
 public interface DataDictService {
 
     /**
-     * 通过导入 Excel 文件生成数据字典组的实体列表。
+     * 通过导入 Excel 文件生成数据字典相关实体数据。
      * <p>
-     * 为了保证内置数据的完整性，这个操作将首先清理所有数据字典组以及数据字典项。
+     * 注意：这个操作将删除所有数据字典数据。
      *
-     * @param excelFile 包含数据字典数据的 Excel 文件。
+     * @param excelFile 包含数据字典数据的内置 Excel 文件。
      */
     void importExcel(File excelFile);
 }

@@ -3,15 +3,14 @@ package com.github.mrzhqiang.rowing.api.system.setting;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
-import java.util.List;
 
 @Data
-public class SysSettingForm {
+public class SysSettingItemForm {
 
+    @NotBlank
+    private String label;
     @NotBlank
     private String name;
     @NotBlank
     private String value;
-
-    private List<SysSettingForm> children;
 }

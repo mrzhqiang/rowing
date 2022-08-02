@@ -3,8 +3,6 @@ package com.github.mrzhqiang.rowing.api.system;
 import com.github.mrzhqiang.rowing.api.system.data.DataDictService;
 import com.google.common.base.Strings;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;
 
@@ -15,10 +13,9 @@ import java.io.IOException;
 @Component
 public class DataDictAutoInitializer extends BaseAutoInitializer {
 
-    private final DataDictService groupService;
+    private static final String EXCEL_FILE_LOCATION = ResourceUtils.CLASSPATH_URL_PREFIX + "data/data-dict.xlsx";
 
-    @Value(ResourceUtils.CLASSPATH_URL_PREFIX + "data/data-dict.xlsx")
-    private Resource resource;
+    private final DataDictService groupService;
 
     public DataDictAutoInitializer(DataDictService groupService) {
         this.groupService = groupService;
@@ -27,10 +24,10 @@ public class DataDictAutoInitializer extends BaseAutoInitializer {
     @Override
     public void attemptInitialize() {
         try {
-            File excelFile = resource.getFile();
+            File excelFile = ResourceUtils.getFile(EXCEL_FILE_LOCATION);
             groupService.importExcel(excelFile);
-        } catch (IOException e) {
-            String message = Strings.lenientFormat("获取内置的数据字典文件出错");
+        } catch (Exception e) {
+            String message = Strings.lenientFormat("初始化数据字典 %s 失败", EXCEL_FILE_LOCATION);
             throw new RuntimeException(message, e);
         }
     }
