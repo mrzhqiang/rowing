@@ -6,12 +6,10 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.openxml4j.opc.OPCPackage;
-import org.apache.poi.openxml4j.opc.PackageAccess;
 import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,8 +47,8 @@ public class SysSettingServiceCachedJpaImpl implements SysSettingService {
         Preconditions.checkArgument(!excelFile.isDirectory(), "excel file must be not directory");
 
         // 以只读模式打开数据字典 Excel 文件
-        try (XSSFWorkbook workbook = new XSSFWorkbook(OPCPackage.open(excelFile, PackageAccess.READ))) {
-            XSSFSheet group = workbook.getSheet(GROUP_SHEET_NAME);
+        try (Workbook workbook = WorkbookFactory.create(excelFile)) {
+            Sheet group = workbook.getSheet(GROUP_SHEET_NAME);
             if (group == null) {
                 log.warn("未找到名为 group 的 Sheet 页");
                 return;
@@ -66,20 +64,20 @@ public class SysSettingServiceCachedJpaImpl implements SysSettingService {
                 throw new RuntimeException(message);
             }
 
-            XSSFSheet item = workbook.getSheet(ITEM_SHEET_NAME);
+            Sheet item = workbook.getSheet(ITEM_SHEET_NAME);
             if (item == null) {
                 log.warn("未找到名为 item 的 Sheet 页");
                 return;
             }
 
             attemptHandleItem(groupMap, item);
-        } catch (InvalidFormatException | IOException e) {
+        } catch (IOException e) {
             String message = Strings.lenientFormat("读取 Excel 文件 %s 出错", excelFile);
             throw new RuntimeException(message, e);
         }
     }
 
-    private Map<String, SysSettingGroup> attemptHandleGroup(XSSFSheet group, String absolutePath) {
+    private Map<String, SysSettingGroup> attemptHandleGroup(Sheet group, String absolutePath) {
         boolean skipHeader = true;
         Map<String, SysSettingGroup> groupMap = Maps.newHashMapWithExpectedSize(group.getPhysicalNumberOfRows());
 
@@ -110,7 +108,7 @@ public class SysSettingServiceCachedJpaImpl implements SysSettingService {
         return groupMap;
     }
 
-    private void attemptHandleItem(Map<String, SysSettingGroup> groupMap, XSSFSheet item) {
+    private void attemptHandleItem(Map<String, SysSettingGroup> groupMap, Sheet item) {
         boolean skipHeader = true;
 
         for (Row cells : item) {
