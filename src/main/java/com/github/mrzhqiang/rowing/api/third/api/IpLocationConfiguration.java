@@ -18,7 +18,7 @@ import retrofit2.Retrofit;
 @Configuration
 public class IpLocationConfiguration {
 
-    public static final String DB_FILE = ResourceUtils.CLASSPATH_URL_PREFIX + "GeoLite2-City.mmdb";
+    public static final String DB_FILE = ResourceUtils.CLASSPATH_URL_PREFIX + "data/GeoLite2-City.mmdb";
 
     @Bean
     public DatabaseReader geoDatabaseReader(@Value(DB_FILE) Resource geoResource) throws Exception {
