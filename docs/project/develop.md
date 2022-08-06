@@ -23,7 +23,7 @@
 
 ## 主要框架
 
-本系统基于 `Spring Boot` 框架，使用 `Redis` 和 `MySQL` 中间件，前端则选择 `Vue2` + `Element-ui` 框架，构建静态文件存放于 `resources/static` 目录。
+本系统基于 `Spring Boot` 框架，使用 `Redis` 和 `MySQL` 中间件，前端则选择 `Vue3` 框架，源码位于 `web` 目录下。
 
 | 框架                                                                           | 备注                 |
 |------------------------------------------------------------------------------|--------------------|
@@ -68,7 +68,7 @@
 ├─├─deploy                                ——部署文档
 ├─├─project                               ——项目文档
 ├─├─user                                  ——用户文档
-├─src                                  ——源代码
+├─src                                   ——源代码
 ├─├─main                                  ——Maven 主目录
 ├─├─├─java                                  ——java 源代码
 ├─├─├─├─com.github.mrzhqiang.rowing             ——代码根目录
@@ -82,5 +82,6 @@
 ├─├─├─├─├─RowingApplication                         ——启动类[1]
 ├─├─├─resources                             ——项目资源
 ├─├─test                                  ——单元测试
+├─web                                   ——前端 vue3 源码
 ...
 ```
