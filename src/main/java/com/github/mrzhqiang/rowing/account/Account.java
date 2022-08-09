@@ -1,7 +1,7 @@
 package com.github.mrzhqiang.rowing.account;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.github.mrzhqiang.rowing.api.domain.AuditableEntity;
+import com.github.mrzhqiang.rowing.domain.AuditableEntity;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -11,13 +11,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.OneToOne;
 import java.time.Instant;
 import java.util.Collection;
 
 /**
  * 账号。
  * <p>
- * 后续可以扩展为通过 学号、教师编号 登录，其他第三方接入也很方便。
+ * 后续可以扩展为通过 学号、教师编号 登录，其他第三方接入（手机号、微信号等等）也很方便。
  */
 @Getter
 @Setter
@@ -53,6 +54,11 @@ public class Account extends AuditableEntity implements UserDetails {
     @Column(nullable = false)
     private String password;
     /**
+     * 账号对应的用户。
+     */
+    @OneToOne(optional = false)
+    private User user;
+    /**
      * 首次登录失败时间戳。
      * <p>
      * 指定时间区间（管理后台设定）内的首次登录失败时间戳
@@ -65,7 +71,7 @@ public class Account extends AuditableEntity implements UserDetails {
      * <p>
      * 指定时间区间（管理后台设定）内的失败次数统计
      */
-    private int failedCount = 0;
+    private int failedCount;
     /**
      * 锁定时间戳。
      * <p>

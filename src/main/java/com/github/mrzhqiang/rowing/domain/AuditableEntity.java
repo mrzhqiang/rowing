@@ -75,7 +75,7 @@ public abstract class AuditableEntity extends BaseEntity {
      *
      * @return UTC 瞬间时刻。
      */
-    protected Instant created() {
+    protected Instant getCreated() {
         return created;
     }
 
@@ -88,7 +88,7 @@ public abstract class AuditableEntity extends BaseEntity {
      *
      * @return UTC 瞬间时刻。
      */
-    protected Instant lastModified() {
+    protected Instant getLastModified() {
         return lastModified;
     }
 

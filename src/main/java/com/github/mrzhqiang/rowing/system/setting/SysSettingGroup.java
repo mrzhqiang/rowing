@@ -1,6 +1,6 @@
 package com.github.mrzhqiang.rowing.system.setting;
 
-import com.github.mrzhqiang.rowing.api.domain.AuditableEntity;
+import com.github.mrzhqiang.rowing.domain.AuditableEntity;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

@@ -52,6 +52,7 @@ public abstract class BaseEntity {
         return String.format("Entity of type %s with id: %s", this.getClass().getName(), this.id);
     }
 
+    @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
     @Override
     public boolean equals(Object o) {
         if (null == o) {
