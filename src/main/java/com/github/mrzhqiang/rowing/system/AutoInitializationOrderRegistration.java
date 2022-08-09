@@ -30,6 +30,8 @@ final class AutoInitializationOrderRegistration {
         OrderStep order = new OrderStep(INITIAL_ORDER, ORDER_STEP);
         put(DataDictAutoInitializer.class, order.next());
         put(SysSettingAutoInitializer.class, order.next());
+        put(AccountAutoInitializer.class, order.next());
+        put(MenuAutoInitializer.class, order.next());
     }
 
     /**
