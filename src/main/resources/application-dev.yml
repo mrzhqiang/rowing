@@ -25,17 +25,17 @@ spring:
     name: "Rowing Develop"
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/rowing?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useUnicode=true&useSSL=false&allowMultiQueries=true
-    username: root
-    password: 123456
+    url: jdbc:mysql://rm-wz9u27rgv130g4xn04o.mysql.rds.aliyuncs.com:3306/rowing?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useUnicode=true&useSSL=false&allowMultiQueries=true
+    username: mrzhqiang
+    password: fssd12355@@
   # 开发环境下，打印 SQL 细节
   jpa:
     show-sql: true
   redis:
     client-type: lettuce
-    database: 0
+    database: 1
     host: localhost
-    password: 123456
+#    password: 123456
     connect-timeout: 10s
   codec:
     # 在 DEBUG 级别记录请求的表单数据；在 TRACE 级别记录请求的 Header 信息

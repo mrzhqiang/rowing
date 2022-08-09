@@ -1,9 +1,8 @@
 package com.github.mrzhqiang.rowing.config;
 
-import com.github.mrzhqiang.rowing.api.account.Account;
-import com.github.mrzhqiang.rowing.api.account.AccountRepository;
-import com.github.mrzhqiang.rowing.api.account.AccountService;
-import com.github.mrzhqiang.rowing.config.SecurityProperties;
+import com.github.mrzhqiang.rowing.account.Account;
+import com.github.mrzhqiang.rowing.account.AccountRepository;
+import com.github.mrzhqiang.rowing.account.AccountService;
 import com.github.mrzhqiang.rowing.util.DateTimes;
 import com.github.mrzhqiang.rowing.util.Joiners;
 import org.springframework.context.MessageSource;
