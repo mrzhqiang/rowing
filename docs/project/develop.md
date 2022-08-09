@@ -18,8 +18,8 @@
 - [x] [1.数据字典](1.data-dict.md)
 - [x] [2.系统设置](2.sys-setting.md)
 - [x] [3.系统初始化](3.sys-init.md)
-- [x] [4.账户](4.account.md)
-- [ ] [5.菜单](5.menu.md)
+- [x] [4.系统账户](4.sys-account.md)
+- [ ] [5.系统菜单](5.sys-menu.md)
 
 ## 主要框架
 
