@@ -1,7 +1,7 @@
 package com.github.mrzhqiang.rowing.system.init;
 
-import com.github.mrzhqiang.rowing.api.domain.BaseEntity;
-import com.github.mrzhqiang.rowing.api.domain.TaskStatus;
+import com.github.mrzhqiang.rowing.domain.BaseEntity;
+import com.github.mrzhqiang.rowing.domain.TaskStatus;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

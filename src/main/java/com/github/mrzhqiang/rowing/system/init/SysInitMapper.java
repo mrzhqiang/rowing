@@ -1,6 +1,6 @@
 package com.github.mrzhqiang.rowing.system.init;
 
-import com.github.mrzhqiang.rowing.api.domain.TaskStatus;
+import com.github.mrzhqiang.rowing.domain.TaskStatus;
 import com.github.mrzhqiang.rowing.system.AutoInitializer;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

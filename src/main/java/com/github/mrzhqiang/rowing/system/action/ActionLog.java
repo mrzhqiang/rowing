@@ -1,6 +1,6 @@
 package com.github.mrzhqiang.rowing.system.action;
 
-import com.github.mrzhqiang.rowing.api.domain.BaseEntity;
+import com.github.mrzhqiang.rowing.domain.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
