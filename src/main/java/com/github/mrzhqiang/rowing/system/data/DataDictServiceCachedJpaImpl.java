@@ -15,8 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
 @Slf4j
@@ -24,12 +22,7 @@ import java.util.Map;
 @Transactional
 public class DataDictServiceCachedJpaImpl implements DataDictService {
 
-    private static final String GROUP_SHEET_NAME = "group";
-    private static final String ITEM_SHEET_NAME = "item";
-    private static final DateTimeFormatter SERIAL_NO_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
-
     private final DataDictGroupRepository groupRepository;
-
     private final DataDictItemRepository itemRepository;
 
     public DataDictServiceCachedJpaImpl(DataDictGroupRepository groupRepository,
@@ -44,27 +37,27 @@ public class DataDictServiceCachedJpaImpl implements DataDictService {
         Preconditions.checkArgument(excelFile.exists(), "excel file must be exists");
         Preconditions.checkArgument(!excelFile.isDirectory(), "excel file must be not directory");
 
-        // 以只读模式打开数据字典 Excel 文件
+        // WorkbookFactory 支持创建 HSSFWorkbook 和 XSSFWorkbook 实例
         try (Workbook workbook = WorkbookFactory.create(excelFile)) {
             Sheet group = workbook.getSheet(GROUP_SHEET_NAME);
             if (group == null) {
-                log.warn("未找到名为 group 的 Sheet 页");
+                log.warn("未找到名为 {} 的 Sheet 页", GROUP_SHEET_NAME);
                 return;
             }
 
-            // 文件有效，那么我们清理所有旧数据
-            groupRepository.deleteAll();
+            // 存在字典组 Sheet 页，先删除所有内置字典数据——当删除字典组时，将级联删除字典项
+            groupRepository.deleteAllByType(DataDictGroup.Type.DEFAULT);
 
-            // 根据 group 页数据解析组映射
-            Map<String, DataDictGroup> groupMap = attemptHandleGroup(group, excelFile.getAbsolutePath());
+            // 尝试处理字典组，生成相关实体，并返回以名称为 key 的映射
+            Map<String, DataDictGroup> groupMap = attemptHandleGroup(group);
             if (groupMap.isEmpty()) {
-                String message = Strings.lenientFormat("Excel %s 文件无效，将撤销当前改动", excelFile);
+                String message = Strings.lenientFormat("Excel 文件 %s 不存在有效字典组数据", excelFile);
                 throw new RuntimeException(message);
             }
 
             Sheet item = workbook.getSheet(ITEM_SHEET_NAME);
             if (item == null) {
-                log.warn("未找到名为 item 的 Sheet 页");
+                log.warn("未找到名为 {} 的 Sheet 页", ITEM_SHEET_NAME);
                 return;
             }
 
@@ -75,14 +68,14 @@ public class DataDictServiceCachedJpaImpl implements DataDictService {
         }
     }
 
-    private Map<String, DataDictGroup> attemptHandleGroup(Sheet group, String filename) {
-        boolean skipHeader = true;
-        String serialNo = LocalDateTime.now().format(SERIAL_NO_FORMATTER);
+    @SuppressWarnings("DuplicatedCode")
+    private Map<String, DataDictGroup> attemptHandleGroup(Sheet group) {
+        // getPhysicalNumberOfRows 不一定是真实数据行数，但适合作为初始大小，尽量避免 put 时触发的扩容操作
         Map<String, DataDictGroup> groupMap = Maps.newHashMapWithExpectedSize(group.getPhysicalNumberOfRows());
 
+        boolean skipHeader = true;
         for (Row cells : group) {
             if (skipHeader) {
-                // 我们只跳过第一行，因为它是标题
                 skipHeader = false;
                 continue;
             }
@@ -94,7 +87,7 @@ public class DataDictServiceCachedJpaImpl implements DataDictService {
             }
 
             String code = Cells.ofString(cells.getCell(1));
-            if (Strings.isNullOrEmpty(code) || CharMatcher.whitespace().matchesAnyOf(code)) {
+            if (Strings.isNullOrEmpty(code) || CharMatcher.whitespace().matchesAllOf(code)) {
                 log.warn("发现第 {} 行 code 列包含空字符串，判断为结束行，终止解析", cells.getRowNum());
                 break;
             }
@@ -102,17 +95,17 @@ public class DataDictServiceCachedJpaImpl implements DataDictService {
             DataDictGroup entity = new DataDictGroup();
             entity.setName(name);
             entity.setCode(code);
-            entity.setSource(filename);
-            entity.setSerialNo(serialNo);
             entity.setType(DataDictGroup.Type.DEFAULT);
+            // save 方法本身带有事务，然后当前 service public 方法也带有事务
+            // 根据传播类型 REQUIRED，则 save 会自动加入 service 的当前事务
             groupMap.put(code, groupRepository.save(entity));
         }
         return groupMap;
     }
 
+    @SuppressWarnings("DuplicatedCode")
     private void attemptHandleItem(Map<String, DataDictGroup> groupMap, Sheet item) {
         boolean skipHeader = true;
-
         for (Row cells : item) {
             if (skipHeader) {
                 // 我们只跳过第一行，因为它是标题
@@ -121,10 +114,11 @@ public class DataDictServiceCachedJpaImpl implements DataDictService {
             }
 
             String parent = Cells.ofString(cells.getCell(0));
-            if (Strings.isNullOrEmpty(parent) || CharMatcher.whitespace().matchesAnyOf(parent)) {
+            if (Strings.isNullOrEmpty(parent) || CharMatcher.whitespace().matchesAllOf(parent)) {
                 log.warn("发现第 {} 行 parent 列包含空字符串，判断为结束行，终止解析", cells.getRowNum());
                 break;
             }
+
             DataDictGroup dictGroup = groupMap.get(parent);
             if (dictGroup == null) {
                 log.warn("错误的字典项，指定的 parent {} 在 group 中不存在", parent);
@@ -132,13 +126,13 @@ public class DataDictServiceCachedJpaImpl implements DataDictService {
             }
 
             String label = Cells.ofString(cells.getCell(1));
-            if (Strings.isNullOrEmpty(label) || CharMatcher.whitespace().matchesAnyOf(label)) {
+            if (Strings.isNullOrEmpty(label) || CharMatcher.whitespace().matchesAllOf(label)) {
                 log.warn("发现第 {} 行 label 列包含空字符串，判断为结束行，终止解析", cells.getRowNum());
                 break;
             }
 
             String value = Cells.ofString(cells.getCell(2));
-            if (Strings.isNullOrEmpty(value) || CharMatcher.whitespace().matchesAnyOf(value)) {
+            if (Strings.isNullOrEmpty(value) || CharMatcher.whitespace().matchesAllOf(value)) {
                 log.warn("发现第 {} 行 value 列包含空字符串，判断为结束行，终止解析", cells.getRowNum());
                 break;
             }
@@ -147,10 +141,6 @@ public class DataDictServiceCachedJpaImpl implements DataDictService {
             entity.setLabel(label);
             entity.setValue(value);
             entity.setGroup(dictGroup);
-            entity.setSerialNo(dictGroup.getSerialNo());
-            // save 方法本身带有事务，然后当前 service public 方法也带有事务
-            // 根据默认传播规则，save 会自动加入 service 的当前事务
-            // 因此如果保存出现异常，会自动回滚事务
             itemRepository.save(entity);
         }
     }

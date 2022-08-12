@@ -6,6 +6,8 @@ import java.util.Optional;
 
 public interface DataDictGroupRepository extends JpaRepository<DataDictGroup, Long> {
 
+    void deleteAllByType(DataDictGroup.Type type);
+
     boolean existsByCode(String code);
 
     Optional<DataDictGroup> findByCode(String code);

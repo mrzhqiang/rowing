@@ -7,6 +7,7 @@ import javax.validation.constraints.NotBlank;
 @Data
 public class DataDictItemForm {
 
+    private String icon;
     @NotBlank
     private String label;
     @NotBlank

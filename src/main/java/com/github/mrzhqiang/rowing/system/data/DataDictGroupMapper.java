@@ -9,7 +9,8 @@ public interface DataDictGroupMapper {
 
     DataDictGroupData toData(DataDictGroup entity);
 
-    @Mapping(target = "items", ignore = true)
+    @Mapping(target = "type", ignore = true)
+    @Mapping(target = "items", expression = "java( DataDictGroup.Type.CUSTOMIZE )")
     @Mapping(target = "version", ignore = true)
     @Mapping(target = "lastModifiedBy", ignore = true)
     @Mapping(target = "lastModified", ignore = true)
@@ -18,6 +19,7 @@ public interface DataDictGroupMapper {
     @Mapping(target = "created", ignore = true)
     DataDictGroup toEntity(DataDictGroupForm form);
 
+    @Mapping(target = "type", ignore = true)
     @Mapping(target = "version", ignore = true)
     @Mapping(target = "lastModifiedBy", ignore = true)
     @Mapping(target = "lastModified", ignore = true)
