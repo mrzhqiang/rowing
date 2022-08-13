@@ -23,6 +23,8 @@ public final class Cells {
      */
     public static String ofString(Cell cell) {
         return Optional.ofNullable(cell)
+                // DataFormatter 支持 null 值和空单元格，直接返回空串
+                // 但不要依赖框架去处理非法值，在升级框架版本时，就不用担心有变化
                 .map(DATA_FORMATTER::formatCellValue)
                 .orElse("");
     }

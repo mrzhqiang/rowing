@@ -1,7 +1,6 @@
 package com.github.mrzhqiang.rowing.system.data;
 
 import com.github.mrzhqiang.rowing.util.Cells;
-import com.google.common.base.CharMatcher;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
@@ -76,18 +75,20 @@ public class DataDictServiceCachedJpaImpl implements DataDictService {
         boolean skipHeader = true;
         for (Row cells : group) {
             if (skipHeader) {
+                // 我们只跳过第一行，因为它是标题
                 skipHeader = false;
                 continue;
             }
 
             String name = Cells.ofString(cells.getCell(0));
-            if (Strings.isNullOrEmpty(name) || CharMatcher.whitespace().matchesAllOf(name)) {
+            // 如果发现 null 值或空串，视为结束行
+            if (Strings.isNullOrEmpty(name)) {
                 log.warn("发现第 {} 行 name 列存在空字符串，判断为结束行，终止解析", cells.getRowNum());
                 break;
             }
 
             String code = Cells.ofString(cells.getCell(1));
-            if (Strings.isNullOrEmpty(code) || CharMatcher.whitespace().matchesAllOf(code)) {
+            if (Strings.isNullOrEmpty(code)) {
                 log.warn("发现第 {} 行 code 列包含空字符串，判断为结束行，终止解析", cells.getRowNum());
                 break;
             }
@@ -97,7 +98,7 @@ public class DataDictServiceCachedJpaImpl implements DataDictService {
             entity.setCode(code);
             entity.setType(DataDictGroup.Type.DEFAULT);
             // save 方法本身带有事务，然后当前 service public 方法也带有事务
-            // 根据传播类型 REQUIRED，则 save 会自动加入 service 的当前事务
+            // 根据 REQUIRED 传播类型，则 save 会自动加入 service 的当前事务
             groupMap.put(code, groupRepository.save(entity));
         }
         return groupMap;
@@ -108,13 +109,12 @@ public class DataDictServiceCachedJpaImpl implements DataDictService {
         boolean skipHeader = true;
         for (Row cells : item) {
             if (skipHeader) {
-                // 我们只跳过第一行，因为它是标题
                 skipHeader = false;
                 continue;
             }
 
             String parent = Cells.ofString(cells.getCell(0));
-            if (Strings.isNullOrEmpty(parent) || CharMatcher.whitespace().matchesAllOf(parent)) {
+            if (Strings.isNullOrEmpty(parent)) {
                 log.warn("发现第 {} 行 parent 列包含空字符串，判断为结束行，终止解析", cells.getRowNum());
                 break;
             }
@@ -126,13 +126,13 @@ public class DataDictServiceCachedJpaImpl implements DataDictService {
             }
 
             String label = Cells.ofString(cells.getCell(1));
-            if (Strings.isNullOrEmpty(label) || CharMatcher.whitespace().matchesAllOf(label)) {
+            if (Strings.isNullOrEmpty(label)) {
                 log.warn("发现第 {} 行 label 列包含空字符串，判断为结束行，终止解析", cells.getRowNum());
                 break;
             }
 
             String value = Cells.ofString(cells.getCell(2));
-            if (Strings.isNullOrEmpty(value) || CharMatcher.whitespace().matchesAllOf(value)) {
+            if (Strings.isNullOrEmpty(value)) {
                 log.warn("发现第 {} 行 value 列包含空字符串，判断为结束行，终止解析", cells.getRowNum());
                 break;
             }

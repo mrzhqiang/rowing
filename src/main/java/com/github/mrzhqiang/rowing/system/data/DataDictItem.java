@@ -14,7 +14,7 @@ import javax.persistence.ManyToOne;
 /**
  * 字典项。
  * <p>
- * 字典项是具体的字典数据，通过字典组进行分类。
+ * 字典项是具体的字典数据，在不同的字典组下，支持相同标签甚至相同值的字典项。
  */
 @Getter
 @Setter
