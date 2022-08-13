@@ -11,6 +11,5 @@ public class SysSettingItemForm {
     private String label;
     @NotBlank
     private String name;
-    @NotBlank
     private String value;
 }

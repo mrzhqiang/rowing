@@ -26,12 +26,12 @@ public class SysSettingGroup extends AuditableEntity {
      */
     @Column(nullable = false)
     private String name;
-    @Column(nullable = false, unique = false)
+    @Column(nullable = false, unique = true)
     private String code;
     /**
      * 设置项。
      */
-    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "group", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @ToString.Exclude
     private List<SysSettingItem> items;
 }

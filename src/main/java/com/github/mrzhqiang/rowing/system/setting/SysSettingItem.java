@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
@@ -19,23 +20,16 @@ import javax.persistence.ManyToOne;
 @Entity
 public class SysSettingItem extends AuditableEntity {
 
-    /**
-     * 标签。
-     */
+    @Column(nullable = false)
     private String label;
-    /**
-     * 名称。
-     */
+    @Column(nullable = false)
     private String name;
-    /**
-     * 数值。
-     */
     private String value;
 
     /**
      * 所属组。
      */
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @ToString.Exclude
     private SysSettingGroup group;
 }

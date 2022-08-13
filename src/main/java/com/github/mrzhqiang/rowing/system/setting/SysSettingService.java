@@ -4,6 +4,9 @@ import java.io.File;
 
 public interface SysSettingService {
 
+    String GROUP_SHEET_NAME = "group";
+    String ITEM_SHEET_NAME = "item";
+
     /**
      * 通过导入 Excel 文件生成系统设置相关实体数据。
      * <p>

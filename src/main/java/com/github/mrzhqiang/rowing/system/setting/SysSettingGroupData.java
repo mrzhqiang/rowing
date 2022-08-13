@@ -9,5 +9,7 @@ public class SysSettingGroupData {
 
     private String id;
     private String name;
+    private String code;
+
     private List<SysSettingItemData> items;
 }
