@@ -7,6 +7,7 @@ import java.util.List;
 @Data
 public class DataDictGroupData {
 
+    private String id;
     private String name;
     private String code;
     private String type;

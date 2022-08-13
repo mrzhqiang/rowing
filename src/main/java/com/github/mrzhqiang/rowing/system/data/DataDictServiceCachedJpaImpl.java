@@ -147,6 +147,7 @@ public class DataDictServiceCachedJpaImpl implements DataDictService {
             entity.setLabel(label);
             entity.setValue(value);
             entity.setGroup(dictGroup);
+
             if (itemRepository.exists(Example.of(entity))) {
                 log.warn("检测到实体 {} 已存在，跳过新增操作", entity);
                 continue;
