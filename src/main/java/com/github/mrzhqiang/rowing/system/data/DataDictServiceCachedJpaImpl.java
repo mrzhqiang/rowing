@@ -9,6 +9,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -93,6 +94,11 @@ public class DataDictServiceCachedJpaImpl implements DataDictService {
                 break;
             }
 
+            if (groupRepository.existsByCode(code)) {
+                log.warn("发现字典组 code {} 已存在，忽略此条数据", code);
+                continue;
+            }
+
             DataDictGroup entity = new DataDictGroup();
             entity.setName(name);
             entity.setCode(code);
@@ -141,6 +147,11 @@ public class DataDictServiceCachedJpaImpl implements DataDictService {
             entity.setLabel(label);
             entity.setValue(value);
             entity.setGroup(dictGroup);
+            if (itemRepository.exists(Example.of(entity))) {
+                log.warn("检测到实体 {} 已存在，跳过新增操作", entity);
+                continue;
+            }
+
             itemRepository.save(entity);
         }
     }
