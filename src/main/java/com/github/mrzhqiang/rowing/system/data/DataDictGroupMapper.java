@@ -9,11 +9,11 @@ public interface DataDictGroupMapper {
 
     DataDictGroupData toData(DataDictGroup entity);
 
-    @Mapping(target = "type", ignore = true)
-    @Mapping(target = "items", expression = "java( DataDictGroup.Type.CUSTOMIZE )")
+    @Mapping(target = "type", expression = "java( DataDictGroup.Type.CUSTOMIZE )")
     @Mapping(target = "version", ignore = true)
     @Mapping(target = "lastModifiedBy", ignore = true)
     @Mapping(target = "lastModified", ignore = true)
+    @Mapping(target = "items", ignore = true)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "createdBy", ignore = true)
     @Mapping(target = "created", ignore = true)

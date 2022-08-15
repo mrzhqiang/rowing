@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.servlet.http.HttpServletRequest;
@@ -122,6 +123,7 @@ public class ExceptionLog extends BaseEntity {
      *
      * @see com.google.common.base.Throwables#getStackTraceAsString(Throwable)
      */
+    @Column(length = 2000)
     private String trace;
     /**
      * 时间戳。

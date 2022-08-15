@@ -22,13 +22,8 @@ public class SysSettingAutoInitializer extends BaseAutoInitializer {
     }
 
     @Override
-    public void attemptInitialize() {
-        try {
-            File excelFile = ResourceUtils.getFile(EXCEL_FILE_LOCATION);
-            service.importExcel(excelFile);
-        } catch (Exception e) {
-            String message = Strings.lenientFormat("初始化系统设置 %s 失败", EXCEL_FILE_LOCATION);
-            throw new RuntimeException(message, e);
-        }
+    public void execute() throws Exception {
+        File excelFile = ResourceUtils.getFile(EXCEL_FILE_LOCATION);
+        service.importExcel(excelFile);
     }
 }

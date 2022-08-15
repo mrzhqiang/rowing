@@ -2,8 +2,6 @@ package com.github.mrzhqiang.rowing.system;
 
 import com.github.mrzhqiang.rowing.system.init.SysInit;
 import com.github.mrzhqiang.rowing.system.init.SysInitService;
-import com.github.mrzhqiang.rowing.system.init.SysInit;
-import com.github.mrzhqiang.rowing.system.init.SysInitService;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
@@ -51,7 +49,7 @@ public final class AutoInitializationCheckRunner implements ApplicationRunner, A
         Map<String, AutoInitializer> initializerMap = context.getBeansOfType(AutoInitializer.class);
         List<AutoInitializer> initializers = Lists.newArrayList(initializerMap.values());
         AnnotationAwareOrderComparator.sort(initializers);
-        List<SysInit> check = service.check(initializers);
+        List<SysInit> check = service.checkAndSave(initializers);
         if (check.isEmpty()) {
             log.info("检测完毕！未发现有新的自动初始化器");
         } else {

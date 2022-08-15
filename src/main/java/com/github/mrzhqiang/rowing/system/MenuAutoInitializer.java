@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 public class MenuAutoInitializer extends BaseAutoInitializer {
 
     @Override
-    public void attemptInitialize() {
+    public void execute() throws Exception {
+
     }
 }

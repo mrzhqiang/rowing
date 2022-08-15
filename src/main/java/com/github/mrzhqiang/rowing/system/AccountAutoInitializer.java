@@ -6,8 +6,8 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 public class AccountAutoInitializer extends BaseAutoInitializer {
-
     @Override
-    public void attemptInitialize() {
+    public void execute() throws Exception {
+
     }
 }

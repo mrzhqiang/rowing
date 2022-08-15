@@ -119,11 +119,13 @@ public final class DateTimes {
     /**
      * 通过瞬间转为本地时间再格式化为基础的时间字符串格式。
      *
-     * @param instant 瞬间。
-     * @return 基础的时间字符串格式。
+     * @param instant UTC 时间戳，允许为 null 值。
+     * @return 基础的时间字符串格式。如果传入参数为 null 值则返回空串。
      */
     public static String localFormat(Instant instant) {
-        Preconditions.checkNotNull(instant, "instant == null");
+        if (instant == null) {
+            return "";
+        }
         return BASIC_FORMATTER.format(LocalDateTime.ofInstant(instant, ZoneId.systemDefault()));
     }
 

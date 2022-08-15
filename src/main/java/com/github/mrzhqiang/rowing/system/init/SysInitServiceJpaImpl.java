@@ -1,15 +1,18 @@
 package com.github.mrzhqiang.rowing.system.init;
 
-import com.github.mrzhqiang.rowing.domain.TaskStatus;
 import com.github.mrzhqiang.rowing.system.AutoInitializer;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
+@Transactional
 public class SysInitServiceJpaImpl implements SysInitService {
 
     private final SysInitMapper mapper;
@@ -22,7 +25,7 @@ public class SysInitServiceJpaImpl implements SysInitService {
     }
 
     @Override
-    public List<SysInit> check(List<AutoInitializer> initializers) {
+    public List<SysInit> checkAndSave(List<AutoInitializer> initializers) {
         if (CollectionUtils.isEmpty(initializers)) {
             return Collections.emptyList();
         }
@@ -36,20 +39,5 @@ public class SysInitServiceJpaImpl implements SysInitService {
         }
 
         return repository.saveAll(sysInits);
-    }
-
-    @Override
-    public boolean checkFinishedBy(String name) {
-        return repository.findByName(name)
-                .map(SysInit::hasFinished)
-                .orElse(false);
-    }
-
-    @Override
-    public void updateFinishedBy(String name) {
-        repository.findByName(name).ifPresent(it -> {
-            it.setStatus(TaskStatus.FINISHED);
-            repository.save(it);
-        });
     }
 }

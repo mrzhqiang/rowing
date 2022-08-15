@@ -1,21 +1,41 @@
 package com.github.mrzhqiang.rowing.domain;
 
+import lombok.Getter;
+
 /**
  * 任务状态。
- * <p>
- * 简单的任务一般只有两种状态：默认状态、已完成状态。
- * <p>
- * 不存在中间状态，也就是说，即使失败也不会保存状态。
  */
+@Getter
 public enum TaskStatus {
     /**
      * 默认状态。
      * <p>
-     * 表示任务未完成，这有可能是未执行过、正在执行中以及执行出错，我们统一视为默认状态。
+     * 表示任务未开始。
      */
-    DEFAULT,
+    DEFAULT("默认"),
     /**
-     * 已完成状态。
+     * 启动状态。
+     * <p>
+     * 表示任务运行中。
      */
-    FINISHED,
+    STARTED("运行中"),
+    /**
+     * 失败状态。
+     * <p>
+     * 表示任务出现问题导致失败。
+     */
+    FAILED("失败"),
+    /**
+     * 完成状态。
+     * <p>
+     * 表示任务执行成功。
+     */
+    COMPLETED("成功"),;
+
+    final String label;
+
+
+    TaskStatus(String label) {
+        this.label = label;
+    }
 }

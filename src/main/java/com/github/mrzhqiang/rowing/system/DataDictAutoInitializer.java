@@ -21,13 +21,8 @@ public class DataDictAutoInitializer extends BaseAutoInitializer {
     }
 
     @Override
-    public void attemptInitialize() {
-        try {
-            File excelFile = ResourceUtils.getFile(EXCEL_FILE_LOCATION);
-            groupService.importExcel(excelFile);
-        } catch (Exception e) {
-            String message = Strings.lenientFormat("初始化数据字典 %s 失败", EXCEL_FILE_LOCATION);
-            throw new RuntimeException(message, e);
-        }
+    public void execute() throws Exception {
+        File excelFile = ResourceUtils.getFile(EXCEL_FILE_LOCATION);
+        groupService.importExcel(excelFile);
     }
 }

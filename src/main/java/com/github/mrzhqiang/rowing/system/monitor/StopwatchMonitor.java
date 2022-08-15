@@ -20,8 +20,8 @@ import org.springframework.stereotype.Component;
 @Order(2)
 public class StopwatchMonitor {
 
-    private static final String BEFORE_TEMPLATE = "{}-{} 秒表开始计时";
-    private static final String AFTER_TEMPLATE = "{}-{} 秒表结束计时！耗时：{}";
+    private static final String BEFORE_TEMPLATE = "{}-{} 开始计时";
+    private static final String AFTER_TEMPLATE = "{}-{} 结束计时！耗时：{}";
 
     @Pointcut("@within(org.springframework.stereotype.Service) && execution(public * *(..))")
     public void businessService() {

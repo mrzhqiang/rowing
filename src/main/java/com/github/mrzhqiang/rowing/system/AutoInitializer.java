@@ -18,24 +18,17 @@ import javax.annotation.Nonnull;
 public interface AutoInitializer extends CommandLineRunner, Ordered {
 
     /**
-     * 自动初始化器的名称。
-     *
-     * @return 返回自动初始化器的名称，需保证全局唯一性，不能返回 Null 值。
+     * 初始化名称。
+     * <p>
+     * 实现类必须保证此名称的全局唯一性。
      */
     @Nonnull
     String getName();
 
     /**
-     * 判断是否已经初始化。
+     * 执行初始化。
      *
-     * @return 返回 True 表示已经初始化；返回 False 则自动开始初始化操作。
+     * @throws Exception 任何异常。允许抛出任何异常，表示由调用方捕捉异常并进行相应处理。
      */
-    boolean hasInitialized();
-
-    /**
-     * 尝试进行初始化操作。
-     * <p>
-     * 注意：一般这个方法调用 service 进行处理，由 service 管理事务。
-     */
-    void attemptInitialize();
+    void execute() throws Exception;
 }
