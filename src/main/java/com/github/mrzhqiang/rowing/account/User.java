@@ -9,11 +9,7 @@ import lombok.ToString;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.Optional;
 
 /**
  * 用户。
@@ -25,9 +21,6 @@ import java.util.Optional;
 @ToString(callSuper = true)
 @Entity
 public class User extends AuditableEntity {
-
-    @OneToOne(mappedBy = "user")
-    private Account account;
 
     /**
      * 昵称。
@@ -45,15 +38,7 @@ public class User extends AuditableEntity {
      */
     private LocalDate birthday;
 
-    /**
-     * 根据当前日期计算年龄。
-     *
-     * @return 年龄，从生日开始，距离今天有多少年。
-     */
-    public Integer getAge() {
-        return Optional.ofNullable(birthday)
-                .map(it -> ChronoUnit.YEARS.between(it, LocalDate.now()))
-                .map(Long::intValue)
-                .orElse(0);
-    }
+    @ToString.Exclude
+    @OneToOne(mappedBy = "user", optional = false)
+    private Account owner;
 }

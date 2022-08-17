@@ -1,6 +1,5 @@
 package com.github.mrzhqiang.rowing.account;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.ToString;
 
@@ -48,9 +47,8 @@ public class AccountForm {
      * <p>
      * 另外，在 toString 和 Json 时，必须忽略密码字段。
      */
+    @ToString.Exclude
     @NotBlank
     @Size(min = 6, max = 15)
-    @ToString.Exclude
-    @JsonIgnore
     private String password;
 }

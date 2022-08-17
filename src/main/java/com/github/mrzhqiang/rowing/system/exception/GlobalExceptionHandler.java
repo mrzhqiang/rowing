@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.ExceptionHandlerMethodResolver;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Optional;
@@ -66,7 +67,8 @@ public class GlobalExceptionHandler {
      * @return 根据请求客户端的类型返回的不同对象，浏览器一般是视图对象，而 API 则是 JSON 对象。
      */
     @ExceptionHandler({
-            ResourceNotFoundException.class})
+            ResourceNotFoundException.class,
+            EntityNotFoundException.class})
     public Object handleNotFound(Exception ex, HttpServletRequest request) {
         log.error("Handle NOT_FOUND by request: " + request, ex);
         return resolveException(ex, request, HttpStatus.NOT_FOUND);

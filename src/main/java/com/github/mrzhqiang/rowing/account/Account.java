@@ -11,9 +11,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import java.time.Instant;
 import java.util.Collection;
+import java.util.Optional;
 
 /**
  * 账号。
@@ -54,11 +56,6 @@ public class Account extends AuditableEntity implements UserDetails {
     @Column(nullable = false)
     private String password;
     /**
-     * 账号对应的用户。
-     */
-    @OneToOne(optional = false)
-    private User user;
-    /**
      * 首次登录失败时间戳。
      * <p>
      * 指定时间区间（管理后台设定）内的首次登录失败时间戳
@@ -86,6 +83,17 @@ public class Account extends AuditableEntity implements UserDetails {
     private boolean disabled;
 
     /**
+     * 账号对应的用户。
+     */
+    @OneToOne(optional = false)
+    private User user;
+    /**
+     * 账号所属角色。
+     */
+    @ManyToOne(optional = false)
+    private Role role;
+
+    /**
      * 获取授予权限列表。
      * <p>
      * 授予权限在 Spring Security 中指的是角色。
@@ -100,7 +108,9 @@ public class Account extends AuditableEntity implements UserDetails {
      */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return AuthorityUtils.NO_AUTHORITIES;
+        return Optional.ofNullable(role)
+                .map(it -> AuthorityUtils.createAuthorityList(it.getName()))
+                .orElse(AuthorityUtils.NO_AUTHORITIES);
     }
 
     /**

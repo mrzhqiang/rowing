@@ -27,8 +27,8 @@ public class Menu extends AuditableEntity {
     @ManyToOne
     private Menu parent;
 
-    @OneToMany(mappedBy = "parent")
     @ToString.Exclude
+    @OneToMany(mappedBy = "parent")
     private List<Menu> children;
 
     /**

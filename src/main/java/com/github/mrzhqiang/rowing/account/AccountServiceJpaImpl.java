@@ -12,13 +12,13 @@ import java.util.Optional;
 
 @Slf4j
 @Service
-public class JpaAccountService implements AccountService {
+public class AccountServiceJpaImpl implements AccountService {
 
     private final AccountRepository repository;
     private final PasswordEncoder passwordEncoder;
 
-    public JpaAccountService(AccountRepository repository,
-                             PasswordEncoder passwordEncoder) {
+    public AccountServiceJpaImpl(AccountRepository repository,
+                                 PasswordEncoder passwordEncoder) {
         this.repository = repository;
         this.passwordEncoder = passwordEncoder;
     }
@@ -42,7 +42,6 @@ public class JpaAccountService implements AccountService {
     @Override
     public Account findByUser(UserDetails user) {
         return repository.findByUsername(user.getUsername())
-                // 基本上不可能出现，除非数据库无法访问，或者已删除对应 username 的 account 表数据
                 .orElseThrow(() -> new RuntimeException("当前会话无法找到对应的账户信息"));
     }
 

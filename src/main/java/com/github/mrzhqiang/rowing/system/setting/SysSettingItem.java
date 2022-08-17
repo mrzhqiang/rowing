@@ -29,7 +29,7 @@ public class SysSettingItem extends AuditableEntity {
     /**
      * 所属组。
      */
-    @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @ToString.Exclude
+    @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private SysSettingGroup group;
 }

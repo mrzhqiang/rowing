@@ -29,11 +29,19 @@ public final class Roles {
      * 用户角色。
      */
     public static final String USER = PREFIX + RAW_USER;
+    /**
+     * 原生匿名角色。
+     */
+    public static final String RAW_ANONYMOUS = "ANONYMOUS";
+    /**
+     * 匿名角色。
+     */
+    public static final String ANONYMOUS = PREFIX + "ANONYMOUS";
 
     /**
      * 等级制度。
      * <p>
      * 比如：管理员也是一个用户，所以用户有的权限，管理员也同样拥有。
      */
-    public static final String HIERARCHY = ADMIN + " > " + USER;
+    public static final String HIERARCHY = ADMIN + " > " + USER + " > " + ANONYMOUS;
 }

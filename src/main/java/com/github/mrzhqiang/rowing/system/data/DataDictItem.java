@@ -33,7 +33,7 @@ public class DataDictItem extends AuditableEntity {
      * <p>
      * 当前字典项所在组。
      */
-    @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @ToString.Exclude
+    @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private DataDictGroup group;
 }

@@ -2,7 +2,6 @@ package com.github.mrzhqiang.rowing.account;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
 
 /**
  * 账号映射器。
@@ -29,15 +28,15 @@ import org.mapstruct.MappingTarget;
  * <p>
  * 对于复杂类型的转换，通常是定义抽象类以及转换 Context 进行处理。
  * <p>
- * 鉴于映射器应该纯粹和简单，我们推荐只使用 2.1 和 2.4 方式进行转换，复杂的转换应该先进行数据化处理，再声明数据类型与转换类型的映射关系即可。
- * <p>
- * 所谓数据化处理，一个鲜明的例子就是，先通过 Service 拿到对应的 Data 类，之后的映射就变得简单了。
+ * 鉴于映射器应该纯粹和简单，我们推荐只使用 2.1 和 2.4 方式进行转换。
  */
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {UserMapper.class})
 public interface AccountMapper {
 
     AccountData toData(Account entity);
 
+    @Mapping(target = "user", ignore = true)
+    @Mapping(target = "role", ignore = true)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "version", ignore = true)
     @Mapping(target = "uid", ignore = true)
@@ -51,18 +50,4 @@ public interface AccountMapper {
     @Mapping(target = "created", ignore = true)
     @Mapping(target = "authorities", ignore = true)
     Account toEntity(AccountForm form);
-
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "version", ignore = true)
-    @Mapping(target = "uid", ignore = true)
-    @Mapping(target = "locked", ignore = true)
-    @Mapping(target = "lastModifiedBy", ignore = true)
-    @Mapping(target = "lastModified", ignore = true)
-    @Mapping(target = "firstFailed", ignore = true)
-    @Mapping(target = "failedCount", ignore = true)
-    @Mapping(target = "disabled", ignore = true)
-    @Mapping(target = "createdBy", ignore = true)
-    @Mapping(target = "created", ignore = true)
-    @Mapping(target = "authorities", ignore = true)
-    void update(AccountForm form, @MappingTarget Account entity);
 }

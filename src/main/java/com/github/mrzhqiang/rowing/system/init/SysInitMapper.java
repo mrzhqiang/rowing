@@ -16,7 +16,7 @@ public interface SysInitMapper {
     SysInitData toData(SysInit entity);
 
     @Mapping(target = "startTime", ignore = true)
-    @Mapping(target = "errorStack", ignore = true)
+    @Mapping(target = "errorTrace", ignore = true)
     @Mapping(target = "errorMessage", ignore = true)
     @Mapping(target = "endTime", ignore = true)
     @Mapping(target = "id", ignore = true)

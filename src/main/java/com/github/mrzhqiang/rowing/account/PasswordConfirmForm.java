@@ -23,10 +23,10 @@ public class PasswordConfirmForm extends AccountForm {
      * <p>
      * 用于比较是否与要修改的密码完全一致，与 password 字段的校验规则及要求完全相同。
      */
+    @JsonIgnore
+    @ToString.Exclude
     @NotBlank
     @Size(min = 6, max = 15)
-    @ToString.Exclude
-    @JsonIgnore
     private String confirmPassword;
 
     /**

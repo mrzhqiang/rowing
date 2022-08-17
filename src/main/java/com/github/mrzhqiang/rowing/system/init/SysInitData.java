@@ -12,5 +12,5 @@ public class SysInitData {
     private String startTime;
     private String endTime;
     private String errorMessage;
-    private String errorStack;
+    private String errorTrace;
 }
