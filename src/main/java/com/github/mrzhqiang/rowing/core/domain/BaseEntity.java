@@ -1,5 +1,6 @@
 package com.github.mrzhqiang.rowing.core.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.util.ProxyUtils;
@@ -47,6 +48,7 @@ public abstract class BaseEntity {
      * <p>
      * 由 JPA 框架自动赋值，作为乐观锁防止脏数据产生。
      */
+    @JsonIgnore
     @Version
     private Long version;
 

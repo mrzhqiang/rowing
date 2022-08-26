@@ -32,6 +32,6 @@ public class SysSettingGroup extends AuditableEntity {
      * 设置项。
      */
     @ToString.Exclude
-    @OneToMany(mappedBy = "group", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL)
     private List<SysSettingItem> items;
 }

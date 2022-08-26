@@ -46,6 +46,7 @@ public class DataDictScanner {
      *
      * @return 包含枚举 class 对象的列表。
      */
+    @SuppressWarnings("unchecked")
     public List<Class<? extends Enum<?>>> scanEnum(String basePackage) {
         Preconditions.checkNotNull(basePackage, "base package == null");
 
@@ -71,7 +72,6 @@ public class DataDictScanner {
                         if (debugEnabled) {
                             log.debug("扫描到数据字典枚举：{}", clazz.getName());
                         }
-                        //noinspection unchecked
                         enums.add((Class<? extends Enum<?>>) clazz);
                     }
                 } catch (FileNotFoundException ex) {

@@ -1,5 +1,6 @@
 package com.github.mrzhqiang.rowing.core.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -41,6 +42,7 @@ public abstract class AuditableEntity extends BaseEntity {
      * 要解决这个问题，必须将此字段排除在 ToString 之外。
      */
     @Nullable
+    @JsonIgnore
     @CreatedBy
     private String createdBy;
     /**
@@ -58,6 +60,7 @@ public abstract class AuditableEntity extends BaseEntity {
      * 要解决这个问题，必须将此字段排除在 ToString 之外。
      */
     @Nullable
+    @JsonIgnore
     @LastModifiedBy
     private String lastModifiedBy;
     /**

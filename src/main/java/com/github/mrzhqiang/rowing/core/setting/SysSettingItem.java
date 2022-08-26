@@ -26,10 +26,7 @@ public class SysSettingItem extends AuditableEntity {
     private String name;
     private String value;
 
-    /**
-     * 所属组。
-     */
     @ToString.Exclude
-    @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(optional = false, cascade = CascadeType.ALL)
     private SysSettingGroup group;
 }

@@ -1,7 +1,7 @@
 package com.github.mrzhqiang.rowing.core.exception;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import com.github.mrzhqiang.rowing.core.domain.BaseRepository;
 
-public interface ExceptionLogRepository extends JpaRepository<ExceptionLog, Long> {
+public interface ExceptionLogRepository extends BaseRepository<ExceptionLog> {
 
 }

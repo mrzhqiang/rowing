@@ -1,7 +1,7 @@
 package com.github.mrzhqiang.rowing.core.setting;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import com.github.mrzhqiang.rowing.core.domain.BaseRepository;
 
-public interface SysSettingItemRepository extends JpaRepository<SysSettingItem, Long> {
+public interface SysSettingItemRepository extends BaseRepository<SysSettingItem> {
 
 }

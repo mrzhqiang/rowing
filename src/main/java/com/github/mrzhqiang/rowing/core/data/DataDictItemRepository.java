@@ -1,7 +1,7 @@
 package com.github.mrzhqiang.rowing.core.data;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import com.github.mrzhqiang.rowing.core.domain.BaseRepository;
 
-public interface DataDictItemRepository extends JpaRepository<DataDictItem, Long> {
+public interface DataDictItemRepository extends BaseRepository<DataDictItem> {
 
 }

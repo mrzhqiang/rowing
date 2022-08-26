@@ -169,6 +169,16 @@ public enum ExceptionCode {
      * 鉴于具体异常以 String 的 hash code 为准，因此必须输出内容，不能因为国际化而导致同一个异常不同的输出语言。
      * <p>
      * 为此，我们在编写异常消息时，直接通过中文表达即可。
+     * <p>
+     * 对于 {@link Math#floorMod(int, int)} 方法：
+     * <p>
+     * floorMod 方法返回与第二个参数 y 相同符号的数值，即 y 为正数则返回正数，y 为负数返回负数。
+     * <p>
+     * x 的正负符号只会影响结果的数值，不会影响结果的符号。
+     * <p>
+     * 比如 x=1 y=10000 返回 1，而 x=-1 y=10000 返回 9999。
+     * <p>
+     * 因此 suffix 将不会出现负数，也就不需要使用绝对值。
      *
      * @param httpStatus HTTP 状态码
      * @param message    异常消息，如果为 Null 则默认为 000 中缀。
@@ -179,10 +189,6 @@ public enum ExceptionCode {
 
         String suffix = Optional.ofNullable(message)
                 .map(String::hashCode)
-                // floorMod 方法返回与第二个参数 y 相同符号的数值，即 y 为正数则返回正数，y 为负数返回负数
-                // x 的正负符号只会影响结果的数值，不会影响结果的符号
-                // 比如 x=1 y=10000 返回 1，而 x=-1 y=10000 返回 9999
-                // 因此 suffix 将不会出现负数，也就不需要使用绝对值
                 .map(it -> Math.floorMod(it, MESSAGE_MOD))
                 .map(String::valueOf)
                 .orElse(NUMBER_ZERO);
