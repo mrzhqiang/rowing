@@ -11,4 +11,5 @@ public final class Splitters {
     }
 
     public static final Splitter COMMA = Splitter.on(',').trimResults();
+    public static final Splitter DOT = Splitter.on('.').trimResults();
 }

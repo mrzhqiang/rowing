@@ -46,7 +46,7 @@ security:
 session:
   # 会话过期重定向地址
   expired-path: "/login?expired"
-api:
+okhttp:
   cache-path: ${user.dir}/.cache
   cache-max-size: 1GB
   call-timeout: 5s

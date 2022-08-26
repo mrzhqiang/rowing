@@ -2,7 +2,8 @@ spring:
   profiles:
     active: dev
   messages:
-    basename: i18n.messages,org.springframework.security.messages
+    # 这里声明 MessageSource 加载的国际化消息文件列表，以逗号 (,) 分割
+    basename: messages,org.springframework.security.messages
     fallback-to-system-locale: false
   cache:
     redis:
@@ -24,6 +25,10 @@ spring:
       max-lifetime: 30000
       connection-timeout: 30000
       connection-test-query: SELECT 1
+  data:
+    rest:
+      base-path: /api
+      enable-enum-translation: true
 security:
   login-path: "/login"
   login-failed-path: "/login?error"

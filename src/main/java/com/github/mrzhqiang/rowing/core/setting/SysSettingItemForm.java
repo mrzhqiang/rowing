@@ -1,0 +1,15 @@
+package com.github.mrzhqiang.rowing.core.setting;
+
+import lombok.Data;
+
+import javax.validation.constraints.NotBlank;
+
+@Data
+public class SysSettingItemForm {
+
+    @NotBlank
+    private String label;
+    @NotBlank
+    private String name;
+    private String value;
+}

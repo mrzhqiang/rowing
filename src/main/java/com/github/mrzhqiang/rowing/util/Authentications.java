@@ -1,6 +1,6 @@
 package com.github.mrzhqiang.rowing.util;
 
-import com.github.mrzhqiang.rowing.account.CurrentUser;
+import com.github.mrzhqiang.rowing.core.account.CurrentUser;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
 import org.springframework.security.authentication.AuthenticationTrustResolverImpl;
 import org.springframework.security.core.Authentication;

@@ -2,13 +2,15 @@ package com.github.mrzhqiang.rowing.config;
 
 import com.github.mrzhqiang.kaptcha.autoconfigure.KaptchaAuthenticationConverter;
 import com.github.mrzhqiang.kaptcha.autoconfigure.KaptchaProperties;
-import com.github.mrzhqiang.rowing.account.Roles;
+import com.github.mrzhqiang.rowing.core.account.LoginFailureHandler;
+import com.github.mrzhqiang.rowing.core.domain.Authority;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyUtils;
 import org.springframework.security.access.vote.RoleHierarchyVoter;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -53,7 +55,7 @@ public class SecurityConfiguration {
     @Bean
     public AccessDecisionVoter<?> hierarchyVoter() {
         RoleHierarchyImpl hierarchy = new RoleHierarchyImpl();
-        hierarchy.setHierarchy(Roles.HIERARCHY);
+        hierarchy.setHierarchy(RoleHierarchyUtils.roleHierarchyFromMap(Authority.hierarchy()));
         return new RoleHierarchyVoter(hierarchy);
     }
 
