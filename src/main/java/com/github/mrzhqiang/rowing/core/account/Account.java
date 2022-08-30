@@ -22,7 +22,7 @@ import java.util.Optional;
 /**
  * 账号。
  * <p>
- * 后续可以扩展为通过 学号、教师编号 登录，其他第三方接入（手机号、微信号等等）也很方便。
+ * 可以扩展为通过【学生学号】、【教师编号】登录，或者其他凭证如【手机号】、【微信号】等进行登录。
  */
 @Getter
 @Setter
@@ -35,7 +35,23 @@ public class Account extends AuditableEntity implements UserDetails {
     /**
      * 用户名。
      * <p>
-     * 创建时指定，唯一。
+     * 1. 注册创建。校验规则：最小长度 4 位，最大长度 20 位，必须为全小写字母，且以字母开头，字母或数据结尾。
+     * <p>
+     * 2. 根据学生学号生成。生成规则：
+     * <p>
+     * 2.1 以 sid_ 为前缀，表示学生编号；
+     * <p>
+     * 2.2 生成最小长度 12 位，最大长度 16 位，包含大小写字母 + 数字的随机字符串，作为中缀；
+     * <p>
+     * 2.3 将学生学号 hash code 后取其中四位数字作为后缀。
+     * <p>
+     * 3. 根据教师编号生成。生成规则：
+     * <p>
+     * 3.1 以 tid_ 为前缀，表示学生编号；
+     * <p>
+     * 3.2 生成最小长度 12 位，最大长度 16 位，包含大小写字母 + 数字的随机if成，作为中缀；
+     * <p>
+     * 3.3 将教师编号 hash code 后取其中四位数字作为后缀。
      */
     @Column(updatable = false, unique = true, nullable = false)
     private String username;
@@ -107,6 +123,17 @@ public class Account extends AuditableEntity implements UserDetails {
         return Optional.ofNullable(authority)
                 .map(it -> AuthorityUtils.createAuthorityList(it.name()))
                 .orElse(AuthorityUtils.NO_AUTHORITIES);
+    }
+
+    /**
+     * 判断是否为管理员角色。
+     *
+     * @return 返回 true 表示当前账户为管理员；否则不是管理员。
+     */
+    public boolean isAdmin() {
+        return Optional.ofNullable(authority)
+                .map(Authority.ROLE_ADMIN::equals)
+                .orElse(false);
     }
 
     /**

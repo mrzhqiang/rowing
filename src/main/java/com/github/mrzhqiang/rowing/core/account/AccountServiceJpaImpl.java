@@ -7,6 +7,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Slf4j
 @Service
 public class AccountServiceJpaImpl implements AccountService {
@@ -29,7 +31,22 @@ public class AccountServiceJpaImpl implements AccountService {
     @Override
     public Account loadUserByUsername(String username) throws UsernameNotFoundException {
         return repository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException(accessor.getMessage("AccountService.UsernameNotFoundException")));
+                .orElseThrow(() -> new UsernameNotFoundException(accessor.getMessage("UsernameNotFoundException")));
+    }
+
+    @Override
+    public Account initAdmin() {
+        return repository.findByUsername(ADMIN_USERNAME).orElseGet(this::createAdmin);
+    }
+
+    private Account createAdmin() {
+        Account admin = new Account();
+        admin.setUsername(ADMIN_USERNAME);
+        String password = UUID.randomUUID().toString();
+        log.info("create admin account generate random password {}", password);
+        admin.setPassword(passwordEncoder.encode(password));
+
+        return admin;
     }
 
     @Override

@@ -34,7 +34,7 @@ public class SysInitServiceJpaImpl implements SysInitService {
         }
 
         return initializers.stream()
-                .filter(it -> !repository.existsByName(it.getName()))
+                .filter(it -> !repository.existsByPath(it.getPath()))
                 .map(mapper::toEntity)
                 .map(repository::save)
                 .collect(Collectors.toList());

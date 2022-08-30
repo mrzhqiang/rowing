@@ -13,6 +13,11 @@ import static org.springframework.security.web.authentication.UsernamePasswordAu
 public interface AccountService extends UserDetailsService {
 
     /**
+     * 管理员的用户名。
+     */
+    String ADMIN_USERNAME = "admin";
+
+    /**
      * 用户名参数名称。
      */
     String USERNAME_KEY = SPRING_SECURITY_FORM_USERNAME_KEY;
@@ -30,6 +35,11 @@ public interface AccountService extends UserDetailsService {
      */
     @Override
     Account loadUserByUsername(String username) throws UsernameNotFoundException;
+
+    /**
+     * 初始化管理员账号。
+     */
+    Account initAdmin();
 
     /**
      * 注册账号。

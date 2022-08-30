@@ -22,10 +22,18 @@ public interface AutoInitializer extends CommandLineRunner, Ordered {
     /**
      * 初始化名称。
      * <p>
-     * 实现类必须保证此名称的全局唯一性。
+     * 用来在界面展示初始化任务名称，建议使用国际化消息解析 path 为对应名称，如果不存在，再使用实现类名称。
      */
     @Nonnull
     String getName();
+
+    /**
+     * 初始化路径。
+     * <p>
+     * 实现类必须保证此路径的全局唯一性。
+     */
+    @Nonnull
+    String getPath();
 
     /**
      * 执行初始化。

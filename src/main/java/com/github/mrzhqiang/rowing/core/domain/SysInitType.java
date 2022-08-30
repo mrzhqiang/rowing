@@ -2,6 +2,10 @@ package com.github.mrzhqiang.rowing.core.domain;
 
 /**
  * 系统初始化类型。
+ * <p>
+ * 对初始化任务进行分类，是为了区分在系统启动时自动执行一次的操作，以及在管理后台手动点击触发一次的操作。
+ * <p>
+ * 如果再有新的初始化任务，则可以通过类型区分是在启动时自动执行——必选，还是在运行中手动执行——可选。
  */
 public enum SysInitType {
 

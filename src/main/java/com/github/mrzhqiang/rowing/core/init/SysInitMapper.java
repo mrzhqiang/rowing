@@ -21,6 +21,7 @@ public interface SysInitMapper {
     @Mapping(target = "endTime", ignore = true)
     @Mapping(target = "type", expression = "java( SysInitType.REQUIRED )")
     @Mapping(target = "name", source = "initializer.name")
+    @Mapping(target = "path", source = "initializer.path")
     @Mapping(target = "status", expression = "java( TaskStatus.DEFAULT )")
     @Mapping(target = "ordered", source = "initializer.order")
     SysInit toEntity(AutoInitializer initializer);

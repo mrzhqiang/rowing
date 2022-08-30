@@ -82,4 +82,5 @@ final class AutoInitializationOrderRegistration {
         Integer order = INITIALIZER_TO_ORDER.get(obj.getClass().getName());
         return Optional.ofNullable(order).orElse(INITIAL_ORDER);
     }
+
 }

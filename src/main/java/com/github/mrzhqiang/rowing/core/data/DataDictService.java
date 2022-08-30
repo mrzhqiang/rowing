@@ -1,5 +1,8 @@
 package com.github.mrzhqiang.rowing.core.data;
 
+/**
+ * 数据字典服务。
+ */
 public interface DataDictService {
 
     /**
@@ -8,4 +11,5 @@ public interface DataDictService {
      * @param basePackage 基础包，即数据字典枚举类所在包路径。
      */
     void syncInternal(String basePackage);
+
 }

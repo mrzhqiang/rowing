@@ -1,4 +1,4 @@
-package com.github.mrzhqiang.rowing.core.data;
+package com.github.mrzhqiang.rowing.core;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
@@ -21,30 +21,32 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * 数据字典扫描器。
+ * 类扫描器。
  * <p>
- * 扫描指定基础包下的所有枚举类，提供给调用方使用。
+ * 功能一：
+ * <p>
+ * 扫描指定基础包下的所有枚举类，返回枚举类的 Class 列表。
  *
  * @see ClassPathScanningCandidateComponentProvider
  */
 @Slf4j
 @Component
-public class DataDictScanner {
+public final class ClassScanner {
 
     private static final String RESOURCE_TEMPLATE = ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX + "%s/**/*.class";
 
     private final ResourcePatternResolver resourcePatternResolver;
     private final MetadataReaderFactory metadataReaderFactory;
 
-    public DataDictScanner(ResourceLoader resourceLoader) {
+    public ClassScanner(ResourceLoader resourceLoader) {
         this.resourcePatternResolver = ResourcePatternUtils.getResourcePatternResolver(resourceLoader);
         this.metadataReaderFactory = new CachingMetadataReaderFactory(resourceLoader);
     }
 
     /**
-     * 扫描基于枚举的内置数据字典。
+     * 扫描枚举列表。
      *
-     * @return 包含枚举 class 对象的列表。
+     * @return 包含枚举 Class 对象的列表。
      */
     @SuppressWarnings("unchecked")
     public List<Class<? extends Enum<?>>> scanEnum(String basePackage) {
@@ -70,7 +72,7 @@ public class DataDictScanner {
                     Class<?> clazz = Class.forName(className);
                     if (clazz.isEnum()) {
                         if (debugEnabled) {
-                            log.debug("扫描到数据字典枚举：{}", clazz.getName());
+                            log.debug("扫描到枚举类：{}", clazz.getName());
                         }
                         enums.add((Class<? extends Enum<?>>) clazz);
                     }
@@ -79,7 +81,7 @@ public class DataDictScanner {
                         log.trace("忽略不可读 " + resource + ": " + ex.getMessage());
                     }
                 } catch (Throwable ex) {
-                    throw new RuntimeException("读取候选数据字典枚举类失败： " + resource, ex);
+                    throw new RuntimeException("读取候选枚举类失败： " + resource, ex);
                 }
             }
         } catch (IOException ex) {

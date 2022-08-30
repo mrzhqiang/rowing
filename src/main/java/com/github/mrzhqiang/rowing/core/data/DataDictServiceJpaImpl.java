@@ -1,5 +1,6 @@
 package com.github.mrzhqiang.rowing.core.data;
 
+import com.github.mrzhqiang.rowing.core.ClassScanner;
 import com.github.mrzhqiang.rowing.core.domain.DataDictType;
 import com.google.common.base.CaseFormat;
 import com.google.common.base.Preconditions;
@@ -22,13 +23,13 @@ import java.util.stream.Collectors;
 @Transactional
 public class DataDictServiceJpaImpl implements DataDictService {
 
-    private final DataDictScanner scanner;
+    private final ClassScanner scanner;
     private final EnumTranslator enumTranslator;
     private final MessageSourceAccessor messageSourceAccessor;
     private final DataDictGroupRepository groupRepository;
     private final DataDictItemRepository itemRepository;
 
-    public DataDictServiceJpaImpl(DataDictScanner scanner,
+    public DataDictServiceJpaImpl(ClassScanner scanner,
                                   EnumTranslator enumTranslator,
                                   MessageSource messageSource,
                                   DataDictGroupRepository groupRepository,
@@ -59,6 +60,11 @@ public class DataDictServiceJpaImpl implements DataDictService {
         dictGroup.setName(name);
         dictGroup.setCode(code);
         dictGroup.setType(DataDictType.INTERNAL);
+
+        if (log.isDebugEnabled()) {
+            log.debug("同步数据字典组 {}-{}", name, code);
+        }
+
         groupRepository.save(dictGroup);
 
         // 将数据字典项的 value （即枚举值）作为 key 键，其本身作为 value 值映射为 Map 对象，方便更新已存在的数据字典项
@@ -77,7 +83,13 @@ public class DataDictServiceJpaImpl implements DataDictService {
             dictItem.setGroup(dictGroup);
             dictItem.setLabel(label);
             dictItem.setValue(itemValue);
+
+            if (log.isDebugEnabled()) {
+                log.debug("同步数据字典组 {} 的数据字典项 {}-{}", code, label, itemValue);
+            }
+
             itemRepository.save(dictItem);
         }
     }
+
 }

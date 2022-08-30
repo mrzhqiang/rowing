@@ -2,7 +2,9 @@ package com.github.mrzhqiang.rowing.core.account;
 
 import lombok.Data;
 import lombok.ToString;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
+import javax.validation.Validation;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -18,20 +20,12 @@ public class LoginForm {
     /**
      * 用户名。
      * <p>
-     * 校验规则：
-     * <p>
-     * 1. 不能为 null 且至少包含一个非空白字符。
-     * <p>
-     * 2. 长度最小 7 位，最大 15 位。
-     * <p>
-     * 3. 必须以大小写字母开头，之后可以是大小写字母、数字。
-     * <p>
      * message 用于校验失败时返回的错误消息，前后包含 '{' 和 '}' 字符则说明是国际化消息。
      * <p>
-     * Spring 框架的 LocalValidatorFactoryBean 已默认设置 Validation 框架的国际化消息，我们不需要在配置文件中重复声明。
+     * {@link LocalValidatorFactoryBean} 已为 {@link Validation} 默认绑定国际化消息，因此不必再配置 Bean 声明。
      */
     @NotBlank
-    @Size(min = 7, max = 15)
+    @Size(min = 4, max = 15)
     @Pattern(regexp = "^[a-zA-Z]+[a-zA-Z\\d]*$", message = "{LoginForm.username}")
     private String username;
     /**
