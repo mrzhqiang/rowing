@@ -32,7 +32,7 @@ public class RegisterController {
             return "register";
         }
 
-        boolean registerSuccessful = accountService.register(form);
+        boolean registerSuccessful = accountService.register(form).isPresent();
         if (!registerSuccessful) {
             result.reject("RegisterController.failed");
             return "register";

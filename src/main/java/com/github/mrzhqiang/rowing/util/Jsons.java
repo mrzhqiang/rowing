@@ -34,10 +34,10 @@ public final class Jsons {
         // no instances
     }
 
-    /*
-     * 排除敏感属性字段
+    /**
+     * 敏感字段，序列化和反序列化需要排除。
      */
-    private static final String[] EXCLUDE_PROPERTIES = {"password", "oldPassword", "newPassword", "confirmPassword"};
+    public static final String[] EXCLUDE_PROPERTIES = {"password", "oldPassword", "newPassword", "confirmPassword"};
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper().setFilterProvider(
             new SimpleFilterProvider().addFilter("fieldFilter", serializeAllExcept(EXCLUDE_PROPERTIES)));

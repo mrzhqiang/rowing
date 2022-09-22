@@ -1,5 +1,6 @@
 package com.github.mrzhqiang.rowing.core.account;
 
+import com.github.mrzhqiang.rowing.core.domain.Authority;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -26,7 +27,7 @@ import org.mapstruct.Mapping;
  * <p>
  * 鉴于映射器应该纯粹和简单，我们推荐只使用 2.1 和 2.4 方式进行转换。
  */
-@Mapper(componentModel = "spring", uses = {UserMapper.class})
+@Mapper(componentModel = "spring", imports = {Authority.class})
 public interface AccountMapper {
 
     @Mapping(target = "version", ignore = true)
@@ -45,7 +46,7 @@ public interface AccountMapper {
 
     @Mapping(target = "version", ignore = true)
     @Mapping(target = "user", ignore = true)
-    @Mapping(target = "role", ignore = true)
+    @Mapping(target = "authority", expression = "java( Authority.ROLE_USER )")
     @Mapping(target = "locked", ignore = true)
     @Mapping(target = "lastModifiedBy", ignore = true)
     @Mapping(target = "lastModified", ignore = true)

@@ -1,6 +1,5 @@
 package com.github.mrzhqiang.rowing.core.account;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -23,10 +22,9 @@ public class PasswordConfirmForm extends LoginForm {
      * <p>
      * 用于比较是否与要修改的密码完全一致，与 password 字段的校验规则及要求完全相同。
      */
-    @JsonIgnore
     @ToString.Exclude
     @NotBlank
-    @Size(min = 6, max = 15)
+    @Size(min = 6, max = 32)
     private String confirmPassword;
 
     /**

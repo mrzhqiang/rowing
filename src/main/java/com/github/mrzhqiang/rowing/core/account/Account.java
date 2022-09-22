@@ -32,26 +32,29 @@ public class Account extends AuditableEntity implements UserDetails {
 
     private static final long serialVersionUID = 5162282743335524644L;
 
+    public static final String STUDENT_ID_PREFIX = "sid_";
+    public static final String TEACHER_ID_PREFIX = "tid_";
+
     /**
      * 用户名。
      * <p>
-     * 1. 注册创建。校验规则：最小长度 4 位，最大长度 20 位，必须为全小写字母，且以字母开头，字母或数据结尾。
+     * 1. 注册创建。校验规则：最小长度 4 位，最大长度 24 位，必须为全小写字母，且以字母开头，字母或数据结尾。
      * <p>
      * 2. 根据学生学号生成。生成规则：
      * <p>
-     * 2.1 以 sid_ 为前缀，表示学生编号；
+     * 2.1 以 sid_ 为前缀，表示学生编号类型；
      * <p>
-     * 2.2 生成最小长度 12 位，最大长度 16 位，包含大小写字母 + 数字的随机字符串，作为中缀；
+     * 2.2 将学生学号 hash code 后取其中四位数字作为中缀；
      * <p>
-     * 2.3 将学生学号 hash code 后取其中四位数字作为后缀。
+     * 2.3 生成最小长度 12 位，最大长度 16 位，包含大小写字母 + 数字 + 特殊字符的随机字符串，作为后缀。
      * <p>
      * 3. 根据教师编号生成。生成规则：
      * <p>
-     * 3.1 以 tid_ 为前缀，表示学生编号；
+     * 3.1 以 tid_ 为前缀，表示教师编号类型；
      * <p>
-     * 3.2 生成最小长度 12 位，最大长度 16 位，包含大小写字母 + 数字的随机if成，作为中缀；
+     * 3.2 将教师编号 hash code 后取其中四位数字作为中缀；
      * <p>
-     * 3.3 将教师编号 hash code 后取其中四位数字作为后缀。
+     * 3.3 生成最小长度 12 位，最大长度 16 位，包含大小写字母 + 数字 + 特殊字符的随机字符成，作为后缀。
      */
     @Column(updatable = false, unique = true, nullable = false)
     private String username;
@@ -102,7 +105,7 @@ public class Account extends AuditableEntity implements UserDetails {
     /**
      * 账号对应的用户。
      */
-    @OneToOne(optional = false)
+    @OneToOne
     private User user;
 
     /**

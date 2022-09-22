@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
  * <p>
  * 参考：<a href="https://docs.spring.io/spring-data/rest/docs/current/reference/html/#repository-resources">使用 REST 框架不再手写 CURD 接口</a>
  * <p>
- * 注意：基础仓库的所有方法默认需要 {@link Authority#USER} 权限，这里声明所有删除方法需要 {@link Authority#ADMIN} 权限。
+ * 注意：基础仓库的所有方法默认需要 {@link Authority#ROLE_USER} 权限，这里声明所有删除方法需要 {@link Authority#ROLE_ADMIN} 权限。
  *
  * @param <E> 实体类型。
  */
