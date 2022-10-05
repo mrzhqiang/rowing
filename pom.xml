@@ -22,7 +22,7 @@
         <bitwalker.version>1.21</bitwalker.version>
         <geoip2.version>2.15.0</geoip2.version>
         <kaptcha-spring-boot-starter.version>2022.0.2</kaptcha-spring-boot-starter.version>
-        <helper.version>2021.1.4</helper.version>
+        <helper.version>2022.1.1</helper.version>
         <retrofit.version>2.9.0</retrofit.version>
 
         <poi.version>5.2.2</poi.version>
@@ -31,8 +31,6 @@
         <org.mapstruct.version>1.4.2.Final</org.mapstruct.version>
         <lombok.version>1.18.24</lombok.version>
         <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
-
-        <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
     </properties>
 
     <repositories>
@@ -97,9 +95,9 @@
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
-        <!-- https://docs.spring.io/spring-boot/docs/2.7.2/reference/html/configuration-metadata.html#appendix.configuration-metadata.annotation-processor -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
+            <!-- https://docs.spring.io/spring-boot/docs/2.7.2/reference/html/configuration-metadata.html#appendix.configuration-metadata.annotation-processor -->
             <artifactId>spring-boot-configuration-processor</artifactId>
             <optional>true</optional>
         </dependency>
@@ -110,43 +108,42 @@
             <artifactId>mysql-connector-java</artifactId>
             <scope>runtime</scope>
         </dependency>
-        <!-- 支持 Java8 Date/Time (JSR 310) API -->
         <dependency>
             <groupId>org.hibernate</groupId>
+            <!-- 支持 Java8 Date/Time (JSR 310) API -->
             <artifactId>hibernate-java8</artifactId>
             <scope>runtime</scope>
         </dependency>
 
         <!-- 第三方依赖 -->
-        <!-- 用户代理解析 -->
         <dependency>
             <groupId>eu.bitwalker</groupId>
             <artifactId>UserAgentUtils</artifactId>
             <version>${bitwalker.version}</version>
         </dependency>
-        <!-- 利用本地数据库转换 IP 为地理位置 -->
         <dependency>
             <groupId>com.maxmind.geoip2</groupId>
+            <!-- 利用本地数据库转换 IP 为地理位置 -->
             <artifactId>geoip2</artifactId>
             <version>${geoip2.version}</version>
         </dependency>
-        <!-- 可观察序列的异步框架 -->
         <dependency>
             <groupId>io.reactivex.rxjava2</groupId>
+            <!-- 可观察序列的异步框架 -->
             <artifactId>rxjava</artifactId>
         </dependency>
-        <!-- 最好用的 HTTP 框架-->
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
+            <!-- 最好用的 HTTP 框架-->
             <artifactId>okhttp</artifactId>
         </dependency>
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
             <artifactId>logging-interceptor</artifactId>
         </dependency>
-        <!-- 声明式 REST 框架 -->
         <dependency>
             <groupId>com.squareup.retrofit2</groupId>
+            <!-- 声明式 REST 框架 -->
             <artifactId>retrofit</artifactId>
             <version>${retrofit.version}</version>
         </dependency>
@@ -165,28 +162,28 @@
             <artifactId>adapter-rxjava2</artifactId>
             <version>${retrofit.version}</version>
         </dependency>
-        <!-- 编译时对象映射器 -->
         <dependency>
             <groupId>org.mapstruct</groupId>
+            <!-- 编译时对象映射器 -->
             <artifactId>mapstruct</artifactId>
             <version>${org.mapstruct.version}</version>
             <optional>true</optional>
         </dependency>
-        <!-- 辅助工具 -->
         <dependency>
             <groupId>com.github.mrzhqiang.helper</groupId>
+            <!-- 辅助方法 -->
             <artifactId>helper</artifactId>
             <version>${helper.version}</version>
         </dependency>
-        <!-- 验证码 -->
         <dependency>
             <groupId>com.github.mrzhqiang</groupId>
+            <!-- 验证码 -->
             <artifactId>kaptcha-spring-boot-starter</artifactId>
             <version>${kaptcha-spring-boot-starter.version}</version>
         </dependency>
-        <!-- POI 工具，处理微软 Office 文件 -->
         <dependency>
             <groupId>org.apache.poi</groupId>
+            <!-- POI 工具，处理微软 Office 文件 -->
             <artifactId>poi-ooxml</artifactId>
             <version>${poi.version}</version>
         </dependency>
@@ -256,7 +253,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>${maven-compiler-plugin.version}</version>
+                <version>3.8.1</version>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
