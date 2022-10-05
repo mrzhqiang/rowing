@@ -9,7 +9,6 @@
 
 - [ ] [项目文档](project)
   - [ ] [开发设计](project/develop.md)
-  - [ ] [计划进度](project/plan.md)
 - [ ] [部署文档](deploy)
   - [ ] [环境准备](deploy/environment.md)
   - [ ] [安装部署](deploy/install.md)
