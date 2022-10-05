@@ -2,11 +2,12 @@ package com.github.mrzhqiang.rowing.config;
 
 import com.github.mrzhqiang.kaptcha.autoconfigure.KaptchaAuthenticationConverter;
 import com.github.mrzhqiang.kaptcha.autoconfigure.KaptchaProperties;
-import com.github.mrzhqiang.rowing.core.account.LoginFailureHandler;
-import com.github.mrzhqiang.rowing.core.domain.Authority;
+import com.github.mrzhqiang.rowing.module.account.LoginFailureHandler;
+import com.github.mrzhqiang.rowing.module.domain.Authority;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
@@ -14,6 +15,7 @@ import org.springframework.security.access.hierarchicalroles.RoleHierarchyUtils;
 import org.springframework.security.access.vote.RoleHierarchyVoter;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
@@ -25,8 +27,13 @@ import org.springframework.security.web.authentication.AuthenticationFilter;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+/**
+ * 安全配置。
+ */
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 @EnableConfigurationProperties({SecurityProperties.class})
+@Configuration
 public class SecurityConfiguration {
 
     private final SecurityProperties properties;

@@ -1,6 +1,6 @@
 package com.github.mrzhqiang.rowing.config;
 
-import com.github.mrzhqiang.rowing.util.Joiners;
+import com.github.mrzhqiang.helper.Joiners;
 import static com.google.common.base.CaseFormat.LOWER_CAMEL;
 import static com.google.common.base.CaseFormat.LOWER_HYPHEN;
 import static com.google.common.base.CaseFormat.UPPER_CAMEL;
@@ -10,14 +10,19 @@ import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * 缓存配置。
+ */
 @EnableCaching
 @Configuration
 public class CacheConfiguration extends CachingConfigurerSupport {
 
     /**
-     * 换成 key 生成器。
+     * 缓存 key 生成器。
      * <p>
-     * 注意：只有在缓存相关注解没有指定 key 的时候，才会使用这个生成器。
+     * 如果缓存注解没有指定 key 名称，则使用这个来生成 key 名称。
+     * <p>
+     * 如果缓存注解指定了 key 名称，则使用指定的名称，此生成器不起作用。
      */
     @Bean
     @Override
