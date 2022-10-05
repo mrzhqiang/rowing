@@ -1,6 +1,6 @@
 package com.github.mrzhqiang.rowing.module.account;
 
-import com.github.mrzhqiang.rowing.module.domain.BaseRepository;
+import com.github.mrzhqiang.rowing.domain.BaseRepository;
 
 /**
  * 教师账户仓库。

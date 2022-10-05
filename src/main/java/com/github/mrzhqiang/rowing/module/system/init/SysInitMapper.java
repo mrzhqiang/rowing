@@ -1,7 +1,7 @@
 package com.github.mrzhqiang.rowing.module.system.init;
 
-import com.github.mrzhqiang.rowing.module.domain.SysInitType;
-import com.github.mrzhqiang.rowing.module.domain.TaskStatus;
+import com.github.mrzhqiang.rowing.domain.SysInitType;
+import com.github.mrzhqiang.rowing.domain.TaskStatus;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

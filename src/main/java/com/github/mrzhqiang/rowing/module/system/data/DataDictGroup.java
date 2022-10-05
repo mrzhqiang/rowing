@@ -1,7 +1,7 @@
 package com.github.mrzhqiang.rowing.module.system.data;
 
-import com.github.mrzhqiang.rowing.module.domain.AuditableEntity;
-import com.github.mrzhqiang.rowing.module.domain.DataDictType;
+import com.github.mrzhqiang.rowing.domain.AuditableEntity;
+import com.github.mrzhqiang.rowing.domain.DataDictType;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

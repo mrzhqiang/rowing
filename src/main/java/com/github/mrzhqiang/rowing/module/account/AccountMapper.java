@@ -1,6 +1,6 @@
 package com.github.mrzhqiang.rowing.module.account;
 
-import com.github.mrzhqiang.rowing.module.domain.Authority;
+import com.github.mrzhqiang.rowing.domain.Authority;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

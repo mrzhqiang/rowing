@@ -2,7 +2,7 @@ package com.github.mrzhqiang.rowing.module.account;
 
 import com.github.mrzhqiang.helper.Environments;
 import com.github.mrzhqiang.helper.random.RandomStrings;
-import com.github.mrzhqiang.rowing.module.domain.Authority;
+import com.github.mrzhqiang.rowing.domain.Authority;
 import com.google.common.base.Preconditions;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;

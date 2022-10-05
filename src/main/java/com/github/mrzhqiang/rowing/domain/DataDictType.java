@@ -13,7 +13,7 @@ import com.github.mrzhqiang.rowing.module.system.data.DataDictGroup;
  * 对于数据字典枚举来说，基于 Spring Data Rest 框架可以通过 rest-message-**.properties 国际化消息文件，进行枚举值的国际化标签。
  * <p>
  * 以中文简单举例，在 rest-message-zn_CN.properties 文件中提供：
- * com.github.mrzhqiang.rowing.module.domain.DataDictType.INTERNAL=内置数据字典，则在访问 rest 接口时，返回枚举值对应的国际化名称。
+ * com.github.mrzhqiang.rowing.domain.DataDictType.INTERNAL=内置数据字典，则在访问 rest 接口时，返回枚举值对应的国际化名称。
  */
 public enum DataDictType {
 

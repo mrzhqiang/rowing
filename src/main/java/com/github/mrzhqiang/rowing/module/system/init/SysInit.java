@@ -1,8 +1,8 @@
 package com.github.mrzhqiang.rowing.module.system.init;
 
-import com.github.mrzhqiang.rowing.module.domain.BaseEntity;
-import com.github.mrzhqiang.rowing.module.domain.SysInitType;
-import com.github.mrzhqiang.rowing.module.domain.TaskStatus;
+import com.github.mrzhqiang.rowing.domain.BaseEntity;
+import com.github.mrzhqiang.rowing.domain.SysInitType;
+import com.github.mrzhqiang.rowing.domain.TaskStatus;
 import com.github.mrzhqiang.rowing.util.Exceptions;
 import lombok.Getter;
 import lombok.Setter;

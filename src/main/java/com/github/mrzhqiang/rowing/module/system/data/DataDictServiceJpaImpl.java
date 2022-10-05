@@ -1,7 +1,7 @@
 package com.github.mrzhqiang.rowing.module.system.data;
 
 import com.github.mrzhqiang.rowing.module.system.ClassScanner;
-import com.github.mrzhqiang.rowing.module.domain.DataDictType;
+import com.github.mrzhqiang.rowing.domain.DataDictType;
 import com.google.common.base.CaseFormat;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;

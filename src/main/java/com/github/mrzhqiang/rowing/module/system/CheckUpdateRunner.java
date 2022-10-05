@@ -1,7 +1,7 @@
 package com.github.mrzhqiang.rowing.module.system;
 
 import com.github.mrzhqiang.rowing.module.system.data.DataDictService;
-import com.github.mrzhqiang.rowing.module.domain.DataDictType;
+import com.github.mrzhqiang.rowing.domain.DataDictType;
 import com.github.mrzhqiang.rowing.module.system.init.AutoInitializer;
 import com.github.mrzhqiang.rowing.module.system.init.SysInit;
 import com.github.mrzhqiang.rowing.module.system.init.SysInitService;

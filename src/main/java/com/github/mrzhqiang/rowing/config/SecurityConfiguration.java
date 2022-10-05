@@ -3,7 +3,7 @@ package com.github.mrzhqiang.rowing.config;
 import com.github.mrzhqiang.kaptcha.autoconfigure.KaptchaAuthenticationConverter;
 import com.github.mrzhqiang.kaptcha.autoconfigure.KaptchaProperties;
 import com.github.mrzhqiang.rowing.module.account.LoginFailureHandler;
-import com.github.mrzhqiang.rowing.module.domain.Authority;
+import com.github.mrzhqiang.rowing.domain.Authority;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;

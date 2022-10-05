@@ -1,7 +1,7 @@
 package com.github.mrzhqiang.rowing.module.account;
 
-import com.github.mrzhqiang.rowing.module.domain.AuditableEntity;
-import com.github.mrzhqiang.rowing.module.domain.Gender;
+import com.github.mrzhqiang.rowing.domain.AuditableEntity;
+import com.github.mrzhqiang.rowing.domain.Gender;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

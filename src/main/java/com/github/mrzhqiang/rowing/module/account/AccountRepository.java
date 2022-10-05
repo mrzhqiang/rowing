@@ -1,6 +1,6 @@
 package com.github.mrzhqiang.rowing.module.account;
 
-import com.github.mrzhqiang.rowing.module.domain.BaseRepository;
+import com.github.mrzhqiang.rowing.domain.BaseRepository;
 import com.github.mrzhqiang.rowing.util.Authorizations;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;

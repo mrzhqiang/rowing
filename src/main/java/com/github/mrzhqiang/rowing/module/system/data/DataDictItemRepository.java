@@ -1,6 +1,6 @@
 package com.github.mrzhqiang.rowing.module.system.data;
 
-import com.github.mrzhqiang.rowing.module.domain.BaseRepository;
+import com.github.mrzhqiang.rowing.domain.BaseRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 /**
