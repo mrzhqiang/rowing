@@ -1,7 +1,6 @@
 package com.github.mrzhqiang.rowing.domain;
 
-import com.github.mrzhqiang.rowing.module.system.ClassScanner;
-import com.github.mrzhqiang.rowing.module.system.data.DataDictGroup;
+import com.github.mrzhqiang.rowing.basic.data.DataDictGroup;
 
 /**
  * 数据字典类型。
