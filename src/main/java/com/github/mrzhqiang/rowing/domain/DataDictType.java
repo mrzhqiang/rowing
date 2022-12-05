@@ -1,11 +1,11 @@
 package com.github.mrzhqiang.rowing.domain;
 
-import com.github.mrzhqiang.rowing.basic.data.DataDictGroup;
+import com.github.mrzhqiang.rowing.module.dict.DictGroup;
 
 /**
  * 数据字典类型。
  * <p>
- * 主要用于 {@link DataDictGroup 数据字典组} 的分类。
+ * 主要用于 {@link DictGroup 数据字典组} 的分类。
  * <p>
  * 同时作为数据字典枚举，本身也会被扫描到数据库中，作为内置数据字典的一员。
  * <p>
@@ -27,5 +27,5 @@ public enum DataDictType {
      * <p>
      * 自定义类型的数据字典，通过数据字典模块进行 CURD 管理。
      */
-    CUSTOMIZE,
+    CUSTOM,
 }

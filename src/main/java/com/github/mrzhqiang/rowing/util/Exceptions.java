@@ -52,7 +52,7 @@ public final class Exceptions {
     public static String ofTrace(@Nullable Exception exception) {
         return Optional.ofNullable(exception)
                 .map(Throwables::getStackTraceAsString)
-                .map(it -> it.substring(0, Math.max(MAX_TRACE_LENGTH, it.length())))
+                .map(it -> it.substring(0, Math.min(MAX_TRACE_LENGTH, it.length())))
                 .orElse("");
     }
 }
