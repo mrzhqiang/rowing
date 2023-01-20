@@ -5,10 +5,10 @@
 
 ---
 
-## 目录
+## 概要
 
-- [ ] [1.初始化](1.init.md)
-- [ ] [2.国际化](2.i18n.md)
+- [ ] [1.国际化](1.i18n.md)
+- [ ] [2.初始化](2.init.md)
 - [ ] [3.字典](3.dict.md)
 - [ ] [4.设置](4.setting.md)
 - [ ] [5.菜单](5.menu.md)
@@ -18,7 +18,7 @@
 
 - `git version 2.27.0.windows.1`
 - `java version "1.8.0_301"`
-- `IntelliJ IDEA 2022.1.3 (Ultimate Edition)`
+- `IntelliJ IDEA 2022.2.3 (Ultimate Edition)`
 - `redis_version:6.0.16`
 - `DBMS: MySQL (ver. 5.7.37-log)`
 
@@ -28,10 +28,10 @@
 
 | 框架                                                                    | 备注                 |
 |-----------------------------------------------------------------------|--------------------|
-| [Spring Boot](https://spring.io/projects/spring-boot)                 | 核心框架               |
-| [Spring Security](https://spring.io/projects/spring-security)         | 安全认证               |
-| [Spring Data Redis](https://spring.io/projects/spring-data-redis)     | Redis 缓存           |
-| [Spring Data JPA](https://spring.io/projects/spring-data-jpa)         | JPA 即 ORM 框架       |
+| [Spring Boot](https://spring.io/projects/spring-boot)                 | 基础框架               |
+| [Spring Security](https://spring.io/projects/spring-security)         | 安全框架               |
+| [Spring Data Redis](https://spring.io/projects/spring-data-redis)     | Redis 数据框架         |
+| [Spring Data JPA](https://spring.io/projects/spring-data-jpa)         | JPA 框架             |
 | [Spring Data REST](https://spring.io/projects/spring-data-rest)       | 基于 JPA 的 REST 框架   |
 | [MySQL Connector Java](https://dev.mysql.com/doc/connector-j/8.0/en/) | MySQL 驱动           |
 | [Spring Validation](https://beanvalidation.org/)                      | 参数校验               |
@@ -40,8 +40,8 @@
 | [Kaptcha](https://github.com/mrzhqiang/kaptcha-spring-boot-starter)   | 验证码                |
 | [Helper](https://github.com/mrzhqiang/helper)                         | Java 常用的辅助工具       |
 | [Geoip2](https://dev.maxmind.com/geoip?lang=en)                       | IP 转地理位置           |
-| [Rxjava](https://github.com/ReactiveX/RxJava)                         | 可观察序列的异步调用框架       |
-| [Okhttp](https://github.com/square/okhttp)                            | 最好用的 HTTP Java 客户端 |
+| [RxJava](https://github.com/ReactiveX/RxJava)                         | 可观察序列的异步调用框架       |
+| [OkHttp](https://github.com/square/okhttp)                            | 最好用的 HTTP Java 客户端 |
 | [Retrofit](https://github.com/square/retrofit)                        | 声明式 RESTFUL 框架     |
 
 ## 项目结构
@@ -67,12 +67,11 @@
 ├─├─├─├─com.github.mrzhqiang.rowing             ——顶层包
 ├─├─├─├─├─config                                    ——配置[1]
 ├─├─├─├─├─domain                                    ——领域[1]
+├─├─├─├─├─exception                                 ——异常[1]
 ├─├─├─├─├─module                                    ——模块[1]
 ├─├─├─├─├─├─account                                    ——账户[2]
 ├─├─├─├─├─├─action                                     ——操作[2]
 ├─├─├─├─├─├─dict                                       ——字典[2]
-├─├─├─├─├─├─exception                                  ——异常[2]
-├─├─├─├─├─├─i18n                                       ——国际化[2]
 ├─├─├─├─├─├─init                                       ——初始化[2]
 ├─├─├─├─├─├─menu                                       ——菜单[2]
 ├─├─├─├─├─├─monitor                                    ——监控[2]
