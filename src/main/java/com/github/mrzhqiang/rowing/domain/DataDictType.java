@@ -1,6 +1,6 @@
 package com.github.mrzhqiang.rowing.domain;
 
-import com.github.mrzhqiang.rowing.module.dict.DictGroup;
+import com.github.mrzhqiang.rowing.modules.dict.DictGroup;
 
 /**
  * 数据字典类型。
