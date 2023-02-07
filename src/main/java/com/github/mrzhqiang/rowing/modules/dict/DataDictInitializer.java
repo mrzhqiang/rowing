@@ -1,6 +1,7 @@
 package com.github.mrzhqiang.rowing.modules.dict;
 
 import com.github.mrzhqiang.rowing.domain.DataDictType;
+import com.github.mrzhqiang.rowing.modules.init.AutoInitializer;
 import com.github.mrzhqiang.rowing.modules.init.BaseInitializer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
-public final class DataDictInitializer extends BaseInitializer {
+public final class DataDictInitializer extends AutoInitializer {
 
     private final DataDictService service;
 

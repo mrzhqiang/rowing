@@ -1,4 +1,4 @@
-package com.github.mrzhqiang.rowing.util;
+package com.github.mrzhqiang.rowing.common;
 
 import org.junit.Test;
 

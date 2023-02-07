@@ -26,6 +26,11 @@ import java.lang.reflect.Parameter;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * 操作日志处理器。
+ * <p>
+ * 利用 AOP 机制，自动记录标记为 {@link Action 操作} 方法的执行情况。
+ */
 @Slf4j
 @Aspect
 @Component

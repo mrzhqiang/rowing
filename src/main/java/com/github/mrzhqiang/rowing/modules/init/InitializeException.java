@@ -1,4 +1,4 @@
-package com.github.mrzhqiang.rowing.exception;
+package com.github.mrzhqiang.rowing.modules.init;
 
 /**
  * 初始化异常。

@@ -35,7 +35,6 @@ final class InitializationOrderRegistration {
 
     static {
         OrderStep order = new OrderStep(INITIAL_ORDER, ORDER_STEP);
-        // 多语言初始化
         // 字典初始化
         put(DataDictInitializer.class, order.next());
         // 设置初始化
@@ -53,7 +52,7 @@ final class InitializationOrderRegistration {
      * @param initializerClass the {@link Initializer} to register
      * @param position         the position to associate with the {@link Filter}
      */
-    private static void put(Class<? extends Initializer> initializerClass, int position) {
+    private static void put(Class<? extends AutoInitializer> initializerClass, int position) {
         String className = initializerClass.getName();
         if (INITIALIZER_TO_ORDER.containsKey(className)) {
             return;

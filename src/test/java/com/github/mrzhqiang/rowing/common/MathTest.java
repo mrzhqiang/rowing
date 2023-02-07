@@ -1,4 +1,4 @@
-package com.github.mrzhqiang.rowing.api.exception;
+package com.github.mrzhqiang.rowing.common;
 
 import org.junit.Assert;
 import org.junit.Test;

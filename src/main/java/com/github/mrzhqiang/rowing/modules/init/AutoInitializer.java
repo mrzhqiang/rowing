@@ -24,10 +24,9 @@ public abstract class AutoInitializer extends BaseInitializer
 
     @Override
     public final void run(String... args) {
-        String path = getPath();
-        log.info("准备执行初始化任务：{} 路径：{}", this.getName(), path);
-        repository.findByPath(path)
-                .filter(InitTask::isNotCompleted)
+        // 通过数据库控制是否可执行
+        repository.findByPath(getPath())
+                .filter(InitTask::isExecutable)
                 .ifPresent(this::attemptExecute);
     }
 

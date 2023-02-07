@@ -3,6 +3,7 @@ package com.github.mrzhqiang.rowing.modules.init;
 import com.github.mrzhqiang.rowing.domain.BaseRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -18,6 +19,14 @@ public interface InitTaskRepository extends BaseRepository<InitTask> {
      * @return 返回 true 表示指定路径已存在；否则表示不存在。
      */
     boolean existsByPath(String path);
+
+    /**
+     * 找到所有不属于指定路径列表的初始化任务数据。
+     *
+     * @param paths 指定路径列表。
+     * @return 初始化任务数据。
+     */
+    List<InitTask> findAllByPathNotIn(List<String> paths);
 
     /**
      * 通过指定路径寻找系统初始化实体。

@@ -1,5 +1,6 @@
 package com.github.mrzhqiang.rowing.modules.setting;
 
+import com.github.mrzhqiang.rowing.modules.init.AutoInitializer;
 import com.github.mrzhqiang.rowing.modules.init.BaseInitializer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -13,7 +14,7 @@ import java.io.FileNotFoundException;
  */
 @Slf4j
 @Component
-public class SysSettingInitializer extends BaseInitializer {
+public class SysSettingInitializer extends AutoInitializer {
 
     /**
      * 系统设置 Excel 文件地址。

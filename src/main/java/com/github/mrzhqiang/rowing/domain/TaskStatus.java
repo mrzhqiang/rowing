@@ -31,11 +31,4 @@ public enum TaskStatus {
      * 表示任务执行成功。
      */
     COMPLETED,
-    /**
-     * 忽略状态。
-     * <p>
-     * 表示任务暂时忽略执行。
-     */
-    IGNORED,
-    ;
 }

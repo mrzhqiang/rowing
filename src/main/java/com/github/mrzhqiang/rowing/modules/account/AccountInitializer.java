@@ -1,5 +1,6 @@
 package com.github.mrzhqiang.rowing.modules.account;
 
+import com.github.mrzhqiang.rowing.modules.init.AutoInitializer;
 import com.github.mrzhqiang.rowing.modules.init.BaseInitializer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -15,7 +16,7 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
-public class AccountInitializer extends BaseInitializer {
+public class AccountInitializer extends AutoInitializer {
 
     private final AccountService service;
 
