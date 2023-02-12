@@ -32,35 +32,39 @@ public class InitTaskServiceJpaImpl implements InitTaskService {
     }
 
     @Override
-    public InitTaskSyncData syncData() {
+    public InitTaskSyncData checkSyncData() {
+        // 代码实现的初始化运行器不存在，需要将所有未废弃的初始化任务进行废弃处理
         if (CollectionUtils.isEmpty(initializers)) {
-            List<InitTask> discards = repository.findAll().stream()
+            List<InitTask> discards = repository.findAllByDiscard(Logic.NO).stream()
                     .peek(it -> it.setDiscard(Logic.YES))
                     .map(repository::save)
                     .collect(Collectors.toList());
             return InitTaskSyncData.of(Collections.emptyList(), discards);
         }
 
-        // 未记录的初始化任务实现，需要新增数据
+        // 找到未被记录的初始化任务实现，进行新增
         List<InitTask> addedList = initializers.stream()
                 .filter(it -> !repository.existsByPath(it.getPath()))
-                .map(this::mapToEntity)
+                .map(this::convertEntity)
                 .map(repository::save)
                 .collect(Collectors.toList());
 
-        // 已删除的初始化任务实现，需要废弃数据
+        // 存在已删除的初始化任务实现，进行废弃
         List<String> paths = initializers.stream()
                 .map(Initializer::getPath)
                 .collect(Collectors.toList());
-        List<InitTask> discardList = repository.findAllByPathNotIn(paths).stream()
-                .peek(it -> it.setDiscard(Logic.YES))
-                .map(repository::save)
-                .collect(Collectors.toList());
+        List<InitTask> discardList = Collections.emptyList();
+        if (!CollectionUtils.isEmpty(paths)) {
+            discardList = repository.findAllByPathNotIn(paths).stream()
+                    .peek(it -> it.setDiscard(Logic.YES))
+                    .map(repository::save)
+                    .collect(Collectors.toList());
+        }
 
         return InitTaskSyncData.of(addedList, discardList);
     }
 
-    private InitTask mapToEntity(Initializer initializer) {
+    private InitTask convertEntity(Initializer initializer) {
         InitTask initTask = mapper.toEntity(initializer);
         // 如果是自动初始化实现，那么属于系统类型的初始化任务
         if (initializer instanceof AutoInitializer) {

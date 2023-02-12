@@ -6,9 +6,9 @@ package com.github.mrzhqiang.rowing.modules.init;
 public interface InitTaskService {
 
     /**
-     * 同步数据。
+     * 检测同步数据。
      *
      * @return 初始化任务同步数据，主要是展示同步情况。
      */
-    InitTaskSyncData syncData();
+    InitTaskSyncData checkSyncData();
 }

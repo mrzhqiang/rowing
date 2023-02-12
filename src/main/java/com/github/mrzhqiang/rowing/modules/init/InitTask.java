@@ -72,7 +72,6 @@ public class InitTask extends AuditableEntity {
      * @return 返回 true 表示任务可以执行；否则需要忽略执行。
      */
     public boolean isExecutable() {
-        return Logic.NO.equals(discard)
-                && TaskStatus.DEFAULT.equals(status);
+        return Logic.NO.equals(discard) && TaskStatus.DEFAULT.equals(status);
     }
 }

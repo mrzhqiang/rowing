@@ -6,18 +6,18 @@ package com.github.mrzhqiang.rowing.modules.init;
  * @see org.springframework.security.config.annotation.web.builders.FilterOrderRegistration.Step
  */
 @SuppressWarnings("JavadocReference")
-public final class OrderStep {
+final class OrderStep {
 
     private int value;
 
     private final int stepSize;
 
-    public OrderStep(int initialValue, int stepSize) {
+    OrderStep(int initialValue, int stepSize) {
         this.value = initialValue;
         this.stepSize = stepSize;
     }
 
-    public int next() {
+    int next() {
         int value = this.value;
         this.value += this.stepSize;
         return value;

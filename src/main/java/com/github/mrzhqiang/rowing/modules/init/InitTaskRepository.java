@@ -1,6 +1,7 @@
 package com.github.mrzhqiang.rowing.modules.init;
 
 import com.github.mrzhqiang.rowing.domain.BaseRepository;
+import com.github.mrzhqiang.rowing.domain.Logic;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 import java.util.List;
@@ -11,6 +12,13 @@ import java.util.Optional;
  */
 @RepositoryRestResource(path = "/init-task", collectionResourceRel = "/init-task")
 public interface InitTaskRepository extends BaseRepository<InitTask> {
+
+    /**
+     * 通过废弃字段找到所有相关的初始化任务。
+     *
+     * @return 初始化任务列表。
+     */
+    List<InitTask> findAllByDiscard(Logic discard);
 
     /**
      * 判断指定路径是否存在。

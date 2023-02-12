@@ -1,5 +1,7 @@
 package com.github.mrzhqiang.rowing.modules.init;
 
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ClassUtils;
 
 /**
@@ -12,6 +14,7 @@ public interface Initializer {
      * <p>
      * 此方法用于执行一段初始化逻辑。
      */
+    @Transactional(rollbackFor = InitializeException.class, propagation = Propagation.REQUIRES_NEW)
     void execute();
 
     /**

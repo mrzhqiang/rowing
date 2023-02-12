@@ -99,15 +99,17 @@ public abstract class BaseInitializer implements Initializer {
                     Strings.lenientFormat("初始化任务 %s 执行成功，用时：%s", taskName, stop));
             taskLog.setMessage(successMessage);
             log.info(successMessage);
-        } catch (Exception e) {
+        } catch (InitializeException e) {
             task.setStatus(TaskStatus.FAILED);
             String cause = Exceptions.ofMessage(e);
+            String trace = Exceptions.ofTrace(e);
             String failedMessage = sourceAccessor.getMessage("Initializer.execute.failure",
                     new Object[]{taskName, cause},
                     Strings.lenientFormat("初始化任务 %s 执行失败，原因：%s", taskName, cause));
             taskLog.setMessage(failedMessage);
-            taskLog.setTrace(Exceptions.ofTrace(e));
-            throw new InitializeException(failedMessage, e);
+            taskLog.setTrace(trace);
+            // 抛出异常，中断行为，但不会影响任务状态和任务日志的记录
+            throw new RuntimeException(failedMessage, e);
         } finally {
             repository.save(task);
             logRepository.save(taskLog);

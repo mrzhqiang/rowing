@@ -11,6 +11,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -29,10 +30,8 @@ public final class InitTaskCheckRunner implements ApplicationRunner {
 
     /**
      * 跳过初始化检测的参数名称。
-     * <p>
-     * 使用 --skip_init_check=true 可以跳过初始化检测运行器的运行。
      */
-    public static final String SKIP_ARGS_NAME = "skip_init_check";
+    public static final String SKIP_ARGS_NAME = "rowing.init.check.skip";
 
     private final InitTaskService initTaskService;
     private final MessageSourceAccessor sourceAccessor;
@@ -45,27 +44,41 @@ public final class InitTaskCheckRunner implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) {
-        // 从运行参数或环境变量中判断是否包含 --skip_init_check
+        // 从运行参数或环境变量中判断是否包含指定参数
         if (args.containsOption(SKIP_ARGS_NAME)) {
-            // 解析选项参数，如果是 --skip_init_check=true 表示跳过检测
+            // 解析选项参数，如果是 --rowing.init.check.skip=true 表示跳过检测
             List<String> optionValues = args.getOptionValues(SKIP_ARGS_NAME);
             if (!CollectionUtils.isEmpty(optionValues)
                     && optionValues.contains(Boolean.TRUE.toString())) {
                 String skipMessage = sourceAccessor.getMessage(
-                        "InitTaskCheckRunner.run.skip_init_check",
-                        "初始化任务检测：发现 skip_init_check=true 跳过检测");
+                        "InitTaskCheckRunner.run.rowing.init.check.skip",
+                        "初始化任务检测，发现 rowing.init.check.skip=true 参数为真，跳过检测");
                 log.info(skipMessage);
                 return;
             }
         }
 
-        InitTaskSyncData syncData = initTaskService.syncData();
+        InitTaskSyncData syncData = initTaskService.checkSyncData();
         List<InitTask> addedList = syncData.getAddedList();
         List<InitTask> discardList = syncData.getDiscardList();
         String reportMessage = sourceAccessor.getMessage("InitTaskCheckRunner.run.report",
                 new Object[]{addedList.size(), discardList.size()},
-                Strings.lenientFormat("初始化任务检测：新增 %s 个初始化任务，废弃 %s 初始化任务",
+                Strings.lenientFormat("初始化任务检测，新增 %s 个初始化任务，废弃 %s 初始化任务",
                         addedList.size(), discardList.size()));
         log.info(reportMessage);
+        if (log.isDebugEnabled()) {
+            if (!addedList.isEmpty()) {
+                String addMessage = sourceAccessor.getMessage("InitTaskCheckRunner.run.report.add",
+                        new Object[]{addedList},
+                        Strings.lenientFormat("初始化任务检测，新增详情：%s", addedList));
+                log.debug(addMessage);
+            }
+            if (!discardList.isEmpty()) {
+                String discardMessage = sourceAccessor.getMessage("InitTaskCheckRunner.run.report.discard",
+                        new Object[]{discardList},
+                        Strings.lenientFormat("初始化任务检测，废弃详情：%s", discardList));
+                log.debug(discardMessage);
+            }
+        }
     }
 }
