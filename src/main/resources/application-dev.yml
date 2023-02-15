@@ -25,9 +25,9 @@ spring:
     name: "Rowing Develop"
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://rm-wz9u27rgv130g4xn04o.mysql.rds.aliyuncs.com:3306/rowing?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useUnicode=true&useSSL=false&allowMultiQueries=true
-    username: mrzhqiang
-    password: fssd12355@@
+    url: jdbc:mysql://127.0.0.1:3306/rowing?serverTimezone=Asia/Shanghai&characterEncoding=utf8&allowMultiQueries=true
+    username: root
+    password: 123456
   # 开发环境下，打印 SQL 细节
   jpa:
     show-sql: true
