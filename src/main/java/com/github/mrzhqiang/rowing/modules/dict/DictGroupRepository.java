@@ -15,11 +15,9 @@ import java.util.Optional;
 @RepositoryRestResource(path = "dict", collectionResourceRel = "dict")
 public interface DictGroupRepository extends BaseRepository<DictGroup> {
 
-    @PreAuthorize(Authorizations.HAS_ROLE_ANONYMOUS)
     @RestResource(exported = false)
     void deleteAllByType(DictType type);
 
-    @PreAuthorize(Authorizations.HAS_ROLE_ANONYMOUS)
     @RestResource(exported = false)
     boolean existsByCode(String code);
 
@@ -29,8 +27,6 @@ public interface DictGroupRepository extends BaseRepository<DictGroup> {
      * @param code 字典组代码。
      * @return 可选的字典组。
      */
-    @PreAuthorize(Authorizations.HAS_ROLE_ANONYMOUS)
-    @RestResource(exported = false)
     Optional<DictGroup> findByCode(String code);
 
 }

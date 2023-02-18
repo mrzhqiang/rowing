@@ -125,9 +125,6 @@ public class DictServiceJpaImpl implements DictService {
                 return;
             }
 
-            // 存在字典组 Sheet 页，先删除所有内置字典数据——当删除字典组时，将级联删除字典项
-            groupRepository.deleteAllByType(DictType.EXCEL);
-
             // 尝试处理字典组，生成相关实体，并返回以名称为 key 的映射
             Map<String, DictGroup> groupMap = attemptHandleGroup(group);
             if (groupMap.isEmpty()) {
