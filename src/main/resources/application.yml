@@ -30,26 +30,29 @@ spring:
     rest:
       base-path: /api
       enable-enum-translation: true
-security:
-  login-path: "/login"
-  login-failed-path: "/login?error"
-  register-path: "/register"
-  register-failed-path: "/register?error"
-  default-success-url: "/dashboard"
-  ignore-path:
-  public-path:
-    - "/"
-    - "/index"
-    - "/error/**"
-  # 若超过最大登录失败次数，账户将被锁定一段时间
-  max-login-failed: 5
-  # 在锁定区间内，无法进行登录操作
-  locked-duration: 5m
-  # 正常账户在首次登录失败时，将记录一个时间戳
-  # 再次登录失败时，如果位于设定的区间时长内，则累加失败次数
-  # 在账户未锁定时，登录成功将清除首次失败时间戳，并重置失败次数
-  first-failed-duration: 1h
-website:
-  author: "287431404@qq.com"
-  favicon: "/favicon.ico"
-  title: "行舟在线考试系统"
+  security:
+    user:
+      name: system
+      password: 123455
+      roles:
+        - ROLE_ADMIN
+rowing:
+  security:
+    login-path: "/login"
+    login-failed-path: "/login?error"
+    register-path: "/register"
+    register-failed-path: "/register?error"
+    default-success-url: "/dashboard"
+    ignore-path:
+    public-path:
+      - "/"
+      - "/index"
+      - "/error/**"
+    # 若超过最大登录失败次数，账户将被锁定一段时间
+    max-login-failed: 5
+    # 在锁定区间内，无法进行登录操作
+    locked-duration: 5m
+    # 正常账户在首次登录失败时，将记录一个时间戳
+    # 再次登录失败时，如果位于设定的区间时长内，则累加失败次数
+    # 在账户未锁定时，登录成功将清除首次失败时间戳，并重置失败次数
+    first-failed-duration: 1h

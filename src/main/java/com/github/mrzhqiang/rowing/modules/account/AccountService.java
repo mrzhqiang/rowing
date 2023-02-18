@@ -1,5 +1,6 @@
 package com.github.mrzhqiang.rowing.modules.account;
 
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import static org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_PASSWORD_KEY;
@@ -47,7 +48,7 @@ public interface AccountService extends UserDetailsService {
      * @throws UsernameNotFoundException 当无法通过用户名找到账号时，抛出此异常，表示登录失败。
      */
     @Override
-    Account loadUserByUsername(String username) throws UsernameNotFoundException;
+    UserDetails loadUserByUsername(String username) throws UsernameNotFoundException;
 
     /**
      * 初始化管理员的系统账户。

@@ -2,11 +2,15 @@ package com.github.mrzhqiang.rowing.modules.account;
 
 import com.github.mrzhqiang.helper.Environments;
 import com.github.mrzhqiang.helper.random.RandomStrings;
+import com.github.mrzhqiang.rowing.config.RowingSecurityProperties;
 import com.github.mrzhqiang.rowing.domain.Authority;
 import com.google.common.base.Preconditions;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.context.MessageSource;
 import org.springframework.context.support.MessageSourceAccessor;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -23,6 +27,7 @@ import java.util.UUID;
 @Service
 public class AccountServiceJpaImpl implements AccountService {
 
+    private final SecurityProperties properties;
     private final AccountMapper mapper;
     private final AccountRepository repository;
     private final StudentAccountRepository studentAccountRepository;
@@ -30,12 +35,14 @@ public class AccountServiceJpaImpl implements AccountService {
     private final PasswordEncoder passwordEncoder;
     private final MessageSourceAccessor sourceAccessor;
 
-    public AccountServiceJpaImpl(AccountMapper mapper,
+    public AccountServiceJpaImpl(SecurityProperties properties,
+                                 AccountMapper mapper,
                                  AccountRepository repository,
                                  StudentAccountRepository studentAccountRepository,
                                  TeacherAccountRepository teacherAccountRepository,
                                  PasswordEncoder passwordEncoder,
                                  MessageSource messageSource) {
+        this.properties = properties;
         this.mapper = mapper;
         this.repository = repository;
         this.studentAccountRepository = studentAccountRepository;
@@ -45,12 +52,22 @@ public class AccountServiceJpaImpl implements AccountService {
     }
 
     @Override
-    public Account loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        // 检测是不是系统
+        SecurityProperties.User user = properties.getUser();
+        if (user.getName().equals(username)) {
+            String[] roles = user.getRoles().toArray(new String[0]);
+            return User.withUsername(username)
+                    .password(passwordEncoder.encode(user.getPassword()))
+                    .roles(roles)
+                    .build();
+        }
+
         // 以学号开头
         if (username.startsWith(Account.STUDENT_ID_PREFIX)) {
             username = username.substring(Account.STUDENT_ID_PREFIX.length());
-
         }
+
         return repository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException(
                         sourceAccessor.getMessage("AccountService.UsernameNotFoundException")));

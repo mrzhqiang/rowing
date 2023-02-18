@@ -46,10 +46,10 @@ public enum Authority {
      */
     public static Map<String, List<String>> hierarchy() {
         Map<String, List<String>> map = Maps.newHashMap();
-        // ADMIN 继承 USER 角色的所有权限，包括 USER 角色继承的其他角色的所有权限
-        map.put(ROLE_ADMIN.name(), Lists.newArrayList(ROLE_USER.name()));
         // ANONYMOUS 可以访问控制的内容，USER 也可以访问和控制
         map.put(ROLE_USER.name(), Lists.newArrayList(ROLE_ANONYMOUS.name()));
+        // ADMIN 继承 USER 角色的所有权限，包括 USER 角色继承的其他角色的所有权限
+        map.put(ROLE_ADMIN.name(), Lists.newArrayList(ROLE_USER.name(), ROLE_ANONYMOUS.name()));
         return map;
     }
 }

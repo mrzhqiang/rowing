@@ -1,7 +1,7 @@
 package com.github.mrzhqiang.rowing.modules.init;
 
 import com.github.mrzhqiang.helper.Exceptions;
-import com.github.mrzhqiang.rowing.domain.BaseEntity;
+import com.github.mrzhqiang.rowing.domain.AuditableEntity;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -13,17 +13,19 @@ import javax.persistence.ManyToOne;
 
 /**
  * 初始化任务记录。
+ * <p>
+ * 继承自审计实体，用于审计操作初始化任务的相关信息，比如操作人及操作时间。
  */
 @Getter
 @Setter
 @ToString(callSuper = true)
 @Entity
-public class InitTaskLog extends BaseEntity {
+public class InitTaskLog extends AuditableEntity {
 
     /**
      * 记录所属任务。
      */
-    @ManyToOne(optional = false, cascade = CascadeType.ALL)
+    @ManyToOne(optional = false)
     private InitTask task;
     /**
      * 消息。

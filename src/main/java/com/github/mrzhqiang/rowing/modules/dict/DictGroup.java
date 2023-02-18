@@ -1,7 +1,7 @@
 package com.github.mrzhqiang.rowing.modules.dict;
 
 import com.github.mrzhqiang.rowing.domain.AuditableEntity;
-import com.github.mrzhqiang.rowing.domain.DataDictType;
+import com.github.mrzhqiang.rowing.domain.DictType;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -53,7 +53,8 @@ public class DictGroup extends AuditableEntity {
      * 内置类型表示在代码中直接使用的枚举字典；自定义类型是用户自己维护的数据字典。
      */
     @Enumerated(EnumType.STRING)
-    private DataDictType type;
+    @Column(nullable = false)
+    private DictType type;
 
     /**
      * 字典组所包含的字典项列表。
@@ -61,7 +62,7 @@ public class DictGroup extends AuditableEntity {
      * 字典项一般用来提供选择，比如下拉框、多选框等等。
      */
     @ToString.Exclude
-    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "group")
     private List<DictItem> items;
 
 }

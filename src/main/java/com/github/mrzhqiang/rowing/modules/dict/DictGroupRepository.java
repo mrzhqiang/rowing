@@ -1,19 +1,26 @@
 package com.github.mrzhqiang.rowing.modules.dict;
 
 import com.github.mrzhqiang.rowing.domain.BaseRepository;
+import com.github.mrzhqiang.rowing.domain.DictType;
+import com.github.mrzhqiang.rowing.util.Authorizations;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import org.springframework.data.rest.core.annotation.RestResource;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.Optional;
 
 /**
  * 数据字典组仓库。
  */
-@RepositoryRestResource(path = "/data-dict", collectionResourceRel = "/data-dict")
+@RepositoryRestResource(path = "dict", collectionResourceRel = "dict")
 public interface DictGroupRepository extends BaseRepository<DictGroup> {
 
-    /**
-     * 根据代码判断是否存在字典组。
-     */
+    @PreAuthorize(Authorizations.HAS_ROLE_ANONYMOUS)
+    @RestResource(exported = false)
+    void deleteAllByType(DictType type);
+
+    @PreAuthorize(Authorizations.HAS_ROLE_ANONYMOUS)
+    @RestResource(exported = false)
     boolean existsByCode(String code);
 
     /**
@@ -22,6 +29,8 @@ public interface DictGroupRepository extends BaseRepository<DictGroup> {
      * @param code 字典组代码。
      * @return 可选的字典组。
      */
+    @PreAuthorize(Authorizations.HAS_ROLE_ANONYMOUS)
+    @RestResource(exported = false)
     Optional<DictGroup> findByCode(String code);
 
 }

@@ -11,8 +11,8 @@ import java.time.Duration;
 @Getter
 @Setter
 @ToString
-@ConfigurationProperties("security")
-public class SecurityProperties {
+@ConfigurationProperties("rowing.security")
+public class RowingSecurityProperties {
 
     private static final String DEF_HOME_PATH = "/";
     private static final String DEF_INDEX_PATH = "/index";

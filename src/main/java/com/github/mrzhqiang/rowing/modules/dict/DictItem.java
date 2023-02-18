@@ -65,7 +65,7 @@ public class DictItem extends AuditableEntity {
     /**
      * 字典项所属字典组。
      */
-    @ManyToOne(optional = false, cascade = CascadeType.ALL)
+    @ManyToOne(optional = false)
     private DictGroup group;
 
 }

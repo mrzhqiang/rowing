@@ -2,23 +2,18 @@ package com.github.mrzhqiang.rowing.modules.init;
 
 import com.github.mrzhqiang.rowing.domain.BaseRepository;
 import com.github.mrzhqiang.rowing.domain.Logic;
+import com.github.mrzhqiang.rowing.util.Authorizations;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * 初始化任务仓库。
  */
-@RepositoryRestResource(path = "/init-task", collectionResourceRel = "/init-task")
+@RepositoryRestResource(path = "init-task", collectionResourceRel = "init-task")
 public interface InitTaskRepository extends BaseRepository<InitTask> {
-
-    /**
-     * 通过废弃字段找到所有相关的初始化任务。
-     *
-     * @return 初始化任务列表。
-     */
-    List<InitTask> findAllByDiscard(Logic discard);
 
     /**
      * 判断指定路径是否存在。
@@ -26,21 +21,24 @@ public interface InitTaskRepository extends BaseRepository<InitTask> {
      * @param path 指定路径，通常是实现类的全限定名称。
      * @return 返回 true 表示指定路径已存在；否则表示不存在。
      */
+    @PreAuthorize(Authorizations.HAS_ROLE_ADMIN)
     boolean existsByPath(String path);
 
     /**
-     * 找到所有不属于指定路径列表的初始化任务数据。
+     * 通过废弃字段找到所有不在指定路径列表中的初始化任务。
      *
-     * @param paths 指定路径列表。
-     * @return 初始化任务数据。
+     * @param discard 废弃字段。
+     * @param paths   指定路径列表。
+     * @return 初始化任务列表。
      */
-    List<InitTask> findAllByPathNotIn(List<String> paths);
+    List<InitTask> findAllByDiscardAndPathNotIn(Logic discard, List<String> paths);
 
     /**
-     * 通过指定路径寻找系统初始化实体。
+     * 通过指定路径找到初始化任务。
      *
      * @param path 指定路径。通常是实现类的全限定名称。
-     * @return 返回可选的系统初始化实体。
+     * @return 初始化任务。
      */
-    Optional<InitTask> findByPath(String path);
+    InitTask findByPath(String path);
+
 }

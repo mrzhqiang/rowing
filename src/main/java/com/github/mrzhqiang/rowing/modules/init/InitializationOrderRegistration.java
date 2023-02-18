@@ -1,9 +1,9 @@
 package com.github.mrzhqiang.rowing.modules.init;
 
-import com.github.mrzhqiang.rowing.modules.account.AccountInitializer;
-import com.github.mrzhqiang.rowing.modules.dict.DataDictInitializer;
-import com.github.mrzhqiang.rowing.modules.menu.MenuInitializer;
-import com.github.mrzhqiang.rowing.modules.setting.SysSettingInitializer;
+import com.github.mrzhqiang.rowing.modules.account.AccountAutoInitializer;
+import com.github.mrzhqiang.rowing.modules.dict.DictAutoInitializer;
+import com.github.mrzhqiang.rowing.modules.menu.MenuAutoInitializer;
+import com.github.mrzhqiang.rowing.modules.setting.SettingAutoInitializer;
 
 import javax.servlet.Filter;
 import java.util.HashMap;
@@ -18,31 +18,17 @@ import java.util.Optional;
 @SuppressWarnings("JavadocReference")
 final class InitializationOrderRegistration {
 
-    /**
-     * 起始顺序。
-     */
     private static final int INITIAL_ORDER = 100;
-    /**
-     * 排序步长。
-     * <p>
-     * 这里参考的是 Spring Security 的 Filter 排序，说明至少可以新增 99 个同类型步骤。
-     */
     private static final int ORDER_STEP = 100;
-    /**
-     * 初始化顺序映射。
-     */
     private static final Map<String, Integer> INITIALIZER_TO_ORDER = new HashMap<>();
 
     static {
         OrderStep order = new OrderStep(INITIAL_ORDER, ORDER_STEP);
-        // 字典初始化
-        put(DataDictInitializer.class, order.next());
-        // 设置初始化
-        put(SysSettingInitializer.class, order.next());
-        // 菜单初始化
-        put(MenuInitializer.class, order.next());
-        // 账户初始化
-        put(AccountInitializer.class, order.next());
+        // 以下是具有严格顺序要求的初始化实现
+        put(DictAutoInitializer.class, order.next());
+        put(SettingAutoInitializer.class, order.next());
+        put(MenuAutoInitializer.class, order.next());
+        put(AccountAutoInitializer.class, order.next());
     }
 
     /**
@@ -52,7 +38,7 @@ final class InitializationOrderRegistration {
      * @param initializerClass the {@link Initializer} to register
      * @param position         the position to associate with the {@link Filter}
      */
-    private static void put(Class<? extends AutoInitializer> initializerClass, int position) {
+    private static void put(Class<? extends Initializer> initializerClass, int position) {
         String className = initializerClass.getName();
         if (INITIALIZER_TO_ORDER.containsKey(className)) {
             return;
@@ -85,14 +71,13 @@ final class InitializationOrderRegistration {
      * 只有运行时才需要知道初始化顺序，因此我们不使用 {@link #getOrder(Class)} 方法，而是使用对象实例。
      *
      * @param obj 初始化实现类的实例。
-     * @return 初始化顺序。默认情况下返回 {@link #INITIAL_ORDER 初始顺序}。
+     * @return 初始化顺序。如果参数为 Null 或者找不到顺序，则返回 {@link Integer#MAX_VALUE} 值。
      */
     static Integer find(Object obj) {
-        if (obj == null) {
-            return INITIAL_ORDER;
-        }
-
-        Integer order = INITIALIZER_TO_ORDER.get(obj.getClass().getName());
-        return Optional.ofNullable(order).orElse(INITIAL_ORDER);
+        return Optional.ofNullable(obj)
+                .map(Object::getClass)
+                .map(Class::getName)
+                .map(INITIALIZER_TO_ORDER::get)
+                .orElse(Integer.MAX_VALUE);
     }
 }

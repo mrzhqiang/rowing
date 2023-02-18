@@ -1,0 +1,8 @@
+### 登录账号
+POST http://localhost/login
+Content-Type: application/json
+
+{
+"username": "system",
+"password": "123456"
+}

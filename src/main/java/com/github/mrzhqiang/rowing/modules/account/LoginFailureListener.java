@@ -1,6 +1,6 @@
 package com.github.mrzhqiang.rowing.modules.account;
 
-import com.github.mrzhqiang.rowing.config.SecurityProperties;
+import com.github.mrzhqiang.rowing.config.RowingSecurityProperties;
 import com.github.mrzhqiang.rowing.util.Authentications;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.authentication.event.AuthenticationFailureBadCredentialsEvent;
@@ -14,12 +14,12 @@ import java.time.Instant;
 @Component
 public class LoginFailureListener implements ApplicationListener<AuthenticationFailureBadCredentialsEvent> {
 
-    private final SecurityProperties securityProperties;
+    private final RowingSecurityProperties rowingSecurityProperties;
     private final AccountRepository accountRepository;
 
-    public LoginFailureListener(SecurityProperties securityProperties,
+    public LoginFailureListener(RowingSecurityProperties rowingSecurityProperties,
                                 AccountRepository accountRepository) {
-        this.securityProperties = securityProperties;
+        this.rowingSecurityProperties = rowingSecurityProperties;
         this.accountRepository = accountRepository;
     }
 
@@ -40,7 +40,7 @@ public class LoginFailureListener implements ApplicationListener<AuthenticationF
     private Account computeFailedCount(Account account) {
         Instant firstFailed = account.getFirstFailed();
         Instant now = Instant.now();
-        Duration firstFailedDuration = securityProperties.getFirstFailedDuration();
+        Duration firstFailedDuration = rowingSecurityProperties.getFirstFailedDuration();
         if (firstFailed == null || firstFailed.plus(firstFailedDuration).isBefore(now)) {
             account.setFirstFailed(now);
             account.setFailedCount(1);
@@ -49,8 +49,8 @@ public class LoginFailureListener implements ApplicationListener<AuthenticationF
 
         int hasFailedCount = account.getFailedCount() + 1;
         account.setFailedCount(hasFailedCount);
-        if (hasFailedCount >= securityProperties.getMaxLoginFailed()) {
-            Duration duration = securityProperties.getLockedDuration();
+        if (hasFailedCount >= rowingSecurityProperties.getMaxLoginFailed()) {
+            Duration duration = rowingSecurityProperties.getLockedDuration();
             account.setLocked(now.plus(duration));
         }
         return account;

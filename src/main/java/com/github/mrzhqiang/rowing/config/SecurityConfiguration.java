@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.access.AccessDecisionVoter;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyUtils;
 import org.springframework.security.access.vote.RoleHierarchyVoter;
@@ -32,17 +33,17 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
  */
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-@EnableConfigurationProperties({SecurityProperties.class})
+@EnableConfigurationProperties({RowingSecurityProperties.class})
 @Configuration
 public class SecurityConfiguration {
 
-    private final SecurityProperties properties;
+    private final RowingSecurityProperties properties;
     private final KaptchaProperties kaptchaProperties;
     private final KaptchaAuthenticationConverter kaptchaConverter;
     private final AuthenticationConfiguration configuration;
     private final LoginFailureHandler failureHandler;
 
-    public SecurityConfiguration(SecurityProperties properties,
+    public SecurityConfiguration(RowingSecurityProperties properties,
                                  KaptchaProperties kaptchaProperties,
                                  KaptchaAuthenticationConverter kaptchaConverter,
                                  AuthenticationConfiguration configuration,
@@ -60,9 +61,14 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public AccessDecisionVoter<?> hierarchyVoter() {
+    public RoleHierarchy roleHierarchy() {
         RoleHierarchyImpl hierarchy = new RoleHierarchyImpl();
         hierarchy.setHierarchy(RoleHierarchyUtils.roleHierarchyFromMap(Authority.hierarchy()));
+        return hierarchy;
+    }
+
+    @Bean
+    public RoleHierarchyVoter hierarchyVoter(RoleHierarchy hierarchy) {
         return new RoleHierarchyVoter(hierarchy);
     }
 
@@ -89,13 +95,13 @@ public class SecurityConfiguration {
                         .antMatchers(properties.getRegisterPath()).permitAll()
                         .anyRequest().authenticated())
                 .formLogin(configurer -> configurer
-                        .loginPage(properties.getLoginPath())
+                        .loginPage(properties.getLoginPath()).permitAll()
                         .defaultSuccessUrl(properties.getDefaultSuccessUrl())
                         .failureHandler(failureHandler).permitAll())
                 .logout().permitAll();
         if (properties.getRememberMe()) {
             http.rememberMe();
         }
-        return http.build();
+        return http.csrf().disable().build();
     }
 }

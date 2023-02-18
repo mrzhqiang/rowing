@@ -11,24 +11,16 @@ public final class Authorizations {
     }
 
     /**
-     * 角色授权前缀。
-     */
-    public static final String HAS_ROLE_PREFIX = "hasRole('";
-    /**
-     * 角色授权后缀。
-     */
-    public static final String HAS_ROLE_SUFFIX = "')";
-    /**
      * 管理员角色授权。
      */
-    public static final String HAS_ROLE_ADMIN = HAS_ROLE_PREFIX + "ADMIN" + HAS_ROLE_SUFFIX;
+    public static final String HAS_ROLE_ADMIN = "hasRole('ROLE_ADMIN')";
     /**
      * 普通用户角色授权。
      */
-    public static final String HAS_ROLE_USER = HAS_ROLE_PREFIX + "USER" + HAS_ROLE_SUFFIX;
+    public static final String HAS_ROLE_USER = "hasRole('ROLE_USER')";
     /**
      * 匿名用户角色授权。
      */
-    public static final String HAS_ROLE_ANONYMOUS = HAS_ROLE_PREFIX + "ANONYMOUS" + HAS_ROLE_SUFFIX;
+    public static final String HAS_ROLE_ANONYMOUS = "hasRole('ROLE_ANONYMOUS')";
 
 }

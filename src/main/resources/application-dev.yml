@@ -35,7 +35,7 @@ spring:
     client-type: lettuce
     database: 1
     host: localhost
-#    password: 123456
+    #    password: 123456
     connect-timeout: 10s
   codec:
     # 在 DEBUG 级别记录请求的表单数据；在 TRACE 级别记录请求的 Header 信息
@@ -46,13 +46,14 @@ spring:
   kaptcha:
     # 开发环境下屏蔽，线上建议打开
     enabled: false
-security:
-  remember-me: false
-session:
-  # 会话过期重定向地址
-  expired-path: "/login?expired"
-okhttp:
-  cache-path: ${user.dir}/.cache
-  cache-max-size: 100MB
-  call-timeout: 5s
-  logging-level: BODY
+rowing:
+  security:
+    remember-me: false
+  session:
+    # 会话过期重定向地址
+    expired-path: "/login?expired"
+  okhttp:
+    cache-path: ${user.dir}/.cache
+    cache-max-size: 100MB
+    call-timeout: 5s
+    logging-level: BODY

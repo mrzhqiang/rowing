@@ -14,7 +14,7 @@ import com.github.mrzhqiang.rowing.modules.dict.DictGroup;
  * 以中文简单举例，在 rest-message-zn_CN.properties 文件中提供：
  * com.github.mrzhqiang.rowing.domain.DataDictType.INTERNAL=内置数据字典，则在访问 rest 接口时，返回枚举值对应的国际化名称。
  */
-public enum DataDictType {
+public enum DictType {
 
     /**
      * 内置类型。
@@ -22,6 +22,15 @@ public enum DataDictType {
      * 内置类型的数据字典，通过 {@link ClassScanner 类扫描器} 扫描包下的所有枚举类，并转为内置数据字典存储到数据库。
      */
     INTERNAL,
+
+    /**
+     * Excel 类型。
+     * <p>
+     * 通过 Excel 文件导入数据字典，存储到数据库。
+     * <p>
+     * 由于这个类型的数据字典会被删除，所以需要设置一个独立类型。
+     */
+    EXCEL,
     /**
      * 自定义类型。
      * <p>

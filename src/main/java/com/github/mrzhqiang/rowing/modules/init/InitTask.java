@@ -1,6 +1,6 @@
 package com.github.mrzhqiang.rowing.modules.init;
 
-import com.github.mrzhqiang.rowing.domain.AuditableEntity;
+import com.github.mrzhqiang.rowing.domain.BaseEntity;
 import com.github.mrzhqiang.rowing.domain.Logic;
 import com.github.mrzhqiang.rowing.domain.TaskStatus;
 import com.github.mrzhqiang.rowing.domain.TaskType;
@@ -23,7 +23,7 @@ import java.util.List;
 @Setter
 @ToString(callSuper = true)
 @Entity
-public class InitTask extends AuditableEntity {
+public class InitTask extends BaseEntity {
 
     /**
      * 路径。
@@ -63,7 +63,7 @@ public class InitTask extends AuditableEntity {
      * 执行历史。
      */
     @ToString.Exclude
-    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "task")
     private List<InitTaskLog> logHistories;
 
     /**

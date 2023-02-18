@@ -8,7 +8,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Getter
 @Setter
 @ToString
-@ConfigurationProperties("session")
+@ConfigurationProperties("rowing.session")
 public class SessionProperties {
 
     private static final int DEF_MAX_SESSION = 1;

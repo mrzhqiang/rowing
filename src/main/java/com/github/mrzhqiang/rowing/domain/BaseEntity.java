@@ -41,7 +41,7 @@ public abstract class BaseEntity {
      * 作为主键，拥有非空约束，使用自增长生成策略。
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     /**
      * 版本号。

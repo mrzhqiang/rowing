@@ -17,6 +17,7 @@ public class AuditingConfiguration {
 
     @Bean
     public AuditorAware<String> auditor() {
-        return () -> Authentications.ofLogin().flatMap(Authentications::findUsername);
+        // 不使用 Authentications.ofLogin 方法，因为可能存在系统对实体的 CRUD 操作，需要支持未登录的用户名
+        return () -> Authentications.ofCurrent().flatMap(Authentications::findUsername);
     }
 }

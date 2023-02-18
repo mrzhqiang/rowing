@@ -17,7 +17,7 @@ import java.time.Duration;
 @Getter
 @Setter
 @ToString
-@ConfigurationProperties("okhttp")
+@ConfigurationProperties("rowing.okhttp")
 public class OkHttpProperties {
 
     private final static String DEF_CACHE_PATH = Paths.get(Environments.USER_DIR, ".cache").toString();

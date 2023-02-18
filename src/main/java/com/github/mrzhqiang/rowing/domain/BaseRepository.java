@@ -16,13 +16,13 @@ import javax.annotation.Nonnull;
  * <p>
  * 这样做可以方便未来对继承的接口进行改进，比如增加 {@link JpaSpecificationExecutor} 接口，或降级为 {@link PagingAndSortingRepository} 分页排序仓库。
  * <p>
- * 参考：<a href="https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories">Spring Data JPA 仓库</a>
+ * 参考：<a href="https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories">spring data jpa repositories</a>
  * <p>
- * 参考：<a href="https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#core.web.basic.paging-and-sorting">内置支持 web 请求参数</a>
+ * 参考：<a href="https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#core.web.basic.paging-and-sorting">spring data jpa paging and sorting</a>
  * <p>
- * 参考：<a href="https://docs.spring.io/spring-data/rest/docs/current/reference/html/#repository-resources">使用 REST 框架不再手写 CURD 接口</a>
+ * 参考：<a href="https://docs.spring.io/spring-data/rest/docs/current/reference/html/#repository-resources">spring data rest repository-resources</a>
  * <p>
- * 注意：基础仓库的所有方法默认需要 {@link Authority#ROLE_USER} 权限，这里声明所有删除方法需要 {@link Authority#ROLE_ADMIN} 权限。
+ * 注意：这里声明所有删除方法需要 {@link Authority#ROLE_ADMIN} 权限。
  *
  * @param <E> 实体类型。
  */

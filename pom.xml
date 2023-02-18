@@ -22,7 +22,7 @@
         <bitwalker.version>1.21</bitwalker.version>
         <geoip2.version>2.15.0</geoip2.version>
         <kaptcha-spring-boot-starter.version>2022.0.2</kaptcha-spring-boot-starter.version>
-        <helper.version>2022.1.1</helper.version>
+        <helper.version>2022.1.2</helper.version>
         <retrofit.version>2.9.0</retrofit.version>
 
         <poi.version>5.2.2</poi.version>
@@ -42,6 +42,10 @@
 
     <dependencies>
         <!-- Spring 框架依赖 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>

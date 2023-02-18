@@ -6,7 +6,6 @@ import java.util.List;
 
 /**
  * 初始化任务检测数据。
- * <p>
  */
 @Getter
 public class InitTaskSyncData {
