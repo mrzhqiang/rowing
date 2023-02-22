@@ -18,11 +18,9 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.rest.webmvc.json.EnumTranslator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
@@ -56,9 +54,6 @@ public class DictServiceJpaImpl implements DictService {
 
     @Override
     public void syncInternal(String basePackage) {
-        Preconditions.checkNotNull(basePackage, "base package == null");
-        Preconditions.checkArgument(StringUtils.hasText(basePackage), "base package must be has text");
-
         scanner.scanEnumBy(basePackage).forEach(this::handleEnum);
     }
 
@@ -85,8 +80,7 @@ public class DictServiceJpaImpl implements DictService {
 
         // 以字典项的 value 作为 Map key 避免重复
         Map<String, DictItem> itemMap = Optional.ofNullable(dictGroup.getItems())
-                .map(Collection::stream)
-                .map(it -> it.collect(Collectors.toMap(DictItem::getValue, Function.identity())))
+                .map(it -> it.stream().collect(Collectors.toMap(DictItem::getValue, Function.identity())))
                 .orElse(Maps.newHashMap());
         // 枚举常量不可能有重复值，所以不需要再 put 到 itemMap 中
         for (Enum<?> enumConstant : enumClass.getEnumConstants()) {
@@ -172,7 +166,7 @@ public class DictServiceJpaImpl implements DictService {
                         new Object[]{cells.getRowNum()},
                         Strings.lenientFormat(
                                 "发现第 %s 行 name 列存在空字符串，判断为结束行，终止解析", cells.getRowNum()));
-                log.warn(emptyNameMessage);
+                log.info(emptyNameMessage);
                 break;
             }
 
@@ -182,7 +176,7 @@ public class DictServiceJpaImpl implements DictService {
                         new Object[]{cells.getRowNum()},
                         Strings.lenientFormat(
                                 "发现第 %s 行 code 列存在空字符串，判断为结束行，终止解析", cells.getRowNum()));
-                log.warn(emptyCodeMessage);
+                log.info(emptyCodeMessage);
                 break;
             }
 
@@ -220,7 +214,7 @@ public class DictServiceJpaImpl implements DictService {
                         new Object[]{cells.getRowNum()},
                         Strings.lenientFormat(
                                 "发现第 %s 行 code 列存在空字符串，判断为结束行，终止解析", cells.getRowNum()));
-                log.warn(emptyCodeMessage);
+                log.info(emptyCodeMessage);
                 break;
             }
 
@@ -239,7 +233,7 @@ public class DictServiceJpaImpl implements DictService {
                         new Object[]{cells.getRowNum()},
                         Strings.lenientFormat(
                                 "发现第 %s 行 label 列存在空字符串，判断为结束行，终止解析", cells.getRowNum()));
-                log.warn(emptyLabelMessage);
+                log.info(emptyLabelMessage);
                 break;
             }
 
@@ -249,7 +243,7 @@ public class DictServiceJpaImpl implements DictService {
                         new Object[]{cells.getRowNum()},
                         Strings.lenientFormat(
                                 "发现第 %s 行 value 列存在空字符串，判断为结束行，终止解析", cells.getRowNum()));
-                log.warn(emptyValueMessage);
+                log.info(emptyValueMessage);
                 break;
             }
 

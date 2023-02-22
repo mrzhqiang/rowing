@@ -9,8 +9,6 @@ import org.springframework.util.ClassUtils;
 
 /**
  * 初始化映射器。
- * <p>
- * 主要针对不同的数据来源，可以转为初始化实体。
  */
 @Mapper(componentModel = "spring",
         imports = {TaskType.class, TaskStatus.class, Logic.class, ClassUtils.class})

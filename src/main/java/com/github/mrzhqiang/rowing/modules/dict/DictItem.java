@@ -5,21 +5,12 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
 /**
  * 字典项。
- * <p>
- * 字典项属于字典组的成员，通常用字典组代码即可获得，因此不同字典组所包含的字典项可以相同，但相同字典组下的字典项不能重复。
- * <p>
- * 对于内置数据字典，由枚举的性质保证字典项不重复。
- * <p>
- * 对于自定义数据字典，由前端校验控制字典项不重复。
- * <p>
- * 因此，其他可能导致数据重复的情况，需要手动处理。
  */
 @Getter
 @Setter

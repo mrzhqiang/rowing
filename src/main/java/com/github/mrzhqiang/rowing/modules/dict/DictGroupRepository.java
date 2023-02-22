@@ -1,22 +1,16 @@
 package com.github.mrzhqiang.rowing.modules.dict;
 
 import com.github.mrzhqiang.rowing.domain.BaseRepository;
-import com.github.mrzhqiang.rowing.domain.DictType;
-import com.github.mrzhqiang.rowing.util.Authorizations;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
-import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.Optional;
 
 /**
- * 数据字典组仓库。
+ * 字典组仓库。
  */
-@RepositoryRestResource(path = "dict", collectionResourceRel = "dict")
+@RepositoryRestResource(path = "dict-group", collectionResourceRel = "dict-group")
 public interface DictGroupRepository extends BaseRepository<DictGroup> {
-
-    @RestResource(exported = false)
-    void deleteAllByType(DictType type);
 
     @RestResource(exported = false)
     boolean existsByCode(String code);

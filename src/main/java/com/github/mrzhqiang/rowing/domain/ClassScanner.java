@@ -25,7 +25,7 @@ import java.util.List;
 /**
  * 类扫描器。
  *
- * @see ClassPathScanningCandidateComponentProvider 基于类路径扫描的候选组件提供器。当前类扫描器的参考源。
+ * @see ClassPathScanningCandidateComponentProvider
  */
 @Slf4j
 @Component

@@ -31,8 +31,8 @@ public class DictAutoInitializer implements Initializer {
     public void execute() {
         try {
             // 通过字典类型枚举，获取指定包路径，同步此包下的所有枚举作为内置字典
-            String dictBasePackageName = DictType.class.getPackage().getName();
-            service.syncInternal(dictBasePackageName);
+            String basePackage = DictType.class.getPackage().getName();
+            service.syncInternal(basePackage);
 
             // 通过 Excel 文件，导入所有内容作为 Excel 字典
             File excelFile = ResourceUtils.getFile(EXCEL_FILE_LOCATION);

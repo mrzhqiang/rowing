@@ -3,38 +3,35 @@ package com.github.mrzhqiang.rowing.domain;
 import com.github.mrzhqiang.rowing.modules.dict.DictGroup;
 
 /**
- * 数据字典类型。
+ * 字典类型。
  * <p>
- * 主要用于 {@link DictGroup 数据字典组} 的分类。
+ * 主要用于 {@link DictGroup} 的分类。
  * <p>
- * 同时作为数据字典枚举，本身也会被扫描到数据库中，作为内置数据字典的一员。
+ * 同时作为字典枚举，本身也会被扫描到数据库中，作为内置字典的一员。
  * <p>
- * 对于数据字典枚举来说，基于 Spring Data Rest 框架可以通过 rest-message-**.properties 国际化消息文件，进行枚举值的国际化标签。
+ * 对于字典枚举来说，基于 Spring Data Rest 框架可以通过 rest-message-**.properties 国际化消息文件，进行枚举值的国际化标签。
  * <p>
  * 以中文简单举例，在 rest-message-zn_CN.properties 文件中提供：
- * com.github.mrzhqiang.rowing.domain.DataDictType.INTERNAL=内置数据字典，则在访问 rest 接口时，返回枚举值对应的国际化名称。
+ * com.github.mrzhqiang.rowing.domain.DataDictType.INTERNAL=内置字典，则在访问 rest 接口时，返回枚举值对应的国际化名称。
  */
 public enum DictType {
 
     /**
      * 内置类型。
      * <p>
-     * 内置类型的数据字典，通过 {@link ClassScanner 类扫描器} 扫描包下的所有枚举类，并转为内置数据字典存储到数据库。
+     * 内置字典，通过 {@link ClassScanner} 扫描当前枚举类所在包下的相关枚举类，并转为内置字典存储到数据库。
      */
     INTERNAL,
-
     /**
      * Excel 类型。
      * <p>
-     * 通过 Excel 文件导入数据字典，存储到数据库。
-     * <p>
-     * 由于这个类型的数据字典会被删除，所以需要设置一个独立类型。
+     * 通过 Excel 文件导入字典，存储到数据库。
      */
     EXCEL,
     /**
      * 自定义类型。
      * <p>
-     * 自定义类型的数据字典，通过数据字典模块进行 CURD 管理。
+     * 通过字典模块进行 CURD 管理。
      */
     CUSTOM,
 }
