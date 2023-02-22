@@ -23,7 +23,7 @@ final class InitializationOrderRegistration {
     private static final Map<String, Integer> INITIALIZER_TO_ORDER = new HashMap<>();
 
     static {
-        OrderStep order = new OrderStep(INITIAL_ORDER, ORDER_STEP);
+        Step order = new Step(INITIAL_ORDER, ORDER_STEP);
         // 以下是具有严格顺序要求的初始化实现
         put(DictAutoInitializer.class, order.next());
         put(SettingAutoInitializer.class, order.next());
@@ -80,4 +80,27 @@ final class InitializationOrderRegistration {
                 .map(INITIALIZER_TO_ORDER::get)
                 .orElse(Integer.MAX_VALUE);
     }
+
+    /**
+     * 初始化器排序步骤。
+     *
+     * @see org.springframework.security.config.annotation.web.builders.FilterOrderRegistration.Step
+     */
+    private static class Step {
+
+        private int value;
+        private final int stepSize;
+
+        Step(int initialValue, int stepSize) {
+            this.value = initialValue;
+            this.stepSize = stepSize;
+        }
+
+        int next() {
+            int value = this.value;
+            this.value += this.stepSize;
+            return value;
+        }
+    }
+
 }

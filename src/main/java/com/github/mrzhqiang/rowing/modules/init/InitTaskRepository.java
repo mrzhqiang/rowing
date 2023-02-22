@@ -3,7 +3,6 @@ package com.github.mrzhqiang.rowing.modules.init;
 import com.github.mrzhqiang.rowing.domain.BaseRepository;
 import com.github.mrzhqiang.rowing.domain.Logic;
 import com.github.mrzhqiang.rowing.util.Authorizations;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -12,6 +11,7 @@ import java.util.List;
 /**
  * 初始化任务仓库。
  */
+@PreAuthorize(Authorizations.HAS_ROLE_ADMIN)
 @RepositoryRestResource(path = "init-task", collectionResourceRel = "init-task")
 public interface InitTaskRepository extends BaseRepository<InitTask> {
 
@@ -21,7 +21,6 @@ public interface InitTaskRepository extends BaseRepository<InitTask> {
      * @param path 指定路径，通常是实现类的全限定名称。
      * @return 返回 true 表示指定路径已存在；否则表示不存在。
      */
-    @PreAuthorize(Authorizations.HAS_ROLE_ADMIN)
     boolean existsByPath(String path);
 
     /**

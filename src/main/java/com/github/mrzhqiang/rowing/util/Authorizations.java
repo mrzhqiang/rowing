@@ -1,7 +1,7 @@
 package com.github.mrzhqiang.rowing.util;
 
 /**
- * 身份授权工具。
+ * 授权工具。
  * <p>
  * 主要提供简便的授权表达式，避免编写错误带来的异常。
  */

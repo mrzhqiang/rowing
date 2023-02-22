@@ -1,6 +1,6 @@
 package com.github.mrzhqiang.rowing.modules.init;
 
-import com.github.mrzhqiang.rowing.domain.BaseEntity;
+import com.github.mrzhqiang.rowing.domain.AuditableEntity;
 import com.github.mrzhqiang.rowing.domain.Logic;
 import com.github.mrzhqiang.rowing.domain.TaskStatus;
 import com.github.mrzhqiang.rowing.domain.TaskType;
@@ -8,7 +8,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -23,7 +22,7 @@ import java.util.List;
 @Setter
 @ToString(callSuper = true)
 @Entity
-public class InitTask extends BaseEntity {
+public class InitTask extends AuditableEntity {
 
     /**
      * 路径。

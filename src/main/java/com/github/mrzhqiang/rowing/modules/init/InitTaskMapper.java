@@ -16,9 +16,13 @@ import org.springframework.util.ClassUtils;
         imports = {TaskType.class, TaskStatus.class, Logic.class, ClassUtils.class})
 public interface InitTaskMapper {
 
+    @Mapping(target = "lastModifiedBy", ignore = true)
+    @Mapping(target = "lastModified", ignore = true)
+    @Mapping(target = "createdBy", ignore = true)
+    @Mapping(target = "created", ignore = true)
     @Mapping(target = "version", ignore = true)
-    @Mapping(target = "logHistories", ignore = true)
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "logHistories", ignore = true)
     @Mapping(target = "discard", expression = "java(Logic.NO)")
     @Mapping(target = "status", expression = "java(TaskStatus.DEFAULT)")
     @Mapping(target = "type", expression = "java(TaskType.OPTIONAL)")

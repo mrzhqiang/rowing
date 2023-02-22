@@ -1,13 +1,11 @@
 package com.github.mrzhqiang.rowing.modules.init;
 
+import com.github.mrzhqiang.rowing.util.Authentications;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
@@ -21,29 +19,21 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
-public final class InitTaskSyncRunner implements ApplicationRunner {
+public final class InitializationSyncRunner implements ApplicationRunner {
 
     private final InitTaskService service;
     private final SecurityProperties properties;
 
-    public InitTaskSyncRunner(InitTaskService service,
-                              SecurityProperties properties) {
+    public InitializationSyncRunner(InitTaskService service,
+                                    SecurityProperties properties) {
         this.service = service;
         this.properties = properties;
     }
 
     @Override
     public void run(ApplicationArguments args) {
-        // 设置
-        SecurityContext context = SecurityContextHolder.createEmptyContext();
-        String name = properties.getUser().getName();
-        String password = properties.getUser().getPassword();
-        context.setAuthentication(UsernamePasswordAuthenticationToken.authenticated(name, password,
-                AuthorityUtils.createAuthorityList(properties.getUser().getRoles().toArray(new String[0]))));
-        SecurityContextHolder.setContext(context);
-
+        Authentications.asSystem(properties);
         service.syncData(args);
-
         SecurityContextHolder.clearContext();
     }
 }

@@ -51,6 +51,10 @@ public class InitTaskServiceJpaImpl implements InitTaskService {
             List<String> optionValues = args.getOptionValues(SKIP_SYNC_ARGS_NAME);
             if (!CollectionUtils.isEmpty(optionValues)
                     && optionValues.contains(Boolean.TRUE.toString())) {
+                // 根据 ServletRequest 的 getLocale 方法指示：
+                // 当请求头中包含 Accept-Language 值时，返回指定的语言代码，否则返回系统默认语言代码
+                // Spring 包装的 SavedRequest 会将返回的语言代码保存到本地线程中
+                // 当通过下面的方法获取国际化消息内容时，自动从本地线程中取得请求对应的语言代码，从而获得对应语言的国际化内容
                 String skipMessage = sourceAccessor.getMessage("InitTaskService.syncData.skipMessage",
                         new Object[]{SKIP_SYNC_ARGS_NAME},
                         Strings.lenientFormat("发现 --%s=true 将跳过同步数据", SKIP_SYNC_ARGS_NAME));
@@ -97,15 +101,10 @@ public class InitTaskServiceJpaImpl implements InitTaskService {
                 log.debug(discardMessage);
             }
         }
-
     }
 
     private InitTask convertEntity(Initializer initializer) {
         InitTask entity = mapper.toEntity(initializer);
-        // 根据 ServletRequest 的 getLocale 方法指示：
-        // 当请求头中包含 Accept-Language 值时，返回指定的语言代码，否则返回系统默认语言代码
-        // Spring 包装的 SavedRequest 会将返回的语言代码保存到本地线程中
-        // 当通过下面的方法获取国际化消息内容时，自动从本地线程中取得请求对应的语言代码，从而获得对应语言的国际化内容
         entity.setName(sourceAccessor.getMessage(entity.getPath(), entity.getName()));
         // 如果是自动执行初始化，那么属于系统类型的初始化任务
         if (initializer.isAutoExecute()) {
@@ -125,26 +124,24 @@ public class InitTaskServiceJpaImpl implements InitTaskService {
                 String skipMessage = sourceAccessor.getMessage("InitTaskService.autoExecute.skipMessage",
                         new Object[]{SKIP_EXECUTE_ARGS_NAME},
                         Strings.lenientFormat("发现 --%s=true 将跳过自动执行", SKIP_EXECUTE_ARGS_NAME));
-                log.info(skipMessage);
+                log.warn(skipMessage);
                 return;
             }
         }
 
         if (CollectionUtils.isEmpty(initializers)) {
             String ignoredMessage = sourceAccessor.getMessage("InitTaskService.autoExecute.ignored",
-                    "未发现任何初始化器的实现，已跳过自动执行");
-            log.info(ignoredMessage);
+                    "未发现任何初始化器的实现，已忽略自动执行");
+            log.warn(ignoredMessage);
             return;
         }
 
-        initializers.stream()
-                .filter(Initializer::isAutoExecute)
-                .forEach(this::attemptExecute);
-
+        initializers.stream().filter(Initializer::isAutoExecute).forEach(this::attemptExecute);
     }
 
     private void attemptExecute(Initializer initializer) {
-        InitTask task = repository.findByPath(initializer.getPath());
+        String path = initializer.getPath();
+        InitTask task = repository.findByPath(path);
         if (task == null || !task.isExecutable()) {
             log.warn(sourceAccessor.getMessage("InitTaskService.autoExecute.skipped",
                     new Object[]{task},
@@ -153,7 +150,6 @@ public class InitTaskServiceJpaImpl implements InitTaskService {
         }
 
         String name = task.getName();
-        String path = task.getPath();
         log.info(sourceAccessor.getMessage("InitTaskService.autoExecute.started",
                 new Object[]{name, path},
                 Strings.lenientFormat("准备执行初始化任务：{}--[{}]", name, path)));
@@ -164,8 +160,8 @@ public class InitTaskServiceJpaImpl implements InitTaskService {
             Stopwatch stopwatch = Stopwatch.createStarted();
             initializer.execute();
             // 如果支持重复执行，那么设置为默认状态，否则设置为已完成状态
-            TaskStatus taskStatus = initializer.isSupportRepeat() ? TaskStatus.DEFAULT : TaskStatus.COMPLETED;
-            task.setStatus(taskStatus);
+            TaskStatus status = initializer.isSupportRepeat() ? TaskStatus.DEFAULT : TaskStatus.COMPLETED;
+            task.setStatus(status);
 
             Stopwatch stop = stopwatch.stop();
             String successMessage = sourceAccessor.getMessage("InitTaskService.autoExecute.success",

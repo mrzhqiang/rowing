@@ -113,7 +113,7 @@ public class ActionLogHandler {
         }
         // 可能还没查到 IP 地址的地理位置，此时手动发起转换请求
         String host = Authentications.currentHost();
-        if (!Authentications.UNKNOWN_HOST.equals(host)) {
+        if (!Authentications.UNKNOWN_HOST_HOLDER.equals(host)) {
             sessionDetailsService.observeApi(host)
                     .onErrorResumeNext(sessionDetailsService.observeDb(host))
                     .subscribe(new DefaultObserver<SessionDetails>() {

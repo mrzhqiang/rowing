@@ -1,25 +1,37 @@
 package com.github.mrzhqiang.rowing.util;
 
 import com.github.mrzhqiang.rowing.modules.account.CurrentUser;
+import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
 import org.springframework.security.authentication.AuthenticationTrustResolverImpl;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
- * 身份验证工具。
+ * 认证工具。
  */
 public final class Authentications {
     private Authentications() {
         // no instances
     }
 
-    public static final String UNKNOWN_USERNAME = "(unknown-user)";
-    public static final String UNKNOWN_HOST = "(unknown-host)";
+    /**
+     * 未知用户的占位符。
+     */
+    public static final String UNKNOWN_USER_HOLDER = "(unknown-user)";
+    /**
+     * 未知主机的占位符。
+     */
+    public static final String UNKNOWN_HOST_HOLDER = "(unknown-host)";
 
     /**
      * 用来判断当前 Authentication 属于匿名用户还是记住用户。
@@ -64,7 +76,7 @@ public final class Authentications {
 
     private static String attemptFindUsername(Object it) {
         if (it == null) {
-            return UNKNOWN_USERNAME;
+            return UNKNOWN_USER_HOLDER;
         }
         if (it instanceof UserDetails) {
             return ((UserDetails) it).getUsername();
@@ -78,7 +90,7 @@ public final class Authentications {
     public static String currentUsername() {
         return Authentications.ofLogin()
                 .flatMap(Authentications::findUsername)
-                .orElse(UNKNOWN_USERNAME);
+                .orElse(UNKNOWN_USER_HOLDER);
     }
 
     /**
@@ -88,16 +100,35 @@ public final class Authentications {
         return Authentications.ofCurrent()
                 .map(Authentication::getDetails)
                 .map(Authentications::attemptFindHost)
-                .orElse(UNKNOWN_HOST);
+                .orElse(UNKNOWN_HOST_HOLDER);
     }
 
     private static String attemptFindHost(Object details) {
         if (details == null) {
-            return UNKNOWN_HOST;
+            return UNKNOWN_HOST_HOLDER;
         }
         if (details instanceof WebAuthenticationDetails) {
             return ((WebAuthenticationDetails) details).getRemoteAddress();
         }
-        return UNKNOWN_HOST;
+        return UNKNOWN_HOST_HOLDER;
+    }
+
+    /**
+     * 作为 system 用户认证。
+     * <p>
+     * 注意：调用此方法后，一定要在执行完任务后，调用 {@link SecurityContextHolder#clearContext()} 清理安全上下文。
+     *
+     * @param properties Spring Security 内置属性配置。
+     */
+    public static void asSystem(SecurityProperties properties) {
+        SecurityProperties.User user = properties.getUser();
+        SecurityContext context = SecurityContextHolder.createEmptyContext();
+        String name = user.getName();
+        String password = user.getPassword();
+        String[] roles = user.getRoles().toArray(new String[0]);
+        List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(roles);
+        Authentication authentication = UsernamePasswordAuthenticationToken.authenticated(name, password, authorities);
+        context.setAuthentication(authentication);
+        SecurityContextHolder.setContext(context);
     }
 }
