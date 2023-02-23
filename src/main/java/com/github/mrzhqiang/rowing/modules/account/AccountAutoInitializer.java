@@ -1,6 +1,6 @@
 package com.github.mrzhqiang.rowing.modules.account;
 
-import com.github.mrzhqiang.rowing.modules.init.Initializer;
+import com.github.mrzhqiang.rowing.modules.init.AutoInitializer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
-public class AccountAutoInitializer implements Initializer {
+public class AccountAutoInitializer extends AutoInitializer {
 
     private final AccountService service;
 
@@ -24,14 +24,8 @@ public class AccountAutoInitializer implements Initializer {
     }
 
     @Override
-    public void execute() {
+    protected void autoRun() throws Exception {
         service.initAdmin();
-
-    }
-
-    @Override
-    public boolean isAutoExecute() {
-        return false;
     }
 
     @Override

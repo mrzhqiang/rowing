@@ -24,7 +24,7 @@ final class InitializationOrderRegistration {
 
     static {
         Step order = new Step(INITIAL_ORDER, ORDER_STEP);
-        // 以下是具有严格顺序要求的初始化实现
+        // 以下是具有严格顺序要求的自动初始化实现
         put(DictAutoInitializer.class, order.next());
         put(SettingAutoInitializer.class, order.next());
         put(MenuAutoInitializer.class, order.next());
@@ -32,13 +32,13 @@ final class InitializationOrderRegistration {
     }
 
     /**
-     * Register a {@link Initializer} with its specific position. If the {@link Initializer} was
+     * Register a {@link AutoInitializer} with its specific position. If the {@link AutoInitializer} was
      * already registered before, the position previously defined is not going to be overridden
      *
-     * @param initializerClass the {@link Initializer} to register
+     * @param initializerClass the {@link AutoInitializer} to register
      * @param position         the position to associate with the {@link Filter}
      */
-    private static void put(Class<? extends Initializer> initializerClass, int position) {
+    private static void put(Class<? extends AutoInitializer> initializerClass, int position) {
         String className = initializerClass.getName();
         if (INITIALIZER_TO_ORDER.containsKey(className)) {
             return;

@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Version;
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
@@ -33,7 +34,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @MappedSuperclass
-public abstract class BaseEntity {
+public abstract class BaseEntity implements Serializable {
 
     /**
      * ID 编号。

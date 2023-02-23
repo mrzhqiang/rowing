@@ -2,7 +2,6 @@ package com.github.mrzhqiang.rowing.modules.account;
 
 import com.github.mrzhqiang.helper.Environments;
 import com.github.mrzhqiang.helper.random.RandomStrings;
-import com.github.mrzhqiang.rowing.config.RowingSecurityProperties;
 import com.github.mrzhqiang.rowing.domain.Authority;
 import com.google.common.base.Preconditions;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -56,10 +56,9 @@ public class AccountServiceJpaImpl implements AccountService {
         // 检测是不是系统
         SecurityProperties.User user = properties.getUser();
         if (user.getName().equals(username)) {
-            String[] roles = user.getRoles().toArray(new String[0]);
             return User.withUsername(username)
                     .password(passwordEncoder.encode(user.getPassword()))
-                    .roles(roles)
+                    .roles(StringUtils.toStringArray(user.getRoles()))
                     .build();
         }
 

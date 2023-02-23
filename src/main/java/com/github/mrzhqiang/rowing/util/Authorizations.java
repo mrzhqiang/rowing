@@ -11,6 +11,13 @@ public final class Authorizations {
     }
 
     /**
+     * 角色前缀。
+     * <p>
+     * 这个前缀是 Spring Security 框架的默认角色前缀。
+     */
+    public static final String ROLE_PREFIX = "ROLE_";
+
+    /**
      * 管理员角色授权。
      */
     public static final String HAS_ROLE_ADMIN = "hasRole('ROLE_ADMIN')";

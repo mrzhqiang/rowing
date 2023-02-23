@@ -1,8 +1,7 @@
 package com.github.mrzhqiang.rowing.modules.dict;
 
 import com.github.mrzhqiang.rowing.domain.DictType;
-import com.github.mrzhqiang.rowing.modules.init.InitializationException;
-import com.github.mrzhqiang.rowing.modules.init.Initializer;
+import com.github.mrzhqiang.rowing.modules.init.AutoInitializer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;
@@ -14,7 +13,7 @@ import java.io.File;
  */
 @Slf4j
 @Component
-public class DictAutoInitializer implements Initializer {
+public class DictAutoInitializer extends AutoInitializer {
 
     /**
      * 字典 Excel 文件地址。
@@ -28,22 +27,13 @@ public class DictAutoInitializer implements Initializer {
     }
 
     @Override
-    public void execute() {
-        try {
-            // 通过字典类型枚举，获取指定包路径，同步此包下的所有枚举作为内置字典
-            String basePackage = DictType.class.getPackage().getName();
-            service.syncInternal(basePackage);
+    protected void autoRun() throws Exception {
+        // 通过字典类型枚举，获取指定包路径，同步此包下的所有枚举作为内置字典
+        String basePackage = DictType.class.getPackage().getName();
+        service.syncInternal(basePackage);
 
-            // 通过 Excel 文件，导入所有内容作为 Excel 字典
-            File excelFile = ResourceUtils.getFile(EXCEL_FILE_LOCATION);
-            service.importExcel(excelFile);
-        } catch (Exception e) {
-            throw new InitializationException(e);
-        }
-    }
-
-    @Override
-    public boolean isAutoExecute() {
-        return true;
+        // 通过 Excel 文件，导入所有内容作为 Excel 字典
+        File excelFile = ResourceUtils.getFile(EXCEL_FILE_LOCATION);
+        service.importExcel(excelFile);
     }
 }

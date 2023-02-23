@@ -10,8 +10,12 @@ import org.springframework.util.ClassUtils;
 /**
  * 初始化映射器。
  */
-@Mapper(componentModel = "spring",
-        imports = {TaskType.class, TaskStatus.class, Logic.class, ClassUtils.class})
+@Mapper(componentModel = "spring", imports = {
+        Logic.class,
+        TaskStatus.class,
+        TaskType.class,
+        ClassUtils.class,
+        InitializationOrderRegistration.class})
 public interface InitTaskMapper {
 
     @Mapping(target = "lastModifiedBy", ignore = true)
@@ -26,6 +30,6 @@ public interface InitTaskMapper {
     @Mapping(target = "type", expression = "java(TaskType.OPTIONAL)")
     @Mapping(target = "name", expression = "java(ClassUtils.getShortName(initializer.getClass()))")
     @Mapping(target = "path", source = "initializer.path")
-    @Mapping(target = "ordered", source = "initializer.order")
+    @Mapping(target = "ordered", expression = "java(InitializationOrderRegistration.find(initializer))")
     InitTask toEntity(Initializer initializer);
 }

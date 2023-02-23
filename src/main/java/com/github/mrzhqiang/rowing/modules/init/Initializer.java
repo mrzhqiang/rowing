@@ -1,38 +1,27 @@
 package com.github.mrzhqiang.rowing.modules.init;
 
-import org.springframework.core.Ordered;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ClassUtils;
 
 /**
  * 初始化器。
  * <p>
- * 注意：实现类必须标记为 {@link Component Spring 组件}，否则无法被记录到数据库，并且无法自动执行。
- * <p>
- * 另外，应该在 {@link InitializationOrderRegistration} 中对实现类进行顺序注册，否则无法保证执行顺序。
- * <p>
- * 关于 {@link Ordered} 接口：用于对初始化顺序进行排序。
+ * 主要是进行一些初始化工作，这个接口定义了一些规则，以便更好的记录并执行初始化。
  */
-public interface Initializer extends Ordered {
+public interface Initializer {
 
     /**
      * 执行初始化。
      * <p>
-     * 此方法上的事务，只有遇到初始化异常才会回滚。
-     * <p>
-     * 如果当前存在事务，那么会开启一个新事务，所以不会回滚当前事务。
+     * 注意，执行初始化应该在新的事务下进行，当遇到异常时，可以回滚执行的操作，且不影响调用方。
      */
-    @Transactional(rollbackFor = InitializationException.class, propagation = Propagation.REQUIRES_NEW)
     void execute();
 
     /**
-     * 此初始化器的唯一路径。
+     * 路径。
      * <p>
-     * 必须保证全局唯一，通过实现类的全限定类名可以保证全局唯一。
+     * 通过实现类的全限定类名可以保证全局唯一。
      *
-     * @return 初始化器的路径。不会返回 Null 值。
+     * @return 初始化器的路径。
      */
     default String getPath() {
         return ClassUtils.getQualifiedName(getClass());
@@ -60,9 +49,4 @@ public interface Initializer extends Ordered {
         return true;
     }
 
-    @Override
-    default int getOrder() {
-        // 从注册登记中获得执行顺序，有执行要求的初始化器必须注册登记
-        return InitializationOrderRegistration.find(this);
-    }
 }

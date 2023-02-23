@@ -1,4 +1,4 @@
-package com.github.mrzhqiang.rowing.modules.monitor;
+package com.github.mrzhqiang.rowing.monitor;
 
 import com.github.mrzhqiang.rowing.modules.session.SessionProperties;
 import com.google.common.util.concurrent.RateLimiter;

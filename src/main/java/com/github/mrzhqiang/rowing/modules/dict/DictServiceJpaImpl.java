@@ -14,7 +14,6 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.context.MessageSource;
 import org.springframework.context.support.MessageSourceAccessor;
-import org.springframework.data.domain.Example;
 import org.springframework.data.rest.webmvc.json.EnumTranslator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,8 +60,8 @@ public class DictServiceJpaImpl implements DictService {
         Preconditions.checkNotNull(enumClass, "enum class == null");
 
         String simpleName = enumClass.getSimpleName();
-        // 枚举类名称是大写开头的驼峰命名，转为带 '-' 连接符的小写名称，作为内置数据字典的 code 关键字
-        String code = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_HYPHEN, simpleName);
+        // 枚举类名称是大写开头的驼峰命名，转为带 '_' 连接符的大写名称，作为内置数据字典的 code 关键字
+        String code = CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, simpleName);
         // 通过从 message.properties 文件中获取枚举类的国际化内容，如果它不存在则使用枚举类的简称作为字典组名称
         String name = sourceAccessor.getMessage(enumClass.getName(), simpleName);
 
@@ -180,21 +179,18 @@ public class DictServiceJpaImpl implements DictService {
                 break;
             }
 
-            if (groupRepository.existsByCode(code)) {
-                String emptyCodeMessage = sourceAccessor.getMessage("DictService.importExcel.exists.code",
-                        new Object[]{code},
-                        Strings.lenientFormat("发现字典组 code %s 已存在，忽略此条数据", code));
-                log.warn(emptyCodeMessage);
-                continue;
-            }
-
-            DictGroup entity = new DictGroup();
+            DictGroup entity = groupRepository.findByCode(code).orElseGet(DictGroup::new);
             entity.setName(name);
             entity.setCode(code);
             entity.setType(DictType.EXCEL);
             // save 方法本身带有事务，然后当前 service public 方法也带有事务
             // 根据 REQUIRED 传播类型，则 save 会自动加入 service 的当前事务
             groupMap.put(code, groupRepository.save(entity));
+
+            String groupMessage = sourceAccessor.getMessage("DictService.importExcel.group",
+                    new Object[]{name, code},
+                    Strings.lenientFormat("Excel 字典组 %s-%s 已同步", name, code));
+            log.info(groupMessage);
         }
         return groupMap;
     }
@@ -247,19 +243,16 @@ public class DictServiceJpaImpl implements DictService {
                 break;
             }
 
-            DictItem entity = new DictItem();
+            DictItem entity = itemRepository.findByGroup_CodeAndValue(code, value).orElseGet(DictItem::new);
             entity.setLabel(label);
             entity.setValue(value);
             entity.setGroup(dictGroup);
-            if (itemRepository.exists(Example.of(entity))) {
-                String entityExistsMessage = sourceAccessor.getMessage("DictService.importExcel.entity.exists",
-                        new Object[]{entity},
-                        Strings.lenientFormat("检测到实体 %s 已存在，跳过新增操作", entity));
-                log.warn(entityExistsMessage);
-                continue;
-            }
-
             itemRepository.save(entity);
+
+            String itemMessage = sourceAccessor.getMessage("DictService.importExcel.item",
+                    new Object[]{label, value, code},
+                    Strings.lenientFormat("Excel 字典项 %s-%s 已同步到 %s 字典组", label, value, code));
+            log.info(itemMessage);
         }
     }
 }

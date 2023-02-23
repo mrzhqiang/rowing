@@ -1,12 +1,9 @@
 package com.github.mrzhqiang.rowing.modules.init;
 
-import com.github.mrzhqiang.rowing.util.Authentications;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
-import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 /**
@@ -22,18 +19,13 @@ import org.springframework.stereotype.Component;
 public final class InitializationSyncRunner implements ApplicationRunner {
 
     private final InitTaskService service;
-    private final SecurityProperties properties;
 
-    public InitializationSyncRunner(InitTaskService service,
-                                    SecurityProperties properties) {
+    public InitializationSyncRunner(InitTaskService service) {
         this.service = service;
-        this.properties = properties;
     }
 
     @Override
     public void run(ApplicationArguments args) {
-        Authentications.asSystem(properties);
         service.syncData(args);
-        SecurityContextHolder.clearContext();
     }
 }

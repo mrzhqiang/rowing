@@ -7,14 +7,14 @@ import org.springframework.security.authentication.AuthenticationTrustResolverIm
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * 认证工具。
@@ -114,21 +114,19 @@ public final class Authentications {
     }
 
     /**
-     * 作为 system 用户认证。
-     * <p>
-     * 注意：调用此方法后，一定要在执行完任务后，调用 {@link SecurityContextHolder#clearContext()} 清理安全上下文。
+     * 通过自带安全属性生成 system 用户认证。
      *
      * @param properties Spring Security 内置属性配置。
+     * @return 认证信息。
      */
-    public static void asSystem(SecurityProperties properties) {
+    public static Authentication ofSystem(SecurityProperties properties) {
         SecurityProperties.User user = properties.getUser();
-        SecurityContext context = SecurityContextHolder.createEmptyContext();
         String name = user.getName();
         String password = user.getPassword();
-        String[] roles = user.getRoles().toArray(new String[0]);
-        List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(roles);
-        Authentication authentication = UsernamePasswordAuthenticationToken.authenticated(name, password, authorities);
-        context.setAuthentication(authentication);
-        SecurityContextHolder.setContext(context);
+        List<GrantedAuthority> authorities = user.getRoles().stream()
+                // role 可以不带前缀，但 GrantedAuthority 必须携带前缀
+                .map(it -> new SimpleGrantedAuthority(Authorizations.ROLE_PREFIX + it))
+                .collect(Collectors.toList());
+        return UsernamePasswordAuthenticationToken.authenticated(name, password, authorities);
     }
 }

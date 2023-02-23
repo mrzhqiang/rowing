@@ -1,7 +1,6 @@
 package com.github.mrzhqiang.rowing.modules.setting;
 
-import com.github.mrzhqiang.rowing.modules.init.InitializationException;
-import com.github.mrzhqiang.rowing.modules.init.Initializer;
+import com.github.mrzhqiang.rowing.modules.init.AutoInitializer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;
@@ -13,7 +12,7 @@ import java.io.File;
  */
 @Slf4j
 @Component
-public class SettingAutoInitializer implements Initializer {
+public class SettingAutoInitializer extends AutoInitializer {
 
     /**
      * 系统设置 Excel 文件地址。
@@ -27,17 +26,9 @@ public class SettingAutoInitializer implements Initializer {
     }
 
     @Override
-    public void execute() {
-        try {
-            File excelFile = ResourceUtils.getFile(EXCEL_FILE_LOCATION);
-            service.importExcel(excelFile);
-        } catch (Exception e) {
-            throw new InitializationException(e);
-        }
+    protected void autoRun() throws Exception {
+        File excelFile = ResourceUtils.getFile(EXCEL_FILE_LOCATION);
+        service.importExcel(excelFile);
     }
 
-    @Override
-    public boolean isAutoExecute() {
-        return false;
-    }
 }

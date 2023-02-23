@@ -27,20 +27,20 @@ public class DictGroup extends AuditableEntity {
      * <p>
      * 通常用于界面展示。
      */
-    @Column(nullable = false)
+    @Column(nullable = false, length = 100)
     private String name;
     /**
      * 代码。
      * <p>
      * 可以用来查询相关字典项，因此必须保证全局唯一。
      */
-    @Column(unique = true, nullable = false)
+    @Column(unique = true, nullable = false, length = 50)
     private String code;
     /**
      * 类型。
      */
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = false, length = 20)
     private DictType type;
 
     /**

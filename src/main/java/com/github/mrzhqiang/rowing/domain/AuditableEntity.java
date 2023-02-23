@@ -1,6 +1,5 @@
 package com.github.mrzhqiang.rowing.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -11,7 +10,6 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.annotation.Nullable;
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
 import java.time.Instant;
@@ -41,8 +39,6 @@ public abstract class AuditableEntity extends BaseEntity {
      * <p>
      * 要解决这个问题，必须将此字段排除在 ToString 之外。
      */
-    @Nullable
-    @JsonIgnore
     @CreatedBy
     private String createdBy;
     /**
@@ -59,8 +55,6 @@ public abstract class AuditableEntity extends BaseEntity {
      * <p>
      * 要解决这个问题，必须将此字段排除在 ToString 之外。
      */
-    @Nullable
-    @JsonIgnore
     @LastModifiedBy
     private String lastModifiedBy;
     /**
