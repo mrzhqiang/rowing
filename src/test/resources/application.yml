@@ -1,0 +1,52 @@
+spring:
+  application:
+    name: "Rowing Test"
+  messages:
+    # 这里声明 MessageSource 加载的国际化消息文件列表，以逗号 (,) 分割
+    basename: messages,org.springframework.security.messages
+    fallback-to-system-locale: false
+  datasource:
+    driver-class-name: org.sqlite.JDBC
+    url: jdbc:sqlite:./test.db
+  jpa:
+    hibernate:
+      ddl-auto: update
+    # 单元测试，打印 SQL 细节
+    show-sql: true
+  cache:
+    type: simple
+  data:
+    rest:
+      base-path: /api
+      enable-enum-translation: true
+  security:
+    user:
+      name: system
+      password: 123456
+      roles:
+        - ADMIN
+  codec:
+    # 在 DEBUG 级别记录请求的表单数据；在 TRACE 级别记录请求的 Header 信息
+    log-request-details: true
+  session:
+    # 5 minutes
+    timeout: 300s
+  kaptcha:
+    # 开发环境下屏蔽，线上建议打开
+    enabled: false
+logging:
+  logback:
+    rollingpolicy:
+      # 开发环境下，每次启动清理历史日志
+      clean-history-on-start: true
+rowing:
+  security:
+    remember-me: false
+  session:
+    # 会话过期重定向地址
+    expired-path: "/login?expired"
+  okhttp:
+    cache-path: ${user.dir}/.cache
+    cache-max-size: 100MB
+    call-timeout: 5s
+    logging-level: BODY
