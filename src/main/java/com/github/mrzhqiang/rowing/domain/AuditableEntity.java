@@ -12,9 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 
 /**
  * 可审计抽象实体。
@@ -45,7 +43,7 @@ public abstract class AuditableEntity extends BaseEntity {
      * 创建时间。
      */
     @CreatedDate
-    private Instant created;
+    private LocalDateTime created;
     /**
      * 最近修改人。
      * <p>
@@ -61,53 +59,6 @@ public abstract class AuditableEntity extends BaseEntity {
      * 最后修改时间。
      */
     @LastModifiedDate
-    private Instant lastModified;
+    private LocalDateTime lastModified;
 
-    /**
-     * 创建时间。
-     * <p>
-     * 这是一个 UTC 时间戳，通常应该转为本地时间，所以请调用 {@link #getLocalCreated()} 方法。
-     * <p>
-     * 本方法为受保护的访问级别，可以避免造成误解。
-     *
-     * @return UTC 瞬间时刻。
-     */
-    protected Instant getCreated() {
-        return created;
-    }
-
-    /**
-     * 最后修改时间。
-     * <p>
-     * 这是一个 UTC 时间戳，通常应该转为本地时间，所以请调用 {@link #getLocalLastModified()} 方法。
-     * <p>
-     * 本方法为受保护的访问级别，可以避免造成误解。
-     *
-     * @return UTC 瞬间时刻。
-     */
-    protected Instant getLastModified() {
-        return lastModified;
-    }
-
-    /**
-     * 本地创建时间。
-     * <p>
-     * 将 UTC 时间转为本地时区的时间，防止跨时区问题。
-     *
-     * @return 本地日期时间。
-     */
-    public LocalDateTime getLocalCreated() {
-        return LocalDateTime.ofInstant(this.created, ZoneId.systemDefault());
-    }
-
-    /**
-     * 本地最后修改时间。
-     * <p>
-     * 将 UTC 时间转为本地时区的时间，防止跨时区问题。
-     *
-     * @return 本地日期时间。
-     */
-    public LocalDateTime getLocalLastModified() {
-        return LocalDateTime.ofInstant(this.lastModified, ZoneId.systemDefault());
-    }
 }

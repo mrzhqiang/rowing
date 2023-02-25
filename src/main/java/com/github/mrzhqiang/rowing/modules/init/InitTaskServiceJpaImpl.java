@@ -115,6 +115,7 @@ public class InitTaskServiceJpaImpl implements InitTaskService {
         return entity;
     }
 
+    @WithSystemUser
     @Override
     public void execute(ApplicationArguments args) {
         // 从运行参数或环境变量中判断是否包含指定参数

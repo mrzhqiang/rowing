@@ -1,5 +1,6 @@
 package com.github.mrzhqiang.rowing.modules.init;
 
+import com.github.mrzhqiang.rowing.domain.SystemUserScope;
 import com.github.mrzhqiang.rowing.system.WithSystemUser;
 import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
@@ -35,7 +36,7 @@ public abstract class AutoInitializer implements Initializer, Ordered {
      * <p>
      * 关于系统用户：自动初始化在系统启动时执行，可能由于未认证而无法执行，需要一个默认的认证用户。
      */
-    @WithSystemUser
+    @WithSystemUser(scope = SystemUserScope.CURRENT)
     @Transactional(rollbackFor = InitializationException.class, propagation = Propagation.REQUIRES_NEW)
     @Override
     public void execute() {
