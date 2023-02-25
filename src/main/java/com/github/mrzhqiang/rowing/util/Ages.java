@@ -47,7 +47,7 @@ public final class Ages {
         // 得到今年的生日日期
         LocalDate thisYearBirthday = birthday.withYear(now.getYear());
         // 如果今年还没过生日，说明未满周岁，需要将岁数 -1 处理
-        if (now.isAfter(thisYearBirthday)) {
+        if (thisYearBirthday.isBefore(now)) {
             age--;
         }
         // 满周岁则直接返回
