@@ -19,9 +19,9 @@ public class SettingAutoInitializer extends AutoInitializer {
      */
     private static final String EXCEL_FILE_LOCATION = ResourceUtils.CLASSPATH_URL_PREFIX + "data/setting.xlsx";
 
-    private final SysSettingService service;
+    private final SettingService service;
 
-    public SettingAutoInitializer(SysSettingService service) {
+    public SettingAutoInitializer(SettingService service) {
         this.service = service;
     }
 

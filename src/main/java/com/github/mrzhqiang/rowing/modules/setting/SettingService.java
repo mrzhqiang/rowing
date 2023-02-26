@@ -2,10 +2,15 @@ package com.github.mrzhqiang.rowing.modules.setting;
 
 import java.io.File;
 
-public interface SysSettingService {
+/**
+ * 设置服务。
+ */
+public interface SettingService {
 
-    String GROUP_SHEET_NAME = "group";
-    String ITEM_SHEET_NAME = "item";
+    /**
+     * 默认设置在 Excel 文件中的 Sheet 页面名称。
+     */
+    String SHEET_NAME = "data";
 
     /**
      * 通过导入 Excel 文件生成系统设置相关实体数据。
