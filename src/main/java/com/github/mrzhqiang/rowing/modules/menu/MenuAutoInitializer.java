@@ -12,4 +12,9 @@ public class MenuAutoInitializer extends AutoInitializer {
     protected void autoRun() throws Exception {
 
     }
+
+    @Override
+    public boolean isSupportRepeat() {
+        return false;
+    }
 }

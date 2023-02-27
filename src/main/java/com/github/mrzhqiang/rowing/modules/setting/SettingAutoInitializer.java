@@ -31,4 +31,8 @@ public class SettingAutoInitializer extends AutoInitializer {
         service.importExcel(excelFile);
     }
 
+    @Override
+    public boolean isSupportRepeat() {
+        return false;
+    }
 }

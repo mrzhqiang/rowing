@@ -1,4 +1,4 @@
-package com.github.mrzhqiang.rowing.system;
+package com.github.mrzhqiang.rowing.security;
 
 import com.github.mrzhqiang.rowing.domain.SystemUserScope;
 

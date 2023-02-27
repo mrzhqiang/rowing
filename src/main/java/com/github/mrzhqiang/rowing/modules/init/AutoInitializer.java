@@ -1,7 +1,7 @@
 package com.github.mrzhqiang.rowing.modules.init;
 
 import com.github.mrzhqiang.rowing.domain.SystemUserScope;
-import com.github.mrzhqiang.rowing.system.WithSystemUser;
+import com.github.mrzhqiang.rowing.security.WithSystemUser;
 import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;

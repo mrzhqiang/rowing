@@ -4,7 +4,7 @@ import com.github.mrzhqiang.helper.Exceptions;
 import com.github.mrzhqiang.rowing.domain.Logic;
 import com.github.mrzhqiang.rowing.domain.TaskStatus;
 import com.github.mrzhqiang.rowing.domain.TaskType;
-import com.github.mrzhqiang.rowing.system.WithSystemUser;
+import com.github.mrzhqiang.rowing.security.WithSystemUser;
 import com.google.common.base.Stopwatch;
 import com.google.common.base.Strings;
 import lombok.extern.slf4j.Slf4j;

@@ -1,4 +1,4 @@
-package com.github.mrzhqiang.rowing.system;
+package com.github.mrzhqiang.rowing.security;
 
 import com.github.mrzhqiang.rowing.domain.SystemUserScope;
 import com.github.mrzhqiang.rowing.util.Authentications;
@@ -34,7 +34,7 @@ public class SystemUserHandler {
         this.securityProperties = securityProperties;
     }
 
-    @Pointcut("@annotation(com.github.mrzhqiang.rowing.system.WithSystemUser)")
+    @Pointcut("@annotation(com.github.mrzhqiang.rowing.security.WithSystemUser)")
     public void withSystemUserPoint() {
         // 切中所有标记 @SystemOperator 注解的方法
     }
