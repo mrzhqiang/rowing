@@ -15,7 +15,8 @@ export function isExternal(path) {
  * @returns {Boolean}
  */
 export function validUsername(str) {
-  return true
+  // 必须不为空，且属于小写字母+数字的组合，长度在 4 到 24 之间，不以 sid_ 或 tid_ 为前缀
+  return str && /[a-z\d]{4,24}/.test(str) && !str.startsWith('sid_') && !str.startsWith('tid_')
 }
 
 /**
@@ -68,10 +69,7 @@ export function validEmail(email) {
  * @returns {Boolean}
  */
 export function isString(str) {
-  if (typeof str === 'string' || str instanceof String) {
-    return true
-  }
-  return false
+  return typeof str === 'string' || str instanceof String
 }
 
 /**
