@@ -30,7 +30,7 @@ public class LoginForm {
      */
     @NotBlank
     @Size(min = 4, max = 24)
-    @Pattern(regexp = "^[a-z]+[a-z\\d]*$", message = "{LoginForm.username}")
+    @Pattern(regexp = "[a-z\\d]{4,24}", message = "{LoginForm.username}")
     private String username;
     /**
      * 密码。
