@@ -3,6 +3,8 @@ package com.github.mrzhqiang.rowing.modules.init;
 import com.github.mrzhqiang.rowing.domain.Logic;
 import com.github.mrzhqiang.rowing.domain.TaskStatus;
 import com.github.mrzhqiang.rowing.domain.TaskType;
+import com.github.mrzhqiang.rowing.init.InitTask;
+import com.github.mrzhqiang.rowing.init.InitTaskRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;

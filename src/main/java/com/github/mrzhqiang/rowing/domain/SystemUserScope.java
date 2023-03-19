@@ -1,11 +1,13 @@
 package com.github.mrzhqiang.rowing.domain;
 
+import com.github.mrzhqiang.rowing.security.WithSystemUser;
+
 /**
  * 系统用户范围。
  * <p>
  * 用于确定系统用户的影响范围。
  *
- * @see com.github.mrzhqiang.rowing.security.WithSystemUser
+ * @see WithSystemUser
  */
 public enum SystemUserScope {
 
