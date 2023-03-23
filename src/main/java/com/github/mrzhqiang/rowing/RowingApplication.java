@@ -6,6 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 
+import javax.annotation.Nonnull;
+
 @Slf4j
 @SpringBootApplication
 public class RowingApplication implements ApplicationListener<ApplicationReadyEvent> {
@@ -15,7 +17,7 @@ public class RowingApplication implements ApplicationListener<ApplicationReadyEv
     }
 
     @Override
-    public void onApplicationEvent(ApplicationReadyEvent event) {
+    public void onApplicationEvent(@Nonnull ApplicationReadyEvent event) {
         log.info("=============================================");
         log.info("           系统启动完毕，可以正常使用！         ");
         log.info("=============================================");
