@@ -1,6 +1,8 @@
 package com.github.mrzhqiang.rowing.action;
 
 import com.github.mrzhqiang.helper.Exceptions;
+import com.github.mrzhqiang.rowing.domain.ActionState;
+import com.github.mrzhqiang.rowing.domain.ActionType;
 import com.github.mrzhqiang.rowing.session.SessionDetails;
 import com.github.mrzhqiang.rowing.session.SessionDetailsService;
 import com.github.mrzhqiang.rowing.session.Sessions;

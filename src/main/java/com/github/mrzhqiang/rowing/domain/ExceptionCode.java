@@ -1,4 +1,4 @@
-package com.github.mrzhqiang.rowing.exception;
+package com.github.mrzhqiang.rowing.domain;
 
 import com.google.common.base.Strings;
 import com.google.common.base.VerifyException;

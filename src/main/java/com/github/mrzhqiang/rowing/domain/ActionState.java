@@ -1,4 +1,4 @@
-package com.github.mrzhqiang.rowing.action;
+package com.github.mrzhqiang.rowing.domain;
 
 public enum ActionState {
     /**

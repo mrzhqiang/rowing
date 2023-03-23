@@ -1,5 +1,7 @@
 package com.github.mrzhqiang.rowing.action;
 
+import com.github.mrzhqiang.rowing.domain.ActionType;
+
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
