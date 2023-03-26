@@ -15,7 +15,7 @@ import javax.persistence.MappedSuperclass;
 import java.time.LocalDateTime;
 
 /**
- * 可审计抽象实体。
+ * 审计实体。
  * <p>
  * 审计信息可以溯源创建人和创建时间，以及最近修改人和最近修改时间。
  * <p>
@@ -56,7 +56,7 @@ public abstract class AuditableEntity extends BaseEntity {
     @LastModifiedBy
     private String lastModifiedBy;
     /**
-     * 最后修改时间。
+     * 最近修改时间。
      */
     @LastModifiedDate
     private LocalDateTime lastModified;

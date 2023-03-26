@@ -1,5 +1,6 @@
 package com.github.mrzhqiang.rowing.domain;
 
+import com.github.mrzhqiang.rowing.dict.ClassScanner;
 import com.github.mrzhqiang.rowing.dict.DictGroup;
 
 /**

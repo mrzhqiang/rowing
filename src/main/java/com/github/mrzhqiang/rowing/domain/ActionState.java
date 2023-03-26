@@ -1,5 +1,8 @@
 package com.github.mrzhqiang.rowing.domain;
 
+/**
+ * 操作状态。
+ */
 public enum ActionState {
     /**
      * 未知
