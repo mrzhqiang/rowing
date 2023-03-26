@@ -1,4 +1,4 @@
-package com.github.mrzhqiang.rowing.domain;
+package com.github.mrzhqiang.rowing.dict;
 
 import com.github.mrzhqiang.helper.Exceptions;
 import com.google.common.base.Preconditions;

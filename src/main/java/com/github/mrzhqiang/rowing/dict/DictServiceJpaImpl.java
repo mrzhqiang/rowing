@@ -1,6 +1,5 @@
 package com.github.mrzhqiang.rowing.dict;
 
-import com.github.mrzhqiang.rowing.domain.ClassScanner;
 import com.github.mrzhqiang.rowing.domain.DictType;
 import com.github.mrzhqiang.rowing.util.Cells;
 import com.google.common.base.CaseFormat;
