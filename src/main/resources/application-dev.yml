@@ -1,5 +1,8 @@
+# Tomcat 配置
 server:
   port: 80
+
+# 日志配置
 logging:
   level:
     # 通过包名来自定义显示的日志级别，可以是前缀包含
@@ -10,6 +13,7 @@ logging:
     rollingpolicy:
       # 开发环境下，每次启动清理历史日志
       clean-history-on-start: true
+
 # 开启调试模式，则 LoggingApplicationListener 会开启 web、sql 以及 org.springframework.boot 日志的调试模式
 debug: true
 # 开启跟踪模式，则 LoggingApplicationListener 会开启以下日志的跟踪模式：
@@ -20,6 +24,8 @@ debug: true
 # org.hibernate.tool.hbm2ddl
 # 由于信息太多，一般情况下不开启跟踪模式，除非遇到疑难杂症无法定位问题
 #trace: true
+
+# Spring 配置
 spring:
   application:
     name: "Rowing Develop"
@@ -38,14 +44,18 @@ spring:
     #    password: 123456
     connect-timeout: 10s
   codec:
-    # 在 DEBUG 级别记录请求的表单数据；在 TRACE 级别记录请求的 Header 信息
+    # 在 DEBUG 日志级别，打印信息包含请求的表单数据；在 TRACE 日志级别，打印信息包含请求的 Header 信息
     log-request-details: true
   session:
     # 5 minutes
     timeout: 300s
-  kaptcha:
-    # 开发环境下屏蔽，线上建议打开
-    enabled: false
+
+# 验证码配置
+kaptcha:
+  # 开发环境下屏蔽，线上建议打开
+  enabled: false
+
+# 项目配置
 rowing:
   security:
     remember-me: false

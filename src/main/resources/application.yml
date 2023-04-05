@@ -1,3 +1,4 @@
+# Spring 配置
 spring:
   profiles:
     active: dev
@@ -33,9 +34,12 @@ spring:
   security:
     user:
       name: system
-      password: 123455
+      # 仅用于开发环境
+      password: 123456
       roles:
         - ROLE_ADMIN
+
+# 项目配置
 rowing:
   security:
     login-path: "/login"
