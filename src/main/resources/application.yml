@@ -3,7 +3,7 @@ spring:
     active: dev
   messages:
     # 这里声明 MessageSource 加载的国际化消息文件列表，以逗号 (,) 分割
-    basename: messages,org.springframework.security.messages
+    basename: i18n.messages,org.springframework.security.messages
     fallback-to-system-locale: false
   cache:
     redis:
