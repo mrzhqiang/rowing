@@ -23,9 +23,11 @@
 
         <bitwalker.version>1.21</bitwalker.version>
         <geoip2.version>2.15.0</geoip2.version>
-        <kaptcha-spring-boot-starter.version>2022.0.2</kaptcha-spring-boot-starter.version>
+        <kaptcha-spring-boot-starter.version>2023.1.0</kaptcha-spring-boot-starter.version>
         <helper.version>2022.1.2</helper.version>
         <retrofit.version>2.9.0</retrofit.version>
+
+        <snakeyaml.version>2.0</snakeyaml.version>
 
         <poi.version>5.2.2</poi.version>
         <poi-ooxml-schemas.version>4.1.2</poi-ooxml-schemas.version>
