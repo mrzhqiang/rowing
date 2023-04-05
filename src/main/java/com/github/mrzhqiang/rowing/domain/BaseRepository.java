@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import javax.annotation.Nonnull;
 
@@ -26,8 +28,10 @@ import javax.annotation.Nonnull;
  *
  * @param <E> 实体类型。
  */
-@PreAuthorize(Authorizations.HAS_ROLE_USER)
 @NoRepositoryBean
+@PreAuthorize(Authorizations.HAS_ROLE_USER)
+@CrossOrigin
+@Validated
 public interface BaseRepository<E extends BaseEntity> extends JpaRepository<E, Long> {
 
     @PreAuthorize(Authorizations.HAS_ROLE_ADMIN)
