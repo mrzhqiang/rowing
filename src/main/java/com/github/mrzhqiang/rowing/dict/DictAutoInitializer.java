@@ -12,7 +12,7 @@ import java.io.File;
  * 字典自动初始化执行器。
  */
 @Slf4j
-@Component
+//@Component
 public class DictAutoInitializer extends AutoInitializer {
 
     /**

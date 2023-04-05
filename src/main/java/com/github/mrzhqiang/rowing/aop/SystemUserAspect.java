@@ -1,4 +1,4 @@
-package com.github.mrzhqiang.rowing.system;
+package com.github.mrzhqiang.rowing.aop;
 
 import com.github.mrzhqiang.rowing.domain.SystemUserScope;
 import com.github.mrzhqiang.rowing.util.Authentications;
@@ -26,15 +26,15 @@ import java.util.Optional;
 @Slf4j
 @Aspect
 @Component
-public class SystemUserHandler {
+public class SystemUserAspect {
 
     private final SecurityProperties securityProperties;
 
-    public SystemUserHandler(SecurityProperties securityProperties) {
+    public SystemUserAspect(SecurityProperties securityProperties) {
         this.securityProperties = securityProperties;
     }
 
-    @Pointcut("@annotation(com.github.mrzhqiang.rowing.system.WithSystemUser)")
+    @Pointcut("@annotation(com.github.mrzhqiang.rowing.aop.WithSystemUser)")
     public void withSystemUserPoint() {
         // 切中所有标记 @SystemOperator 注解的方法
     }

@@ -12,7 +12,7 @@ spring:
     password:
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     # 单元测试，打印 SQL 细节
     show-sql: true
     database: h2

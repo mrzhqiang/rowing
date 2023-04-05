@@ -12,7 +12,7 @@ spring:
       enable-statistics: true
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
   sql:
     init:
       mode: always
@@ -37,7 +37,7 @@ spring:
       # 仅用于开发环境
       password: 123456
       roles:
-        - ROLE_ADMIN
+        - ADMIN
 
 # 项目配置
 rowing:

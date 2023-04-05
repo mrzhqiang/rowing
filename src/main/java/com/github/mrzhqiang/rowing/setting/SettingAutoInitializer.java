@@ -12,7 +12,7 @@ import java.io.File;
  * 设置自动初始化器。
  */
 @Slf4j
-@Component
+//@Component
 public class SettingAutoInitializer extends AutoInitializer {
 
     /**

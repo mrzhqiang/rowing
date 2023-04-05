@@ -32,7 +32,7 @@ public class AccountServiceJpaImpl implements AccountService {
     private final AccountRepository repository;
     private final StudentAccountRepository studentAccountRepository;
     private final TeacherAccountRepository teacherAccountRepository;
-    private final PasswordEncoder passwordEncoder;
+    //private final PasswordEncoder passwordEncoder;
     private final MessageSourceAccessor sourceAccessor;
 
     public AccountServiceJpaImpl(SecurityProperties properties,
@@ -40,24 +40,24 @@ public class AccountServiceJpaImpl implements AccountService {
                                  AccountRepository repository,
                                  StudentAccountRepository studentAccountRepository,
                                  TeacherAccountRepository teacherAccountRepository,
-                                 PasswordEncoder passwordEncoder,
+                                 //PasswordEncoder passwordEncoder,
                                  MessageSource messageSource) {
         this.properties = properties;
         this.mapper = mapper;
         this.repository = repository;
         this.studentAccountRepository = studentAccountRepository;
         this.teacherAccountRepository = teacherAccountRepository;
-        this.passwordEncoder = passwordEncoder;
+        //this.passwordEncoder = passwordEncoder;
         this.sourceAccessor = new MessageSourceAccessor(messageSource);
     }
 
-    @Override
+    /*@Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         // 检测是不是系统
         SecurityProperties.User user = properties.getUser();
         if (user.getName().equals(username)) {
             return User.withUsername(username)
-                    .password(passwordEncoder.encode(user.getPassword()))
+                    //.password(passwordEncoder.encode(user.getPassword()))
                     .roles(StringUtils.toStringArray(user.getRoles()))
                     .build();
         }
@@ -70,7 +70,7 @@ public class AccountServiceJpaImpl implements AccountService {
         return repository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException(
                         sourceAccessor.getMessage("AccountService.UsernameNotFoundException")));
-    }
+    }*/
 
     @Override
     public Account initAdmin() {
@@ -88,7 +88,7 @@ public class AccountServiceJpaImpl implements AccountService {
         } catch (IOException e) {
             throw new RuntimeException(sourceAccessor.getMessage("AccountService.GenerateAdminFileFailure"), e);
         }
-        admin.setPassword(passwordEncoder.encode(password));
+        //admin.setPassword(passwordEncoder.encode(password));
 
         return admin;
     }
@@ -106,8 +106,8 @@ public class AccountServiceJpaImpl implements AccountService {
         }
 
         Account entity = mapper.toEntity(registerForm);
-        String encodePassword = passwordEncoder.encode(entity.getPassword());
-        entity.setPassword(encodePassword);
+        //String encodePassword = passwordEncoder.encode(entity.getPassword());
+        //entity.setPassword(encodePassword);
         repository.save(entity);
         if (log.isDebugEnabled()) {
             log.debug("created account: {} for register", entity);
@@ -133,7 +133,7 @@ public class AccountServiceJpaImpl implements AccountService {
         // 身份证后 6 位作为密码
         String idCard = form.getIdCard();
         String password = idCard.substring(idCard.length() - 6);
-        account.setPassword(passwordEncoder.encode(password));
+        //account.setPassword(passwordEncoder.encode(password));
         // 默认用户角色
         account.setAuthority(Authority.ROLE_USER);
         return Optional.of(repository.save(account));
@@ -157,7 +157,7 @@ public class AccountServiceJpaImpl implements AccountService {
         // 身份证后 6 位作为密码
         String idCard = form.getIdCard();
         String password = idCard.substring(idCard.length() - 6);
-        account.setPassword(passwordEncoder.encode(password));
+        //account.setPassword(passwordEncoder.encode(password));
         // 默认用户角色
         account.setAuthority(Authority.ROLE_USER);
         return Optional.of(repository.save(account));

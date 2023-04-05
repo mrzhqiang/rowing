@@ -29,8 +29,8 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
  */
 //@EnableWebSecurity
 //@EnableGlobalMethodSecurity(prePostEnabled = true)
-@EnableConfigurationProperties({RowingSecurityProperties.class})
-@Configuration
+//@EnableConfigurationProperties({RowingSecurityProperties.class})
+//@Configuration
 public class SecurityConfiguration {
 
     private final RowingSecurityProperties properties;

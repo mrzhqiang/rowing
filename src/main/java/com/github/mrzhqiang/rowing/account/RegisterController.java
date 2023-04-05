@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-@Controller
-@RequestMapping("/register")
+//@Controller
+//@RequestMapping("/register")
 public class RegisterController {
 
     private final AccountService accountService;

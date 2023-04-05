@@ -21,7 +21,7 @@ import java.util.Optional;
  * <p>
  * 4. 通过学号注册系统账户。
  */
-public interface AccountService extends UserDetailsService {
+public interface AccountService /*extends UserDetailsService*/ {
 
     /**
      * 管理员的用户名。
@@ -47,8 +47,8 @@ public interface AccountService extends UserDetailsService {
      * @return 账户实例。
      * @throws UsernameNotFoundException 当无法通过用户名找到账号时，抛出此异常，表示登录失败。
      */
-    @Override
-    UserDetails loadUserByUsername(String username) throws UsernameNotFoundException;
+    /*@Override
+    UserDetails loadUserByUsername(String username) throws UsernameNotFoundException;*/
 
     /**
      * 初始化管理员的系统账户。

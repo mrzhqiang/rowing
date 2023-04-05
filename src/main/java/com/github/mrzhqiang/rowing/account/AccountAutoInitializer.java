@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
  * 2. 管理员账号初始化。
  */
 @Slf4j
-@Component
+//@Component
 public class AccountAutoInitializer extends AutoInitializer {
 
     private final AccountService service;

@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.time.Instant;
 import java.util.Optional;
 
-@Component
+//@Component
 public class LoginFailureHandler extends SimpleUrlAuthenticationFailureHandler {
 
     private final RowingSecurityProperties rowingSecurityProperties;
