@@ -7,15 +7,17 @@ logging:
   level:
     # 通过包名来自定义显示的日志级别，可以是前缀包含
     # 比如 com.github 包含所有的 com.github.** 包名
-    org.springframework.security: DEBUG
     rowing: DEBUG
+    org.hibernate.type: TRACE
+    org.hibernate.SQL: DEBUG
+    org.springframework.security: INFO
   logback:
     rollingpolicy:
       # 开发环境下，每次启动清理历史日志
       clean-history-on-start: true
 
 # 开启调试模式，则 LoggingApplicationListener 会开启 web、sql 以及 org.springframework.boot 日志的调试模式
-debug: true
+debug: false
 # 开启跟踪模式，则 LoggingApplicationListener 会开启以下日志的跟踪模式：
 # org.springframework
 # org.apache.tomcat
@@ -34,9 +36,9 @@ spring:
     url: jdbc:mysql://127.0.0.1:3306/rowing?serverTimezone=Asia/Shanghai&characterEncoding=utf8&allowMultiQueries=true
     username: root
     password: 123456
-  # 开发环境下，打印 SQL 细节
   jpa:
-    show-sql: true
+    # 是否打印 SQL 细节，其实就是 org.hibernate.SQL 配置项
+    show-sql: false
   redis:
     client-type: lettuce
     database: 1
@@ -44,7 +46,8 @@ spring:
     #    password: 123456
     connect-timeout: 10s
   codec:
-    # 在 DEBUG 日志级别，打印信息包含请求的表单数据；在 TRACE 日志级别，打印信息包含请求的 Header 信息
+    # 在 DEBUG 日志级别，打印信息包含请求的表单数据
+    # 在 TRACE 日志级别，打印信息包含请求的 Header 信息
     log-request-details: true
   session:
     # 5 minutes
