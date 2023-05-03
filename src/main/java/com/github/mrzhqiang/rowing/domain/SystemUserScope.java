@@ -1,6 +1,6 @@
 package com.github.mrzhqiang.rowing.domain;
 
-import com.github.mrzhqiang.rowing.aop.WithSystemUser;
+import com.github.mrzhqiang.rowing.auth.WithSystemUser;
 
 /**
  * 系统用户范围。

@@ -124,8 +124,7 @@ public final class Authentications {
         String name = user.getName();
         String password = user.getPassword();
         List<GrantedAuthority> authorities = user.getRoles().stream()
-                // role 可以不带前缀，但 GrantedAuthority 必须携带前缀
-                .map(it -> new SimpleGrantedAuthority(Authorizations.ROLE_PREFIX + it))
+                .map(Authorizations::ofRole)
                 .collect(Collectors.toList());
         return UsernamePasswordAuthenticationToken.authenticated(name, password, authorities);
     }

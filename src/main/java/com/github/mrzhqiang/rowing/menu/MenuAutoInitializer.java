@@ -10,12 +10,12 @@ import org.springframework.stereotype.Component;
 public class MenuAutoInitializer extends AutoInitializer {
 
     @Override
-    protected void autoRun() throws Exception {
+    protected void onAutoRun() throws Exception {
 
     }
 
     @Override
-    public boolean isSupportRepeat() {
+    public boolean isEachRun() {
         return false;
     }
 }

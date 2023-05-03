@@ -27,13 +27,13 @@ public class SettingAutoInitializer extends AutoInitializer {
     }
 
     @Override
-    protected void autoRun() throws Exception {
+    protected void onAutoRun() throws Exception {
         File excelFile = ResourceUtils.getFile(EXCEL_FILE_LOCATION);
         service.importExcel(excelFile);
     }
 
     @Override
-    public boolean isSupportRepeat() {
+    public boolean isEachRun() {
         return false;
     }
 }

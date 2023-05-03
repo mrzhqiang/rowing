@@ -1,7 +1,7 @@
 package com.github.mrzhqiang.rowing.init;
 
 import com.github.mrzhqiang.rowing.domain.SystemUserScope;
-import com.github.mrzhqiang.rowing.aop.WithSystemUser;
+import com.github.mrzhqiang.rowing.auth.WithSystemUser;
 import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
@@ -24,10 +24,10 @@ public abstract class AutoInitializer implements Initializer, Ordered {
      * 自动运行。
      * <p>
      * 这里是扩展类需要实现的方法，使其专注于业务逻辑。
-     * <p>
-     * 支持抛出任何异常，最终会转化为初始化异常。
+     *
+     * @throws Exception 支持抛出任何异常，最终会转化为初始化异常。
      */
-    protected abstract void autoRun() throws Exception;
+    protected abstract void onAutoRun() throws Exception;
 
     /**
      * 执行初始化。
@@ -39,16 +39,16 @@ public abstract class AutoInitializer implements Initializer, Ordered {
     @WithSystemUser(scope = SystemUserScope.CURRENT)
     @Transactional(rollbackFor = InitializationException.class, propagation = Propagation.REQUIRES_NEW)
     @Override
-    public void execute() {
+    public void run() {
         try {
-            this.autoRun();
+            onAutoRun();
         } catch (Exception e) {
             throw new InitializationException(e);
         }
     }
 
     @Override
-    public final boolean isAutoExecute() {
+    public final boolean isAutoRun() {
         return true;
     }
 

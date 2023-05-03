@@ -27,7 +27,7 @@ public class DictAutoInitializer extends AutoInitializer {
     }
 
     @Override
-    protected void autoRun() throws Exception {
+    protected void onAutoRun() throws Exception {
         // 通过字典类型枚举，获取指定包路径，同步此包下的所有枚举作为内置字典
         String basePackage = DictType.class.getPackage().getName();
         service.syncInternal(basePackage);

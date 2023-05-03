@@ -7,14 +7,7 @@ import org.springframework.util.ClassUtils;
  * <p>
  * 主要是进行一些初始化工作，这个接口定义了一些规则，以便更好的记录并执行初始化。
  */
-public interface Initializer {
-
-    /**
-     * 执行初始化。
-     * <p>
-     * 注意，执行初始化应该在新的事务下进行，当遇到异常时，可以回滚执行的操作，且不影响调用方。
-     */
-    void execute();
+public interface Initializer extends Runnable {
 
     /**
      * 路径。
@@ -28,25 +21,24 @@ public interface Initializer {
     }
 
     /**
-     * 是否自动执行。
+     * 是否自动运行。
      * <p>
-     * 自动执行的初始化器，将在系统启动时，自动调用执行方法。
+     * 自动运行的初始化器，将在系统启动时，自动调用运行方法。
      *
-     * @return 返回 true 表示自动执行；否则表示手动执行。
+     * @return 返回 true 表示自动运行；否则表示手动运行。
      */
-    default boolean isAutoExecute() {
+    default boolean isAutoRun() {
         return false;
     }
 
     /**
-     * 是否支持重复。
+     * 是否每次运行。
      * <p>
-     * 支持重复的初始化器，通常在执行完成后，自动设置为默认状态，以便下次执行。
+     * 自动运行的任务，通常情况下只运行一次，如果开启每次运行，则每次启动都将自动运行。
      *
-     * @return 返回 true 表示重复；否则表示不重复。
+     * @return 返回 true 表示每次运行；否则表示只运行一次。
      */
-    default boolean isSupportRepeat() {
+    default boolean isEachRun() {
         return true;
     }
-
 }

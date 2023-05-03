@@ -1,5 +1,7 @@
 package com.github.mrzhqiang.rowing.util;
 
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
 /**
  * 授权工具。
  * <p>
@@ -30,4 +32,14 @@ public final class Authorizations {
      */
     public static final String HAS_ROLE_ANONYMOUS = "hasRole('ROLE_ANONYMOUS')";
 
+    /**
+     * 角色的权限。
+     *
+     * @param role 指定角色。
+     * @return 带角色前缀的权限。
+     */
+    public static SimpleGrantedAuthority ofRole(String role) {
+        // 角色可以不带前缀，但 GrantedAuthority 必须携带前缀
+        return new SimpleGrantedAuthority(ROLE_PREFIX + role);
+    }
 }

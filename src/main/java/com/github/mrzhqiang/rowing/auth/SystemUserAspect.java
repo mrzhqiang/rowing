@@ -1,4 +1,4 @@
-package com.github.mrzhqiang.rowing.aop;
+package com.github.mrzhqiang.rowing.auth;
 
 import com.github.mrzhqiang.rowing.domain.SystemUserScope;
 import com.github.mrzhqiang.rowing.util.Authentications;
@@ -34,9 +34,9 @@ public class SystemUserAspect {
         this.securityProperties = securityProperties;
     }
 
-    @Pointcut("@annotation(com.github.mrzhqiang.rowing.aop.WithSystemUser)")
+    @Pointcut("@annotation(com.github.mrzhqiang.rowing.auth.WithSystemUser)")
     public void withSystemUserPoint() {
-        // 切中所有标记 @SystemOperator 注解的方法
+        // 切中所有标记 @WithSystemUser 注解的方法
     }
 
     @Around("withSystemUserPoint()")

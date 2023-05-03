@@ -1,10 +1,11 @@
 package com.github.mrzhqiang.rowing.init;
 
 import com.github.mrzhqiang.helper.Exceptions;
+import com.github.mrzhqiang.rowing.auth.WithSystemUser;
 import com.github.mrzhqiang.rowing.domain.Logic;
 import com.github.mrzhqiang.rowing.domain.TaskStatus;
 import com.github.mrzhqiang.rowing.domain.TaskType;
-import com.github.mrzhqiang.rowing.aop.WithSystemUser;
+import com.github.mrzhqiang.rowing.util.Environments;
 import com.google.common.base.Stopwatch;
 import com.google.common.base.Strings;
 import lombok.extern.slf4j.Slf4j;
@@ -46,23 +47,18 @@ public class InitTaskServiceJpaImpl implements InitTaskService {
     @WithSystemUser
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void syncData(ApplicationArguments args) {
+    public void sync(ApplicationArguments args) {
         // 从运行参数或环境变量中判断是否包含指定参数
-        if (args.containsOption(SKIP_SYNC_ARGS_NAME)) {
-            // 解析选项参数，如果存在 true 表示跳过检测
-            List<String> optionValues = args.getOptionValues(SKIP_SYNC_ARGS_NAME);
-            if (!CollectionUtils.isEmpty(optionValues)
-                    && optionValues.contains(Boolean.TRUE.toString())) {
-                // 根据 ServletRequest 的 getLocale 方法指示：
-                // 当请求头中包含 Accept-Language 值时，返回指定的语言代码，否则返回系统默认语言代码
-                // Spring 包装的 SavedRequest 会将返回的语言代码保存到本地线程中
-                // 当通过下面的方法获取国际化消息内容时，自动从本地线程中取得请求对应的语言代码，从而获得对应语言的国际化内容
-                String skipMessage = sourceAccessor.getMessage("InitTaskService.syncData.skipMessage",
-                        new Object[]{SKIP_SYNC_ARGS_NAME},
-                        Strings.lenientFormat("发现 --%s=true 将跳过同步数据", SKIP_SYNC_ARGS_NAME));
-                log.info(skipMessage);
-                return;
-            }
+        if (Environments.hasTrue(args, SKIP_SYNC_ARGS_NAME)) {
+            // 根据 ServletRequest 的 getLocale 方法指示：
+            // 当请求头中包含 Accept-Language 值时，返回指定的语言代码，否则返回系统默认语言代码
+            // Spring 包装的 SavedRequest 会将返回的语言代码保存到本地线程中
+            // 当通过下面的方法获取国际化消息内容时，自动从本地线程中取得请求对应的语言代码，从而获得对应语言的国际化内容
+            String skipMessage = sourceAccessor.getMessage("InitTaskService.syncData.skipMessage",
+                    new Object[]{SKIP_SYNC_ARGS_NAME},
+                    Strings.lenientFormat("发现 --%s=true 将跳过同步数据", SKIP_SYNC_ARGS_NAME));
+            log.info(skipMessage);
+            return;
         }
 
         // 找到未被记录的初始化任务实现，进行新增
@@ -109,7 +105,7 @@ public class InitTaskServiceJpaImpl implements InitTaskService {
         InitTask entity = mapper.toEntity(initializer);
         entity.setName(sourceAccessor.getMessage(entity.getPath(), entity.getName()));
         // 如果是自动执行初始化，那么属于系统类型的初始化任务
-        if (initializer.isAutoExecute()) {
+        if (initializer.isAutoRun()) {
             entity.setType(TaskType.SYSTEM);
         }
         return entity;
@@ -119,17 +115,12 @@ public class InitTaskServiceJpaImpl implements InitTaskService {
     @Override
     public void execute(ApplicationArguments args) {
         // 从运行参数或环境变量中判断是否包含指定参数
-        if (args.containsOption(SKIP_EXECUTE_ARGS_NAME)) {
-            // 解析选项参数，如果存在 true 表示跳过执行
-            List<String> optionValues = args.getOptionValues(SKIP_EXECUTE_ARGS_NAME);
-            if (!CollectionUtils.isEmpty(optionValues)
-                    && optionValues.contains(Boolean.TRUE.toString())) {
-                String skipMessage = sourceAccessor.getMessage("InitTaskService.autoExecute.skipMessage",
-                        new Object[]{SKIP_EXECUTE_ARGS_NAME},
-                        Strings.lenientFormat("发现 --%s=true 将跳过自动执行", SKIP_EXECUTE_ARGS_NAME));
-                log.warn(skipMessage);
-                return;
-            }
+        if (Environments.hasTrue(args, SKIP_EXECUTE_ARGS_NAME)) {
+            String skipMessage = sourceAccessor.getMessage("InitTaskService.autoExecute.skipMessage",
+                    new Object[]{SKIP_EXECUTE_ARGS_NAME},
+                    Strings.lenientFormat("发现 --%s=true 将跳过自动执行", SKIP_EXECUTE_ARGS_NAME));
+            log.warn(skipMessage);
+            return;
         }
 
         if (CollectionUtils.isEmpty(initializers)) {
@@ -139,7 +130,7 @@ public class InitTaskServiceJpaImpl implements InitTaskService {
             return;
         }
 
-        initializers.stream().filter(Initializer::isAutoExecute).forEach(this::attemptExecute);
+        initializers.stream().filter(Initializer::isAutoRun).forEach(this::attemptExecute);
     }
 
     private void attemptExecute(Initializer initializer) {
@@ -161,9 +152,9 @@ public class InitTaskServiceJpaImpl implements InitTaskService {
         InitTaskLog taskLog = InitTaskLog.of(task);
         try {
             Stopwatch stopwatch = Stopwatch.createStarted();
-            initializer.execute();
-            // 如果支持重复执行，那么设置为默认状态，否则设置为已完成状态
-            TaskStatus status = initializer.isSupportRepeat() ? TaskStatus.DEFAULT : TaskStatus.COMPLETED;
+            initializer.run();
+            // 如果开启每次运行，那么设置初始化任务为默认状态，否则设置为已完成状态（表示只执行一次）
+            TaskStatus status = initializer.isEachRun() ? TaskStatus.DEFAULT : TaskStatus.COMPLETED;
             task.setStatus(status);
 
             Stopwatch stop = stopwatch.stop();
