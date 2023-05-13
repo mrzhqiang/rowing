@@ -22,22 +22,6 @@ import javax.persistence.ManyToOne;
 public class DictItem extends AuditableEntity {
 
     /**
-     * 图标。
-     * <p>
-     * 允许为空，说明字典项不存在前置图标，则仅展示标签内容。
-     * <p>
-     * 图标一般以图标库引用名称为主，通常直接使用即可。
-     */
-    private String icon;
-    /**
-     * 样式。
-     * <p>
-     * 允许为空，说明字典项不存在前端样式，则仅展示标签内容。
-     * <p>
-     * 样式一般以 css 选择器为主，通常直接使用即可。
-     */
-    private String style;
-    /**
      * 标签。
      * <p>
      * 标签是字典项的文字说明。
