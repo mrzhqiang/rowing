@@ -16,8 +16,10 @@ import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.data.rest.webmvc.json.EnumTranslator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ResourceUtils;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Optional;
@@ -101,13 +103,14 @@ public class DictServiceJpaImpl implements DictService {
     }
 
     @Override
-    public void importExcel(File excelFile) {
+    public void importExcel(String excelFile) throws FileNotFoundException {
         Preconditions.checkNotNull(excelFile, "excel file == null");
-        Preconditions.checkArgument(excelFile.exists(), "excel file must be exists");
-        Preconditions.checkArgument(!excelFile.isDirectory(), "excel file must be not directory");
+        File file = ResourceUtils.getFile(excelFile);
+        Preconditions.checkArgument(file.exists(), "excel file must be exists");
+        Preconditions.checkArgument(!file.isDirectory(), "excel file must be not directory");
 
         // WorkbookFactory 支持创建 HSSFWorkbook 和 XSSFWorkbook 实例
-        try (Workbook workbook = WorkbookFactory.create(excelFile)) {
+        try (Workbook workbook = WorkbookFactory.create(file)) {
             Sheet group = workbook.getSheet(GROUP_SHEET_NAME);
             if (group == null) {
                 String notFoundMessage = sourceAccessor.getMessage("DictService.importExcel.notFound",

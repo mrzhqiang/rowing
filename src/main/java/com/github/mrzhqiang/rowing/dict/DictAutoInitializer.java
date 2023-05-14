@@ -1,39 +1,37 @@
 package com.github.mrzhqiang.rowing.dict;
 
-import com.github.mrzhqiang.rowing.domain.DictType;
 import com.github.mrzhqiang.rowing.init.AutoInitializer;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Component;
-import org.springframework.util.ResourceUtils;
 
-import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.List;
 
 /**
  * 字典自动初始化执行器。
  */
 @Slf4j
 @Component
+@EnableConfigurationProperties(DictProperties.class)
 public class DictAutoInitializer extends AutoInitializer {
 
-    /**
-     * 字典 Excel 文件地址。
-     */
-    private static final String EXCEL_FILE_LOCATION = ResourceUtils.CLASSPATH_URL_PREFIX + "data/dict.xlsx";
-
     private final DictService service;
+    private final DictProperties properties;
 
-    public DictAutoInitializer(DictService service) {
+    public DictAutoInitializer(DictService service, DictProperties properties) {
         this.service = service;
+        this.properties = properties;
     }
 
     @Override
     protected void onAutoRun() throws Exception {
-        // 通过字典类型枚举，获取指定包路径，同步此包下的所有枚举作为内置字典
-        String basePackage = DictType.class.getPackage().getName();
-        service.syncInternal(basePackage);
+        List<String> innerPaths = properties.getInnerPaths();
+        innerPaths.forEach(service::syncInternal);
 
-        // 通过 Excel 文件，导入所有内容作为 Excel 字典
-        File excelFile = ResourceUtils.getFile(EXCEL_FILE_LOCATION);
-        service.importExcel(excelFile);
+        List<String> excelPaths = properties.getExcelPaths();
+        for (String excelPath : excelPaths) {
+            service.importExcel(excelPath);
+        }
     }
 }
