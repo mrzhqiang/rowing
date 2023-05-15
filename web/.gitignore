@@ -23,3 +23,10 @@ pnpm-debug.log*
 *.sw?
 
 package-lock.json
+yarn.lock
+
+tests/**/coverage/
+test/e2e/reports
+selenium-debug.log
+
+**/*.log
