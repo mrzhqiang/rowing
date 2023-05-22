@@ -31,6 +31,7 @@ export function parseTime(time, cFormat) {
     if ((typeof time === 'number') && (time.toString().length === 10)) {
       time = time * 1000;
     }
+    //noinspection JSCheckFunctionSignatures
     date = new Date(time);
   }
   const formatObj = {
@@ -41,7 +42,7 @@ export function parseTime(time, cFormat) {
     i: date.getMinutes(),
     s: date.getSeconds(),
     a: date.getDay()
-  }
+  };
   return format.replace(/{([ymdhisa])+}/g, (result, key) => {
     const value = formatObj[key];
     // Note: getDay() returns 0 on Sunday
@@ -59,6 +60,7 @@ export function parseTime(time, cFormat) {
  */
 export function formatTime(time, option) {
   if (('' + time).length === 10) {
+    //noinspection JSCheckFunctionSignatures
     time = parseInt(time) * 1000;
   } else {
     time = +time;
@@ -115,13 +117,13 @@ export function getQueryObject(url) {
 }
 
 /**
- * @param {string} input value
+ * @param {string} str value
  * @returns {number} output value
  */
 export function byteLength(str) {
   // returns the byte length of an utf8 string
   let s = str.length;
-  for (var i = str.length - 1; i >= 0; i--) {
+  for (let i = str.length - 1; i >= 0; i--) {
     const code = str.charCodeAt(i);
     if (code > 0x7f && code <= 0x7ff) {
       s++;
@@ -151,7 +153,7 @@ export function cleanArray(actual) {
 
 /**
  * @param {Object} json
- * @returns {Array}
+ * @returns {string}
  */
 export function param(json) {
   if (!json) return '';
@@ -234,15 +236,15 @@ export function toggleClass(element, className) {
     classString += '' + className;
   } else {
     classString =
-      classString.substr(0, nameIndex) +
-      classString.substr(nameIndex + className.length);
+      classString.substring(0, nameIndex) +
+      classString.substring(nameIndex + className.length);
   }
   element.className = classString;
 }
 
 /**
  * @param {string} type
- * @returns {Date}
+ * @returns {Date|number}
  */
 export function getTime(type) {
   if (type === 'start') {
@@ -311,7 +313,7 @@ export function deepClone(source) {
     } else {
       targetObj[keys] = source[keys];
     }
-  })
+  });
   return targetObj;
 }
 

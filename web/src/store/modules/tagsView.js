@@ -67,7 +67,7 @@ const mutations = {
       }
     }
   }
-}
+};
 
 const actions = {
   addView({dispatch}, view) {
@@ -153,11 +153,11 @@ const actions = {
   updateVisitedView({commit}, view) {
     commit('UPDATE_VISITED_VIEW', view);
   }
-}
+};
 
 export default {
   namespaced: true,
   state,
   mutations,
   actions
-}
+};

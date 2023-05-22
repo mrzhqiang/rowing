@@ -9,7 +9,7 @@ const state = {
   device: 'desktop',
   language: getLanguage(),
   size: Cookies.get('size') || 'medium'
-}
+};
 
 const mutations = {
   TOGGLE_SIDEBAR: state => {
@@ -37,7 +37,7 @@ const mutations = {
     state.size = size;
     Cookies.set('size', size);
   }
-}
+};
 
 const actions = {
   toggleSideBar({commit}) {
@@ -55,11 +55,11 @@ const actions = {
   setSize({commit}, size) {
     commit('SET_SIZE', size);
   }
-}
+};
 
 export default {
   namespaced: true,
   state,
   mutations,
   actions
-}
+};
