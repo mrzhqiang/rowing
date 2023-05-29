@@ -10,7 +10,7 @@ import Chart from '@/components/LineMarker';
 export default {
   name: 'LineChart',
   components: {Chart}
-}
+};
 </script>
 
 <style scoped>

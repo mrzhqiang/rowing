@@ -56,7 +56,7 @@ export default {
       list: null,
       listLoading: true,
       downloadLoading: false
-    }
+    };
   },
   created() {
     this.fetchData();
@@ -65,8 +65,8 @@ export default {
     fetchData() {
       this.listLoading = true;
       fetchList(this.listQuery).then(response => {
-        this.list = response.data.items
-        this.listLoading = false
+        this.list = response.data.items;
+        this.listLoading = false;
       });
     },
     handleDownload() {
@@ -97,5 +97,5 @@ export default {
       }));
     }
   }
-}
+};
 </script>

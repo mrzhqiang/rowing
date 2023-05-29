@@ -28,14 +28,14 @@ export default {
   data() {
     return {
       isActive: false
-    }
+    };
   },
   methods: {
     clickTitle() {
       this.isActive = !this.isActive;
     }
   }
-}
+};
 </script>
 
 <style lang="scss">

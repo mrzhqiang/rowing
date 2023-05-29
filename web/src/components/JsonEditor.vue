@@ -51,7 +51,7 @@ export default {
       return this.jsonEditor.getValue();
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

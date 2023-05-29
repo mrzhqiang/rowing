@@ -30,7 +30,7 @@ export default {
         {key: 'b-platform', name: 'b-platform'},
         {key: 'c-platform', name: 'c-platform'}
       ]
-    }
+    };
   },
   computed: {
     platforms: {
@@ -42,5 +42,5 @@ export default {
       }
     }
   }
-}
+};
 </script>

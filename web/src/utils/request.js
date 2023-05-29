@@ -28,7 +28,7 @@ service.interceptors.request.use(
     console.log(error); // for debug
     return Promise.reject(error);
   }
-)
+);
 
 // response interceptor
 service.interceptors.response.use(

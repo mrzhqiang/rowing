@@ -29,7 +29,7 @@ export default {
     }
     return vnodes;
   }
-}
+};
 </script>
 
 <style scoped>

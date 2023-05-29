@@ -45,7 +45,7 @@ export default {
   data() {
     return {
       editing: false
-    }
+    };
   },
   methods: {
     deleteTodo(todo) {
@@ -77,5 +77,5 @@ export default {
       this.editing = false;
     }
   }
-}
+};
 </script>

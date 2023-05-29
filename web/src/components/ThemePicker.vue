@@ -17,7 +17,7 @@ export default {
     return {
       chalk: '', // content of theme-chalk css
       theme: ''
-    }
+    };
   },
   computed: {
     defaultTheme() {
@@ -60,7 +60,7 @@ export default {
             document.head.appendChild(styleTag);
           }
           styleTag.innerText = newStyle;
-        }
+        };
       };
 
       if (!this.chalk) {
@@ -95,7 +95,7 @@ export default {
     updateStyle(style, oldCluster, newCluster) {
       let newStyle = style;
       oldCluster.forEach((color, index) => {
-        newStyle = newStyle.replace(new RegExp(color, 'ig'), newCluster[ThemePicker]);
+        newStyle = newStyle.replace(new RegExp(color, 'ig'), newCluster['ThemePicker']);
       });
       return newStyle;
     },
@@ -159,7 +159,7 @@ export default {
       return clusters;
     }
   }
-}
+};
 </script>
 
 <style>

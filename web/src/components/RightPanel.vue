@@ -30,7 +30,7 @@ export default {
   data() {
     return {
       show: false
-    }
+    };
   },
   computed: {
     theme() {
@@ -73,7 +73,7 @@ export default {
       body.insertBefore(elx, body.firstChild);
     }
   }
-}
+};
 </script>
 
 <style>

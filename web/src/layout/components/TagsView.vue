@@ -38,7 +38,7 @@ export default {
       left: 0,
       selectedTag: {},
       affixTags: []
-    }
+    };
   },
   computed: {
     visitedViews() {
@@ -195,7 +195,7 @@ export default {
       this.closeMenu();
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

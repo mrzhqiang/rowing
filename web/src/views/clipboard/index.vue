@@ -31,7 +31,7 @@ export default {
     return {
       activeName: 'directly',
       inputData: 'https://github.com/PanJiaChen/vue-element-admin'
-    }
+    };
   },
   methods: {
     handleCopy(text, event) {
@@ -45,6 +45,6 @@ export default {
       });
     }
   }
-}
+};
 </script>
 

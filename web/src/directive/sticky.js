@@ -85,6 +85,6 @@ vueSticky.install = Vue => {
       window.removeEventListener('scroll', listenAction);
     }
   });
-}
+};
 
 export default vueSticky;

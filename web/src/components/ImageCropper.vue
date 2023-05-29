@@ -37,6 +37,7 @@
             <div class="vicp-img-container">
               <img
                 ref="img"
+                alt="#"
                 :src="sourceImgUrl"
                 :style="sourceImgStyle"
                 class="vicp-img"
@@ -55,8 +56,7 @@
                 @mousedown="imgStartMove"
                 @mousemove="imgMove"
                 @mouseup="createImg"
-                @mouseout="createImg"
-                alt="#">
+                @mouseout="createImg">
               <div :style="sourceImgShadeStyle" class="vicp-img-shade vicp-img-shade-1"/>
               <div :style="sourceImgShadeStyle" class="vicp-img-shade vicp-img-shade-2"/>
             </div>
@@ -295,7 +295,7 @@ export default {
         naturalWidth: 0, // 原宽
         naturalHeight: 0
       }
-    }
+    };
   },
   computed: {
     // 进度条样式
@@ -473,7 +473,7 @@ export default {
       fr.onload = e => {
         this.sourceImgUrl = fr.result;
         this.startCrop();
-      }
+      };
       fr.readAsDataURL(file);
     },
     // 剪裁前准备工作
@@ -527,7 +527,7 @@ export default {
         this.sourceImg = img;
         this.createImg();
         this.setStep(2);
-      }
+      };
     },
     // 鼠标按下图片准备移动
     imgStartMove(e) {
@@ -593,7 +593,7 @@ export default {
             rotate();
           }, 60);
         }
-      }
+      };
       rotate();
     },
     // 按钮按下开始向左旋转
@@ -608,7 +608,7 @@ export default {
             rotate();
           }, 60);
         }
-      }
+      };
       rotate();
     },
     // 停止旋转
@@ -629,7 +629,7 @@ export default {
             zoom();
           }, 60);
         }
-      }
+      };
       zoom();
     },
     // 按钮松开或移开取消放大
@@ -648,7 +648,7 @@ export default {
             zoom();
           }, 60);
         }
-      }
+      };
       zoom();
     },
     // 按钮松开或移开取消缩小
@@ -806,7 +806,7 @@ export default {
       }
     }
   }
-}
+};
 </script>
 
 <!--suppress CssInvalidCharsetRule -->

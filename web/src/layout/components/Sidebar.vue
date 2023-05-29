@@ -50,5 +50,5 @@ export default {
       return !this.sidebar.opened;
     }
   }
-}
+};
 </script>

@@ -10,7 +10,7 @@ import Chart from '@/components/MixChart';
 export default {
   name: 'MixChart',
   components: {Chart}
-}
+};
 </script>
 
 <style scoped>

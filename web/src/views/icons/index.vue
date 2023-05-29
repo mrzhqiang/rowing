@@ -50,7 +50,7 @@ export default {
     return {
       svgIcons,
       elementIcons
-    }
+    };
   },
   methods: {
     generateIconCode(symbol) {
@@ -63,7 +63,7 @@ export default {
       clipboard(text, event);
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

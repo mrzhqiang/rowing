@@ -101,7 +101,7 @@ const defaultForm = {
 
 export default {
   name: 'ArticleDetail',
-  components: { Tinymce, MDinput, Upload, Sticky, Warning, CommentDropdown, PlatformDropdown, SourceUrlDropdown },
+  components: {Tinymce, MDinput, Upload, Sticky, Warning, CommentDropdown, PlatformDropdown, SourceUrlDropdown},
   props: {
     isEdit: {
       type: Boolean,
@@ -195,7 +195,7 @@ export default {
         this.setPageTitle();
       }).catch(err => {
         console.log(err);
-      })
+      });
     },
     setTagsViewTitle() {
       const title = this.lang === 'zh' ? '编辑文章' : 'Edit Article';
@@ -223,7 +223,7 @@ export default {
           console.log('error submit!!');
           return false;
         }
-      })
+      });
     },
     draftForm() {
       if (this.postForm.content.length === 0 || this.postForm.title.length === 0) {
@@ -250,7 +250,7 @@ export default {
       });
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

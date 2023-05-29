@@ -12,7 +12,7 @@ export default {
   data() {
     return {
       left: 0
-    }
+    };
   },
   computed: {
     scrollWrapper() {
@@ -73,7 +73,7 @@ export default {
       }
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

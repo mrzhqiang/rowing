@@ -29,7 +29,7 @@ export default {
   data() {
     return {
       chart: null
-    }
+    };
   },
   mounted() {
     this.$nextTick(() => {
@@ -99,5 +99,5 @@ export default {
       });
     }
   }
-}
+};
 </script>

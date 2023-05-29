@@ -29,7 +29,7 @@ export default {
       ],
       activeName: 'CN',
       createdTimes: 0
-    }
+    };
   },
   watch: {
     activeName(val) {
@@ -48,7 +48,7 @@ export default {
       this.createdTimes = this.createdTimes + 1;
     }
   }
-}
+};
 </script>
 
 <style scoped>

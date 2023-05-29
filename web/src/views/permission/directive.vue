@@ -86,7 +86,7 @@ export default {
       this.key++;
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

@@ -19,7 +19,7 @@ export default {
       return this.$route.path;
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

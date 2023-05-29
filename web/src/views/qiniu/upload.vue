@@ -15,10 +15,10 @@ import {getToken} from '@/api/qiniu';
 export default {
   data() {
     return {
-      dataObj: { token: '', key: '' },
+      dataObj: {token: '', key: ''},
       image_uri: [],
       fileList: []
-    }
+    };
   },
   methods: {
     beforeUpload() {
@@ -37,5 +37,5 @@ export default {
       });
     }
   }
-}
+};
 </script>

@@ -34,7 +34,7 @@ export default {
       // openWindow(url, thirdpart, 540, 540)
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

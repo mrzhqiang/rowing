@@ -29,7 +29,7 @@ export function filterAsyncRoutes(routes, roles) {
       }
       res.push(tmp);
     }
-  })
+  });
 
   return res;
 }
@@ -57,7 +57,7 @@ const actions = {
       }
       commit('SET_ROUTES', accessedRoutes);
       resolve(accessedRoutes);
-    })
+    });
   }
 };
 

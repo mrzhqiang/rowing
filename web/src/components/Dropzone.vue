@@ -75,7 +75,7 @@ export default {
     return {
       dropzone: '',
       initOnce: true
-    }
+    };
   },
   watch: {
     defaultImg(val) {
@@ -210,7 +210,7 @@ export default {
       }
     }
   }
-}
+};
 </script>
 
 <style scoped>

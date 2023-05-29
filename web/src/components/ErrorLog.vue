@@ -52,7 +52,7 @@ export default {
   data() {
     return {
       dialogTableVisible: false
-    }
+    };
   },
   computed: {
     errorLogs() {
@@ -65,7 +65,7 @@ export default {
       this.$store.dispatch('errorLog/clearErrorLog');
     }
   }
-}
+};
 </script>
 
 <style scoped>

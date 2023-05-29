@@ -29,7 +29,7 @@ const messages = {
     ...jaLocale,
     ...elementJaLocale
   }
-}
+};
 export function getLanguage() {
   const chooseLanguage = Cookies.get('language');
   if (chooseLanguage) return chooseLanguage;

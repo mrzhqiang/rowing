@@ -5,7 +5,7 @@ export default {
     return {
       $_sidebarElm: null,
       $_resizeHandler: null
-    }
+    };
   },
   mounted() {
     this.initListener();
@@ -53,4 +53,4 @@ export default {
       chart && chart.resize();
     }
   }
-}
+};

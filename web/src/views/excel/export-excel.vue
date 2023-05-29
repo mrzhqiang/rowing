@@ -51,9 +51,10 @@ import {parseTime} from '@/utils';
 import FilenameOption from './components/FilenameOption';
 import AutoWidthOption from './components/AutoWidthOption';
 import BookTypeOption from './components/BookTypeOption';
+
 export default {
   name: 'ExportExcel',
-  components: { FilenameOption, AutoWidthOption, BookTypeOption },
+  components: {FilenameOption, AutoWidthOption, BookTypeOption},
   data() {
     return {
       list: null,
@@ -62,7 +63,7 @@ export default {
       filename: '',
       autoWidth: true,
       bookType: 'xlsx'
-    }
+    };
   },
   created() {
     this.fetchData();
@@ -102,7 +103,7 @@ export default {
       }));
     }
   }
-}
+};
 </script>
 
 <style>

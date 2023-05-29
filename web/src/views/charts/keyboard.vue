@@ -10,7 +10,7 @@ import Chart from '@/components/Keyboard';
 export default {
   name: 'KeyboardChart',
   components: {Chart}
-}
+};
 </script>
 
 <style scoped>

@@ -34,7 +34,7 @@ import FixiOSBug from './FixiOSBug';
 
 export default {
   name: 'SidebarItem',
-  components: { Item, AppLink },
+  components: {Item, AppLink},
   mixins: [FixiOSBug],
   props: {
     // route object
@@ -67,7 +67,7 @@ export default {
           this.onlyOneChild = item;
           return true;
         }
-      })
+      });
 
       // When there is only one child router, the child router is displayed by default
       if (showingChildren.length === 1) {
@@ -94,5 +94,5 @@ export default {
 
     generateTitle
   }
-}
+};
 </script>

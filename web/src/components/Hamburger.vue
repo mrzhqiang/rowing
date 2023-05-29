@@ -27,7 +27,7 @@ export default {
       this.$emit('toggleClick');
     }
   }
-}
+};
 </script>
 
 <style scoped>

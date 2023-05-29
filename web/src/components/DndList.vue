@@ -38,13 +38,13 @@ export default {
     list1: {
       type: Array,
       default() {
-        return []
+        return [];
       }
     },
     list2: {
       type: Array,
       default() {
-        return []
+        return [];
       }
     },
     list1Title: {
@@ -101,7 +101,7 @@ export default {
       dataTransfer.setData('Text', '');
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

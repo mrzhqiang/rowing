@@ -33,7 +33,7 @@ export default {
           'border-radius': '4px',
           'line-height': '45px',
           background: '#e7eaf1'
-        }
+        };
       }
     },
     transitionName: {
@@ -46,7 +46,7 @@ export default {
       visible: false,
       interval: null,
       isMoving: false
-    }
+    };
   },
   mounted() {
     window.addEventListener('scroll', this.handleScroll);
@@ -87,7 +87,7 @@ export default {
       return -c / 2 * (--t * (t - 2) - 1) + b;
     }
   }
-}
+};
 </script>
 
 <style scoped>

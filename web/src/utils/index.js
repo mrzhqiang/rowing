@@ -31,7 +31,7 @@ export function parseTime(time, cFormat) {
     if ((typeof time === 'number') && (time.toString().length === 10)) {
       time = time * 1000;
     }
-    //noinspection JSCheckFunctionSignatures
+    // noinspection JSCheckFunctionSignatures
     date = new Date(time);
   }
   const formatObj = {
@@ -60,7 +60,7 @@ export function parseTime(time, cFormat) {
  */
 export function formatTime(time, option) {
   if (('' + time).length === 10) {
-    //noinspection JSCheckFunctionSignatures
+    // noinspection JSCheckFunctionSignatures
     time = parseInt(time) * 1000;
   } else {
     time = +time;
@@ -184,7 +184,7 @@ export function param2Obj(url) {
       const name = v.substring(0, index);
       obj[name] = v.substring(index + 1, v.length);
     }
-  })
+  });
   return obj;
 }
 
@@ -218,7 +218,7 @@ export function objectMerge(target, source) {
     } else {
       target[property] = sourceProperty;
     }
-  })
+  });
   return target;
 }
 
@@ -278,7 +278,7 @@ export function debounce(func, wait, immediate) {
         if (!timeout) context = args = null;
       }
     }
-  }
+  };
 
   return function (...args) {
     context = this;
@@ -292,7 +292,7 @@ export function debounce(func, wait, immediate) {
     }
 
     return result;
-  }
+  };
 }
 
 /**

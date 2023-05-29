@@ -48,7 +48,7 @@ export default {
       dataTransfer.setData('Text', '');
     }
   }
-}
+};
 </script>
 <style lang="scss" scoped>
 .board-column {

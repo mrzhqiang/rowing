@@ -49,7 +49,7 @@ export default {
         name: 'John Smith',
         address: 'No.1518,  Jinshajiang Road, Putuo District'
       }]
-    }
+    };
   },
   methods: {
     // v-el-drag-dialog onDrag callback function
@@ -57,5 +57,5 @@ export default {
       this.$refs.select.blur();
     }
   }
-}
+};
 </script>

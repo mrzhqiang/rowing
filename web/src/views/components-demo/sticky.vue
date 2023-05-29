@@ -117,9 +117,9 @@ export default {
           return time.getTime() > Date.now();
         }
       }
-    }
+    };
   }
-}
+};
 </script>
 
 <style scoped>

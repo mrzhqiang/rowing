@@ -172,4 +172,4 @@ export default {
     fixedHeader: 'Fixed Header',
     sidebarLogo: 'Sidebar Logo'
   }
-}
+};

@@ -229,4 +229,4 @@ export default {
       lowestPx: '画像が小さすぎます。最小サイズ: '
     }
   }
-}
+};

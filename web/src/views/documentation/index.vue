@@ -33,9 +33,9 @@ export default {
         {title: 'webpack4（上）', href: 'https://juejin.im/post/59bb864b5188257e7a427c09'},
         {title: 'webpack4（下）', href: 'https://juejin.im/post/5b5d6d6f6fb9a04fea58aabc'}
       ]
-    }
+    };
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

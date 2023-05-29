@@ -1,7 +1,7 @@
 <template>
   <el-breadcrumb class="app-breadcrumb" separator="/">
     <transition-group name="breadcrumb">
-      <el-breadcrumb-item v-for="(item,index) in levelList" :key="item.path">
+      <el-breadcrumb-item v-for="(item) in levelList" :key="item.path">
         <span v-if="item.redirect==='noRedirect'||breadcrumb===levelList.length-1" class="no-redirect">
           {{ generateTitle(item.meta.title) }}
         </span>
@@ -20,7 +20,7 @@ export default {
   data() {
     return {
       levelList: null
-    }
+    };
   },
   watch: {
     $route(route) {
@@ -57,7 +57,7 @@ export default {
     pathCompile(path) {
       // To solve this problem https://github.com/PanJiaChen/vue-element-admin/issues/561
       const {params} = this.$route;
-      let toPath = pathToRegexp.compile(path);
+      const toPath = pathToRegexp.compile(path);
       return toPath(params);
     },
     handleLink(item) {
@@ -69,7 +69,7 @@ export default {
       this.$router.push(this.pathCompile(path));
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

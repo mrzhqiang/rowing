@@ -49,7 +49,7 @@ export default {
   data() {
     return {
       editor: null
-    }
+    };
   },
   computed: {
     editorOptions() {
@@ -94,7 +94,7 @@ export default {
       }
       this.editor.on('change', () => {
         this.$emit('input', this.editor.getValue());
-      })
+      });
     },
     destroyEditor() {
       if (!this.editor) {
@@ -116,5 +116,5 @@ export default {
       return this.editor.getHtml();
     }
   }
-}
+};
 </script>

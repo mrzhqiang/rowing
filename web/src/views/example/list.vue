@@ -70,8 +70,8 @@ export default {
         published: 'success',
         draft: 'info',
         deleted: 'danger'
-      }
-      return statusMap[status]
+      };
+      return statusMap[status];
     }
   },
   data() {
@@ -83,7 +83,7 @@ export default {
         page: 1,
         limit: 20
       }
-    }
+    };
   },
   created() {
     this.getList();
@@ -98,7 +98,7 @@ export default {
       });
     }
   }
-}
+};
 </script>
 
 <style scoped>

@@ -15,7 +15,7 @@ export default {
   data() {
     return {
       currentRole: 'adminDashboard'
-    }
+    };
   },
   computed: {
     ...mapGetters([
@@ -27,5 +27,5 @@ export default {
       this.currentRole = 'editorDashboard';
     }
   }
-}
+};
 </script>

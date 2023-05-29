@@ -19,8 +19,8 @@ export default {
             return;
           }
           handleMouseleave(e);
-        }
+        };
       }
     }
   }
-}
+};

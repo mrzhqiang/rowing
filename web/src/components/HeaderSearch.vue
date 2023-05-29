@@ -32,7 +32,7 @@ export default {
       searchPool: [],
       show: false,
       fuse: undefined
-    }
+    };
   },
   computed: {
     routes() {
@@ -168,7 +168,7 @@ export default {
       }
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

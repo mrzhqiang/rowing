@@ -21,7 +21,7 @@ export default {
     return {
       article: '',
       fullscreenLoading: true
-    }
+    };
   },
   mounted() {
     this.fetchData();
@@ -41,7 +41,7 @@ export default {
       });
     }
   }
-}
+};
 </script>
 
 <style lang="scss">

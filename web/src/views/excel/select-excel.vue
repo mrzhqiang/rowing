@@ -61,7 +61,7 @@ export default {
       multipleSelection: [],
       downloadLoading: false,
       filename: ''
-    }
+    };
   },
   created() {
     this.fetchData();
@@ -104,5 +104,5 @@ export default {
       return jsonData.map(v => filterVal.map(j => v[j]));
     }
   }
-}
+};
 </script>

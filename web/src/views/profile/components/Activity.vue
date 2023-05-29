@@ -100,7 +100,7 @@ export default {
       carouselPrefix
     };
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

@@ -47,7 +47,7 @@ export default {
     return {
       tempUrl: '',
       dataObj: {token: '', key: ''}
-    }
+    };
   },
   computed: {
     imageUrl() {
@@ -81,7 +81,7 @@ export default {
       });
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

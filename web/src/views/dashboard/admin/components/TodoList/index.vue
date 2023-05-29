@@ -57,7 +57,7 @@ const defalutList = [
   {text: 'webpack', done: true}
 ];
 export default {
-  components: { Todo },
+  components: {Todo},
   filters: {
     pluralize: (n, w) => n === 1 ? w : w + 's',
     capitalize: s => s.charAt(0).toUpperCase() + s.slice(1)
@@ -68,7 +68,7 @@ export default {
       filters,
       // todos: JSON.parse(window.localStorage.getItem(STORAGE_KEY)) || defalutList
       todos: defalutList
-    }
+    };
   },
   computed: {
     allChecked() {
@@ -104,7 +104,7 @@ export default {
       this.todos.splice(this.todos.indexOf(todo), 1);
       this.setLocalStorage();
     },
-    editTodo({ todo, value }) {
+    editTodo({todo, value}) {
       todo.text = value;
       this.setLocalStorage();
     },
@@ -112,14 +112,14 @@ export default {
       this.todos = this.todos.filter(todo => !todo.done);
       this.setLocalStorage();
     },
-    toggleAll({ done }) {
+    toggleAll({done}) {
       this.todos.forEach(todo => {
         todo.done = done;
         this.setLocalStorage();
       });
     }
   }
-}
+};
 </script>
 
 <style lang="scss">

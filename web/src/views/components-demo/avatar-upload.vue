@@ -37,7 +37,7 @@ export default {
       imagecropperShow: false,
       imagecropperKey: 0,
       image: 'https://wpimg.wallstcn.com/577965b9-bb9e-4e02-9f0c-095b41417191'
-    }
+    };
   },
   methods: {
     cropSuccess(resData) {
@@ -49,7 +49,7 @@ export default {
       this.imagecropperShow = false;
     }
   }
-}
+};
 </script>
 
 <style scoped>

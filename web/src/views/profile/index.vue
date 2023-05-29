@@ -37,7 +37,7 @@ import Account from './components/Account';
 
 export default {
   name: 'Profile',
-  components: { UserCard, Activity, Timeline, Account },
+  components: {UserCard, Activity, Timeline, Account},
   data() {
     return {
       user: {},
@@ -64,5 +64,5 @@ export default {
       };
     }
   }
-}
+};
 </script>

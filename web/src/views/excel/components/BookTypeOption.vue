@@ -23,7 +23,7 @@ export default {
   data() {
     return {
       options: ['xlsx', 'csv', 'txt']
-    }
+    };
   },
   computed: {
     bookType: {
@@ -35,5 +35,5 @@ export default {
       }
     }
   }
-}
+};
 </script>

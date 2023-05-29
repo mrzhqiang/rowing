@@ -20,7 +20,7 @@ export default {
   data() {
     return {
       driver: null
-    }
+    };
   },
   mounted() {
     this.driver = new Driver();
@@ -31,5 +31,5 @@ export default {
       this.driver.start();
     }
   }
-}
+};
 </script>

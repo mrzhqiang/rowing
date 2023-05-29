@@ -237,7 +237,7 @@ export default {
         title: [{required: true, message: 'title is required', trigger: 'blur'}]
       },
       downloadLoading: false
-    }
+    };
   },
   created() {
     this.getList();
@@ -253,7 +253,7 @@ export default {
         setTimeout(() => {
           this.listLoading = false;
         }, 1.5 * 1000);
-      })
+      });
     },
     handleFilter() {
       this.listQuery.page = 1;
@@ -388,5 +388,5 @@ export default {
       return sort === `+${key}` ? 'ascending' : 'descending';
     }
   }
-}
+};
 </script>

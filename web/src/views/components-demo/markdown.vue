@@ -76,7 +76,7 @@ export default {
         'zh': 'zh_CN',
         'es': 'es_ES'
       }
-    }
+    };
   },
   computed: {
     language() {
@@ -89,7 +89,7 @@ export default {
       console.log(this.html);
     }
   }
-}
+};
 </script>
 
 <style scoped>

@@ -25,7 +25,7 @@ export default {
         header: null,
         results: null
       }
-    }
+    };
   },
   methods: {
     generateData({header, results}) {
@@ -95,7 +95,7 @@ export default {
           this.generateData({header, results});
           this.loading = false;
           resolve();
-        }
+        };
         reader.readAsArrayBuffer(rawFile);
       });
     },
@@ -118,7 +118,7 @@ export default {
       return /\.(xlsx|xls|csv)$/.test(file.name);
     }
   }
-}
+};
 </script>
 
 <style scoped>

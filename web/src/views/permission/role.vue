@@ -272,7 +272,7 @@ export default {
       return false;
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

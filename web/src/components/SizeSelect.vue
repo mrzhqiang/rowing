@@ -23,7 +23,7 @@ export default {
         {label: 'Small', value: 'small'},
         {label: 'Mini', value: 'mini'}
       ]
-    }
+    };
   },
   computed: {
     size() {
@@ -53,5 +53,5 @@ export default {
       });
     }
   }
-}
+};
 </script>

@@ -24,9 +24,9 @@ export default {
   data() {
     return {
       value: JSON.parse(jsonData)
-    }
+    };
   }
-}
+};
 </script>
 
 <style scoped>

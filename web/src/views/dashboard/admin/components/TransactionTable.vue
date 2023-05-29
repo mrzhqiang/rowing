@@ -39,7 +39,7 @@ export default {
   data() {
     return {
       list: null
-    }
+    };
   },
   created() {
     this.fetchData();
@@ -51,5 +51,5 @@ export default {
       });
     }
   }
-}
+};
 </script>

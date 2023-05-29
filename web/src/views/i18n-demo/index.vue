@@ -83,11 +83,12 @@ export default {
   data() {
     return {
       date: '',
-      tableData: [{
-        date: '2016-05-03',
-        name: 'Tom',
-        address: 'No. 189, Grove St, Los Angeles'
-      },
+      tableData: [
+        {
+          date: '2016-05-03',
+          name: 'Tom',
+          address: 'No. 189, Grove St, Los Angeles'
+        },
         {
           date: '2016-05-02',
           name: 'Tom',
@@ -105,7 +106,7 @@ export default {
         }],
       options: [],
       value: ''
-    }
+    };
   },
   computed: {
     lang: {
@@ -150,7 +151,7 @@ export default {
       ];
     }
   }
-}
+};
 </script>
 
 <style scoped>

@@ -37,7 +37,7 @@ export default {
         value: 'Strawberry',
         label: 'Strawberry'
       }]
-    }
+    };
   }
-}
+};
 </script>

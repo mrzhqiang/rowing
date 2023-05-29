@@ -1,4 +1,3 @@
-
 export default {
   zh: {
     i18nView: {
@@ -80,4 +79,4 @@ export default {
       three: '3'
     }
   }
-}
+};

@@ -15,5 +15,5 @@ export default {
       this.$router.push({path: '/permission/index?' + +new Date()});
     }
   }
-}
+};
 </script>

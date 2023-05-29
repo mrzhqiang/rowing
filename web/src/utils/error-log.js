@@ -1,21 +1,21 @@
 import Vue from 'vue';
 import store from '@/store';
-import {isString, isArray} from '@/utils/validate'
-import settings from '@/settings'
+import {isString, isArray} from '@/utils/validate';
+import settings from '@/settings';
 
 // you can set in settings.js
 // errorLog:'production' | ['production', 'development']
-const {errorLog: needErrorLog} = settings
+const {errorLog: needErrorLog} = settings;
 
 function checkNeed() {
-  const env = process.env.NODE_ENV
+  const env = process.env.NODE_ENV;
   if (isString(needErrorLog)) {
-    return env === needErrorLog
+    return env === needErrorLog;
   }
   if (isArray(needErrorLog)) {
-    return needErrorLog.includes(env)
+    return needErrorLog.includes(env);
   }
-  return false
+  return false;
 }
 
 if (checkNeed()) {
@@ -28,8 +28,8 @@ if (checkNeed()) {
         vm,
         info,
         url: window.location.href
-      })
-      console.error(err, info)
-    })
-  }
+      });
+      console.error(err, info);
+    });
+  };
 }

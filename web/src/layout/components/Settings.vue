@@ -33,7 +33,7 @@ export default {
   name: 'Settings',
   components: {ThemePicker},
   data() {
-    return {}
+    return {};
   },
   computed: {
     fixedHeader: {
@@ -92,7 +92,7 @@ export default {
       });
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

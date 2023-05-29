@@ -42,7 +42,7 @@ const dynamicLoadScript = (src, callback) => {
     script.onerror = function () {
       this.onerror = this.onload = null;
       cb(new Error('Failed to load ' + src), script);
-    }
+    };
   }
 
   function ieOnEnd(script) {
@@ -55,8 +55,8 @@ const dynamicLoadScript = (src, callback) => {
         cb(null, script); // there is no way to catch loading errors in IE8
       }
       callbacks = null;
-    }
+    };
   }
-}
+};
 
 export default dynamicLoadScript;

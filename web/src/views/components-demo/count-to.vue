@@ -69,7 +69,7 @@ export default {
       setSeparator: ',',
       setSuffix: ' rmb',
       setPrefix: '¥ '
-    }
+    };
   },
   computed: {
     _startVal() {
@@ -122,7 +122,7 @@ export default {
       this.$refs.example.pauseResume();
     }
   }
-}
+};
 </script>
 
 <style scoped>

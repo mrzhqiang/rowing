@@ -1,7 +1,7 @@
 const state = {
   visitedViews: [],
   cachedViews: []
-}
+};
 
 const mutations = {
   ADD_VISITED_VIEW: (state, view) => {
@@ -39,7 +39,7 @@ const mutations = {
   DEL_OTHERS_VISITED_VIEWS: (state, view) => {
     state.visitedViews = state.visitedViews.filter(v => {
       return v.meta.affix || v.path === view.path;
-    })
+    });
   },
   DEL_OTHERS_CACHED_VIEWS: (state, view) => {
     const index = state.cachedViews.indexOf(view.name);
@@ -56,7 +56,7 @@ const mutations = {
     state.visitedViews = state.visitedViews.filter(tag => tag.meta.affix);
   },
   DEL_ALL_CACHED_VIEWS: state => {
-    state.cachedViews = []
+    state.cachedViews = [];
   },
 
   UPDATE_VISITED_VIEW: (state, view) => {

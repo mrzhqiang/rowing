@@ -54,4 +54,4 @@ export default {
       delete el._v_clipboard;
     }
   }
-}
+};

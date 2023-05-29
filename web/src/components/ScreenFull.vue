@@ -12,7 +12,7 @@ export default {
   data() {
     return {
       isFullscreen: false
-    }
+    };
   },
   mounted() {
     this.init();
@@ -45,7 +45,7 @@ export default {
       }
     }
   }
-}
+};
 </script>
 
 <style scoped>

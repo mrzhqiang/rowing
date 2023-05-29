@@ -32,9 +32,9 @@ export default {
         {name: 'Mission', id: 9},
         {name: 'Mission', id: 10}
       ]
-    }
+    };
   }
-}
+};
 </script>
 <style lang="scss">
 .board {

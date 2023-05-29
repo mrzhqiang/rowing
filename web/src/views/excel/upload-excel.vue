@@ -17,7 +17,7 @@ export default {
     return {
       tableData: [],
       tableHeader: []
-    }
+    };
   },
   methods: {
     beforeUpload(file) {
@@ -38,5 +38,5 @@ export default {
       this.tableHeader = header;
     }
   }
-}
+};
 </script>

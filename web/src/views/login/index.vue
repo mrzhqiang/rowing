@@ -120,7 +120,7 @@ export default {
       showDialog: false,
       redirect: undefined,
       otherQuery: {}
-    }
+    };
   },
   watch: {
     $route: {
@@ -160,7 +160,7 @@ export default {
       }
       this.$nextTick(() => {
         this.$refs.password.focus();
-      })
+      });
     },
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
@@ -178,7 +178,7 @@ export default {
           console.log('error submit!!');
           return false;
         }
-      })
+      });
     },
     getOtherQuery(query) {
       return Object.keys(query).reduce((acc, cur) => {
@@ -207,7 +207,7 @@ export default {
     //   }
     // }
   }
-}
+};
 </script>
 
 <style lang="scss">

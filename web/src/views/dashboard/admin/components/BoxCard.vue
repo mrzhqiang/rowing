@@ -48,7 +48,7 @@ export default {
         article_count: 1024,
         pageviews_count: 1024
       }
-    }
+    };
   },
   computed: {
     ...mapGetters([
@@ -57,7 +57,7 @@ export default {
       'roles'
     ])
   }
-}
+};
 </script>
 
 <style lang="scss">

@@ -30,7 +30,7 @@ export default {
   data() {
     return {
       chart: null
-    }
+    };
   },
   mounted() {
     this.initChart();
@@ -222,5 +222,5 @@ export default {
       });
     }
   }
-}
+};
 </script>

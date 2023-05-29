@@ -68,7 +68,7 @@ export default {
         'es': 'es_MX',
         'ja': 'ja'
       }
-    }
+    };
   },
   computed: {
     language() {
@@ -214,7 +214,7 @@ export default {
       arr.forEach(v => window.tinymce.get(this.tinymceId).insertContent(`<img class="wscnph" src="${v.url}" >`));
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

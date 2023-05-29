@@ -24,7 +24,7 @@ import ErrorB from './components/ErrorTestB';
 export default {
   name: 'ErrorLog',
   components: {ErrorA, ErrorB}
-}
+};
 </script>
 
 <style scoped>

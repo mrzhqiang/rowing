@@ -5,7 +5,7 @@ export default {
     return {
       $_sidebarElm: null,
       $_resizeHandler: null
-    }
+    };
   },
   mounted() {
     this.$_resizeHandler = debounce(() => {
@@ -52,4 +52,4 @@ export default {
       this.$_sidebarElm && this.$_sidebarElm.removeEventListener('transitionend', this.$_sidebarResizeHandler);
     }
   }
-}
+};

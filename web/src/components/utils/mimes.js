@@ -4,4 +4,4 @@ export default {
   'gif': 'image/gif',
   'svg': 'image/svg+xml',
   'psd': 'image/photoshop'
-}
+};

@@ -19,14 +19,14 @@ export default {
   components: {Dropzone},
   methods: {
     dropzoneS(file) {
-      console.log(file)
-      this.$message({message: 'Upload success', type: 'success'})
+      console.log(file);
+      this.$message({message: 'Upload success', type: 'success'});
     },
     dropzoneR(file) {
-      console.log(file)
-      this.$message({message: 'Delete success', type: 'success'})
+      console.log(file);
+      this.$message({message: 'Delete success', type: 'success'});
     }
   }
-}
+};
 </script>
 

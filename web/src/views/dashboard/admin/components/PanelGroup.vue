@@ -67,7 +67,7 @@ export default {
       this.$emit('handleSetLineChartData', type);
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

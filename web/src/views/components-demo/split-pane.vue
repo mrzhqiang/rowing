@@ -28,13 +28,13 @@ import splitPane from 'vue-splitpane';
 
 export default {
   name: 'SplitpaneDemo',
-  components: { splitPane },
+  components: {splitPane},
   methods: {
     resize() {
       console.log('resize');
     }
   }
-}
+};
 </script>
 
 <style  scoped>

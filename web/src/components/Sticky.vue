@@ -34,7 +34,7 @@ export default {
       width: undefined,
       height: undefined,
       isSticky: false
-    }
+    };
   },
   mounted() {
     this.height = this.$el.getBoundingClientRect().height;
@@ -86,5 +86,5 @@ export default {
       }
     }
   }
-}
+};
 </script>
