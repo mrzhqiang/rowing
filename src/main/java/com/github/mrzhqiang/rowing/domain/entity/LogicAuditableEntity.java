@@ -1,5 +1,7 @@
-package com.github.mrzhqiang.rowing.domain;
+package com.github.mrzhqiang.rowing.domain.entity;
 
+import com.github.mrzhqiang.rowing.domain.Logic;
+import com.github.mrzhqiang.rowing.domain.entity.AuditableEntity;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

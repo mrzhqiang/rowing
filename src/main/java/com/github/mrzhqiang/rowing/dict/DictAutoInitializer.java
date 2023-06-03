@@ -1,11 +1,12 @@
 package com.github.mrzhqiang.rowing.dict;
 
+import com.github.mrzhqiang.rowing.domain.TaskMode;
 import com.github.mrzhqiang.rowing.init.AutoInitializer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
-import java.io.FileNotFoundException;
 import java.util.List;
 
 /**
@@ -25,13 +26,21 @@ public class DictAutoInitializer extends AutoInitializer {
     }
 
     @Override
-    protected void onAutoRun() throws Exception {
+    protected void onExecute() {
         List<String> innerPaths = properties.getInnerPaths();
-        innerPaths.forEach(service::syncInternal);
+        if (!CollectionUtils.isEmpty(innerPaths)) {
+            innerPaths.forEach(service::syncInternal);
+        }
 
         List<String> excelPaths = properties.getExcelPaths();
-        for (String excelPath : excelPaths) {
-            service.importExcel(excelPath);
+        if (!CollectionUtils.isEmpty(excelPaths)) {
+            excelPaths.forEach(service::syncExcel);
         }
+    }
+
+    @Override
+    public TaskMode getMode() {
+        // 每次启动都执行
+        return TaskMode.EACH;
     }
 }

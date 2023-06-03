@@ -1,6 +1,6 @@
-package com.github.mrzhqiang.rowing.auth;
+package com.github.mrzhqiang.rowing.account;
 
-import com.github.mrzhqiang.rowing.domain.SystemUserScope;
+import com.github.mrzhqiang.rowing.domain.MockScope;
 import com.github.mrzhqiang.rowing.util.Authentications;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -34,7 +34,7 @@ public class SystemUserAspect {
         this.securityProperties = securityProperties;
     }
 
-    @Pointcut("@annotation(com.github.mrzhqiang.rowing.auth.WithSystemUser)")
+    @Pointcut("@annotation(com.github.mrzhqiang.rowing.account.SystemUserMock)")
     public void withSystemUserPoint() {
         // 切中所有标记 @WithSystemUser 注解的方法
     }
@@ -43,13 +43,13 @@ public class SystemUserAspect {
     public Object systemUserHandle(ProceedingJoinPoint point) throws Throwable {
         // 检测注解的范围属性，以决定是否获取当前安全上下文
         Method targetMethod = ((MethodSignature) point.getSignature()).getMethod();
-        WithSystemUser annotation = AnnotationUtils.findAnnotation(targetMethod, WithSystemUser.class);
-        SystemUserScope scope = Optional.ofNullable(annotation)
-                .map(WithSystemUser::scope)
-                .orElse(SystemUserScope.GLOBAL);
+        SystemUserMock annotation = AnnotationUtils.findAnnotation(targetMethod, SystemUserMock.class);
+        MockScope scope = Optional.ofNullable(annotation)
+                .map(SystemUserMock::scope)
+                .orElse(MockScope.GLOBAL);
 
         SecurityContext currentContext = null;
-        if (SystemUserScope.CURRENT.equals(scope)) {
+        if (MockScope.CURRENT.equals(scope)) {
             currentContext = SecurityContextHolder.getContext();
         }
 

@@ -1,6 +1,6 @@
 package com.github.mrzhqiang.rowing.dict;
 
-import com.github.mrzhqiang.rowing.domain.BaseRepository;
+import com.github.mrzhqiang.rowing.domain.repository.BaseRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 

@@ -12,7 +12,7 @@ import java.io.File;
  * 设置自动初始化器。
  */
 @Slf4j
-//@Component
+@Component
 public class SettingAutoInitializer extends AutoInitializer {
 
     /**
@@ -27,13 +27,9 @@ public class SettingAutoInitializer extends AutoInitializer {
     }
 
     @Override
-    protected void onAutoRun() throws Exception {
+    protected void onExecute() throws Exception {
         File excelFile = ResourceUtils.getFile(EXCEL_FILE_LOCATION);
         service.importExcel(excelFile);
     }
 
-    @Override
-    public boolean isEachRun() {
-        return false;
-    }
 }

@@ -1,5 +1,7 @@
-package com.github.mrzhqiang.rowing.domain;
+package com.github.mrzhqiang.rowing.domain.repository;
 
+import com.github.mrzhqiang.rowing.domain.Authority;
+import com.github.mrzhqiang.rowing.domain.entity.BaseEntity;
 import com.github.mrzhqiang.rowing.util.Authorizations;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;

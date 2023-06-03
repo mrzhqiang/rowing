@@ -25,12 +25,8 @@ public class AccountAutoInitializer extends AutoInitializer {
     }
 
     @Override
-    protected void onAutoRun() throws Exception {
+    protected void onExecute() throws Exception {
         service.initAdmin();
     }
 
-    @Override
-    public boolean isEachRun() {
-        return false;
-    }
 }

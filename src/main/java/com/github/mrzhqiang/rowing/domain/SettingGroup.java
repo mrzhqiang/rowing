@@ -1,5 +1,7 @@
 package com.github.mrzhqiang.rowing.domain;
 
+import java.util.stream.Stream;
+
 /**
  * 设置分组。
  * <p>
@@ -28,11 +30,9 @@ public enum SettingGroup {
     ;
 
     public static SettingGroup of(String group) {
-        for (SettingGroup settingGroup : SettingGroup.values()) {
-            if (settingGroup.name().equals(group)) {
-                return settingGroup;
-            }
-        }
-        return GENERAL;
+        return Stream.of(values())
+                .filter(it -> it.name().equalsIgnoreCase(group))
+                .findFirst()
+                .orElse(GENERAL);
     }
 }

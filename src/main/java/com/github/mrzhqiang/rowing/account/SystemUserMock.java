@@ -1,6 +1,6 @@
-package com.github.mrzhqiang.rowing.auth;
+package com.github.mrzhqiang.rowing.account;
 
-import com.github.mrzhqiang.rowing.domain.SystemUserScope;
+import com.github.mrzhqiang.rowing.domain.MockScope;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -18,7 +18,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 @Documented
-public @interface WithSystemUser {
+public @interface SystemUserMock {
     /**
      * 范围。
      * <p>
@@ -26,5 +26,5 @@ public @interface WithSystemUser {
      *
      * @return 操作人范围。
      */
-    SystemUserScope scope() default SystemUserScope.GLOBAL;
+    MockScope scope() default MockScope.GLOBAL;
 }

@@ -27,7 +27,7 @@ public interface InitTaskMapper {
     @Mapping(target = "logHistories", ignore = true)
     @Mapping(target = "discard", expression = "java(Logic.NO)")
     @Mapping(target = "status", expression = "java(TaskStatus.DEFAULT)")
-    @Mapping(target = "type", expression = "java(TaskType.OPTIONAL)")
+    @Mapping(target = "type", source = "initializer.type")
     @Mapping(target = "name", expression = "java(ClassUtils.getShortName(initializer.getClass()))")
     @Mapping(target = "path", source = "initializer.path")
     @Mapping(target = "ordered", expression = "java(InitializationOrderRegistration.find(initializer))")

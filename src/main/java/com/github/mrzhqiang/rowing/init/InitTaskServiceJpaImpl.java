@@ -1,8 +1,9 @@
 package com.github.mrzhqiang.rowing.init;
 
 import com.github.mrzhqiang.helper.Exceptions;
-import com.github.mrzhqiang.rowing.auth.WithSystemUser;
+import com.github.mrzhqiang.rowing.account.SystemUserMock;
 import com.github.mrzhqiang.rowing.domain.Logic;
+import com.github.mrzhqiang.rowing.domain.TaskMode;
 import com.github.mrzhqiang.rowing.domain.TaskStatus;
 import com.github.mrzhqiang.rowing.domain.TaskType;
 import com.github.mrzhqiang.rowing.util.Environments;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,7 +46,7 @@ public class InitTaskServiceJpaImpl implements InitTaskService {
         this.initializers = initializers;
     }
 
-    @WithSystemUser
+    @SystemUserMock
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void sync(ApplicationArguments args) {
@@ -72,10 +74,13 @@ public class InitTaskServiceJpaImpl implements InitTaskService {
         List<String> paths = initializers.stream()
                 .map(Initializer::getPath)
                 .collect(Collectors.toList());
-        List<InitTask> discardList = repository.findAllByDiscardAndPathNotIn(Logic.NO, paths).stream()
-                .peek(it -> it.setDiscard(Logic.YES))
-                .map(repository::save)
-                .collect(Collectors.toList());
+        List<InitTask> discardList = Collections.emptyList();
+        if (!CollectionUtils.isEmpty(paths)) {
+            discardList = repository.findAllByDiscardAndPathNotIn(Logic.NO, paths).stream()
+                    .peek(it -> it.setDiscard(Logic.YES))
+                    .map(repository::save)
+                    .collect(Collectors.toList());
+        }
 
         // 打印简要的初始化报告
         String reportMessage = sourceAccessor.getMessage("InitTaskService.syncData.simpleReport",
@@ -104,14 +109,10 @@ public class InitTaskServiceJpaImpl implements InitTaskService {
     private InitTask convertEntity(Initializer initializer) {
         InitTask entity = mapper.toEntity(initializer);
         entity.setName(sourceAccessor.getMessage(entity.getPath(), entity.getName()));
-        // 如果是自动执行初始化，那么属于系统类型的初始化任务
-        if (initializer.isAutoRun()) {
-            entity.setType(TaskType.SYSTEM);
-        }
         return entity;
     }
 
-    @WithSystemUser
+    @SystemUserMock
     @Override
     public void execute(ApplicationArguments args) {
         // 从运行参数或环境变量中判断是否包含指定参数
@@ -130,7 +131,9 @@ public class InitTaskServiceJpaImpl implements InitTaskService {
             return;
         }
 
-        initializers.stream().filter(Initializer::isAutoRun).forEach(this::attemptExecute);
+        initializers.stream()
+                .filter(it -> TaskType.SYSTEM.equals(it.getType()))
+                .forEach(this::attemptExecute);
     }
 
     private void attemptExecute(Initializer initializer) {
@@ -153,8 +156,9 @@ public class InitTaskServiceJpaImpl implements InitTaskService {
         try {
             Stopwatch stopwatch = Stopwatch.createStarted();
             initializer.run();
-            // 如果开启每次运行，那么设置初始化任务为默认状态，否则设置为已完成状态（表示只执行一次）
-            TaskStatus status = initializer.isEachRun() ? TaskStatus.DEFAULT : TaskStatus.COMPLETED;
+            // 如果是每次运行模式，那么设置初始化任务为默认状态，否则设置为已完成状态（表示只执行一次）
+            TaskStatus status = TaskMode.EACH.equals(initializer.getMode())
+                    ? TaskStatus.DEFAULT : TaskStatus.COMPLETED;
             task.setStatus(status);
 
             Stopwatch stop = stopwatch.stop();

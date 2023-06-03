@@ -1,4 +1,4 @@
-package com.github.mrzhqiang.rowing.domain;
+package com.github.mrzhqiang.rowing.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;

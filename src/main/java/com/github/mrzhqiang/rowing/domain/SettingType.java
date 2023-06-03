@@ -1,5 +1,7 @@
 package com.github.mrzhqiang.rowing.domain;
 
+import java.util.stream.Stream;
+
 /**
  * 设置类型。
  * <p>
@@ -38,11 +40,9 @@ public enum SettingType {
     ;
 
     public static SettingType of(String type) {
-        for (SettingType settingType : SettingType.values()) {
-            if (settingType.name().equals(type)) {
-                return settingType;
-            }
-        }
-        return INPUT;
+        return Stream.of(values())
+                .filter(it -> it.name().equalsIgnoreCase(type))
+                .findFirst()
+                .orElse(INPUT);
     }
 }

@@ -44,7 +44,10 @@ public class SettingServiceJpaImpl implements SettingService {
         try (Workbook workbook = WorkbookFactory.create(excelFile)) {
             Sheet sheet = workbook.getSheet(SHEET_NAME);
             if (sheet == null) {
-                log.warn("未找到名为 {} 的 Sheet 页", SHEET_NAME);
+                String notFoundMessage = sourceAccessor.getMessage("SettingService.importExcel.notFound",
+                        new Object[]{SHEET_NAME},
+                        Strings.lenientFormat("未找到名为 %s 的 Sheet 页", SHEET_NAME));
+                log.warn(notFoundMessage);
                 return;
             }
 
@@ -57,31 +60,51 @@ public class SettingServiceJpaImpl implements SettingService {
 
                 String label = Cells.ofString(cells.getCell(0));
                 if (Strings.isNullOrEmpty(label)) {
-                    log.warn("发现第 {} 行 label 列包含空字符串，判断为结束行，终止解析", cells.getRowNum());
+                    String emptyNameMessage = sourceAccessor.getMessage("SettingService.importExcel.empty.label",
+                            new Object[]{cells.getRowNum()},
+                            Strings.lenientFormat(
+                                    "发现第 %s 行 label 列存在空字符串，判断为结束行，终止解析", cells.getRowNum()));
+                    log.info(emptyNameMessage);
                     break;
                 }
 
                 String type = Cells.ofString(cells.getCell(1));
                 if (Strings.isNullOrEmpty(type)) {
-                    log.warn("发现第 {} 行 type 列包含空字符串，判断为结束行，终止解析", cells.getRowNum());
+                    String emptyNameMessage = sourceAccessor.getMessage("SettingService.importExcel.empty.type",
+                            new Object[]{cells.getRowNum()},
+                            Strings.lenientFormat(
+                                    "发现第 %s 行 type 列存在空字符串，判断为结束行，终止解析", cells.getRowNum()));
+                    log.info(emptyNameMessage);
                     break;
                 }
 
                 String name = Cells.ofString(cells.getCell(2));
                 if (Strings.isNullOrEmpty(name)) {
-                    log.warn("发现第 {} 行 name 列包含空字符串，判断为结束行，终止解析", cells.getRowNum());
+                    String emptyNameMessage = sourceAccessor.getMessage("SettingService.importExcel.empty.name",
+                            new Object[]{cells.getRowNum()},
+                            Strings.lenientFormat(
+                                    "发现第 %s 行 name 列存在空字符串，判断为结束行，终止解析", cells.getRowNum()));
+                    log.info(emptyNameMessage);
                     break;
                 }
 
                 String value = Cells.ofString(cells.getCell(3));
                 if (Strings.isNullOrEmpty(value)) {
-                    log.warn("发现第 {} 行 value 列包含空字符串，判断为结束行，终止解析", cells.getRowNum());
+                    String emptyNameMessage = sourceAccessor.getMessage("SettingService.importExcel.empty.value",
+                            new Object[]{cells.getRowNum()},
+                            Strings.lenientFormat(
+                                    "发现第 %s 行 value 列存在空字符串，判断为结束行，终止解析", cells.getRowNum()));
+                    log.info(emptyNameMessage);
                     break;
                 }
 
                 String group = Cells.ofString(cells.getCell(4));
                 if (Strings.isNullOrEmpty(group)) {
-                    log.warn("发现第 {} 行 group 列包含空字符串，判断为结束行，终止解析", cells.getRowNum());
+                    String emptyNameMessage = sourceAccessor.getMessage("SettingService.importExcel.empty.group",
+                            new Object[]{cells.getRowNum()},
+                            Strings.lenientFormat(
+                                    "发现第 %s 行 group 列存在空字符串，判断为结束行，终止解析", cells.getRowNum()));
+                    log.info(emptyNameMessage);
                     break;
                 }
 
@@ -90,14 +113,17 @@ public class SettingServiceJpaImpl implements SettingService {
                 entity.setName(name);
                 entity.setGroup(SettingGroup.of(group));
 
+                // Example 表示查询示例，只有匹配传入参数的非空属性，才返回对应数据
                 entity = repository.findOne(Example.of(entity)).orElse(entity);
                 entity.setLabel(label);
                 entity.setValue(value);
                 repository.save(entity);
             }
         } catch (IOException e) {
-            String message = Strings.lenientFormat("读取 Excel 文件 %s 出错", excelFile);
-            throw new RuntimeException(message, e);
+            String exceptionMessage = sourceAccessor.getMessage("SettingService.importExcel.exception",
+                    new Object[]{excelFile},
+                    Strings.lenientFormat("读取 Excel 文件 %s 出错", excelFile));
+            throw new RuntimeException(exceptionMessage, e);
         }
     }
 

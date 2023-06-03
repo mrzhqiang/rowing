@@ -24,7 +24,7 @@ public interface InitTaskService {
     void sync(ApplicationArguments args);
 
     /**
-     * 执行初始化任务。
+     * 执行任务。
      *
      * @param args 系统启动时的运行参数以及环境变量。
      */

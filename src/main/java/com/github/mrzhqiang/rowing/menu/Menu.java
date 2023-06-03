@@ -1,6 +1,6 @@
 package com.github.mrzhqiang.rowing.menu;
 
-import com.github.mrzhqiang.rowing.domain.AuditableEntity;
+import com.github.mrzhqiang.rowing.domain.entity.AuditableEntity;
 import com.github.mrzhqiang.rowing.domain.MenuType;
 import lombok.Getter;
 import lombok.Setter;

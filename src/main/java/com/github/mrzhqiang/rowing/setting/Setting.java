@@ -1,6 +1,6 @@
 package com.github.mrzhqiang.rowing.setting;
 
-import com.github.mrzhqiang.rowing.domain.AuditableEntity;
+import com.github.mrzhqiang.rowing.domain.entity.AuditableEntity;
 import com.github.mrzhqiang.rowing.domain.SettingGroup;
 import com.github.mrzhqiang.rowing.domain.SettingType;
 import lombok.Getter;
@@ -44,7 +44,7 @@ public class Setting extends AuditableEntity {
     /**
      * 数值。
      */
-    @Column(nullable = false)
+    @Column(nullable = false, length = 2000)
     private String value;
     /**
      * 分组。

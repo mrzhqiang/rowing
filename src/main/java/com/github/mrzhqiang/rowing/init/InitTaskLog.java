@@ -1,7 +1,7 @@
 package com.github.mrzhqiang.rowing.init;
 
 import com.github.mrzhqiang.helper.Exceptions;
-import com.github.mrzhqiang.rowing.domain.AuditableEntity;
+import com.github.mrzhqiang.rowing.domain.entity.AuditableEntity;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

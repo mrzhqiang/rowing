@@ -1,7 +1,5 @@
 package com.github.mrzhqiang.rowing.dict;
 
-import java.io.FileNotFoundException;
-
 /**
  * 字典服务。
  */
@@ -24,9 +22,9 @@ public interface DictService {
     void syncInternal(String basePackage);
 
     /**
-     * 通过导入 Excel 文件生成字典相关实体数据。
+     * 同步 Excel 字典。
      *
      * @param excelFile 内置字典 Excel 文件。
      */
-    void importExcel(String excelFile) throws FileNotFoundException;
+    void syncExcel(String excelFile);
 }

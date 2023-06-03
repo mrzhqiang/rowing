@@ -1,6 +1,6 @@
 package com.github.mrzhqiang.rowing.init;
 
-import com.github.mrzhqiang.rowing.domain.AuditableEntity;
+import com.github.mrzhqiang.rowing.domain.entity.AuditableEntity;
 import com.github.mrzhqiang.rowing.domain.Logic;
 import com.github.mrzhqiang.rowing.domain.TaskStatus;
 import com.github.mrzhqiang.rowing.domain.TaskType;
