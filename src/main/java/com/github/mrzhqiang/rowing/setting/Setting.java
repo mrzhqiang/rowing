@@ -1,7 +1,7 @@
 package com.github.mrzhqiang.rowing.setting;
 
-import com.github.mrzhqiang.rowing.domain.entity.AuditableEntity;
-import com.github.mrzhqiang.rowing.domain.SettingGroup;
+import com.github.mrzhqiang.rowing.domain.AuditableEntity;
+import com.github.mrzhqiang.rowing.domain.SettingTab;
 import com.github.mrzhqiang.rowing.domain.SettingType;
 import lombok.Getter;
 import lombok.Setter;
@@ -33,24 +33,23 @@ public class Setting extends AuditableEntity {
     @Column(nullable = false, length = 50)
     private SettingType type;
     /**
-     * 风格。
-     */
-    private String style;
-    /**
      * 名称。
      */
     @Column(nullable = false, unique = true, length = 50)
     private String name;
     /**
-     * 数值。
+     * 内容。
      */
     @Column(nullable = false, length = 2000)
-    private String value;
+    private String content;
     /**
-     * 分组。
+     * 选项。
      */
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 50)
-    private SettingGroup group;
-
+    private SettingTab tab;
+    /**
+     * 风格。
+     */
+    private String style;
 }

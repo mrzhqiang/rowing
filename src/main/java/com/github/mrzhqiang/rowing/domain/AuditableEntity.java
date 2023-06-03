@@ -1,4 +1,4 @@
-package com.github.mrzhqiang.rowing.domain.entity;
+package com.github.mrzhqiang.rowing.domain;
 
 import lombok.Getter;
 import lombok.Setter;

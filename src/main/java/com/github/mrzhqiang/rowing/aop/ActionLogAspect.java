@@ -1,6 +1,8 @@
-package com.github.mrzhqiang.rowing.action;
+package com.github.mrzhqiang.rowing.aop;
 
 import com.github.mrzhqiang.helper.Exceptions;
+import com.github.mrzhqiang.rowing.action.ActionLog;
+import com.github.mrzhqiang.rowing.action.ActionLogRepository;
 import com.github.mrzhqiang.rowing.domain.ActionState;
 import com.github.mrzhqiang.rowing.domain.ActionType;
 import com.github.mrzhqiang.rowing.session.SessionDetails;
@@ -36,7 +38,7 @@ import java.util.Optional;
 @Slf4j
 @Aspect
 @Component
-public class ActionLogHandler {
+public class ActionLogAspect {
 
     private static final String UNKNOWN_ACTION = "(unknown-action)";
     private static final String PARAMETERS_TEMPLATE = "%s=%s";
@@ -45,13 +47,13 @@ public class ActionLogHandler {
     private final ActionLogRepository repository;
     private final SessionDetailsService sessionDetailsService;
 
-    public ActionLogHandler(ActionLogRepository repository,
-                            SessionDetailsService sessionDetailsService) {
+    public ActionLogAspect(ActionLogRepository repository,
+                           SessionDetailsService sessionDetailsService) {
         this.repository = repository;
         this.sessionDetailsService = sessionDetailsService;
     }
 
-    @Pointcut("@annotation(com.github.mrzhqiang.rowing.action.Action)")
+    @Pointcut("@annotation(com.github.mrzhqiang.rowing.aop.Action)")
     public void actionPoint() {
     }
 

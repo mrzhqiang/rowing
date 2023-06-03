@@ -3,11 +3,11 @@ package com.github.mrzhqiang.rowing.domain;
 import java.util.stream.Stream;
 
 /**
- * 设置分组。
+ * 设置选项。
  * <p>
- * 主要用于对相同类型的设置进行分组。
+ * 主要用于对相同类型的设置进行分组，方便以选项卡形式展示。
  */
-public enum SettingGroup {
+public enum SettingTab {
 
     /**
      * 一般。
@@ -29,9 +29,9 @@ public enum SettingGroup {
     FILE,
     ;
 
-    public static SettingGroup of(String group) {
+    public static SettingTab of(String tab) {
         return Stream.of(values())
-                .filter(it -> it.name().equalsIgnoreCase(group))
+                .filter(it -> it.name().equalsIgnoreCase(tab))
                 .findFirst()
                 .orElse(GENERAL);
     }

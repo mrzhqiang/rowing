@@ -1,6 +1,6 @@
 package com.github.mrzhqiang.rowing.exception;
 
-import com.github.mrzhqiang.rowing.domain.entity.BaseEntity;
+import com.github.mrzhqiang.rowing.domain.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

@@ -1,6 +1,5 @@
-package com.github.mrzhqiang.rowing.domain.repository;
+package com.github.mrzhqiang.rowing.domain;
 
-import com.github.mrzhqiang.rowing.domain.entity.LogicAuditableEntity;
 import com.github.mrzhqiang.rowing.util.Authorizations;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -11,14 +10,14 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Nonnull;
 
 /**
- * 逻辑审计仓库。
+ * 逻辑仓库。
  * <p>
- * 设定如果继承此基础仓库，则必须使用 {@link LogicAuditableEntity} 的扩展实体，以规范逻辑删除字段。
+ * 设定如果继承此基础仓库，则必须使用 {@link LogicEntity} 的扩展实体，以规范逻辑删除字段。
  *
  * @param <E> 实体类型。
  */
 @NoRepositoryBean
-public interface LogicAuditableRepository<E extends LogicAuditableEntity> extends BaseRepository<E> {
+public interface LogicRepository<E extends LogicEntity> extends BaseRepository<E> {
 
     /**
      * 根据主键逻辑删除实体。

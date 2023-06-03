@@ -1,4 +1,4 @@
-package com.github.mrzhqiang.rowing.monitor;
+package com.github.mrzhqiang.rowing.aop;
 
 import com.google.common.base.Stopwatch;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 @Aspect
 @Component
 @Order(2)
-public class StopwatchMonitor {
+public class StopwatchAspect {
 
     private static final String BEFORE_TEMPLATE = "{}-{} 开始计时";
     private static final String AFTER_TEMPLATE = "{}-{} 结束计时！耗时：{}";

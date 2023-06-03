@@ -2,7 +2,7 @@ package com.github.mrzhqiang.rowing.action;
 
 import com.github.mrzhqiang.rowing.domain.ActionState;
 import com.github.mrzhqiang.rowing.domain.ActionType;
-import com.github.mrzhqiang.rowing.domain.entity.BaseEntity;
+import com.github.mrzhqiang.rowing.domain.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

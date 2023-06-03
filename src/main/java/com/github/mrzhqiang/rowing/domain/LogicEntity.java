@@ -1,7 +1,5 @@
-package com.github.mrzhqiang.rowing.domain.entity;
+package com.github.mrzhqiang.rowing.domain;
 
-import com.github.mrzhqiang.rowing.domain.Logic;
-import com.github.mrzhqiang.rowing.domain.entity.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Where;

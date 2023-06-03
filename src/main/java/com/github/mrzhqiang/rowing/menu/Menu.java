@@ -1,6 +1,6 @@
 package com.github.mrzhqiang.rowing.menu;
 
-import com.github.mrzhqiang.rowing.domain.entity.AuditableEntity;
+import com.github.mrzhqiang.rowing.domain.AuditableEntity;
 import com.github.mrzhqiang.rowing.domain.MenuType;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,6 +9,8 @@ import lombok.ToString;
 import javax.persistence.Column;
 import javax.persistence.ConstraintMode;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -42,6 +44,7 @@ public class Menu extends AuditableEntity {
     /**
      * 类型。
      */
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 50)
     private MenuType type;
     /**

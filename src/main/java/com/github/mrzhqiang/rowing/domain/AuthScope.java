@@ -1,15 +1,15 @@
 package com.github.mrzhqiang.rowing.domain;
 
-import com.github.mrzhqiang.rowing.account.SystemUserMock;
+import com.github.mrzhqiang.rowing.aop.SystemUserAuth;
 
 /**
- * 模拟范围。
+ * 认证范围。
  * <p>
- * 用于确定 {@link SystemUserMock} 的生效范围。
+ * 用于确定 {@link SystemUserAuth} 的生效范围。
  *
- * @see SystemUserMock
+ * @see SystemUserAuth
  */
-public enum MockScope {
+public enum AuthScope {
 
     /**
      * 全局。

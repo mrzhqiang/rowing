@@ -1,7 +1,7 @@
 package com.github.mrzhqiang.rowing.init;
 
 import com.github.mrzhqiang.helper.Exceptions;
-import com.github.mrzhqiang.rowing.account.SystemUserMock;
+import com.github.mrzhqiang.rowing.aop.SystemUserAuth;
 import com.github.mrzhqiang.rowing.domain.Logic;
 import com.github.mrzhqiang.rowing.domain.TaskMode;
 import com.github.mrzhqiang.rowing.domain.TaskStatus;
@@ -46,7 +46,7 @@ public class InitTaskServiceJpaImpl implements InitTaskService {
         this.initializers = initializers;
     }
 
-    @SystemUserMock
+    @SystemUserAuth
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void sync(ApplicationArguments args) {
@@ -112,7 +112,7 @@ public class InitTaskServiceJpaImpl implements InitTaskService {
         return entity;
     }
 
-    @SystemUserMock
+    @SystemUserAuth
     @Override
     public void execute(ApplicationArguments args) {
         // 从运行参数或环境变量中判断是否包含指定参数
@@ -168,7 +168,9 @@ public class InitTaskServiceJpaImpl implements InitTaskService {
             taskLog.setMessage(successMessage);
             log.info(successMessage);
         } catch (InitializationException e) {
-            task.setStatus(TaskStatus.FAILED);
+            TaskStatus status = TaskMode.EACH.equals(initializer.getMode())
+                    ? TaskStatus.DEFAULT : TaskStatus.FAILED;
+            task.setStatus(status);
             String cause = Exceptions.ofMessage(e);
             String trace = Exceptions.ofTrace(e);
             String failedMessage = sourceAccessor.getMessage("InitTaskService.autoExecute.failure",

@@ -62,6 +62,8 @@ kaptcha:
 rowing:
   security:
     remember-me: false
+    ignore-path:
+      - "/api/**"
   session:
     # 会话过期重定向地址
     expired-path: "/login?expired"

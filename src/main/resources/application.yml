@@ -38,6 +38,9 @@ spring:
       password: 123456
       roles:
         - ADMIN
+  devtools:
+    restart:
+      additional-exclude: data/**
 
 # 项目配置
 rowing:

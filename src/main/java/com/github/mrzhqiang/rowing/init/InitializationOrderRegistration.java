@@ -26,9 +26,9 @@ final class InitializationOrderRegistration {
         Step order = new Step(INITIAL_ORDER, ORDER_STEP);
         // 以下是具有严格顺序要求的自动初始化实现
         put(DictAutoInitializer.class, order.next());
-        //put(SettingAutoInitializer.class, order.next());
-        //put(MenuAutoInitializer.class, order.next());
-        //put(AccountAutoInitializer.class, order.next());
+        put(SettingAutoInitializer.class, order.next());
+        put(MenuAutoInitializer.class, order.next());
+        put(AccountAutoInitializer.class, order.next());
     }
 
     /**

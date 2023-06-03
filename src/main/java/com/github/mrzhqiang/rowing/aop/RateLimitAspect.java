@@ -1,6 +1,5 @@
-package com.github.mrzhqiang.rowing.monitor;
+package com.github.mrzhqiang.rowing.aop;
 
-import com.github.mrzhqiang.rowing.session.SessionProperties;
 import com.github.mrzhqiang.rowing.session.SessionProperties;
 import com.google.common.util.concurrent.RateLimiter;
 import lombok.extern.slf4j.Slf4j;
@@ -30,32 +29,32 @@ import javax.servlet.http.HttpSession;
 @Aspect
 @Component
 @Order(1)
-public class RateLimitMonitor {
+public class RateLimitAspect {
 
     private final SessionProperties properties;
 
-    public RateLimitMonitor(SessionProperties properties) {
+    public RateLimitAspect(SessionProperties properties) {
         this.properties = properties;
     }
 
     @Pointcut("@annotation(org.springframework.web.bind.annotation.GetMapping)")
     public void getMappingPoint() {
-        // aop point
+        // 切中 GetMapping 注解标记的方法
     }
 
     @Pointcut("@annotation(org.springframework.web.bind.annotation.PostMapping)")
     public void postMappingPoint() {
-        // aop point
+        // 切中 PostMapping 注解标记的方法
     }
 
     @Pointcut("@annotation(org.springframework.web.bind.annotation.PutMapping)")
     public void putMappingPoint() {
-        // aop point
+        // 切中 PutMapping 注解标记的方法
     }
 
     @Pointcut("@annotation(org.springframework.web.bind.annotation.DeleteMapping)")
     public void deleteMappingPoint() {
-        // aop point
+        // 切中 DeleteMapping 注解标记的方法
     }
 
     @Around("getMappingPoint() || postMappingPoint() || putMappingPoint() || deleteMappingPoint()")

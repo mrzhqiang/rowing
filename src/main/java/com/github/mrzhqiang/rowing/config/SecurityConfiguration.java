@@ -6,6 +6,7 @@ import com.github.mrzhqiang.rowing.account.LoginFailureHandler;
 import com.github.mrzhqiang.rowing.domain.Authority;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
@@ -14,7 +15,9 @@ import org.springframework.security.access.hierarchicalroles.RoleHierarchyUtils;
 import org.springframework.security.access.vote.RoleHierarchyVoter;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,10 +30,10 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 /**
  * 安全配置。
  */
-//@EnableWebSecurity
-//@EnableGlobalMethodSecurity(prePostEnabled = true)
-//@EnableConfigurationProperties({RowingSecurityProperties.class})
-//@Configuration
+@EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableConfigurationProperties({RowingSecurityProperties.class})
+@Configuration
 public class SecurityConfiguration {
 
     private final RowingSecurityProperties properties;
@@ -51,31 +54,31 @@ public class SecurityConfiguration {
         this.failureHandler = failureHandler;
     }
 
-    //@Bean
+    @Bean
     public PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
-    //@Bean
+    @Bean
     public RoleHierarchy roleHierarchy() {
         RoleHierarchyImpl hierarchy = new RoleHierarchyImpl();
         hierarchy.setHierarchy(RoleHierarchyUtils.roleHierarchyFromMap(Authority.hierarchy()));
         return hierarchy;
     }
 
-    //@Bean
+    @Bean
     public RoleHierarchyVoter hierarchyVoter(RoleHierarchy hierarchy) {
         return new RoleHierarchyVoter(hierarchy);
     }
 
-    //@Bean
+    @Bean
     public WebSecurityCustomizer ignoring() {
         return web -> web.ignoring()
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
                 .antMatchers(properties.getIgnorePath());
     }
 
-    //@Bean
+    @Bean
     public SecurityFilterChain webFilterChain(HttpSecurity http) throws Exception {
         AuthenticationManager manager = configuration.getAuthenticationManager();
 

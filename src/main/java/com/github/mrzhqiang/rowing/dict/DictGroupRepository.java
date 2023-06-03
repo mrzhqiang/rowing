@@ -1,9 +1,15 @@
 package com.github.mrzhqiang.rowing.dict;
 
-import com.github.mrzhqiang.rowing.domain.repository.BaseRepository;
+import com.github.mrzhqiang.rowing.aop.SystemUserAuth;
+import com.github.mrzhqiang.rowing.domain.BaseRepository;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -23,4 +29,27 @@ public interface DictGroupRepository extends BaseRepository<DictGroup> {
      */
     Optional<DictGroup> findByCode(String code);
 
+    @SystemUserAuth
+    @Override
+    List<DictGroup> findAll();
+
+    @SystemUserAuth
+    @Override
+    List<DictGroup> findAll(Sort sort);
+
+    @SystemUserAuth
+    @Override
+    <S extends DictGroup> List<S> findAll(Example<S> example);
+
+    @SystemUserAuth
+    @Override
+    <S extends DictGroup> List<S> findAll(Example<S> example, Sort sort);
+
+    @SystemUserAuth
+    @Override
+    Page<DictGroup> findAll(Pageable pageable);
+
+    @SystemUserAuth
+    @Override
+    <S extends DictGroup> Page<S> findAll(Example<S> example, Pageable pageable);
 }

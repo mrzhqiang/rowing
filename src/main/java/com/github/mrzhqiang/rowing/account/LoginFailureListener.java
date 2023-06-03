@@ -11,7 +11,7 @@ import javax.annotation.Nonnull;
 import java.time.Duration;
 import java.time.Instant;
 
-//@Component
+@Component
 public class LoginFailureListener implements ApplicationListener<AuthenticationFailureBadCredentialsEvent> {
 
     private final RowingSecurityProperties rowingSecurityProperties;
