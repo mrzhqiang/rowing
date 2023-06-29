@@ -3,17 +3,11 @@ package com.github.mrzhqiang.rowing.account;
 import com.github.mrzhqiang.helper.Environments;
 import com.github.mrzhqiang.helper.random.RandomStrings;
 import com.github.mrzhqiang.rowing.domain.Authority;
+import com.github.mrzhqiang.rowing.i18n.I18nHolder;
 import com.google.common.base.Preconditions;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
-import org.springframework.context.MessageSource;
-import org.springframework.context.support.MessageSourceAccessor;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -33,22 +27,20 @@ public class AccountServiceJpaImpl implements AccountService {
     private final StudentAccountRepository studentAccountRepository;
     private final TeacherAccountRepository teacherAccountRepository;
     //private final PasswordEncoder passwordEncoder;
-    private final MessageSourceAccessor sourceAccessor;
 
     public AccountServiceJpaImpl(SecurityProperties properties,
                                  AccountMapper mapper,
                                  AccountRepository repository,
                                  StudentAccountRepository studentAccountRepository,
-                                 TeacherAccountRepository teacherAccountRepository,
+                                 TeacherAccountRepository teacherAccountRepository
                                  //PasswordEncoder passwordEncoder,
-                                 MessageSource messageSource) {
+                                 ) {
         this.properties = properties;
         this.mapper = mapper;
         this.repository = repository;
         this.studentAccountRepository = studentAccountRepository;
         this.teacherAccountRepository = teacherAccountRepository;
         //this.passwordEncoder = passwordEncoder;
-        this.sourceAccessor = new MessageSourceAccessor(messageSource);
     }
 
     /*@Override
@@ -86,7 +78,7 @@ public class AccountServiceJpaImpl implements AccountService {
         try {
             Files.write(passwordFile, password.getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE);
         } catch (IOException e) {
-            throw new RuntimeException(sourceAccessor.getMessage("AccountService.GenerateAdminFileFailure"), e);
+            throw new RuntimeException(I18nHolder.getAccessor().getMessage("AccountService.GenerateAdminFileFailure"), e);
         }
         //admin.setPassword(passwordEncoder.encode(password));
 

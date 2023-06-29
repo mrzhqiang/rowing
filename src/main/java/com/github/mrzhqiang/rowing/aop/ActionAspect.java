@@ -31,14 +31,14 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * 操作日志处理器。
+ * 操作处理器。
  * <p>
  * 利用 AOP 机制，自动记录标记为 {@link Action 操作} 方法的执行情况。
  */
 @Slf4j
 @Aspect
 @Component
-public class ActionLogAspect {
+public class ActionAspect {
 
     private static final String UNKNOWN_ACTION = "(unknown-action)";
     private static final String PARAMETERS_TEMPLATE = "%s=%s";
@@ -47,8 +47,8 @@ public class ActionLogAspect {
     private final ActionLogRepository repository;
     private final SessionDetailsService sessionDetailsService;
 
-    public ActionLogAspect(ActionLogRepository repository,
-                           SessionDetailsService sessionDetailsService) {
+    public ActionAspect(ActionLogRepository repository,
+                        SessionDetailsService sessionDetailsService) {
         this.repository = repository;
         this.sessionDetailsService = sessionDetailsService;
     }

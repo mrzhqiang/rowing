@@ -1,7 +1,6 @@
-import defaultSettings from '@/settings';
 import i18n from '@/lang';
 
-const title = defaultSettings.title || process.env.TITLE;
+const title = process.env.VUE_APP_TITLE;
 
 export default function getPageTitle(key) {
   const hasKey = i18n.te(`route.${key}`);

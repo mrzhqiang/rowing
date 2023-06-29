@@ -1,18 +1,17 @@
 package com.github.mrzhqiang.rowing.init;
 
 import com.github.mrzhqiang.helper.Exceptions;
-import com.github.mrzhqiang.rowing.aop.SystemUserAuth;
+import com.github.mrzhqiang.rowing.aop.SystemAuth;
 import com.github.mrzhqiang.rowing.domain.Logic;
 import com.github.mrzhqiang.rowing.domain.TaskMode;
 import com.github.mrzhqiang.rowing.domain.TaskStatus;
 import com.github.mrzhqiang.rowing.domain.TaskType;
+import com.github.mrzhqiang.rowing.i18n.I18nHolder;
 import com.github.mrzhqiang.rowing.util.Environments;
 import com.google.common.base.Stopwatch;
 import com.google.common.base.Strings;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
-import org.springframework.context.MessageSource;
-import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -31,22 +30,19 @@ public class InitTaskServiceJpaImpl implements InitTaskService {
     private final InitTaskMapper mapper;
     private final InitTaskRepository repository;
     private final InitTaskLogRepository logRepository;
-    private final MessageSourceAccessor sourceAccessor;
     private final List<Initializer> initializers;
 
     public InitTaskServiceJpaImpl(InitTaskMapper mapper,
                                   InitTaskRepository repository,
                                   InitTaskLogRepository logRepository,
-                                  MessageSource messageSource,
                                   List<Initializer> initializers) {
         this.mapper = mapper;
         this.repository = repository;
         this.logRepository = logRepository;
-        this.sourceAccessor = new MessageSourceAccessor(messageSource);
         this.initializers = initializers;
     }
 
-    @SystemUserAuth
+    @SystemAuth
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void sync(ApplicationArguments args) {
@@ -56,7 +52,7 @@ public class InitTaskServiceJpaImpl implements InitTaskService {
             // 当请求头中包含 Accept-Language 值时，返回指定的语言代码，否则返回系统默认语言代码
             // Spring 包装的 SavedRequest 会将返回的语言代码保存到本地线程中
             // 当通过下面的方法获取国际化消息内容时，自动从本地线程中取得请求对应的语言代码，从而获得对应语言的国际化内容
-            String skipMessage = sourceAccessor.getMessage("InitTaskService.syncData.skipMessage",
+            String skipMessage = I18nHolder.getAccessor().getMessage("InitTaskService.syncData.skipMessage",
                     new Object[]{SKIP_SYNC_ARGS_NAME},
                     Strings.lenientFormat("发现 --%s=true 将跳过同步数据", SKIP_SYNC_ARGS_NAME));
             log.info(skipMessage);
@@ -83,7 +79,7 @@ public class InitTaskServiceJpaImpl implements InitTaskService {
         }
 
         // 打印简要的初始化报告
-        String reportMessage = sourceAccessor.getMessage("InitTaskService.syncData.simpleReport",
+        String reportMessage = I18nHolder.getAccessor().getMessage("InitTaskService.syncData.simpleReport",
                 new Object[]{addedList.size(), discardList.size()},
                 Strings.lenientFormat("新增 %s 个初始化任务，废弃 %s 初始化任务",
                         addedList.size(), discardList.size()));
@@ -92,13 +88,13 @@ public class InitTaskServiceJpaImpl implements InitTaskService {
         // 如果开启调试日志，则打印初始化报告详情
         if (log.isDebugEnabled()) {
             if (!addedList.isEmpty()) {
-                String addMessage = sourceAccessor.getMessage("InitTaskService.syncData.addReport",
+                String addMessage = I18nHolder.getAccessor().getMessage("InitTaskService.syncData.addReport",
                         new Object[]{addedList},
                         Strings.lenientFormat("新增初始化任务详情：%s", addedList));
                 log.debug(addMessage);
             }
             if (!discardList.isEmpty()) {
-                String discardMessage = sourceAccessor.getMessage("InitTaskService.syncData.discardReport",
+                String discardMessage = I18nHolder.getAccessor().getMessage("InitTaskService.syncData.discardReport",
                         new Object[]{discardList},
                         Strings.lenientFormat("废弃初始化任务详情：%s", discardList));
                 log.debug(discardMessage);
@@ -108,16 +104,16 @@ public class InitTaskServiceJpaImpl implements InitTaskService {
 
     private InitTask convertEntity(Initializer initializer) {
         InitTask entity = mapper.toEntity(initializer);
-        entity.setName(sourceAccessor.getMessage(entity.getPath(), entity.getName()));
+        entity.setName(I18nHolder.getAccessor().getMessage(entity.getPath(), entity.getName()));
         return entity;
     }
 
-    @SystemUserAuth
+    @SystemAuth
     @Override
     public void execute(ApplicationArguments args) {
         // 从运行参数或环境变量中判断是否包含指定参数
         if (Environments.hasTrue(args, SKIP_EXECUTE_ARGS_NAME)) {
-            String skipMessage = sourceAccessor.getMessage("InitTaskService.autoExecute.skipMessage",
+            String skipMessage = I18nHolder.getAccessor().getMessage("InitTaskService.autoExecute.skipMessage",
                     new Object[]{SKIP_EXECUTE_ARGS_NAME},
                     Strings.lenientFormat("发现 --%s=true 将跳过自动执行", SKIP_EXECUTE_ARGS_NAME));
             log.warn(skipMessage);
@@ -125,7 +121,7 @@ public class InitTaskServiceJpaImpl implements InitTaskService {
         }
 
         if (CollectionUtils.isEmpty(initializers)) {
-            String ignoredMessage = sourceAccessor.getMessage("InitTaskService.autoExecute.ignored",
+            String ignoredMessage = I18nHolder.getAccessor().getMessage("InitTaskService.autoExecute.ignored",
                     "未发现任何初始化器的实现，已忽略自动执行");
             log.warn(ignoredMessage);
             return;
@@ -140,14 +136,14 @@ public class InitTaskServiceJpaImpl implements InitTaskService {
         String path = initializer.getPath();
         InitTask task = repository.findByPath(path);
         if (task == null || !task.isExecutable()) {
-            log.warn(sourceAccessor.getMessage("InitTaskService.autoExecute.skipped",
+            log.warn(I18nHolder.getAccessor().getMessage("InitTaskService.autoExecute.skipped",
                     new Object[]{task},
                     String.format("初始化任务 %s，无需执行", task)));
             return;
         }
 
         String name = task.getName();
-        log.info(sourceAccessor.getMessage("InitTaskService.autoExecute.started",
+        log.info(I18nHolder.getAccessor().getMessage("InitTaskService.autoExecute.started",
                 new Object[]{name, path},
                 Strings.lenientFormat("准备执行初始化任务：{}--[{}]", name, path)));
 
@@ -162,7 +158,7 @@ public class InitTaskServiceJpaImpl implements InitTaskService {
             task.setStatus(status);
 
             Stopwatch stop = stopwatch.stop();
-            String successMessage = sourceAccessor.getMessage("InitTaskService.autoExecute.success",
+            String successMessage = I18nHolder.getAccessor().getMessage("InitTaskService.autoExecute.success",
                     new Object[]{name, stop},
                     Strings.lenientFormat("初始化任务 %s 执行成功，用时：%s", name, stop));
             taskLog.setMessage(successMessage);
@@ -173,7 +169,7 @@ public class InitTaskServiceJpaImpl implements InitTaskService {
             task.setStatus(status);
             String cause = Exceptions.ofMessage(e);
             String trace = Exceptions.ofTrace(e);
-            String failedMessage = sourceAccessor.getMessage("InitTaskService.autoExecute.failure",
+            String failedMessage = I18nHolder.getAccessor().getMessage("InitTaskService.autoExecute.failure",
                     new Object[]{name, cause},
                     Strings.lenientFormat("初始化任务 %s 执行失败，原因：%s", name, cause));
             taskLog.setMessage(failedMessage);

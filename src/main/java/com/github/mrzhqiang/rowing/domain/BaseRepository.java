@@ -1,7 +1,5 @@
 package com.github.mrzhqiang.rowing.domain;
 
-import com.github.mrzhqiang.rowing.domain.Authority;
-import com.github.mrzhqiang.rowing.domain.BaseEntity;
 import com.github.mrzhqiang.rowing.util.Authorizations;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -9,7 +7,6 @@ import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.CrossOrigin;
 
 import javax.annotation.Nonnull;
 
@@ -32,7 +29,6 @@ import javax.annotation.Nonnull;
  */
 @NoRepositoryBean
 @PreAuthorize(Authorizations.HAS_ROLE_USER)
-@CrossOrigin
 @Validated
 public interface BaseRepository<E extends BaseEntity> extends JpaRepository<E, Long> {
 

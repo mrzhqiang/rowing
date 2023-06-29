@@ -1,10 +1,10 @@
 package com.github.mrzhqiang.rowing.account;
 
 import com.github.mrzhqiang.helper.Joiners;
-import com.github.mrzhqiang.rowing.config.RowingSecurityProperties;
+import com.github.mrzhqiang.rowing.i18n.I18nHolder;
+import com.github.mrzhqiang.rowing.setting.Setting;
+import com.github.mrzhqiang.rowing.setting.SettingRepository;
 import com.github.mrzhqiang.rowing.util.DateTimes;
-import org.springframework.context.MessageSource;
-import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.AuthenticationException;
@@ -15,37 +15,41 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.Optional;
 
 @Component
 public class LoginFailureHandler extends SimpleUrlAuthenticationFailureHandler {
 
-    private final RowingSecurityProperties rowingSecurityProperties;
-    private final AccountRepository accountRepository;
-    private final MessageSourceAccessor sourceAccessor;
+    private static final int DEF_MAX_LOGIN_FAILED = 5;
+    private static final Duration DEF_FIRST_FAILED_DURATION = Duration.ofHours(1);
+    private static final Duration DEF_LOCKED_DURATION = Duration.ofMinutes(5);
 
-    public LoginFailureHandler(RowingSecurityProperties rowingSecurityProperties,
-                               AccountRepository accountRepository,
-                               MessageSource messageSource) {
-        this.rowingSecurityProperties = rowingSecurityProperties;
+    private static final String MAX_LOGIN_FAILED = "max-login-failed";
+    private static final String FIRST_FAILED_DURATION = "first-failed-duration";
+    private static final String ACCOUNT_LOCKED_DURATION = "account-locked-duration";
+
+    private final AccountRepository accountRepository;
+    private final SettingRepository settingRepository;
+
+    public LoginFailureHandler(AccountRepository accountRepository,
+                               SettingRepository settingRepository) {
         this.accountRepository = accountRepository;
-        this.sourceAccessor = new MessageSourceAccessor(messageSource);
-        // 自定义失败处理器，我们需要固定失败的重定向地址
-        setDefaultFailureUrl(rowingSecurityProperties.getLoginFailedPath());
+        this.settingRepository = settingRepository;
     }
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request,
                                         HttpServletResponse response,
-                                        AuthenticationException exception)
-            throws IOException, ServletException {
+                                        AuthenticationException exception) throws IOException, ServletException {
         String username = request.getParameter(AccountService.USERNAME_KEY);
         AuthenticationException rawException = exception;
         exception = Optional.ofNullable(username)
                 .flatMap(accountRepository::findByUsername)
                 .map(it -> handleException(it, rawException))
                 .orElse(rawException);
+        // todo 返回登录失败提示
         super.onAuthenticationFailure(request, response, exception);
     }
 
@@ -65,9 +69,12 @@ public class LoginFailureHandler extends SimpleUrlAuthenticationFailureHandler {
 
     private BadCredentialsException parseBadCredentials(Account account, BadCredentialsException exception) {
         int currentFailedCount = account.getFailedCount();
-        Integer maxLoginFailed = rowingSecurityProperties.getMaxLoginFailed();
+        Integer maxLoginFailed = settingRepository.findByName(MAX_LOGIN_FAILED)
+                .map(Setting::getContent)
+                .map(Integer::parseInt)
+                .orElse(DEF_MAX_LOGIN_FAILED);
         String rawMessage = exception.getMessage();
-        String message = sourceAccessor.getMessage("AccountAuthenticationFailureHandler.BadCredentialsException",
+        String message = I18nHolder.getAccessor().getMessage("LoginFailureHandler.BadCredentialsException",
                 new Object[]{currentFailedCount, maxLoginFailed});
         return new BadCredentialsException(Joiners.DASH.join(rawMessage, message), exception);
     }
@@ -76,7 +83,7 @@ public class LoginFailureHandler extends SimpleUrlAuthenticationFailureHandler {
         Instant locked = account.getLocked();
         String lockedDuration = DateTimes.haveTime(Instant.now(), locked);
         String rawMessage = exception.getMessage();
-        String message = sourceAccessor.getMessage("AccountAuthenticationFailureHandler.LockedException",
+        String message = I18nHolder.getAccessor().getMessage("LoginFailureHandler.LockedException",
                 new Object[]{lockedDuration});
         return new LockedException(Joiners.DASH.join(rawMessage, message), exception);
     }

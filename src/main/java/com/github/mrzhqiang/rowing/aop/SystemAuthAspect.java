@@ -1,6 +1,6 @@
 package com.github.mrzhqiang.rowing.aop;
 
-import com.github.mrzhqiang.rowing.domain.AuthScope;
+import com.github.mrzhqiang.rowing.domain.SystemAuthScope;
 import com.github.mrzhqiang.rowing.util.Authentications;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -28,15 +28,15 @@ import java.util.Optional;
 @Aspect
 @Component
 @Order(3)
-public class SystemUserAspect {
+public class SystemAuthAspect {
 
     private final Authentication system;
 
-    public SystemUserAspect(SecurityProperties securityProperties) {
+    public SystemAuthAspect(SecurityProperties securityProperties) {
         this.system = Authentications.ofSystem(securityProperties);
     }
 
-    @Pointcut("@annotation(com.github.mrzhqiang.rowing.aop.SystemUserAuth)")
+    @Pointcut("@annotation(com.github.mrzhqiang.rowing.aop.SystemAuth)")
     public void withSystemUserPoint() {
         // 切中所有标记 @WithSystemUser 注解的方法
     }
@@ -45,26 +45,25 @@ public class SystemUserAspect {
     public Object systemUserHandle(ProceedingJoinPoint point) throws Throwable {
         // 检测注解的范围属性，以决定是否获取当前安全上下文
         Method targetMethod = ((MethodSignature) point.getSignature()).getMethod();
-        SystemUserAuth annotation = AnnotationUtils.findAnnotation(targetMethod, SystemUserAuth.class);
-        AuthScope scope = Optional.ofNullable(annotation)
-                .map(SystemUserAuth::scope)
-                .orElse(AuthScope.GLOBAL);
+        SystemAuth annotation = AnnotationUtils.findAnnotation(targetMethod, SystemAuth.class);
+        SystemAuthScope scope = Optional.ofNullable(annotation)
+                .map(SystemAuth::scope)
+                .orElse(SystemAuthScope.DEFAULT);
 
-        SecurityContext currentContext = null;
-        if (AuthScope.CURRENT.equals(scope)) {
-            currentContext = SecurityContextHolder.getContext();
+        SecurityContext currentContext = SecurityContextHolder.getContext();
+        // 如果不是默认范围，或者是默认范围但不存在当前用户认证，那么允许替换
+        if (!SystemAuthScope.DEFAULT.equals(scope) || currentContext == null) {
+            // 替换当前安全上下文为 system 认证
+            // 这里的逻辑参考了 RunAsManager#buildRunAs 在 AbstractSecurityInterceptor 中执行时的逻辑
+            SecurityContext systemContext = SecurityContextHolder.createEmptyContext();
+            systemContext.setAuthentication(system);
+            SecurityContextHolder.setContext(systemContext);
         }
-
-        // 替换当前安全上下文为 system 认证
-        // 这里的逻辑参考了 RunAsManager#buildRunAs 在 AbstractSecurityInterceptor 中执行时的逻辑
-        SecurityContext context = SecurityContextHolder.createEmptyContext();
-        context.setAuthentication(system);
-        SecurityContextHolder.setContext(context);
         // 执行目标方法
         Object result = point.proceed();
 
         // 根据注解的范围，即当前上下文是否保留，决定是否还原安全上下文
-        if (currentContext != null) {
+        if (SystemAuthScope.CURRENT.equals(scope)) {
             SecurityContextHolder.setContext(currentContext);
         } else {
             SecurityContextHolder.clearContext();

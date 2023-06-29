@@ -1,13 +1,11 @@
 'use strict';
 const path = require('path');
-const defaultSettings = require('./src/settings.js');
 
 function resolve(dir) {
   return path.join(__dirname, dir);
 }
 
-const name = defaultSettings.title || process.env.TITLE; // page title
-
+const name = process.env.VUE_APP_TITLE; // page title
 // If your port is set to 80,
 // use administrator privileges to execute the command line.
 // For example, Mac: sudo npm run
@@ -36,7 +34,17 @@ module.exports = {
       warnings: false,
       errors: true
     },
-    //before: require('./mock/mock-server.js')
+    proxy: {
+      // detail: https://cli.vuejs.org/config/#devserver-proxy
+      [process.env.VUE_APP_BASE_API]: {
+        target: `http://localhost:8888`,
+        changeOrigin: true,
+        pathRewrite: {
+          ['^' + process.env.VUE_APP_BASE_API]: ''
+        }
+      }
+    },
+    disableHostCheck: true
   },
   configureWebpack: {
     // provide the app's title in webpack's name field, so that
@@ -49,7 +57,6 @@ module.exports = {
     }
   },
   chainWebpack(config) {
-    // it can improve the speed of the first screen, it is recommended to turn on preload
     // it can improve the speed of the first screen, it is recommended to turn on preload
     config.plugin('preload').tap(() => [
       {

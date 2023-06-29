@@ -1,16 +1,24 @@
 package com.github.mrzhqiang.rowing.domain;
 
-import com.github.mrzhqiang.rowing.aop.SystemUserAuth;
+import com.github.mrzhqiang.rowing.aop.SystemAuth;
 
 /**
- * 认证范围。
+ * 系统认证范围。
  * <p>
- * 用于确定 {@link SystemUserAuth} 的生效范围。
+ * 用于确定 {@link SystemAuth} 的生效范围。
  *
- * @see SystemUserAuth
+ * @see SystemAuth
  */
-public enum AuthScope {
+public enum SystemAuthScope {
 
+    /**
+     * 默认。
+     * <p>
+     * 表示在无用户认证的情况下，默认设置为系统认证，当方法调用完成，再回退到无用户认证。
+     * <p>
+     * 如果已有用户认证，则不进行任何替换操作。
+     */
+    DEFAULT,
     /**
      * 全局。
      * <p>

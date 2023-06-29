@@ -1,8 +1,8 @@
 package com.github.mrzhqiang.rowing.exception;
 
 import com.github.mrzhqiang.helper.Environments;
-import com.github.mrzhqiang.rowing.aop.SystemUserAuth;
-import com.github.mrzhqiang.rowing.domain.AuthScope;
+import com.github.mrzhqiang.rowing.aop.SystemAuth;
+import com.github.mrzhqiang.rowing.domain.SystemAuthScope;
 import com.github.mrzhqiang.rowing.util.Views;
 import com.google.common.base.VerifyException;
 import lombok.extern.slf4j.Slf4j;
@@ -50,7 +50,7 @@ public class GlobalExceptionHandler {
      * @param request 当前请求。
      * @return 根据请求客户端的类型返回的不同对象，浏览器一般是视图对象，而 API 则是 JSON 对象。
      */
-    @SystemUserAuth(scope = AuthScope.CURRENT)
+    @SystemAuth(scope = SystemAuthScope.CURRENT)
     @ExceptionHandler({
             IllegalArgumentException.class,
             IllegalStateException.class,
@@ -69,7 +69,7 @@ public class GlobalExceptionHandler {
      * @param request 当前请求。
      * @return 根据请求客户端的类型返回的不同对象，浏览器一般是视图对象，而 API 则是 JSON 对象。
      */
-    @SystemUserAuth(scope = AuthScope.CURRENT)
+    @SystemAuth(scope = SystemAuthScope.CURRENT)
     @ExceptionHandler({
             ResourceNotFoundException.class,
             EntityNotFoundException.class})
@@ -87,7 +87,7 @@ public class GlobalExceptionHandler {
      * @param request 当前请求。
      * @return 根据请求客户端的类型返回的不同对象，浏览器一般是视图对象，而 API 则是 JSON 对象。
      */
-    @SystemUserAuth(scope = AuthScope.CURRENT)
+    @SystemAuth(scope = SystemAuthScope.CURRENT)
     @ExceptionHandler({
             NullPointerException.class,
             IndexOutOfBoundsException.class,
@@ -106,7 +106,7 @@ public class GlobalExceptionHandler {
      * @param request 当前请求。
      * @return 根据请求客户端的类型返回的不同对象，浏览器一般是视图对象，而 API 则是 JSON 对象。
      */
-    @SystemUserAuth(scope = AuthScope.CURRENT)
+    @SystemAuth(scope = SystemAuthScope.CURRENT)
     @ExceptionHandler({
             IOException.class})
     public Object handleServiceUnavailable(Exception ex, HttpServletRequest request) {
@@ -131,7 +131,7 @@ public class GlobalExceptionHandler {
      * @param request 当请求。
      * @return 根据请求客户端的类型返回的不同对象，浏览器一般是视图对象，而 API 则是 JSON 对象。
      */
-    @SystemUserAuth(scope = AuthScope.CURRENT)
+    @SystemAuth(scope = SystemAuthScope.CURRENT)
     @SuppressWarnings("JavadocReference")
     @ExceptionHandler({Exception.class})
     public Object handleOther(Exception ex, HttpServletRequest request) {

@@ -1,6 +1,4 @@
 module.exports = {
-  title: 'Rowing',
-
   /**
    * @type {boolean} true | false
    * @description Whether show the settings right-panel

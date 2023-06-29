@@ -2,6 +2,7 @@ package com.github.mrzhqiang.rowing.dict;
 
 import com.github.mrzhqiang.rowing.domain.DictType;
 import com.github.mrzhqiang.rowing.domain.Logic;
+import com.github.mrzhqiang.rowing.i18n.I18nHolder;
 import com.github.mrzhqiang.rowing.util.Cells;
 import com.google.common.base.CaseFormat;
 import com.google.common.base.Preconditions;
@@ -13,8 +14,6 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
-import org.springframework.context.MessageSource;
-import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.data.rest.webmvc.json.EnumTranslator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,18 +37,15 @@ public class DictServiceJpaImpl implements DictService {
     private final DictGroupRepository groupRepository;
     private final DictItemRepository itemRepository;
     private final ClassScanner scanner;
-    private final MessageSourceAccessor sourceAccessor;
     private final EnumTranslator enumTranslator;
 
     public DictServiceJpaImpl(DictGroupRepository groupRepository,
                               DictItemRepository itemRepository,
                               ClassScanner scanner,
-                              MessageSource messageSource,
                               EnumTranslator enumTranslator) {
         this.groupRepository = groupRepository;
         this.itemRepository = itemRepository;
         this.scanner = scanner;
-        this.sourceAccessor = new MessageSourceAccessor(messageSource);
         this.enumTranslator = enumTranslator;
     }
 
@@ -65,13 +61,13 @@ public class DictServiceJpaImpl implements DictService {
         // 枚举类名称是大写开头的驼峰命名，转为带 '_' 连接符的大写名称，作为内置数据字典的 code 关键字
         String code = CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, simpleName);
         // 通过从 message.properties 文件中获取枚举类的国际化内容，如果它不存在则使用枚举类的简称作为字典组名称
-        String name = sourceAccessor.getMessage(enumClass.getName(), simpleName);
+        String name = I18nHolder.getAccessor().getMessage(enumClass.getName(), simpleName);
 
         // 通过 code 找到数据字典组，如果存在就更新，如果不存在就创建
         DictGroup dictGroup = groupRepository.findByCode(code).orElseGet(DictGroup::new);
         // 已设置冻结，不进行更新
         if (Logic.YES.equals(dictGroup.getFreeze())) {
-            String groupMessage = sourceAccessor.getMessage("DictService.syncInternal.group.freeze",
+            String groupMessage = I18nHolder.getAccessor().getMessage("DictService.syncInternal.group.freeze",
                     new Object[]{name, code},
                     Strings.lenientFormat("内置字典组 %s-%s 已冻结，跳过同步", name, code));
             log.info(groupMessage);
@@ -83,7 +79,7 @@ public class DictServiceJpaImpl implements DictService {
         dictGroup.setFreeze(Logic.NO);
         groupRepository.save(dictGroup);
 
-        String groupMessage = sourceAccessor.getMessage("DictService.syncInternal.group",
+        String groupMessage = I18nHolder.getAccessor().getMessage("DictService.syncInternal.group",
                 new Object[]{name, code},
                 Strings.lenientFormat("内置字典组 %s-%s 已同步", name, code));
         log.info(groupMessage);
@@ -105,7 +101,7 @@ public class DictServiceJpaImpl implements DictService {
             dictItem.setValue(itemValue);
             itemRepository.save(dictItem);
 
-            String itemMessage = sourceAccessor.getMessage("DictService.syncInternal.item",
+            String itemMessage = I18nHolder.getAccessor().getMessage("DictService.syncInternal.item",
                     new Object[]{label, itemValue, name},
                     Strings.lenientFormat("内置字典项 %s-%s 已同步到 %s 字典组", label, itemValue, name));
             log.info(itemMessage);
@@ -124,7 +120,7 @@ public class DictServiceJpaImpl implements DictService {
         try (Workbook workbook = WorkbookFactory.create(file)) {
             Sheet group = workbook.getSheet(GROUP_SHEET_NAME);
             if (group == null) {
-                String notFoundMessage = sourceAccessor.getMessage("DictService.importExcel.notFound",
+                String notFoundMessage = I18nHolder.getAccessor().getMessage("DictService.importExcel.notFound",
                         new Object[]{GROUP_SHEET_NAME},
                         Strings.lenientFormat("未找到名为 %s 的 Sheet 页", GROUP_SHEET_NAME));
                 log.warn(notFoundMessage);
@@ -134,7 +130,7 @@ public class DictServiceJpaImpl implements DictService {
             // 尝试处理字典组，生成相关实体，并返回以名称为 key 的映射
             Map<String, DictGroup> groupMap = attemptHandleGroup(group);
             if (groupMap.isEmpty()) {
-                String invalidMessage = sourceAccessor.getMessage("DictService.syncExcel.invalid",
+                String invalidMessage = I18nHolder.getAccessor().getMessage("DictService.syncExcel.invalid",
                         new Object[]{},
                         Strings.lenientFormat("Excel 文件 %s 不存在有效字典组数据", excelFile));
                 throw new RuntimeException(invalidMessage);
@@ -142,7 +138,7 @@ public class DictServiceJpaImpl implements DictService {
 
             Sheet item = workbook.getSheet(ITEM_SHEET_NAME);
             if (item == null) {
-                String notFoundSheetMessage = sourceAccessor.getMessage("DictService.syncExcel.notFound",
+                String notFoundSheetMessage = I18nHolder.getAccessor().getMessage("DictService.syncExcel.notFound",
                         new Object[]{ITEM_SHEET_NAME},
                         Strings.lenientFormat("未找到名为 %s 的 Sheet 页", ITEM_SHEET_NAME));
                 log.warn(notFoundSheetMessage);
@@ -151,7 +147,7 @@ public class DictServiceJpaImpl implements DictService {
 
             attemptHandleItem(groupMap, item);
         } catch (IOException e) {
-            String exceptionMessage = sourceAccessor.getMessage("DictService.syncExcel.exception",
+            String exceptionMessage = I18nHolder.getAccessor().getMessage("DictService.syncExcel.exception",
                     new Object[]{excelFile},
                     Strings.lenientFormat("读取 Excel 文件 %s 出错", excelFile));
             throw new RuntimeException(exceptionMessage, e);
@@ -174,7 +170,7 @@ public class DictServiceJpaImpl implements DictService {
             String name = Cells.ofString(cells.getCell(0));
             // 如果发现 null 值或空串，视为结束行
             if (Strings.isNullOrEmpty(name)) {
-                String emptyNameMessage = sourceAccessor.getMessage("DictService.syncExcel.empty.name",
+                String emptyNameMessage = I18nHolder.getAccessor().getMessage("DictService.syncExcel.empty.name",
                         new Object[]{cells.getRowNum()},
                         Strings.lenientFormat(
                                 "发现第 %s 行 name 列存在空字符串，判断为结束行，终止解析", cells.getRowNum()));
@@ -184,7 +180,7 @@ public class DictServiceJpaImpl implements DictService {
 
             String code = Cells.ofString(cells.getCell(1));
             if (Strings.isNullOrEmpty(code)) {
-                String emptyCodeMessage = sourceAccessor.getMessage("DictService.syncExcel.empty.code",
+                String emptyCodeMessage = I18nHolder.getAccessor().getMessage("DictService.syncExcel.empty.code",
                         new Object[]{cells.getRowNum()},
                         Strings.lenientFormat(
                                 "发现第 %s 行 code 列存在空字符串，判断为结束行，终止解析", cells.getRowNum()));
@@ -201,7 +197,7 @@ public class DictServiceJpaImpl implements DictService {
             // 根据 REQUIRED 传播类型，则 save 会自动加入 service 的当前事务
             groupMap.put(code, groupRepository.save(entity));
 
-            String groupMessage = sourceAccessor.getMessage("DictService.syncExcel.group",
+            String groupMessage = I18nHolder.getAccessor().getMessage("DictService.syncExcel.group",
                     new Object[]{name, code},
                     Strings.lenientFormat("Excel 字典组 %s-%s 已同步", name, code));
             log.info(groupMessage);
@@ -220,7 +216,7 @@ public class DictServiceJpaImpl implements DictService {
 
             String code = Cells.ofString(cells.getCell(0));
             if (Strings.isNullOrEmpty(code)) {
-                String emptyCodeMessage = sourceAccessor.getMessage("DictService.syncExcel.empty.code",
+                String emptyCodeMessage = I18nHolder.getAccessor().getMessage("DictService.syncExcel.empty.code",
                         new Object[]{cells.getRowNum()},
                         Strings.lenientFormat(
                                 "发现第 %s 行 code 列存在空字符串，判断为结束行，终止解析", cells.getRowNum()));
@@ -230,7 +226,7 @@ public class DictServiceJpaImpl implements DictService {
 
             DictGroup dictGroup = groupMap.get(code);
             if (dictGroup == null) {
-                String codeNotFoundMessage = sourceAccessor.getMessage("DictService.syncExcel.code.notFound",
+                String codeNotFoundMessage = I18nHolder.getAccessor().getMessage("DictService.syncExcel.code.notFound",
                         new Object[]{code},
                         Strings.lenientFormat("错误的字典项，指定的 code %s 在 group Sheet 页中不存在", code));
                 log.warn(codeNotFoundMessage);
@@ -239,7 +235,7 @@ public class DictServiceJpaImpl implements DictService {
 
             String label = Cells.ofString(cells.getCell(1));
             if (Strings.isNullOrEmpty(label)) {
-                String emptyLabelMessage = sourceAccessor.getMessage("DictService.syncExcel.empty.label",
+                String emptyLabelMessage = I18nHolder.getAccessor().getMessage("DictService.syncExcel.empty.label",
                         new Object[]{cells.getRowNum()},
                         Strings.lenientFormat(
                                 "发现第 %s 行 label 列存在空字符串，判断为结束行，终止解析", cells.getRowNum()));
@@ -249,7 +245,7 @@ public class DictServiceJpaImpl implements DictService {
 
             String value = Cells.ofString(cells.getCell(2));
             if (Strings.isNullOrEmpty(value)) {
-                String emptyValueMessage = sourceAccessor.getMessage("DictService.syncExcel.empty.value",
+                String emptyValueMessage = I18nHolder.getAccessor().getMessage("DictService.syncExcel.empty.value",
                         new Object[]{cells.getRowNum()},
                         Strings.lenientFormat(
                                 "发现第 %s 行 value 列存在空字符串，判断为结束行，终止解析", cells.getRowNum()));
@@ -263,7 +259,7 @@ public class DictServiceJpaImpl implements DictService {
             entity.setGroup(dictGroup);
             itemRepository.save(entity);
 
-            String itemMessage = sourceAccessor.getMessage("DictService.syncExcel.item",
+            String itemMessage = I18nHolder.getAccessor().getMessage("DictService.syncExcel.item",
                     new Object[]{label, value, code},
                     Strings.lenientFormat("Excel 字典项 %s-%s 已同步到 %s 字典组", label, value, code));
             log.info(itemMessage);

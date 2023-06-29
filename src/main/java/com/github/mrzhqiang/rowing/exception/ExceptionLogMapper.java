@@ -27,7 +27,7 @@ public interface ExceptionLogMapper {
     @Mapping(target = "address", source = "request.remoteAddr")
     @Mapping(target = "sessionId", source = "request.requestedSessionId")
     @Mapping(target = "message", expression = "java( Exceptions.ofMessage(exception) )")
-    @Mapping(target = "code", expression = "java( com.github.mrzhqiang.rowing.domain.ExceptionCode.of(exception).format(status.value(),exception.getMessage()) )")
+    @Mapping(target = "code", expression = "java( ExceptionCode.of(exception).format(status.value(), exception.getMessage()) )")
     @Mapping(target = "trace", expression = "java( Exceptions.ofTrace(exception) )")
     ExceptionLog toEntity(HttpStatus status, HttpServletRequest request, Exception exception);
 }

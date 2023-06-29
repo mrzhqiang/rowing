@@ -1,6 +1,7 @@
 package com.github.mrzhqiang.rowing.account;
 
-import com.github.mrzhqiang.rowing.config.RowingSecurityProperties;
+import com.github.mrzhqiang.rowing.setting.Setting;
+import com.github.mrzhqiang.rowing.setting.SettingRepository;
 import com.github.mrzhqiang.rowing.util.Authentications;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.authentication.event.AuthenticationFailureBadCredentialsEvent;
@@ -14,13 +15,21 @@ import java.time.Instant;
 @Component
 public class LoginFailureListener implements ApplicationListener<AuthenticationFailureBadCredentialsEvent> {
 
-    private final RowingSecurityProperties rowingSecurityProperties;
-    private final AccountRepository accountRepository;
+    private static final int DEF_MAX_LOGIN_FAILED = 5;
+    private static final Duration DEF_FIRST_FAILED_DURATION = Duration.ofHours(1);
+    private static final Duration DEF_ACCOUNT_LOCKED_DURATION = Duration.ofMinutes(5);
 
-    public LoginFailureListener(RowingSecurityProperties rowingSecurityProperties,
-                                AccountRepository accountRepository) {
-        this.rowingSecurityProperties = rowingSecurityProperties;
+    private static final String MAX_LOGIN_FAILED = "max-login-failed";
+    private static final String FIRST_FAILED_DURATION = "first-failed-duration";
+    private static final String ACCOUNT_LOCKED_DURATION = "account-locked-duration";
+
+    private final AccountRepository accountRepository;
+    private final SettingRepository settingRepository;
+
+    public LoginFailureListener(AccountRepository accountRepository,
+                                SettingRepository settingRepository) {
         this.accountRepository = accountRepository;
+        this.settingRepository = settingRepository;
     }
 
     @Override
@@ -40,7 +49,10 @@ public class LoginFailureListener implements ApplicationListener<AuthenticationF
     private Account computeFailedCount(Account account) {
         Instant firstFailed = account.getFirstFailed();
         Instant now = Instant.now();
-        Duration firstFailedDuration = rowingSecurityProperties.getFirstFailedDuration();
+        Duration firstFailedDuration = settingRepository.findByName(FIRST_FAILED_DURATION)
+                .map(Setting::getContent)
+                .map(Duration::parse)
+                .orElse(DEF_FIRST_FAILED_DURATION);
         if (firstFailed == null || firstFailed.plus(firstFailedDuration).isBefore(now)) {
             account.setFirstFailed(now);
             account.setFailedCount(1);
@@ -49,8 +61,15 @@ public class LoginFailureListener implements ApplicationListener<AuthenticationF
 
         int hasFailedCount = account.getFailedCount() + 1;
         account.setFailedCount(hasFailedCount);
-        if (hasFailedCount >= rowingSecurityProperties.getMaxLoginFailed()) {
-            Duration duration = rowingSecurityProperties.getLockedDuration();
+        Integer maxLoginFailed = settingRepository.findByName(MAX_LOGIN_FAILED)
+                .map(Setting::getContent)
+                .map(Integer::parseInt)
+                .orElse(DEF_MAX_LOGIN_FAILED);
+        if (hasFailedCount >= maxLoginFailed) {
+            Duration duration = settingRepository.findByName(ACCOUNT_LOCKED_DURATION)
+                    .map(Setting::getContent)
+                    .map(Duration::parse)
+                    .orElse(DEF_ACCOUNT_LOCKED_DURATION);
             account.setLocked(now.plus(duration));
         }
         return account;

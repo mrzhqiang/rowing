@@ -1,14 +1,13 @@
 package com.github.mrzhqiang.rowing.dict;
 
 import com.github.mrzhqiang.helper.Exceptions;
+import com.github.mrzhqiang.rowing.i18n.I18nHolder;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Stopwatch;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
-import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.support.ResourcePatternResolver;
@@ -35,12 +34,10 @@ public final class ClassScanner {
 
     private final ResourcePatternResolver resourcePatternResolver;
     private final MetadataReaderFactory metadataReaderFactory;
-    private final MessageSourceAccessor sourceAccessor;
 
-    public ClassScanner(ResourceLoader resourceLoader, MessageSource messageSource) {
+    public ClassScanner(ResourceLoader resourceLoader) {
         this.resourcePatternResolver = ResourcePatternUtils.getResourcePatternResolver(resourceLoader);
         this.metadataReaderFactory = new CachingMetadataReaderFactory(resourceLoader);
-        this.sourceAccessor = new MessageSourceAccessor(messageSource);
     }
 
     /**
@@ -52,7 +49,7 @@ public final class ClassScanner {
     public List<Class<? extends Enum<?>>> scanEnumBy(String basePackage) {
         Preconditions.checkNotNull(basePackage, "base package == null");
 
-        String startMessage = sourceAccessor.getMessage("ClassScanner.scanEnum.start",
+        String startMessage = I18nHolder.getAccessor().getMessage("ClassScanner.scanEnum.start",
                 new Object[]{basePackage},
                 Strings.lenientFormat("准备扫描 %s 包下的所有枚举", basePackage));
         log.info(startMessage);
@@ -72,7 +69,7 @@ public final class ClassScanner {
                     Class<?> clazz = Class.forName(className);
                     if (clazz.isEnum()) {
                         if (log.isDebugEnabled()) {
-                            String nameMessage = sourceAccessor.getMessage("ClassScanner.scanEnum.success",
+                            String nameMessage = I18nHolder.getAccessor().getMessage("ClassScanner.scanEnum.success",
                                     new Object[]{resource, className},
                                     Strings.lenientFormat("扫描成功，资源文件 %s 枚举类：%s", resource, className));
                             log.debug(nameMessage);
@@ -81,7 +78,7 @@ public final class ClassScanner {
                     }
                 } catch (Exception e) {
                     String message = Exceptions.ofMessage(e);
-                    String notFoundMessage = sourceAccessor.getMessage("ClassScanner.scanEnum.failure",
+                    String notFoundMessage = I18nHolder.getAccessor().getMessage("ClassScanner.scanEnum.failure",
                             new Object[]{resource, message},
                             Strings.lenientFormat("扫描失败，资源文件 %s 失败原因：%s", resource, message));
                     log.warn(notFoundMessage);
@@ -89,7 +86,7 @@ public final class ClassScanner {
             }
         } catch (Exception ex) {
             String message = Exceptions.ofMessage(ex);
-            String exceptionMessage = sourceAccessor.getMessage("ClassScanner.scanEnum.error",
+            String exceptionMessage = I18nHolder.getAccessor().getMessage("ClassScanner.scanEnum.error",
                     new Object[]{message},
                     Strings.lenientFormat("扫描出错，原因：%s", message));
             throw new RuntimeException(exceptionMessage, ex);
@@ -97,7 +94,7 @@ public final class ClassScanner {
 
         int total = enums.size();
         Stopwatch stop = stopwatch.stop();
-        String finishedMessage = sourceAccessor.getMessage("ClassScanner.scanEnum.finished",
+        String finishedMessage = I18nHolder.getAccessor().getMessage("ClassScanner.scanEnum.finished",
                 new Object[]{total, stop},
                 Strings.lenientFormat("扫描完成，一共找到 %s 个枚举类，用时：%s", total, stop));
         log.info(finishedMessage);
