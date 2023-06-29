@@ -9,6 +9,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,27 +30,33 @@ public interface DictGroupRepository extends BaseRepository<DictGroup> {
      */
     Optional<DictGroup> findByCode(String code);
 
+    @Nonnull
     @SystemAuth
     @Override
     List<DictGroup> findAll();
 
+    @Nonnull
     @SystemAuth
     @Override
-    List<DictGroup> findAll(Sort sort);
+    List<DictGroup> findAll(@Nonnull Sort sort);
 
+    @Nonnull
     @SystemAuth
     @Override
-    <S extends DictGroup> List<S> findAll(Example<S> example);
+    <S extends DictGroup> List<S> findAll(@Nonnull Example<S> example);
 
+    @Nonnull
     @SystemAuth
     @Override
-    <S extends DictGroup> List<S> findAll(Example<S> example, Sort sort);
+    <S extends DictGroup> List<S> findAll(@Nonnull Example<S> example, @Nonnull Sort sort);
 
+    @Nonnull
     @SystemAuth
     @Override
-    Page<DictGroup> findAll(Pageable pageable);
+    Page<DictGroup> findAll(@Nonnull Pageable pageable);
 
+    @Nonnull
     @SystemAuth
     @Override
-    <S extends DictGroup> Page<S> findAll(Example<S> example, Pageable pageable);
+    <S extends DictGroup> Page<S> findAll(@Nonnull Example<S> example, @Nonnull Pageable pageable);
 }
