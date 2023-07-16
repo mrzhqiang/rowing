@@ -1,4 +1,4 @@
-package com.github.mrzhqiang.rowing.third;
+package com.github.mrzhqiang.rowing.session;
 
 import lombok.Data;
 

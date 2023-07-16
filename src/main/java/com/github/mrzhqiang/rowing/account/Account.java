@@ -3,7 +3,10 @@ package com.github.mrzhqiang.rowing.account;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.mrzhqiang.rowing.domain.AuditableEntity;
 import com.github.mrzhqiang.rowing.domain.Authority;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
@@ -27,18 +30,27 @@ import java.util.Optional;
 @Getter
 @Setter
 @ToString(callSuper = true)
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
 public class Account extends AuditableEntity implements UserDetails {
 
     private static final long serialVersionUID = 5162282743335524644L;
 
+    /**
+     * 学生账号前缀。
+     */
     public static final String STUDENT_ID_PREFIX = "sid_";
+    /**
+     * 教师账号前缀。
+     */
     public static final String TEACHER_ID_PREFIX = "tid_";
 
     /**
      * 用户名。
      * <p>
-     * 1. 注册创建。校验规则：最小长度 4 位，最大长度 24 位，必须为全小写字母，且以字母开头，字母或数据结尾。
+     * 1. 注册创建。校验规则：最小长度 4 位，最大长度 24 位，必须为全小写字母，且以字母开头，字母或数字结尾，不包含特殊符号。
      * <p>
      * 2. 根据学生学号生成。生成规则：
      * <p>
@@ -133,7 +145,7 @@ public class Account extends AuditableEntity implements UserDetails {
      *
      * @return 返回 true 表示当前账户为管理员；否则不是管理员。
      */
-    public boolean isAdmin() {
+    public boolean isAdminRole() {
         return Optional.ofNullable(authority)
                 .map(Authority.ROLE_ADMIN::equals)
                 .orElse(false);

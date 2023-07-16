@@ -33,7 +33,7 @@ public final class Ages {
      * <p>
      * 根据百度百科的介绍，周岁以出生年为 0 岁，第二年过完生日为 1 岁，以此类推。
      * <p>
-     * 因此将现在的年份与生日的年份相减，得到的岁数还必须以今年是否过生日为基准，过了不做改动，没过则 -1 岁。
+     * 因此将现在的年份与生日的年份相减，得到的岁数还必须以今年是否过生日为基准，如果过了不做任何改动，否则需要减去 1 岁。
      *
      * @param birthday 生日日期。
      * @return 周岁。
@@ -42,15 +42,11 @@ public final class Ages {
         Preconditions.checkNotNull(birthday, "birthday == null");
 
         LocalDate now = LocalDate.now();
-        // 计算生日到现在的年份差值——岁数
         int age = (int) ChronoUnit.YEARS.between(birthday, now);
-        // 得到今年的生日日期
         LocalDate thisYearBirthday = birthday.withYear(now.getYear());
-        // 如果今年还没过生日，说明未满周岁，需要将岁数 -1 处理
         if (thisYearBirthday.isBefore(now)) {
             age--;
         }
-        // 满周岁则直接返回
         return age;
     }
 }

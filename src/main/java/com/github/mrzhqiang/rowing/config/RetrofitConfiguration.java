@@ -1,4 +1,4 @@
-package com.github.mrzhqiang.rowing.third;
+package com.github.mrzhqiang.rowing.config;
 
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.OkHttpClient;

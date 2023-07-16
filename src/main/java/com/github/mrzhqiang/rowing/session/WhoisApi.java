@@ -1,4 +1,4 @@
-package com.github.mrzhqiang.rowing.third;
+package com.github.mrzhqiang.rowing.session;
 
 import io.reactivex.Observable;
 import retrofit2.http.GET;

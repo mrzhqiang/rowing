@@ -2,8 +2,9 @@ package com.github.mrzhqiang.rowing.config;
 
 import com.github.mrzhqiang.kaptcha.autoconfigure.KaptchaAuthenticationConverter;
 import com.github.mrzhqiang.kaptcha.autoconfigure.KaptchaProperties;
-import com.github.mrzhqiang.rowing.account.LoginFailureHandler;
+import com.github.mrzhqiang.rowing.account.AccountLoginHandler;
 import com.github.mrzhqiang.rowing.domain.Authority;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,26 +18,35 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandlerImpl;
 import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
 import org.springframework.security.web.authentication.AuthenticationFilter;
+import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
+import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 安全配置。
  */
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-@EnableConfigurationProperties({RowingSecurityProperties.class})
+@EnableConfigurationProperties({SecurityProperties.class, SessionProperties.class})
 @Configuration
 public class SecurityConfiguration {
 
-    private final RowingSecurityProperties properties;
+    private final SecurityProperties securityProperties;
+    private final SessionProperties sessionProperties;
 
-    public SecurityConfiguration(RowingSecurityProperties properties) {
-        this.properties = properties;
+    public SecurityConfiguration(SecurityProperties securityProperties,
+                                 SessionProperties sessionProperties) {
+        this.securityProperties = securityProperties;
+        this.sessionProperties = sessionProperties;
     }
 
     @Bean
@@ -62,7 +72,7 @@ public class SecurityConfiguration {
                                                       KaptchaAuthenticationConverter kaptchaConverter) throws Exception {
         AuthenticationManager manager = configuration.getAuthenticationManager();
         AuthenticationFilter filter = new AuthenticationFilter(manager, kaptchaConverter);
-        filter.setRequestMatcher(new AntPathRequestMatcher(properties.getRegisterPath(), HttpMethod.POST.name()));
+        filter.setRequestMatcher(new AntPathRequestMatcher(securityProperties.getRegisterPath(), HttpMethod.POST.name()));
         return filter;
     }
 
@@ -71,8 +81,15 @@ public class SecurityConfiguration {
                                                    KaptchaAuthenticationConverter kaptchaConverter) throws Exception {
         AuthenticationManager manager = configuration.getAuthenticationManager();
         AuthenticationFilter filter = new AuthenticationFilter(manager, kaptchaConverter);
-        filter.setRequestMatcher(new AntPathRequestMatcher(properties.getLoginPath(), HttpMethod.POST.name()));
+        filter.setRequestMatcher(new AntPathRequestMatcher(securityProperties.getLoginPath(), HttpMethod.POST.name()));
         return filter;
+    }
+
+    @Bean
+    public WebSecurityCustomizer ignoring() {
+        return web -> web.ignoring()
+                .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
+                .antMatchers(securityProperties.getIgnorePath());
     }
 
     @Bean
@@ -80,18 +97,35 @@ public class SecurityConfiguration {
                                               AuthenticationFilter registerKaptchaFilter,
                                               AuthenticationFilter loginKaptchaFilter,
                                               KaptchaProperties kaptchaProperties,
-                                              LoginFailureHandler failureHandler) throws Exception {
-        http.addFilterAfter(loginKaptchaFilter, AnonymousAuthenticationFilter.class);
-        http.addFilterAfter(registerKaptchaFilter, AnonymousAuthenticationFilter.class);
-
-        http.authorizeRequests(urlRegistry -> urlRegistry
+                                              AccountLoginHandler loginHandler) throws Exception {
+        return http.addFilterAfter(registerKaptchaFilter, AnonymousAuthenticationFilter.class)
+                .addFilterAfter(loginKaptchaFilter, AnonymousAuthenticationFilter.class)
+                .authorizeRequests(urlRegistry -> urlRegistry
                         .antMatchers(HttpMethod.GET, kaptchaProperties.getPath()).permitAll()
-                        .antMatchers(HttpMethod.POST, properties.getLoginPath(), properties.getRegisterPath()).permitAll()
+                        .antMatchers(HttpMethod.POST, securityProperties.getRegisterPath()).permitAll()
+                        .antMatchers(HttpMethod.POST, securityProperties.getLoginPath()).permitAll()
+                        .antMatchers(HttpMethod.POST, securityProperties.getLogoutPath()).permitAll()
+                        .antMatchers(securityProperties.getPublicPath()).permitAll()
                         .anyRequest().authenticated())
                 .formLogin(loginConfigurer -> loginConfigurer
-                        .loginPage(properties.getLoginPath())
-                        .failureHandler(failureHandler))
-                .logout().permitAll();
-        return http.csrf().disable().build();
+                        .loginPage(securityProperties.getLoginPath())
+                        .successHandler(loginHandler)
+                        .failureHandler(loginHandler))
+                .exceptionHandling(handlingConfigurer -> handlingConfigurer
+                        .accessDeniedHandler(new AccessDeniedHandlerImpl())
+                        .authenticationEntryPoint(new Http403ForbiddenEntryPoint()))
+                .sessionManagement(managementConfigurer -> managementConfigurer
+                        .invalidSessionStrategy((request, response) ->
+                                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "invalidSessionStrategy"))
+                        .sessionConcurrency(controlConfigurer -> controlConfigurer
+                                .maximumSessions(sessionProperties.getMaxSession())
+                                .expiredSessionStrategy(event ->
+                                        event.getResponse().sendError(HttpServletResponse.SC_UNAUTHORIZED, "expiredSessionStrategy"))))
+                .logout(logoutConfigurer -> logoutConfigurer
+                        .logoutUrl(securityProperties.getLogoutPath())
+                        .logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler())
+                        .deleteCookies("JSESSIONID"))
+                .csrf().disable()
+                .build();
     }
 }

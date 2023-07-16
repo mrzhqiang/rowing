@@ -1,6 +1,8 @@
 package com.github.mrzhqiang.rowing.setting;
 
-import java.io.File;
+import org.springframework.util.ResourceUtils;
+
+import java.util.Optional;
 
 /**
  * 设置服务。
@@ -8,16 +10,26 @@ import java.io.File;
 public interface SettingService {
 
     /**
+     * 系统设置 Excel 文件地址。
+     */
+    String EXCEL_FILE_LOCATION = ResourceUtils.CLASSPATH_URL_PREFIX + "data/setting.xlsx";
+
+    /**
      * 默认设置在 Excel 文件中的 Sheet 页面名称。
      */
     String SHEET_NAME = "data";
 
     /**
-     * 通过导入 Excel 文件生成系统设置相关实体数据。
-     * <p>
-     * 注意：这个操作将删除所有系统设置数据。
-     *
-     * @param excelFile 包含系统设置数据的内置 Excel 文件。
+     * 初始化系统设置。
      */
-    void importExcel(File excelFile);
+    void init();
+
+    /**
+     * 通过设置名称找到设置。
+     *
+     * @param name 名称。
+     * @return 可选的设置实例。
+     */
+    Optional<Setting> findByName(String name);
+
 }

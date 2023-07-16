@@ -1,4 +1,4 @@
-package com.github.mrzhqiang.rowing.third;
+package com.github.mrzhqiang.rowing.config;
 
 import com.github.mrzhqiang.helper.Environments;
 import lombok.Getter;
@@ -20,8 +20,23 @@ import java.time.Duration;
 @ConfigurationProperties("rowing.okhttp")
 public class OkHttpProperties {
 
+    /**
+     * 默认的缓存路径。
+     * <p>
+     * 这里是在项目运行目录下，指定 .cache 目录作为缓存路径。
+     */
     private final static String DEF_CACHE_PATH = Paths.get(Environments.USER_DIR, ".cache").toString();
+    /**
+     * 默认的缓存上限大小。
+     * <p>
+     * 这里指定为 1GB 大小。
+     */
     private final static DataSize DEF_CACHE_MAX_SIZE = DataSize.ofGigabytes(1);
+    /**
+     * 默认的调用超时时长。
+     * <p>
+     * 这里指定为 5s 时长。
+     */
     private static final Duration DEF_CALL_TIMEOUT = Duration.ofSeconds(5);
 
     /**

@@ -1,5 +1,6 @@
 package com.github.mrzhqiang.rowing.init;
 
+import com.github.mrzhqiang.rowing.account.RunAsSystem;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -25,6 +26,7 @@ public class InitializationRunner implements ApplicationRunner {
         this.service = service;
     }
 
+    @RunAsSystem
     @Override
     public void run(ApplicationArguments args) {
         // 同步初始化任务

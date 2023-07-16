@@ -1,24 +1,22 @@
 package com.github.mrzhqiang.rowing.account;
 
-import com.github.mrzhqiang.rowing.config.RowingSecurityProperties;
-import org.springframework.stereotype.Controller;
+import com.github.mrzhqiang.rowing.config.SecurityProperties;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 //@Controller
 //@RequestMapping("/register")
 public class RegisterController {
 
     private final AccountService accountService;
-    private final RowingSecurityProperties rowingSecurityProperties;
+    private final SecurityProperties securityProperties;
 
-    public RegisterController(AccountService accountService, RowingSecurityProperties rowingSecurityProperties) {
+    public RegisterController(AccountService accountService, SecurityProperties securityProperties) {
         this.accountService = accountService;
-        this.rowingSecurityProperties = rowingSecurityProperties;
+        this.securityProperties = securityProperties;
     }
 
     @GetMapping
@@ -38,6 +36,6 @@ public class RegisterController {
             return "register";
         }
 
-        return "redirect:" + rowingSecurityProperties.getLoginPath();
+        return "redirect:" + securityProperties.getLoginPath();
     }
 }

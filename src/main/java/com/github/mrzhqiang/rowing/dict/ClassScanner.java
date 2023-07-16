@@ -49,10 +49,9 @@ public final class ClassScanner {
     public List<Class<? extends Enum<?>>> scanEnumBy(String basePackage) {
         Preconditions.checkNotNull(basePackage, "base package == null");
 
-        String startMessage = I18nHolder.getAccessor().getMessage("ClassScanner.scanEnum.start",
-                new Object[]{basePackage},
-                Strings.lenientFormat("准备扫描 %s 包下的所有枚举", basePackage));
-        log.info(startMessage);
+        log.info(I18nHolder.getAccessor().getMessage(
+                "ClassScanner.scanEnumBy.start", new Object[]{basePackage},
+                Strings.lenientFormat("准备扫描 %s 包下的所有枚举", basePackage)));
 
         Stopwatch stopwatch = Stopwatch.createStarted();
         List<Class<? extends Enum<?>>> enums = Lists.newArrayList();
@@ -69,35 +68,32 @@ public final class ClassScanner {
                     Class<?> clazz = Class.forName(className);
                     if (clazz.isEnum()) {
                         if (log.isDebugEnabled()) {
-                            String nameMessage = I18nHolder.getAccessor().getMessage("ClassScanner.scanEnum.success",
-                                    new Object[]{resource, className},
-                                    Strings.lenientFormat("扫描成功，资源文件 %s 枚举类：%s", resource, className));
-                            log.debug(nameMessage);
+                            log.debug(I18nHolder.getAccessor().getMessage(
+                                    "ClassScanner.scanEnumBy.success", new Object[]{resource, className},
+                                    Strings.lenientFormat("扫描成功，资源文件 %s 枚举类：%s", resource, className)));
                         }
                         enums.add((Class<? extends Enum<?>>) clazz);
                     }
                 } catch (Exception e) {
                     String message = Exceptions.ofMessage(e);
-                    String notFoundMessage = I18nHolder.getAccessor().getMessage("ClassScanner.scanEnum.failure",
-                            new Object[]{resource, message},
-                            Strings.lenientFormat("扫描失败，资源文件 %s 失败原因：%s", resource, message));
-                    log.warn(notFoundMessage);
+                    log.warn(I18nHolder.getAccessor().getMessage(
+                            "ClassScanner.scanEnumBy.failure", new Object[]{resource, message},
+                            Strings.lenientFormat("扫描失败，资源文件 %s 失败原因：%s", resource, message)));
                 }
             }
         } catch (Exception ex) {
             String message = Exceptions.ofMessage(ex);
-            String exceptionMessage = I18nHolder.getAccessor().getMessage("ClassScanner.scanEnum.error",
-                    new Object[]{message},
+            String exceptionMessage = I18nHolder.getAccessor().getMessage(
+                    "ClassScanner.scanEnumBy.error", new Object[]{message},
                     Strings.lenientFormat("扫描出错，原因：%s", message));
             throw new RuntimeException(exceptionMessage, ex);
         }
 
         int total = enums.size();
         Stopwatch stop = stopwatch.stop();
-        String finishedMessage = I18nHolder.getAccessor().getMessage("ClassScanner.scanEnum.finished",
-                new Object[]{total, stop},
-                Strings.lenientFormat("扫描完成，一共找到 %s 个枚举类，用时：%s", total, stop));
-        log.info(finishedMessage);
+        log.info(I18nHolder.getAccessor().getMessage(
+                "ClassScanner.scanEnumBy.finished", new Object[]{total, stop},
+                Strings.lenientFormat("扫描完成，一共找到 %s 个枚举类，用时：%s", total, stop)));
         return enums;
     }
 }

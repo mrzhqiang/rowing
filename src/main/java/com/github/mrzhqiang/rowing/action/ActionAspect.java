@@ -1,8 +1,6 @@
-package com.github.mrzhqiang.rowing.aop;
+package com.github.mrzhqiang.rowing.action;
 
 import com.github.mrzhqiang.helper.Exceptions;
-import com.github.mrzhqiang.rowing.action.ActionLog;
-import com.github.mrzhqiang.rowing.action.ActionLogRepository;
 import com.github.mrzhqiang.rowing.domain.ActionState;
 import com.github.mrzhqiang.rowing.domain.ActionType;
 import com.github.mrzhqiang.rowing.session.SessionDetails;
@@ -53,7 +51,7 @@ public class ActionAspect {
         this.sessionDetailsService = sessionDetailsService;
     }
 
-    @Pointcut("@annotation(com.github.mrzhqiang.rowing.aop.Action)")
+    @Pointcut("@annotation(com.github.mrzhqiang.rowing.action.Action)")
     public void actionPoint() {
     }
 
@@ -117,7 +115,7 @@ public class ActionAspect {
         }
         // 可能还没查到 IP 地址的地理位置，此时手动发起转换请求
         String host = Authentications.currentHost();
-        if (!Authentications.UNKNOWN_HOST_HOLDER.equals(host)) {
+        if (!Authentications.UNKNOWN_HOST.equals(host)) {
             sessionDetailsService.observeApi(host)
                     .onErrorResumeNext(sessionDetailsService.observeDb(host))
                     .subscribe(new DefaultObserver<SessionDetails>() {

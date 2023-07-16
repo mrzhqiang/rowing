@@ -1,6 +1,5 @@
 package com.github.mrzhqiang.rowing.session;
 
-import com.github.mrzhqiang.rowing.third.WhoIsIpData;
 import com.google.common.base.Strings;
 import com.maxmind.geoip2.model.CityResponse;
 import org.mapstruct.Mapper;

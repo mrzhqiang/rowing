@@ -1,7 +1,7 @@
 package com.github.mrzhqiang.rowing.account;
 
 import com.github.mrzhqiang.rowing.domain.BaseRepository;
-import com.github.mrzhqiang.rowing.util.Authorizations;
+import static com.github.mrzhqiang.rowing.util.Authorizations.HAS_ROLE_ADMIN;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -11,8 +11,8 @@ import java.util.Optional;
 /**
  * 账号仓库。
  */
+@PreAuthorize(HAS_ROLE_ADMIN)
 @RepositoryRestResource(path = "account", collectionResourceRel = "account")
-@PreAuthorize(Authorizations.HAS_ROLE_ADMIN)
 public interface AccountRepository extends BaseRepository<Account> {
 
     /**
@@ -21,7 +21,6 @@ public interface AccountRepository extends BaseRepository<Account> {
      * @param username 用户名。
      * @return 返回 true 表示用户名已存在；否则表示不存在。
      */
-    @PreAuthorize(Authorizations.HAS_ROLE_ANONYMOUS)
     @RestResource(exported = false)
     boolean existsByUsername(String username);
 
@@ -33,7 +32,7 @@ public interface AccountRepository extends BaseRepository<Account> {
      * @param username 用户名。
      * @return 可选的账户。
      */
-    @PreAuthorize(Authorizations.HAS_ROLE_ANONYMOUS)
     @RestResource(exported = false)
     Optional<Account> findByUsername(String username);
+
 }

@@ -27,14 +27,14 @@ public class CacheConfiguration extends CachingConfigurerSupport {
     @Bean
     @Override
     public KeyGenerator keyGenerator() {
-        // classLowerHyphen -- CacheConfiguration >> cache-configuration
-        // methodLowerHyphen -- keyGenerator >> key-generator
-        // key -- classLowerHyphen:methodLowerHyphen:params...
         return (target, method, params) -> {
             String className = target.getClass().getSimpleName();
+            // classLowerHyphen -- CacheConfiguration >> cache-configuration
             String classLowerHyphen = UPPER_CAMEL.to(LOWER_HYPHEN, className);
             String methodName = method.getName();
+            // methodLowerHyphen -- keyGenerator >> key-generator
             String methodLowerHyphen = LOWER_CAMEL.to(LOWER_HYPHEN, methodName);
+            // key -- classLowerHyphen:methodLowerHyphen:params...
             return Joiners.CACHE.join(classLowerHyphen, methodLowerHyphen, params);
         };
     }

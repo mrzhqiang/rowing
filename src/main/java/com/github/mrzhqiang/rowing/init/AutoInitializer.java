@@ -1,7 +1,5 @@
 package com.github.mrzhqiang.rowing.init;
 
-import com.github.mrzhqiang.rowing.domain.SystemAuthScope;
-import com.github.mrzhqiang.rowing.aop.SystemAuth;
 import com.github.mrzhqiang.rowing.domain.TaskType;
 import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
@@ -87,7 +85,6 @@ public abstract class AutoInitializer implements Initializer, Ordered {
      * <p>
      * 自动初始化在系统启动时执行，可能由于未认证而无法执行，此时需要模拟系统用户。
      */
-    @SystemAuth(scope = SystemAuthScope.CURRENT)
     @Transactional(rollbackFor = InitializationException.class, propagation = Propagation.REQUIRES_NEW)
     @Override
     public void run() {

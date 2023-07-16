@@ -6,6 +6,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
+import java.util.Optional;
+
 /**
  * 审计配置。
  * <p>
@@ -17,7 +19,10 @@ public class AuditingConfiguration {
 
     @Bean
     public AuditorAware<String> auditor() {
-        // 不使用 Authentications.ofLogin 方法，因为可能存在系统对实体的 CRUD 操作，需要支持未登录的用户名
-        return () -> Authentications.ofCurrent().flatMap(Authentications::findUsername);
+        // 默认情况下返回 system 用户名称，如果存在已认证用户，则返回已认证用户名称
+        return () -> Optional.of(Authentications.SYSTEM_USERNAME)
+                .map(it -> Authentications.ofLogin()
+                        .flatMap(Authentications::findUsername)
+                        .orElse(it));
     }
 }

@@ -1,8 +1,8 @@
 package com.github.mrzhqiang.rowing.exception;
 
 import com.github.mrzhqiang.helper.Environments;
-import com.github.mrzhqiang.rowing.aop.SystemAuth;
-import com.github.mrzhqiang.rowing.domain.SystemAuthScope;
+import com.github.mrzhqiang.rowing.account.RunAsSystem;
+import com.github.mrzhqiang.rowing.i18n.I18nHolder;
 import com.github.mrzhqiang.rowing.util.Views;
 import com.google.common.base.VerifyException;
 import lombok.extern.slf4j.Slf4j;
@@ -50,7 +50,7 @@ public class GlobalExceptionHandler {
      * @param request 当前请求。
      * @return 根据请求客户端的类型返回的不同对象，浏览器一般是视图对象，而 API 则是 JSON 对象。
      */
-    @SystemAuth(scope = SystemAuthScope.CURRENT)
+    @RunAsSystem
     @ExceptionHandler({
             IllegalArgumentException.class,
             IllegalStateException.class,
@@ -69,7 +69,7 @@ public class GlobalExceptionHandler {
      * @param request 当前请求。
      * @return 根据请求客户端的类型返回的不同对象，浏览器一般是视图对象，而 API 则是 JSON 对象。
      */
-    @SystemAuth(scope = SystemAuthScope.CURRENT)
+    @RunAsSystem
     @ExceptionHandler({
             ResourceNotFoundException.class,
             EntityNotFoundException.class})
@@ -87,7 +87,7 @@ public class GlobalExceptionHandler {
      * @param request 当前请求。
      * @return 根据请求客户端的类型返回的不同对象，浏览器一般是视图对象，而 API 则是 JSON 对象。
      */
-    @SystemAuth(scope = SystemAuthScope.CURRENT)
+    @RunAsSystem
     @ExceptionHandler({
             NullPointerException.class,
             IndexOutOfBoundsException.class,
@@ -106,7 +106,7 @@ public class GlobalExceptionHandler {
      * @param request 当前请求。
      * @return 根据请求客户端的类型返回的不同对象，浏览器一般是视图对象，而 API 则是 JSON 对象。
      */
-    @SystemAuth(scope = SystemAuthScope.CURRENT)
+    @RunAsSystem
     @ExceptionHandler({
             IOException.class})
     public Object handleServiceUnavailable(Exception ex, HttpServletRequest request) {
@@ -131,7 +131,7 @@ public class GlobalExceptionHandler {
      * @param request 当请求。
      * @return 根据请求客户端的类型返回的不同对象，浏览器一般是视图对象，而 API 则是 JSON 对象。
      */
-    @SystemAuth(scope = SystemAuthScope.CURRENT)
+    @RunAsSystem
     @SuppressWarnings("JavadocReference")
     @ExceptionHandler({Exception.class})
     public Object handleOther(Exception ex, HttpServletRequest request) {
@@ -149,7 +149,8 @@ public class GlobalExceptionHandler {
         // 非调试模式下，展示异常代码会比较友好，暴露异常消息会显得很低级，且容易被发现漏洞
         if (!Environments.debug()) {
             data.setMessage(log.getCode());
-            data.setTrace(DEF_TRACE_ON_PRODUCTION);
+            data.setTrace(I18nHolder.getAccessor().getMessage(
+                    "GlobalExceptionHandler.DEF_TRACE_ON_PRODUCTION", DEF_TRACE_ON_PRODUCTION));
         }
 
         if (isHtmlRequest(request)) {

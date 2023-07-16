@@ -1,4 +1,4 @@
-package com.github.mrzhqiang.rowing.third;
+package com.github.mrzhqiang.rowing.config;
 
 import okhttp3.Cache;
 import okhttp3.Interceptor;

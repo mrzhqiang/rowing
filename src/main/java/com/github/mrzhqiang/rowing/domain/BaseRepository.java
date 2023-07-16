@@ -1,6 +1,7 @@
 package com.github.mrzhqiang.rowing.domain;
 
-import com.github.mrzhqiang.rowing.util.Authorizations;
+import static com.github.mrzhqiang.rowing.util.Authorizations.HAS_ROLE_ADMIN;
+import static com.github.mrzhqiang.rowing.util.Authorizations.HAS_ROLE_USER;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.NoRepositoryBean;
@@ -28,39 +29,39 @@ import javax.annotation.Nonnull;
  * @param <E> 实体类型。
  */
 @NoRepositoryBean
-@PreAuthorize(Authorizations.HAS_ROLE_USER)
+@PreAuthorize(HAS_ROLE_USER)
 @Validated
 public interface BaseRepository<E extends BaseEntity> extends JpaRepository<E, Long> {
 
-    @PreAuthorize(Authorizations.HAS_ROLE_ADMIN)
+    @PreAuthorize(HAS_ROLE_ADMIN)
     @Override
     void deleteAllInBatch(@Nonnull Iterable<E> entities);
 
-    @PreAuthorize(Authorizations.HAS_ROLE_ADMIN)
+    @PreAuthorize(HAS_ROLE_ADMIN)
     @Override
     void deleteAllByIdInBatch(@Nonnull Iterable<Long> longs);
 
-    @PreAuthorize(Authorizations.HAS_ROLE_ADMIN)
+    @PreAuthorize(HAS_ROLE_ADMIN)
     @Override
     void deleteAllInBatch();
 
-    @PreAuthorize(Authorizations.HAS_ROLE_ADMIN)
+    @PreAuthorize(HAS_ROLE_ADMIN)
     @Override
     void deleteById(@Nonnull Long aLong);
 
-    @PreAuthorize(Authorizations.HAS_ROLE_ADMIN)
+    @PreAuthorize(HAS_ROLE_ADMIN)
     @Override
     void delete(@Nonnull E entity);
 
-    @PreAuthorize(Authorizations.HAS_ROLE_ADMIN)
+    @PreAuthorize(HAS_ROLE_ADMIN)
     @Override
     void deleteAllById(@Nonnull Iterable<? extends Long> longs);
 
-    @PreAuthorize(Authorizations.HAS_ROLE_ADMIN)
+    @PreAuthorize(HAS_ROLE_ADMIN)
     @Override
     void deleteAll(@Nonnull Iterable<? extends E> entities);
 
-    @PreAuthorize(Authorizations.HAS_ROLE_ADMIN)
+    @PreAuthorize(HAS_ROLE_ADMIN)
     @Override
     void deleteAll();
 }

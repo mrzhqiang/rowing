@@ -1,13 +1,16 @@
 package com.github.mrzhqiang.rowing.domain;
 
+import com.github.mrzhqiang.rowing.util.Authorizations;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 /**
- * 权限。
+ * 权限枚举。
  * <p>
  * 基于 Spring Security 的角色体系，由于前后端分离，因此这里需要保持足够简单。
  */
@@ -15,23 +18,34 @@ public enum Authority {
 
     /**
      * 管理员。
-     * <p>
-     * 包含完整的 CURD 权限，以及对一些特殊接口的访问权限，比如账户管理、权限管理等。
      */
     ROLE_ADMIN,
     /**
      * 普通用户。
-     * <p>
-     * 包含 CURD 中的新增、修改和查询权限，其中查询和修改权限仅限于自己创建的数据。
      */
     ROLE_USER,
     /**
      * 匿名用户。
-     * <p>
-     * 支持注册、登录相关的接口访问权限。
      */
     ROLE_ANONYMOUS,
     ;
+
+    /**
+     * 通过角色代码转换权限枚举。
+     *
+     * @param role 角色代码。
+     * @return 权限枚举。
+     */
+    public static Authority of(String role) {
+        if (!StringUtils.hasText(role)) {
+            return ROLE_ANONYMOUS;
+        }
+
+        return Stream.of(values())
+                .filter(it -> role.equals(it.name().replaceFirst(Authorizations.ROLE_PREFIX, "")))
+                .findFirst()
+                .orElse(ROLE_ANONYMOUS);
+    }
 
     /**
      * 等级制度。

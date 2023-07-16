@@ -3,6 +3,8 @@ package com.github.mrzhqiang.rowing.i18n;
 import org.springframework.context.MessageSource;
 import org.springframework.context.MessageSourceAware;
 import org.springframework.context.support.MessageSourceAccessor;
+import org.springframework.core.annotation.Order;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.Nonnull;
 
@@ -11,6 +13,8 @@ import javax.annotation.Nonnull;
  * <p>
  * 事实上，它在应用初始化时，获取消息源并作为消息源访问器的参数，可以通过获取这个访问器来处理国际化消息。
  */
+@Component
+@Order(Integer.MIN_VALUE)
 public final class I18nHolder implements MessageSourceAware {
 
     private static MessageSourceAccessor accessor;

@@ -55,6 +55,14 @@
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.springframework.session</groupId>
+            <artifactId>spring-session-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.session</groupId>
+            <artifactId>spring-session-data-redis</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
@@ -105,7 +113,7 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <!-- https://docs.spring.io/spring-boot/docs/2.7.2/reference/html/configuration-metadata.html#appendix.configuration-metadata.annotation-processor -->
+            <!-- https://docs.spring.io/spring-boot/docs/2.7.10/reference/html/configuration-metadata.html#appendix.configuration-metadata.annotation-processor -->
             <artifactId>spring-boot-configuration-processor</artifactId>
             <optional>true</optional>
         </dependency>

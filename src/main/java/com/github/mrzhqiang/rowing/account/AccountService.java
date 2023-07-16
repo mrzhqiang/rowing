@@ -1,6 +1,5 @@
 package com.github.mrzhqiang.rowing.account;
 
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import static org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_PASSWORD_KEY;
@@ -21,16 +20,12 @@ import java.util.Optional;
  * <p>
  * 4. 通过学号注册系统账户。
  */
-public interface AccountService /*extends UserDetailsService*/ {
+public interface AccountService extends UserDetailsService {
 
-    /**
-     * 管理员的用户名。
-     */
-    String ADMIN_USERNAME = "admin";
     /**
      * 保存管理员初始化密码的文件。
      */
-    String PASSWORD_FILE = "admin.txt";
+    String ADMIN_PASSWORD_FILENAME = "admin.txt";
     /**
      * 用户名参数名称。
      */
@@ -47,13 +42,13 @@ public interface AccountService /*extends UserDetailsService*/ {
      * @return 账户实例。
      * @throws UsernameNotFoundException 当无法通过用户名找到账号时，抛出此异常，表示登录失败。
      */
-    /*@Override
-    UserDetails loadUserByUsername(String username) throws UsernameNotFoundException;*/
+    @Override
+    Account loadUserByUsername(String username) throws UsernameNotFoundException;
 
     /**
-     * 初始化管理员的系统账户。
+     * 初始化账户。
      */
-    Account initAdmin();
+    void init();
 
     /**
      * 注册系统账户。

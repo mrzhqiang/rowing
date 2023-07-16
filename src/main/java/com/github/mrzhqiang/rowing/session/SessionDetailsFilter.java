@@ -26,7 +26,7 @@ import java.io.IOException;
  * 这个类来自 spring-session-sample-boot-findbyusername/src/main/java/sample/session/SessionDetailsFilter.java
  */
 @Slf4j
-@Component
+//@Component
 @Order(Ordered.HIGHEST_PRECEDENCE + 101)
 public class SessionDetailsFilter extends OncePerRequestFilter {
 

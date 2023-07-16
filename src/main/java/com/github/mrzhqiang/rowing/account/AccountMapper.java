@@ -1,6 +1,7 @@
 package com.github.mrzhqiang.rowing.account;
 
 import com.github.mrzhqiang.rowing.domain.Authority;
+import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -30,31 +31,10 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring", imports = {Authority.class})
 public interface AccountMapper {
 
-    @Mapping(target = "version", ignore = true)
-    @Mapping(target = "user", ignore = true)
-    @Mapping(target = "authority", ignore = true)
-    @Mapping(target = "locked", ignore = true)
-    @Mapping(target = "lastModifiedBy", ignore = true)
-    @Mapping(target = "lastModified", ignore = true)
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "firstFailed", ignore = true)
-    @Mapping(target = "failedCount", ignore = true)
-    @Mapping(target = "disabled", ignore = true)
-    @Mapping(target = "createdBy", ignore = true)
-    @Mapping(target = "created", ignore = true)
+    @BeanMapping(ignoreByDefault = true)
     Account toEntity(LoginForm form);
 
-    @Mapping(target = "version", ignore = true)
-    @Mapping(target = "user", ignore = true)
+    @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "authority", expression = "java( Authority.ROLE_USER )")
-    @Mapping(target = "locked", ignore = true)
-    @Mapping(target = "lastModifiedBy", ignore = true)
-    @Mapping(target = "lastModified", ignore = true)
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "firstFailed", ignore = true)
-    @Mapping(target = "failedCount", ignore = true)
-    @Mapping(target = "disabled", ignore = true)
-    @Mapping(target = "createdBy", ignore = true)
-    @Mapping(target = "created", ignore = true)
     Account toEntity(RegisterForm form);
 }

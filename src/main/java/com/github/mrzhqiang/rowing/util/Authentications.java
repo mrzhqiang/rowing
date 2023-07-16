@@ -1,19 +1,17 @@
 package com.github.mrzhqiang.rowing.util;
 
-import com.github.mrzhqiang.rowing.account.CurrentUser;
-import org.springframework.boot.autoconfigure.security.SecurityProperties;
+import com.github.mrzhqiang.rowing.domain.Authority;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
 import org.springframework.security.authentication.AuthenticationTrustResolverImpl;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.UUID;
 
 /**
  * 认证工具。
@@ -24,48 +22,62 @@ public final class Authentications {
     }
 
     /**
-     * 未知用户的占位符。
-     */
-    public static final String UNKNOWN_USER_HOLDER = "(unknown-user)";
-    /**
-     * 未知主机的占位符。
-     */
-    public static final String UNKNOWN_HOST_HOLDER = "(unknown-host)";
-
-    /**
-     * 用来判断当前 Authentication 属于匿名用户还是记住用户。
-     */
-    private static final AuthenticationTrustResolver TRUST_RESOLVER =
-            new AuthenticationTrustResolverImpl();
-
-    /**
-     * 当前安全上下文的认证信息。
+     * 系统虚拟用户名。
      * <p>
-     * 这个方法可以被 {@link CurrentUser} 替代，用于 Controller 层的方法参数。
+     * 数据库审计需要一个系统虚拟用户。
      */
-    public static Optional<Authentication> ofCurrent() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return Optional.ofNullable(authentication);
-    }
+    public static final String SYSTEM_USERNAME = "system";
+    /**
+     * 超级管理员用户名。
+     */
+    public static final String ADMIN_USERNAME = "admin";
+    /**
+     * 未知主机。
+     * <p>
+     * 注意：未知主机通常与系统用户同时出现，也可能在其他情况下出现，主要是避免空的主机数据被记录。
+     */
+    public static final String UNKNOWN_HOST = "(unknown)";
 
     /**
-     * 当前登录的认证信息。
+     * 用来判断当前 Authentication 属于匿名用户还是 RememberMe 用户。
+     */
+    private static final AuthenticationTrustResolver TRUST_RESOLVER = new AuthenticationTrustResolverImpl();
+
+    /**
+     * 已登录认证。
      * <p>
-     * 注意，如果没有 Authentication 实例，或者 Authentication 没有通过验证，或者 Authentication 是一个匿名实例，则返回不存在。
+     * 注意，如果不存在 Authentication 实例，
+     * 或者 Authentication 实例没有通过认证（即登录成功），
+     * 或者 Authentication 实例是一个匿名认证，
+     * 则返回不存在。
      *
      * @return 可选的实例，表示有可能返回不存在，但永远不会是 null 值。
      */
     public static Optional<Authentication> ofLogin() {
-        return Authentications.ofCurrent()
+        return Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication())
                 .filter(Authentication::isAuthenticated)
                 .filter(it -> !TRUST_RESOLVER.isAnonymous(it));
     }
 
     /**
-     * 从认证信息中获取用户名。
+     * 系统认证。
+     * <p>
+     * 注意：系统认证仅用于内部调用需要认证的方法时使用，不能作为正常用户进行认证。
+     *
+     * @return 系统认证。
+     */
+    public static Authentication ofSystem() {
+        return UsernamePasswordAuthenticationToken.authenticated(
+                SYSTEM_USERNAME,
+                UUID.randomUUID().toString(),
+                AuthorityUtils.createAuthorityList(Authority.ROLE_ADMIN.name()));
+    }
+
+    /**
+     * 获取认证用户名。
      *
      * @param authentication 认证信息。可能是登录用户，也可能是匿名用户。
-     * @return 用户名字符串。
+     * @return 可选的用户名。
      */
     public static Optional<String> findUsername(Authentication authentication) {
         return Optional.ofNullable(authentication)
@@ -75,7 +87,7 @@ public final class Authentications {
 
     private static String attemptFindUsername(Object it) {
         if (it == null) {
-            return UNKNOWN_USER_HOLDER;
+            return SYSTEM_USERNAME;
         }
         if (it instanceof UserDetails) {
             return ((UserDetails) it).getUsername();
@@ -85,46 +97,34 @@ public final class Authentications {
 
     /**
      * 获取当前请求的用户名。
+     * <p>
+     * 注意：这个方法默认使用 system 用户名，如果存在认证信息，则使用认证用户名。
      */
     public static String currentUsername() {
-        return Authentications.ofLogin()
+        return Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication())
                 .flatMap(Authentications::findUsername)
-                .orElse(UNKNOWN_USER_HOLDER);
+                .orElse(SYSTEM_USERNAME);
     }
 
     /**
      * 获取当前请求的主机地址。
+     * <p>
+     * 注意：这个方法默认使用 unknown 主机名，如果存在主机信息，则使用主机地址。
      */
     public static String currentHost() {
-        return Authentications.ofCurrent()
+        return Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication())
                 .map(Authentication::getDetails)
                 .map(Authentications::attemptFindHost)
-                .orElse(UNKNOWN_HOST_HOLDER);
+                .orElse(UNKNOWN_HOST);
     }
 
     private static String attemptFindHost(Object details) {
         if (details == null) {
-            return UNKNOWN_HOST_HOLDER;
+            return UNKNOWN_HOST;
         }
         if (details instanceof WebAuthenticationDetails) {
             return ((WebAuthenticationDetails) details).getRemoteAddress();
         }
-        return UNKNOWN_HOST_HOLDER;
-    }
-
-    /**
-     * 通过自带安全属性生成 system 用户认证。
-     *
-     * @param properties Spring Security 内置属性配置。
-     * @return 认证信息。
-     */
-    public static Authentication ofSystem(SecurityProperties properties) {
-        SecurityProperties.User user = properties.getUser();
-        String name = user.getName();
-        String password = user.getPassword();
-        List<GrantedAuthority> authorities = user.getRoles().stream()
-                .map(Authorizations::ofRole)
-                .collect(Collectors.toList());
-        return UsernamePasswordAuthenticationToken.authenticated(name, password, authorities);
+        return UNKNOWN_HOST;
     }
 }

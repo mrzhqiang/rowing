@@ -8,7 +8,7 @@ spring:
     fallback-to-system-locale: false
   cache:
     redis:
-      key-prefix: "rowing"
+      key-prefix: "rowing:"
       enable-statistics: true
   jpa:
     hibernate:
@@ -31,35 +31,14 @@ spring:
     rest:
       base-path: /api
       enable-enum-translation: true
-  security:
-    user:
-      name: system
-      # 仅用于开发环境
-      password: 123456
-      roles:
-        - ADMIN
-  devtools:
-    restart:
-      additional-exclude: data/**
 
 # 项目配置
 rowing:
   security:
     login-path: "/login"
-    login-failed-path: "/login?error"
+    logout-path: "/logout"
     register-path: "/register"
-    register-failed-path: "/register?error"
-    default-success-url: "/dashboard"
     ignore-path:
     public-path:
-      - "/"
-      - "/index"
+      - "/error"
       - "/error/**"
-    # 若超过最大登录失败次数，账户将被锁定一段时间
-    max-login-failed: 5
-    # 在锁定区间内，无法进行登录操作
-    locked-duration: 5m
-    # 正常账户在首次登录失败时，将记录一个时间戳
-    # 再次登录失败时，如果位于设定的区间时长内，则累加失败次数
-    # 在账户未锁定时，登录成功将清除首次失败时间戳，并重置失败次数
-    first-failed-duration: 1h

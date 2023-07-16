@@ -16,6 +16,7 @@ public class LoginSuccessListener implements ApplicationListener<AuthenticationS
         this.accountRepository = accountRepository;
     }
 
+    @RunAsSystem
     @Override
     public void onApplicationEvent(@Nonnull AuthenticationSuccessEvent event) {
         Authentication authentication = event.getAuthentication();

@@ -4,6 +4,7 @@ import com.github.mrzhqiang.rowing.setting.Setting;
 import com.github.mrzhqiang.rowing.setting.SettingRepository;
 import com.github.mrzhqiang.rowing.util.Authentications;
 import org.springframework.context.ApplicationListener;
+import org.springframework.security.authentication.event.AbstractAuthenticationFailureEvent;
 import org.springframework.security.authentication.event.AuthenticationFailureBadCredentialsEvent;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
@@ -13,7 +14,7 @@ import java.time.Duration;
 import java.time.Instant;
 
 @Component
-public class LoginFailureListener implements ApplicationListener<AuthenticationFailureBadCredentialsEvent> {
+public class LoginFailureListener implements ApplicationListener<AbstractAuthenticationFailureEvent> {
 
     private static final int DEF_MAX_LOGIN_FAILED = 5;
     private static final Duration DEF_FIRST_FAILED_DURATION = Duration.ofHours(1);
@@ -32,10 +33,13 @@ public class LoginFailureListener implements ApplicationListener<AuthenticationF
         this.settingRepository = settingRepository;
     }
 
+    @RunAsSystem
     @Override
-    public void onApplicationEvent(@Nonnull AuthenticationFailureBadCredentialsEvent event) {
+    public void onApplicationEvent(@Nonnull AbstractAuthenticationFailureEvent event) {
         Authentication authentication = event.getAuthentication();
-        handleLoginFailed(authentication);
+        if (event instanceof AuthenticationFailureBadCredentialsEvent) {
+            handleLoginFailed(authentication);
+        }
     }
 
     private void handleLoginFailed(Authentication authentication) {

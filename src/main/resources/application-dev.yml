@@ -10,7 +10,7 @@ logging:
     rowing: DEBUG
     org.hibernate.type: TRACE
     org.hibernate.SQL: DEBUG
-    org.springframework.security: INFO
+    org.springframework.security: TRACE
   logback:
     rollingpolicy:
       # 开发环境下，每次启动清理历史日志
@@ -30,7 +30,7 @@ debug: false
 # Spring 配置
 spring:
   application:
-    name: "Rowing Develop"
+    name: "Rowing Dev"
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://127.0.0.1:3306/rowing?serverTimezone=Asia/Shanghai&characterEncoding=utf8&allowMultiQueries=true
@@ -52,6 +52,9 @@ spring:
   session:
     # 5 minutes
     timeout: 300s
+  devtools:
+    restart:
+      additional-exclude: data/**
 
 # 验证码配置
 kaptcha:
@@ -60,13 +63,6 @@ kaptcha:
 
 # 项目配置
 rowing:
-  security:
-    remember-me: false
-    ignore-path:
-      - "/api/**"
-  session:
-    # 会话过期重定向地址
-    expired-path: "/login?expired"
   okhttp:
     cache-path: ${user.dir}/.cache
     cache-max-size: 100MB

@@ -1,4 +1,4 @@
-package com.github.mrzhqiang.rowing.session;
+package com.github.mrzhqiang.rowing.config;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -11,19 +11,17 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties("rowing.session")
 public class SessionProperties {
 
+    /**
+     * 默认的最大会话数量。
+     * <p>
+     * 超过最大会话数量，将自动掉线处理。
+     */
     private static final int DEF_MAX_SESSION = 1;
-    private static final String DEF_EXPIRED_PATH = "/login?expired";
 
     /**
      * 每个账号最多能登录的会话数量。
      */
     private Integer maxSession = DEF_MAX_SESSION;
-    /**
-     * 会话过期重定向地址。
-     * <p>
-     * 可能是由于会话数量过多而引起会话过期。
-     */
-    private String expiredPath = DEF_EXPIRED_PATH;
     /**
      * 限流器参数。
      */
@@ -34,7 +32,17 @@ public class SessionProperties {
     @ToString
     public static class RateLimiter {
 
+        /**
+         * 默认的限流器键名称。
+         * <p>
+         * 这个键名称将在会话中保持，以便计算每秒接口访问次数，得出限流数据。
+         */
         public static final String DEF_RATE_LIMITER_KEY = "RateLimiter";
+        /**
+         * 默认的每秒限流许可。
+         * <p>
+         * 即表示在此许可范围内，接口访问是允许的，否则将触发限流策略。
+         */
         public static final double DEF_RATE_LIMITER_PERMITS = 2.0;
 
         /**

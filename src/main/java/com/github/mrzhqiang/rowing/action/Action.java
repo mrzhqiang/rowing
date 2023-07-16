@@ -1,4 +1,4 @@
-package com.github.mrzhqiang.rowing.aop;
+package com.github.mrzhqiang.rowing.action;
 
 import com.github.mrzhqiang.rowing.domain.ActionType;
 
