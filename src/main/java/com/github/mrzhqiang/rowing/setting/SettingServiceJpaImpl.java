@@ -1,6 +1,5 @@
 package com.github.mrzhqiang.rowing.setting;
 
-import com.github.mrzhqiang.rowing.account.RunAsSystem;
 import com.github.mrzhqiang.rowing.domain.SettingTab;
 import com.github.mrzhqiang.rowing.domain.SettingType;
 import com.github.mrzhqiang.rowing.i18n.I18nHolder;
@@ -27,12 +26,9 @@ import java.util.Optional;
 @Service
 public class SettingServiceJpaImpl implements SettingService {
 
-    private final SettingMapper mapper;
     private final SettingRepository repository;
 
-    public SettingServiceJpaImpl(SettingMapper mapper,
-                                 SettingRepository repository) {
-        this.mapper = mapper;
+    public SettingServiceJpaImpl(SettingRepository repository) {
         this.repository = repository;
     }
 
@@ -93,13 +89,13 @@ public class SettingServiceJpaImpl implements SettingService {
                 }
 
                 String content = Cells.ofString(cells.getCell(3));
-                if (Strings.isNullOrEmpty(content)) {
+                /*if (Strings.isNullOrEmpty(content)) {
                     log.info(I18nHolder.getAccessor().getMessage(
                             "SettingService.importExcel.empty.content", new Object[]{cells.getRowNum()},
                             Strings.lenientFormat(
                                     "发现第 %s 行 content 列存在空字符串，判断为结束行，终止解析", cells.getRowNum())));
                     break;
-                }
+                }*/
 
                 String tab = Cells.ofString(cells.getCell(4));
                 if (Strings.isNullOrEmpty(tab)) {
@@ -128,7 +124,6 @@ public class SettingServiceJpaImpl implements SettingService {
         }
     }
 
-    @RunAsSystem
     @Cacheable("setting")
     @Override
     public Optional<Setting> findByName(String name) {

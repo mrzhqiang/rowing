@@ -2,7 +2,8 @@ package com.github.mrzhqiang.rowing.config;
 
 import com.github.mrzhqiang.kaptcha.autoconfigure.KaptchaAuthenticationConverter;
 import com.github.mrzhqiang.kaptcha.autoconfigure.KaptchaProperties;
-import com.github.mrzhqiang.rowing.account.AccountLoginHandler;
+import com.github.mrzhqiang.rowing.account.LoginFailureHandler;
+import com.github.mrzhqiang.rowing.account.LoginSuccessHandler;
 import com.github.mrzhqiang.rowing.domain.Authority;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -36,7 +37,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-@EnableConfigurationProperties({SecurityProperties.class, SessionProperties.class})
+@EnableConfigurationProperties({SecurityProperties.class})
 @Configuration
 public class SecurityConfiguration {
 
@@ -97,7 +98,8 @@ public class SecurityConfiguration {
                                               AuthenticationFilter registerKaptchaFilter,
                                               AuthenticationFilter loginKaptchaFilter,
                                               KaptchaProperties kaptchaProperties,
-                                              AccountLoginHandler loginHandler) throws Exception {
+                                              LoginFailureHandler loginFailureHandler,
+                                              LoginSuccessHandler loginSuccessHandler) throws Exception {
         return http.addFilterAfter(registerKaptchaFilter, AnonymousAuthenticationFilter.class)
                 .addFilterAfter(loginKaptchaFilter, AnonymousAuthenticationFilter.class)
                 .authorizeRequests(urlRegistry -> urlRegistry
@@ -109,8 +111,8 @@ public class SecurityConfiguration {
                         .anyRequest().authenticated())
                 .formLogin(loginConfigurer -> loginConfigurer
                         .loginPage(securityProperties.getLoginPath())
-                        .successHandler(loginHandler)
-                        .failureHandler(loginHandler))
+                        .failureHandler(loginFailureHandler)
+                        .successHandler(loginSuccessHandler))
                 .exceptionHandling(handlingConfigurer -> handlingConfigurer
                         .accessDeniedHandler(new AccessDeniedHandlerImpl())
                         .authenticationEntryPoint(new Http403ForbiddenEntryPoint()))

@@ -177,4 +177,10 @@ public class AccountServiceJpaImpl implements AccountService {
         String suffix = RandomStrings.ofLength(12, 16);
         return prefix + infix + suffix;
     }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void update(Account account) {
+        repository.save(account);
+    }
 }

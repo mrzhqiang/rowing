@@ -27,6 +27,12 @@ public enum SettingTab {
      * 与文件相关的设置，比如附件大小限制、允许上传的附件类型、附件名称编码规则等。
      */
     FILE,
+    /**
+     * 安全。
+     * <p>
+     * 与安全有关的设置，比如账号登录失败最大次数，账号锁定时长等。
+     */
+    SECURITY,
     ;
 
     public static SettingTab of(String tab) {

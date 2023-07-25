@@ -9,12 +9,13 @@
 
 本项目的主要功能有：
 
-- [x] [1.国际化](1.i18n.md)
-- [ ] [2.初始化](2.init.md)
-- [ ] [3.字典](3.dict.md)
-- [ ] [4.设置](4.setting.md)
-- [ ] [5.菜单](5.menu.md)
-- [ ] [6.账户](6.account.md)
+- [x] [1.1.安全](1.1.security.md)
+- [x] [1.2.国际化](1.2.i18n.md)
+- [ ] [1.3.初始化](1.3.init.md)
+- [ ] [1.4.字典](1.4.dict.md)
+- [ ] [1.5.设置](1.5.setting.md)
+- [ ] [1.6.菜单](1.6.menu.md)
+- [ ] [1.7.账户](1.7.account.md)
 
 ## 开发环境
 
@@ -73,23 +74,17 @@
 ├─├─├─java                                  ——java 源代码
 ├─├─├─├─com.github.mrzhqiang.rowing           ——顶层包
 ├─├─├─├─├─account                               ——账户
-├─├─├─├─├─├─Account                               ——账户实体
-├─├─├─├─├─├─AccountController                     ——账户控制器
-├─├─├─├─├─├─AccountRepository                     ——账户仓库
-├─├─├─├─├─├─AccountService                        ——账户服务
-├─├─├─├─├─├─AccountServiceJpaImpl                 ——账户服务 JPA 实现
 ├─├─├─├─├─action                                ——操作
+├─├─├─├─├─aop                                   ——切面
 ├─├─├─├─├─config                                ——配置
 ├─├─├─├─├─dict                                  ——字典
 ├─├─├─├─├─domain                                ——领域
 ├─├─├─├─├─exception                             ——异常
+├─├─├─├─├─i18n                                  ——国际化
 ├─├─├─├─├─init                                  ——初始化
 ├─├─├─├─├─menu                                  ——菜单
-├─├─├─├─├─monitor                               ——监控
 ├─├─├─├─├─session                               ——会话
 ├─├─├─├─├─setting                               ——设置
-├─├─├─├─├─system                                ——系统
-├─├─├─├─├─third                                 ——第三方
 ├─├─├─├─├─util                                  ——工具
 ├─├─├─├─├─RowingApplication                     ——启动类
 ├─├─├─resources                             ——项目资源

@@ -8,44 +8,35 @@ import com.github.mrzhqiang.rowing.util.DateTimes;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.LockedException;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.Duration;
 import java.time.Instant;
 import java.util.Optional;
 
 @Component
-public class AccountLoginHandler implements AuthenticationFailureHandler, AuthenticationSuccessHandler {
-
-    private static final int DEF_MAX_LOGIN_FAILED = 5;
-    private static final Duration DEF_FIRST_FAILED_DURATION = Duration.ofHours(1);
-    private static final Duration DEF_LOCKED_DURATION = Duration.ofMinutes(5);
-
-    private static final String MAX_LOGIN_FAILED = "max-login-failed";
-    private static final String FIRST_FAILED_DURATION = "first-failed-duration";
-    private static final String ACCOUNT_LOCKED_DURATION = "account-locked-duration";
+public class LoginFailureHandler implements AuthenticationFailureHandler {
 
     private final AccountService accountService;
     private final SettingService settingService;
 
-    public AccountLoginHandler(AccountService accountService,
+    public LoginFailureHandler(AccountService accountService,
                                SettingService settingService) {
         this.accountService = accountService;
         this.settingService = settingService;
     }
 
+    /**
+     * 注意：通常是先发出登录失败的事件，再执行登录失败的回调。
+     */
     @Override
     public void onAuthenticationFailure(HttpServletRequest request,
                                         HttpServletResponse response,
-                                        AuthenticationException exception) throws IOException, ServletException {
+                                        AuthenticationException exception) throws IOException {
         String username = request.getParameter(AccountService.USERNAME_KEY);
         AuthenticationException authenticationException = Optional.ofNullable(username)
                 .map(accountService::loadUserByUsername)
@@ -70,10 +61,10 @@ public class AccountLoginHandler implements AuthenticationFailureHandler, Authen
 
     private BadCredentialsException parseBadCredentials(Account account, BadCredentialsException exception) {
         int currentFailedCount = account.getFailedCount();
-        Integer maxLoginFailed = settingService.findByName(MAX_LOGIN_FAILED)
+        Integer maxLoginFailed = settingService.findByName(SettingService.MAX_LOGIN_FAILED)
                 .map(Setting::getContent)
                 .map(Integer::parseInt)
-                .orElse(DEF_MAX_LOGIN_FAILED);
+                .orElse(SettingService.DEF_MAX_LOGIN_FAILED);
         String rawMessage = exception.getMessage();
         String message = I18nHolder.getAccessor().getMessage(
                 "LoginFailureHandler.BadCredentialsException", new Object[]{currentFailedCount, maxLoginFailed});
@@ -89,8 +80,4 @@ public class AccountLoginHandler implements AuthenticationFailureHandler, Authen
         return new LockedException(Joiners.DASH.join(rawMessage, message), exception);
     }
 
-    @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-
-    }
 }

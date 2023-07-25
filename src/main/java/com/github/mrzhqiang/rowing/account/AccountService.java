@@ -77,4 +77,6 @@ public interface AccountService extends UserDetailsService {
      * @return 可选的系统账户。如果存在表示注册成功；否则表示注册失败。
      */
     Optional<Account> registerForTeacher(TeacherInfoForm form);
+
+    void update(Account account);
 }

@@ -88,14 +88,6 @@ public class Account extends AuditableEntity implements UserDetails {
     @Column(nullable = false)
     private Authority authority;
     /**
-     * 首次登录失败时间戳。
-     * <p>
-     * 指定时间区间（管理后台设定）内的首次登录失败时间戳
-     * <p>
-     * 记录首次失败时间，可以在一定持续时间内，统计认证失败的次数，在达到最大次数时，锁定账号一段时间，避免被暴力破解。
-     */
-    private Instant firstFailed;
-    /**
      * 失败次数统计。
      * <p>
      * 指定时间区间（管理后台设定）内的失败次数统计
