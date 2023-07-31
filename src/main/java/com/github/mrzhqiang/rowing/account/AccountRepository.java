@@ -1,7 +1,7 @@
 package com.github.mrzhqiang.rowing.account;
 
 import com.github.mrzhqiang.rowing.domain.BaseRepository;
-import static com.github.mrzhqiang.rowing.util.Authorizations.HAS_ROLE_ADMIN;
+import static com.github.mrzhqiang.rowing.util.Authorizes.HAS_ROLE_ADMIN;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 import org.springframework.security.access.prepost.PreAuthorize;

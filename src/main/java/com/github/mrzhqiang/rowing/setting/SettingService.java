@@ -26,6 +26,14 @@ public interface SettingService {
      * 默认最大登录失败次数。
      */
     int DEF_MAX_LOGIN_FAILED = 5;
+    /**
+     * 密码传输时的 RSA 私钥。
+     */
+    String PASSWORD_RSA_PRIVATE_KEY = "password-rsa-private-key";
+    /**
+     * 密码传输时的 RSA 公钥。
+     */
+    String PASSWORD_RSA_PUBLIC_KEY = "password-rsa-public-key";
 
     /**
      * 初始化系统设置。
@@ -40,4 +48,5 @@ public interface SettingService {
      */
     Optional<Setting> findByName(String name);
 
+    RSAKeyData createRsaKey();
 }

@@ -7,8 +7,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
  * <p>
  * 主要提供简便的授权表达式，避免编写错误带来的异常。
  */
-public final class Authorizations {
-    private Authorizations() {
+public final class Authorizes {
+    private Authorizes() {
         // no instances
     }
 

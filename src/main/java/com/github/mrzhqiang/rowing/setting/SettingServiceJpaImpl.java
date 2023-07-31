@@ -3,7 +3,9 @@ package com.github.mrzhqiang.rowing.setting;
 import com.github.mrzhqiang.rowing.domain.SettingTab;
 import com.github.mrzhqiang.rowing.domain.SettingType;
 import com.github.mrzhqiang.rowing.i18n.I18nHolder;
+import com.github.mrzhqiang.rowing.util.Authorizes;
 import com.github.mrzhqiang.rowing.util.Cells;
+import com.github.mrzhqiang.rowing.util.RSADecrypts;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import lombok.SneakyThrows;
@@ -14,12 +16,14 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Example;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ResourceUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.security.KeyPair;
 import java.util.Optional;
 
 @Slf4j
@@ -128,5 +132,12 @@ public class SettingServiceJpaImpl implements SettingService {
     @Override
     public Optional<Setting> findByName(String name) {
         return Optional.ofNullable(name).flatMap(repository::findByName);
+    }
+
+    @PreAuthorize(Authorizes.HAS_ROLE_ADMIN)
+    @Override
+    public RSAKeyData createRsaKey() {
+        KeyPair keyPair = RSADecrypts.generateKeyPair();
+        return new RSAKeyData(RSADecrypts.privateKey(keyPair), RSADecrypts.publicKey(keyPair));
     }
 }

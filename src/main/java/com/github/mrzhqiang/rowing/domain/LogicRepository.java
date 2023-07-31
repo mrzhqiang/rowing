@@ -1,6 +1,6 @@
 package com.github.mrzhqiang.rowing.domain;
 
-import com.github.mrzhqiang.rowing.util.Authorizations;
+import com.github.mrzhqiang.rowing.util.Authorizes;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.NoRepositoryBean;
@@ -24,7 +24,7 @@ public interface LogicRepository<E extends LogicEntity> extends BaseRepository<E
      *
      * @param id 主键 id。
      */
-    @PreAuthorize(Authorizations.HAS_ROLE_ADMIN)
+    @PreAuthorize(Authorizes.HAS_ROLE_ADMIN)
     @Transactional
     @Modifying
     @Query("update #{#entityName} e set e.deleted = 'YES' where e.id = ?1")
@@ -33,7 +33,7 @@ public interface LogicRepository<E extends LogicEntity> extends BaseRepository<E
     /**
      * 逻辑删除所有实体。
      */
-    @PreAuthorize(Authorizations.HAS_ROLE_ADMIN)
+    @PreAuthorize(Authorizes.HAS_ROLE_ADMIN)
     @Transactional
     @Modifying
     @Query("update #{#entityName} e set e.deleted = 'YES'")

@@ -1,7 +1,7 @@
 package com.github.mrzhqiang.rowing.domain;
 
-import static com.github.mrzhqiang.rowing.util.Authorizations.HAS_ROLE_ADMIN;
-import static com.github.mrzhqiang.rowing.util.Authorizations.HAS_ROLE_USER;
+import static com.github.mrzhqiang.rowing.util.Authorizes.HAS_ROLE_ADMIN;
+import static com.github.mrzhqiang.rowing.util.Authorizes.HAS_ROLE_USER;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.NoRepositoryBean;

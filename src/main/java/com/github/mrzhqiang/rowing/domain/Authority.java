@@ -1,6 +1,6 @@
 package com.github.mrzhqiang.rowing.domain;
 
-import com.github.mrzhqiang.rowing.util.Authorizations;
+import com.github.mrzhqiang.rowing.util.Authorizes;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.springframework.util.StringUtils;
@@ -42,7 +42,7 @@ public enum Authority {
         }
 
         return Stream.of(values())
-                .filter(it -> role.equals(it.name().replaceFirst(Authorizations.ROLE_PREFIX, "")))
+                .filter(it -> role.equals(it.name().replaceFirst(Authorizes.ROLE_PREFIX, "")))
                 .findFirst()
                 .orElse(ROLE_ANONYMOUS);
     }
