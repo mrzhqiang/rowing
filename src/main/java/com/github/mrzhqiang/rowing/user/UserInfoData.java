@@ -11,5 +11,6 @@ public class UserInfoData {
     private List<String> roles = Lists.newArrayList("admin");
     private String nickname;
     private String avatar;
+    private String gender;
     private String introduction;
 }

@@ -10,6 +10,7 @@ public interface UserMapper {
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "nickname", source = "nickname")
     @Mapping(target = "avatar", source = "avatar")
+    @Mapping(target = "gender", source = "gender")
     @Mapping(target = "introduction", source = "introduction")
     UserInfoData toData(User user);
 }
