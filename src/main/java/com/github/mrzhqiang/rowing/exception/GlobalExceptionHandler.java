@@ -16,6 +16,7 @@ import org.springframework.web.method.annotation.ExceptionHandlerMethodResolver;
 
 import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.ConstraintViolationException;
 import java.io.IOException;
 import java.util.Optional;
 
@@ -52,6 +53,7 @@ public class GlobalExceptionHandler {
      */
     @RunAsSystem
     @ExceptionHandler({
+            ConstraintViolationException.class,
             IllegalArgumentException.class,
             IllegalStateException.class,
             VerifyException.class})

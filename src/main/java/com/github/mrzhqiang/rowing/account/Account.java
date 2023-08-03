@@ -117,7 +117,7 @@ public class Account extends AuditableEntity implements UserDetails {
      * <p>
      * 另外，还可以将前端的菜单路由和资源权限，存储在用户维度，避免影响后端的角色权限。
      */
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     private User user;
 
     /**

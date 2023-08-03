@@ -16,8 +16,6 @@ import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.servlet.http.HttpServletRequest;
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 
 /**
  * 异常日志。
@@ -163,12 +161,4 @@ public class ExceptionLog extends BaseEntity {
         return timestamp;
     }
 
-    /**
-     * 本地时间戳。
-     * <p>
-     * 将 UTC 时间戳转为本地时区的时间戳。
-     */
-    public LocalDateTime localTimestamp() {
-        return LocalDateTime.ofInstant(timestamp, ZoneId.systemDefault());
-    }
 }

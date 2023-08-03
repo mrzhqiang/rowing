@@ -4,6 +4,7 @@ import com.google.common.base.Strings;
 import com.google.common.base.VerifyException;
 
 import javax.annotation.Nullable;
+import javax.validation.ValidationException;
 import java.io.IOException;
 import java.util.Optional;
 
@@ -54,6 +55,7 @@ public enum ExceptionCode {
      * 通常是程序状态验证不通过导致。
      *
      * @see VerifyException
+     * @see ValidationException
      */
     VERIFY("4"),
     /**
@@ -145,7 +147,8 @@ public enum ExceptionCode {
             return ILLEGAL;
         }
 
-        if (exception instanceof VerifyException) {
+        if (exception instanceof VerifyException
+                || exception instanceof ValidationException) {
             return VERIFY;
         }
 
