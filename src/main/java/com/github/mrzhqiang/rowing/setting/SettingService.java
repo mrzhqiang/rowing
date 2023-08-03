@@ -2,6 +2,7 @@ package com.github.mrzhqiang.rowing.setting;
 
 import org.springframework.util.ResourceUtils;
 
+import java.time.Duration;
 import java.util.Optional;
 
 /**
@@ -26,6 +27,14 @@ public interface SettingService {
      * 默认最大登录失败次数。
      */
     int DEF_MAX_LOGIN_FAILED = 5;
+    /**
+     * 账号锁定持续时长。
+     */
+    String ACCOUNT_LOCKED_DURATION = "account-locked-duration";
+    /**
+     * 默认账号锁定持续时长。
+     */
+    Duration DEF_ACCOUNT_LOCKED_DURATION = Duration.ofMinutes(30);
     /**
      * 密码传输时的 RSA 私钥。
      */

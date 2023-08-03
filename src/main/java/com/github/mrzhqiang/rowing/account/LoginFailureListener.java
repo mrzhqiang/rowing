@@ -15,14 +15,13 @@ import javax.annotation.Nonnull;
 import java.time.Duration;
 import java.time.Instant;
 
+/**
+ * 登录失败监听器。
+ * <p>
+ * 监听抽象的认证失败事件，通过不同的认证失败事件，进行不同的处理逻辑。
+ */
 @Component
 public class LoginFailureListener implements ApplicationListener<AbstractAuthenticationFailureEvent> {
-
-    private static final int DEF_MAX_LOGIN_FAILED = 5;
-    private static final Duration DEF_ACCOUNT_LOCKED_DURATION = Duration.ofMinutes(30);
-
-    private static final String MAX_LOGIN_FAILED = "max-login-failed";
-    private static final String ACCOUNT_LOCKED_DURATION = "account-locked-duration";
 
     private final AccountService accountService;
     private final SettingService settingService;
@@ -55,28 +54,31 @@ public class LoginFailureListener implements ApplicationListener<AbstractAuthent
 
     private Account computeFailedCount(Account account) {
         int hasFailedCount = account.getFailedCount();
+        // 账号未锁定，统计失败次数，并判断是否超过最大失败次数，如果超过则锁定账号
         if (account.isAccountNonLocked()) {
-            int maxLoginFailed = settingService.findByName(MAX_LOGIN_FAILED)
+            int maxLoginFailed = settingService.findByName(SettingService.MAX_LOGIN_FAILED)
                     .map(Setting::getContent)
                     .map(Integer::parseInt)
-                    .orElse(DEF_MAX_LOGIN_FAILED);
+                    .orElse(SettingService.DEF_MAX_LOGIN_FAILED);
             if (hasFailedCount < maxLoginFailed) {
                 account.setFailedCount(hasFailedCount + 1);
             }
             if (account.getFailedCount() >= maxLoginFailed) {
-                Duration duration = settingService.findByName(ACCOUNT_LOCKED_DURATION)
+                Duration duration = settingService.findByName(SettingService.ACCOUNT_LOCKED_DURATION)
                         .map(Setting::getContent)
                         .map(DurationStyle::detectAndParse)
-                        .orElse(DEF_ACCOUNT_LOCKED_DURATION);
+                        .orElse(SettingService.DEF_ACCOUNT_LOCKED_DURATION);
                 account.setLocked(Instant.now().plus(duration));
             }
             return account;
         }
 
+        // 锁定的账号，如果失败次数未重置为零，则进行重置操作
         if (hasFailedCount != 0) {
             account.setFailedCount(0);
             return account;
         }
+        // 返回 null 值不会进行更新操作
         return null;
     }
 

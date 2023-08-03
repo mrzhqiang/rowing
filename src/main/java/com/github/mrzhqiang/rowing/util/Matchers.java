@@ -11,7 +11,7 @@ public final class Matchers {
     }
 
     /**
-     * 纯数字匹配器。
+     * 纯阿拉伯数字匹配器。
      */
     public static final CharMatcher PURE_NUMBER = CharMatcher.inRange('0', '9');
 }

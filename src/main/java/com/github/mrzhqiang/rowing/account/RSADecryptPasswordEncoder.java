@@ -22,6 +22,7 @@ public class RSADecryptPasswordEncoder implements PasswordEncoder {
         this.settingService = settingService;
     }
 
+    @RunAsSystem
     @Override
     public String encode(CharSequence rawPassword) {
         String passwordString = rawPassword.toString();
@@ -33,6 +34,7 @@ public class RSADecryptPasswordEncoder implements PasswordEncoder {
         return passwordEncoder.encode(password);
     }
 
+    @RunAsSystem
     @Override
     public boolean matches(CharSequence rawPassword, String encodedPassword) {
         String passwordString = rawPassword.toString();

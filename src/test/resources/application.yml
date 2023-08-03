@@ -46,11 +46,6 @@ logging:
       # 开发环境下，每次启动清理历史日志
       clean-history-on-start: true
 rowing:
-  security:
-    remember-me: false
-  session:
-    # 会话过期重定向地址
-    expired-path: "/login?expired"
   okhttp:
     cache-path: ${user.dir}/.cache
     cache-max-size: 100MB

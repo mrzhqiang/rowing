@@ -60,6 +60,7 @@ public class ExceptionLog extends BaseEntity {
      *
      * @see HttpStatus#getReasonPhrase()
      */
+    @Column(length = 100)
     private String error;
     /**
      * 请求方法。
@@ -69,6 +70,7 @@ public class ExceptionLog extends BaseEntity {
      * @see org.springframework.http.HttpMethod
      * @see HttpServletRequest#getMethod()
      */
+    @Column(length = 10)
     private String method;
     /**
      * 请求 URL。
@@ -81,24 +83,30 @@ public class ExceptionLog extends BaseEntity {
      *
      * @see HttpServletRequest#getRequestURL()
      */
+    @Column(length = 2 * 1024)
     private String url;
     /**
      * 请求的查询参数。
      *
      * @see HttpServletRequest#getQueryString()
      */
+    @Column(length = 6 * 1024)
     private String query;
     /**
      * 请求的地址。
      *
      * @see HttpServletRequest#getRemoteAddr()
      */
+    @Column(length = 128)
     private String address;
     /**
      * 请求的会话 ID。
+     * <p>
+     * 比如：d9d2701a-3101-4df8-b659-b42b1d1e38cd
      *
      * @see HttpServletRequest#getRequestedSessionId()
      */
+    @Column(length = 36)
     private String sessionId;
     /**
      * 消息。
@@ -107,6 +115,7 @@ public class ExceptionLog extends BaseEntity {
      *
      * @see Exception#getMessage()
      */
+    @Column(length = 500)
     private String message;
     /**
      * 代码。
@@ -115,6 +124,7 @@ public class ExceptionLog extends BaseEntity {
      * <p>
      * 这里保存一份异常代码，用于未来对异常情况进行分析时，提取经典的异常情况，用于公示。
      */
+    @Column(length = 20)
     private String code;
     /**
      * 痕迹。
@@ -146,6 +156,7 @@ public class ExceptionLog extends BaseEntity {
      * @see UserDetails#getUsername()
      */
     @CreatedBy
+    @Column(length = 24)
     private String operator;
 
     protected Instant getTimestamp() {

@@ -10,15 +10,15 @@ export function login(data) {
 
 export function getInfo(token) {
   return request({
-    url: '/api/user/info',
+    url: '/userInfo',
     method: 'get',
-    params: {token}
+    // params: {token}
   });
 }
 
 export function logout() {
   return request({
-    url: '/api/user/logout',
+    url: '/logout',
     method: 'post'
   });
 }

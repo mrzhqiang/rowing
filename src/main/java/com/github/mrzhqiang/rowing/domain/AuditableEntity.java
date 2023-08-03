@@ -10,6 +10,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.persistence.Column;
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
 import java.time.LocalDateTime;
@@ -38,6 +39,7 @@ public abstract class AuditableEntity extends BaseEntity {
      * 要解决这个问题，必须将此字段排除在 ToString 之外。
      */
     @CreatedBy
+    @Column(length = 24)
     private String createdBy;
     /**
      * 创建时间。
@@ -54,6 +56,7 @@ public abstract class AuditableEntity extends BaseEntity {
      * 要解决这个问题，必须将此字段排除在 ToString 之外。
      */
     @LastModifiedBy
+    @Column(length = 24)
     private String lastModifiedBy;
     /**
      * 最近修改时间。

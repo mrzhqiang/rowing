@@ -3,7 +3,6 @@ package com.github.mrzhqiang.rowing.exception;
 import com.github.mrzhqiang.helper.Environments;
 import com.github.mrzhqiang.rowing.account.RunAsSystem;
 import com.github.mrzhqiang.rowing.i18n.I18nHolder;
-import com.github.mrzhqiang.rowing.util.Views;
 import com.google.common.base.VerifyException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -11,9 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.ExceptionHandlerMethodResolver;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
@@ -24,7 +23,7 @@ import java.util.Optional;
  * 全局异常处理器。
  *
  * <p>
- * 捕捉 {@link org.springframework.stereotype.Controller} 注解标记的相关类所抛出的异常，进行转换处理。
+ * 捕捉 {@link RestController} 注解标记的相关类所抛出的异常，进行转换处理。
  */
 @Slf4j
 @RestControllerAdvice
@@ -48,7 +47,8 @@ public class GlobalExceptionHandler {
      *
      * @param ex      具体异常。
      * @param request 当前请求。
-     * @return 根据请求客户端的类型返回的不同对象，浏览器一般是视图对象，而 API 则是 JSON 对象。
+     * @return 根据客户端的请求类型返回不同的对象。
+     * 由于是前后端分离的架构，如果发现 html 请求则返回 404 表示不存在，否则返回 JSON 数据。
      */
     @RunAsSystem
     @ExceptionHandler({
@@ -67,7 +67,8 @@ public class GlobalExceptionHandler {
      *
      * @param ex      具体异常。
      * @param request 当前请求。
-     * @return 根据请求客户端的类型返回的不同对象，浏览器一般是视图对象，而 API 则是 JSON 对象。
+     * @return 根据客户端的请求类型返回不同的对象。
+     * 由于是前后端分离的架构，如果发现 html 请求则返回 404 表示不存在，否则返回 JSON 数据。
      */
     @RunAsSystem
     @ExceptionHandler({
@@ -85,7 +86,8 @@ public class GlobalExceptionHandler {
      *
      * @param ex      具体异常。
      * @param request 当前请求。
-     * @return 根据请求客户端的类型返回的不同对象，浏览器一般是视图对象，而 API 则是 JSON 对象。
+     * @return 根据客户端的请求类型返回不同的对象。
+     * 由于是前后端分离的架构，如果发现 html 请求则返回 404 表示不存在，否则返回 JSON 数据。
      */
     @RunAsSystem
     @ExceptionHandler({
@@ -104,7 +106,8 @@ public class GlobalExceptionHandler {
      *
      * @param ex      具体异常。
      * @param request 当前请求。
-     * @return 根据请求客户端的类型返回的不同对象，浏览器一般是视图对象，而 API 则是 JSON 对象。
+     * @return 根据客户端的请求类型返回不同的对象。
+     * 由于是前后端分离的架构，如果发现 html 请求则返回 404 表示不存在，否则返回 JSON 数据。
      */
     @RunAsSystem
     @ExceptionHandler({
@@ -129,7 +132,8 @@ public class GlobalExceptionHandler {
      *
      * @param ex      具体异常。
      * @param request 当请求。
-     * @return 根据请求客户端的类型返回的不同对象，浏览器一般是视图对象，而 API 则是 JSON 对象。
+     * @return 根据客户端的请求类型返回不同的对象。
+     * 由于是前后端分离的架构，如果发现 html 请求则返回 404 表示不存在，否则返回 JSON 数据。
      */
     @RunAsSystem
     @SuppressWarnings("JavadocReference")
@@ -154,10 +158,7 @@ public class GlobalExceptionHandler {
         }
 
         if (isHtmlRequest(request)) {
-            ModelAndView view = new ModelAndView(Views.EXCEPTION_VIEW_NAME_PREFIX);
-            view.setStatus(HttpStatus.resolve(data.getStatus()));
-            view.addObject("data", data);
-            return view;
+            return ResponseEntity.notFound();
         }
 
         return ResponseEntity.status(httpStatus).body(data);

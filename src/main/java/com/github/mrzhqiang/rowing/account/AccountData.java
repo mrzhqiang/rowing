@@ -1,6 +1,6 @@
 package com.github.mrzhqiang.rowing.account;
 
-import lombok.Data;
+import com.github.mrzhqiang.rowing.user.User;
 import org.springframework.data.rest.core.config.Projection;
 
 /**
@@ -8,9 +8,11 @@ import org.springframework.data.rest.core.config.Projection;
  * <p>
  * 账户具有私密性，所以利用投影功能，屏蔽隐私相关字段。
  */
-@Data
 @Projection(types = {Account.class}, name = "account")
-public class AccountData {
+public interface AccountData {
 
+    String getUsername();
+
+    User getUser();
 
 }

@@ -1,10 +1,8 @@
-package com.github.mrzhqiang.rowing.modules.init;
+package com.github.mrzhqiang.rowing.init;
 
 import com.github.mrzhqiang.rowing.domain.Logic;
 import com.github.mrzhqiang.rowing.domain.TaskStatus;
 import com.github.mrzhqiang.rowing.domain.TaskType;
-import com.github.mrzhqiang.rowing.init.InitTask;
-import com.github.mrzhqiang.rowing.init.InitTaskRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -15,10 +13,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Objects;
 
-/**
- * 初始化任务仓库测试类。
- * <p>
- */
 @RunWith(SpringRunner.class)
 @DataJpaTest
 class InitTaskRepositoryTest {

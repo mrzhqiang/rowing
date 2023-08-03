@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -37,6 +38,7 @@ public class ActionLog extends BaseEntity {
     /**
      * 操作所在方法参数
      */
+    @Column(length = 2000)
     private String params;
     /**
      * 操作状态

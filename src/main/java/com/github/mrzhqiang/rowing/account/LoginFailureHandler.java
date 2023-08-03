@@ -1,10 +1,10 @@
 package com.github.mrzhqiang.rowing.account;
 
 import com.github.mrzhqiang.helper.Joiners;
+import com.github.mrzhqiang.helper.time.DateTimes;
 import com.github.mrzhqiang.rowing.i18n.I18nHolder;
 import com.github.mrzhqiang.rowing.setting.Setting;
 import com.github.mrzhqiang.rowing.setting.SettingService;
-import com.github.mrzhqiang.rowing.util.DateTimes;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.LockedException;
@@ -18,6 +18,11 @@ import java.io.IOException;
 import java.time.Instant;
 import java.util.Optional;
 
+/**
+ * 登录失败处理器。
+ * <p>
+ * 主要对登录失败的各种异常进行处理，比如密码错误的异常，会记录一次失败，如果失败次数超过阈值，则锁定一段时间账号，避免暴力破解密码。
+ */
 @Component
 public class LoginFailureHandler implements AuthenticationFailureHandler {
 

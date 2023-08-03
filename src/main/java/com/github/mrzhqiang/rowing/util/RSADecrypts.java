@@ -10,6 +10,7 @@ import java.security.KeyPairGenerator;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 
 /**
@@ -42,11 +43,27 @@ public final class RSADecrypts {
     }
 
     @SneakyThrows
+    public static PublicKey parsePublicKey(String publicText) {
+        byte[] decode = Base64.getDecoder().decode(publicText);
+        X509EncodedKeySpec keySpec = new X509EncodedKeySpec(decode);
+        KeyFactory factory = KeyFactory.getInstance("RSA");
+        return factory.generatePublic(keySpec);
+    }
+
+    @SneakyThrows
     public static PrivateKey parsePrivateKey(String privateText) {
         byte[] decode = Base64.getDecoder().decode(privateText);
         PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(decode);
         KeyFactory factory = KeyFactory.getInstance("RSA");
         return factory.generatePrivate(keySpec);
+    }
+
+    @SneakyThrows
+    public static String encrypt(String plainText, PublicKey publicKey) {
+        Cipher encryptCipher = Cipher.getInstance("RSA");
+        encryptCipher.init(Cipher.ENCRYPT_MODE, publicKey);
+        byte[] cipherText = encryptCipher.doFinal(plainText.getBytes(StandardCharsets.UTF_8));
+        return Base64.getEncoder().encodeToString(cipherText);
     }
 
     @SneakyThrows

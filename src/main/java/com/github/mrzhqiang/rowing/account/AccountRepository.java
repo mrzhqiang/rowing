@@ -12,7 +12,7 @@ import java.util.Optional;
  * 账号仓库。
  */
 @PreAuthorize(HAS_ROLE_ADMIN)
-@RepositoryRestResource(path = "account", collectionResourceRel = "account")
+@RepositoryRestResource(path = "account", collectionResourceRel = "account", excerptProjection = AccountData.class)
 public interface AccountRepository extends BaseRepository<Account> {
 
     /**

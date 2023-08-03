@@ -21,6 +21,7 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Method;
@@ -84,6 +85,9 @@ public class ActionAspect {
             paramList.add(Strings.lenientFormat(PARAMETERS_TEMPLATE, name, arg));
         }
         String params = Joiner.on(DOT_CHAR).join(paramList);
+        if (StringUtils.hasLength(params)) {
+            params = params.substring(0, Math.min(2000, params.length()));
+        }
 
         ActionState state = ActionState.UNKNOWN;
         String resultContent = "(no-content)";
@@ -105,11 +109,12 @@ public class ActionAspect {
         actionLog.setState(state);
         actionLog.setResult(resultContent);
         actionLog.setOperator(Authentications.currentUsername());
-        SessionDetails sessionDetails = Sessions.ofCurrentDetails();
-        if (sessionDetails != null) {
-            actionLog.setIp(sessionDetails.getIp());
-            actionLog.setLocation(sessionDetails.getLocation());
-            actionLog.setDevice(sessionDetails.getAccessType());
+        Optional<SessionDetails> sessionDetails = Sessions.ofCurrentDetails();
+        if (sessionDetails.isPresent()) {
+            SessionDetails details = sessionDetails.get();
+            actionLog.setIp(details.getIp());
+            actionLog.setLocation(details.getLocation());
+            actionLog.setDevice(details.getAccessType());
             repository.save(actionLog);
             return;
         }

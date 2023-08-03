@@ -115,7 +115,7 @@ public final class Jsons {
      * 从 json 文件转换为包含指定类型元素的 List 实例。
      */
     @SneakyThrows
-    public static <T> List<T> listFromFile(File jsonFile, Class<T> clazz) {
+    public static <T> List<T> listFrom(File jsonFile, Class<T> clazz) {
         Preconditions.checkNotNull(jsonFile, "json file == null");
         Preconditions.checkArgument(jsonFile.exists(), "json file is not exists");
         Preconditions.checkArgument(jsonFile.isFile(), "json file is not file");
@@ -141,7 +141,7 @@ public final class Jsons {
      * 从 json 文件转换为指定 key 和 value 类型的 Map 实例。
      */
     @SneakyThrows
-    public static <K, V> Map<K, V> mapFromFile(File jsonFile, Class<K> keyClass, Class<V> valueClass) {
+    public static <K, V> Map<K, V> mapFrom(File jsonFile, Class<K> keyClass, Class<V> valueClass) {
         Preconditions.checkNotNull(jsonFile, "json file == null");
         Preconditions.checkArgument(jsonFile.exists(), "json file is not exists");
         Preconditions.checkArgument(jsonFile.isFile(), "json file is not file");

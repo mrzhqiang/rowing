@@ -1,4 +1,4 @@
-package com.github.mrzhqiang.rowing.common;
+package com.github.mrzhqiang.rowing.jre;
 
 import org.junit.Assert;
 import org.junit.Test;

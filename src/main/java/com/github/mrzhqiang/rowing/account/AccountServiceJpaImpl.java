@@ -3,7 +3,10 @@ package com.github.mrzhqiang.rowing.account;
 import com.github.mrzhqiang.helper.Environments;
 import com.github.mrzhqiang.helper.random.RandomStrings;
 import com.github.mrzhqiang.rowing.domain.Authority;
+import com.github.mrzhqiang.rowing.domain.Gender;
 import com.github.mrzhqiang.rowing.i18n.I18nHolder;
+import com.github.mrzhqiang.rowing.user.User;
+import com.github.mrzhqiang.rowing.user.UserRepository;
 import com.github.mrzhqiang.rowing.util.Authentications;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
@@ -19,6 +22,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
@@ -29,13 +34,16 @@ public class AccountServiceJpaImpl implements AccountService {
 
     private final AccountMapper mapper;
     private final AccountRepository repository;
+    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
     public AccountServiceJpaImpl(AccountMapper mapper,
                                  AccountRepository repository,
+                                 UserRepository userRepository,
                                  PasswordEncoder passwordEncoder) {
         this.mapper = mapper;
         this.repository = repository;
+        this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -61,11 +69,8 @@ public class AccountServiceJpaImpl implements AccountService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void init() {
-        initAdmin();
-    }
-
-    private void initAdmin() {
-        repository.findByUsername(Authentications.ADMIN_USERNAME).orElseGet(this::createAdmin);
+        Account admin = repository.findByUsername(Authentications.ADMIN_USERNAME).orElseGet(this::createAdmin);
+        userRepository.findByOwner(admin).orElseGet(() -> createAdminUser(admin));
     }
 
     private Account createAdmin() {
@@ -84,6 +89,17 @@ public class AccountServiceJpaImpl implements AccountService {
         admin.setPassword(passwordEncoder.encode(password));
         admin.setAuthority(Authority.ROLE_ADMIN);
         return repository.save(admin);
+    }
+
+    private User createAdminUser(Account admin) {
+        User user = new User();
+        user.setOwner(admin);
+        user.setNickname(I18nHolder.getAccessor().getMessage("AccountService.nickname.admin", "管理员"));
+        user.setBirthday(LocalDate.of(2019, Month.of(10), 25));
+        user.setGender(Gender.MALE);
+
+        admin.setUser(user);
+        return userRepository.save(user);
     }
 
     @RunAsSystem

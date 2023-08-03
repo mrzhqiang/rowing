@@ -3,6 +3,7 @@ package com.github.mrzhqiang.rowing.account;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.mrzhqiang.rowing.domain.AuditableEntity;
 import com.github.mrzhqiang.rowing.domain.Authority;
+import com.github.mrzhqiang.rowing.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,6 +14,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -68,21 +70,23 @@ public class Account extends AuditableEntity implements UserDetails {
      * <p>
      * 3.3 生成最小长度 12 位，最大长度 16 位，包含大小写字母 + 数字 + 特殊字符的随机字符成，作为后缀。
      */
-    @Column(updatable = false, unique = true, nullable = false)
+    @Column(updatable = false, unique = true, nullable = false, length = 24)
     private String username;
     /**
      * 密码。
      * <p>
-     * 创建时指定，加密存储。
+     * 创建时指定，必须加密存储，最小长度 6 位，最大长度 64 位，可以是任意字符。
      * <p>
      * 密码绝对不允许明文存储，通过 Spring Security Crypto 的 PasswordEncoder 类进行随机盐编码处理。
      */
     @JsonIgnore
     @ToString.Exclude
-    @Column(nullable = false)
+    @Column(nullable = false, length = 64)
     private String password;
     /**
      * 账号所属角色。
+     * <p>
+     * 注意：这个角色是后端角色，仅用于区别匿名用户、普通用户以及管理员使用，不作为菜单路由和资源权限的标识符。
      */
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -90,13 +94,13 @@ public class Account extends AuditableEntity implements UserDetails {
     /**
      * 失败次数统计。
      * <p>
-     * 指定时间区间（管理后台设定）内的失败次数统计
+     * 账号未锁定时，统计登录失败的次数，当次数达到阈值时，将锁定账号一段时间，期间不再统计次数，也不允许登录，直到锁定时间过期。
      */
-    private int failedCount;
+    private int failedCount = 0;
     /**
      * 锁定时间戳。
      * <p>
-     * 如果时间戳存在且处于未来的时间点，则说明账号被锁定。
+     * 这个时间戳属于未来时间，即当前时间 > 锁定时间戳，则表示账号未锁定，否则表示账号已锁定。
      */
     private Instant locked;
     /**
@@ -108,8 +112,12 @@ public class Account extends AuditableEntity implements UserDetails {
 
     /**
      * 账号对应的用户。
+     * <p>
+     * 用户通常比账号具有更丰富的特征，比如昵称、头像、性别、生日等等。
+     * <p>
+     * 另外，还可以将前端的菜单路由和资源权限，存储在用户维度，避免影响后端的角色权限。
      */
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private User user;
 
     /**
@@ -125,22 +133,12 @@ public class Account extends AuditableEntity implements UserDetails {
      * <p>
      * 当然，有经验的开发者也可以设计一套 AccessDecisionVoter 投票决策，它是上面所有内容的底层支撑接口。
      */
+    @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Optional.ofNullable(authority)
                 .map(it -> AuthorityUtils.createAuthorityList(it.name()))
                 .orElse(AuthorityUtils.NO_AUTHORITIES);
-    }
-
-    /**
-     * 判断是否为管理员角色。
-     *
-     * @return 返回 true 表示当前账户为管理员；否则不是管理员。
-     */
-    public boolean isAdminRole() {
-        return Optional.ofNullable(authority)
-                .map(Authority.ROLE_ADMIN::equals)
-                .orElse(false);
     }
 
     /**
@@ -150,6 +148,7 @@ public class Account extends AuditableEntity implements UserDetails {
      * <p>
      * 比如给用户的账号设置半年期限，如果到期则不能访问系统，除非申请账号延期。到期时，必须立即注销所有在线会话。
      */
+    @JsonIgnore
     @Override
     public boolean isAccountNonExpired() {
         return true;
@@ -164,6 +163,7 @@ public class Account extends AuditableEntity implements UserDetails {
      * <p>
      * 手动锁定：由管理员手动锁定账号，必须手动解锁才能恢复正常。这是一个额外的锁定状态字段，被锁定的账号必须立即注销所有在线会话。
      */
+    @JsonIgnore
     @Override
     public boolean isAccountNonLocked() {
         return Optional.ofNullable(locked)
@@ -180,6 +180,7 @@ public class Account extends AuditableEntity implements UserDetails {
      * <p>
      * 更改密码一般会导致关联的所有应用失效，特别是在以当前账号系统作为认证源的情况下，此时需要权衡利弊，以决定是否启用该机制。
      */
+    @JsonIgnore
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
@@ -196,6 +197,7 @@ public class Account extends AuditableEntity implements UserDetails {
      * <p>
      * 如果这个状态由管理员手动管理，在禁用和启用时，都将发送一条邮件通知。
      */
+    @JsonIgnore
     @Override
     public boolean isEnabled() {
         return !disabled;

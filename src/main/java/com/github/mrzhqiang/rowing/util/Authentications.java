@@ -87,6 +87,7 @@ public final class Authentications {
 
     private static String attemptFindUsername(Object it) {
         if (it == null) {
+            // 为审计而返回 system 用户
             return SYSTEM_USERNAME;
         }
         if (it instanceof UserDetails) {
