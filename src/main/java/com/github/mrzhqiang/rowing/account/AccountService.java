@@ -40,7 +40,7 @@ public interface AccountService extends UserDetailsService {
      *
      * @param username 用户名。
      * @return 账户实例。
-     * @throws UsernameNotFoundException 当无法通过用户名找到账号时，抛出此异常，表示登录失败。
+     * @throws UsernameNotFoundException 当无法通过用户名找到账户时，抛出此异常，表示登录失败。
      */
     @Override
     Account loadUserByUsername(String username) throws UsernameNotFoundException;

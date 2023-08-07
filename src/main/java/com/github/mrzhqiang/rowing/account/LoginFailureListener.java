@@ -54,7 +54,7 @@ public class LoginFailureListener implements ApplicationListener<AbstractAuthent
 
     private Account computeFailedCount(Account account) {
         int hasFailedCount = account.getFailedCount();
-        // 账号未锁定，统计失败次数，并判断是否超过最大失败次数，如果超过则锁定账号
+        // 账户未锁定，统计失败次数，并判断是否超过最大失败次数，如果超过则锁定账户
         if (account.isAccountNonLocked()) {
             int maxLoginFailed = settingService.findByName(SettingService.MAX_LOGIN_FAILED)
                     .map(Setting::getContent)
@@ -73,7 +73,7 @@ public class LoginFailureListener implements ApplicationListener<AbstractAuthent
             return account;
         }
 
-        // 锁定的账号，如果失败次数未重置为零，则进行重置操作
+        // 锁定的账户，如果失败次数未重置为零，则进行重置操作
         if (hasFailedCount != 0) {
             account.setFailedCount(0);
             return account;

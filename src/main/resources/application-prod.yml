@@ -26,7 +26,7 @@ spring:
     host: ${redis_host:127.0.0.1}
     password: ${redis_password:123456}
     connect-timeout: 10s
-  # 账号中心是需要会话的，但不需要 Cookie 自动登录
+  # 账户中心是需要会话的，但不需要 Cookie 自动登录
   session:
     # 1 hours
     timeout: 3600s

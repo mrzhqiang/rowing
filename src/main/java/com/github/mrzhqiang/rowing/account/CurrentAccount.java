@@ -9,7 +9,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 /**
- * 当前账号。
+ * 当前账户。
  * <p>
  * 通过此注解，可以从当前会话中得到 {@link UserDetails} 实例。
  * <p>

@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 /**
- * 账号自动初始化器。
+ * 账户自动初始化器。
  */
 @Slf4j
 @Component

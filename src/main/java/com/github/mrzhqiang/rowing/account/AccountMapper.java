@@ -6,7 +6,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 /**
- * 账号映射器。
+ * 账户映射器。
  * <p>
  * 关于映射器：
  * <p>

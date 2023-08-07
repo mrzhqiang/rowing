@@ -7,8 +7,6 @@
 
 ## 主要功能
 
-本项目的主要功能有：
-
 - [x] [1.1.安全](1.1.security.md)
 - [x] [1.2.国际化](1.2.i18n.md)
 - [ ] [1.3.初始化](1.3.init.md)
@@ -18,8 +16,6 @@
 - [ ] [1.7.账户](1.7.account.md)
 
 ## 开发环境
-
-本项目需要的最小开发环境：
 
 - `git version 2.27.0.windows.1`
 - `java version "1.8.0_301"`
@@ -33,9 +29,9 @@
 
 ## 框架依赖
 
-后端基于 `Spring Boot` 框架，使用 `Redis` 和 `MySQL` 中间件，前端基于 `Vue` 框架，参考 `vue-element-admin` 模板。
+后端基于`Spring Boot`框架，使用`Redis`和`MySQL`中间件，前端基于`vue-element-admin`模板进行二次开发。
 
-此处仅列出最核心的后端依赖，如需了解全部内容，请访问项目中的 `pom.xml` 文件。
+后端依赖：
 
 | 框架                                                                    | 备注                 |
 |-----------------------------------------------------------------------|--------------------|
@@ -55,24 +51,66 @@
 | [OkHttp](https://github.com/square/okhttp)                            | 最好用的 HTTP Java 客户端 |
 | [Retrofit](https://github.com/square/retrofit)                        | 声明式 RESTFUL 框架     |
 
-（前端框架待补充）
+以上仅列出最核心的后端依赖，如需了解全部内容，请访问项目中的`pom.xml`文件。
+
+前端依赖：
+
+```json
+{
+  "dependencies": {
+    "axios": "0.18.1",
+    "clipboard": "2.0.4",
+    "codemirror": "5.45.0",
+    "core-js": "^3.8.3",
+    "driver.js": "0.9.5",
+    "dropzone": "5.5.1",
+    "echarts": "4.2.1",
+    "element-ui": "2.13.2",
+    "file-saver": "2.0.1",
+    "fuse.js": "3.4.4",
+    "js-cookie": "2.2.0",
+    "jsencrypt": "^3.3.2",
+    "jsonlint": "1.6.3",
+    "jszip": "3.2.1",
+    "normalize.css": "7.0.0",
+    "nprogress": "0.2.0",
+    "path-to-regexp": "2.4.0",
+    "pinyin": "2.9.0",
+    "screenfull": "4.2.0",
+    "script-loader": "0.7.2",
+    "sortablejs": "1.8.4",
+    "tui-editor": "1.3.3",
+    "vue": "^2.7.14",
+    "vue-count-to": "1.0.13",
+    "vue-i18n": "7.3.2",
+    "vue-router": "3.0.2",
+    "vue-splitpane": "1.0.4",
+    "vuedraggable": "2.20.0",
+    "vuex": "3.1.0",
+    "xlsx": "0.14.1",
+    "xregexp": "^5.1.1"
+  }
+}
+```
+
+前端依赖主要是`Vue`家族、`element-ui`框架以及一些常用的`js`工具和`css`样式。
 
 ## 代码结构
 
 代码需要遵循一定的结构，好的代码结构阅读起来，一定是赏心悦目的。
 
-在本项目中，后端遵循 `Spring Boot` 官方推荐的[代码结构规范][1]，即以功能为主，功能包内有控制器、服务、服务实现、仓库等内容。
+在本项目中，后端遵循`Spring Boot`官方推荐的[代码结构规范][1]，即以功能为主，功能包内有控制器、服务、服务实现、仓库等内容。
 
 ```
 ├─docs                                  ——项目文档
 ├─├─deployment                             ——安装部署
 ├─├─develop                                ——开发设计
 ├─├─guide                                  ——使用指南
-├─http                                  ——接口测试目录
-├─src                                   ——源代码目录
-├─├─main                                  ——Maven 主目录
-├─├─├─java                                  ——java 源代码
-├─├─├─├─com.github.mrzhqiang.rowing           ——顶层包
+├─http                                  ——接口测试
+├─src
+├─├─main
+├─├─├─java
+├─├─├─├─com.github.mrzhqiang.rowing
 ├─├─├─├─├─account                               ——账户
 ├─├─├─├─├─action                                ——操作
 ├─├─├─├─├─aop                                   ——切面
@@ -85,6 +123,7 @@
 ├─├─├─├─├─menu                                  ——菜单
 ├─├─├─├─├─session                               ——会话
 ├─├─├─├─├─setting                               ——设置
+├─├─├─├─├─user                                  ——用户
 ├─├─├─├─├─util                                  ——工具
 ├─├─├─├─├─RowingApplication                     ——启动类
 ├─├─├─resources                             ——项目资源
@@ -92,20 +131,38 @@
 ├─web                                   ——前端源码
 ```
 
-在本项目中，前端保持 `@vue/cli` 创建项目时的初始代码结构，同时参考了 `vue` 官方文档推荐的[代码结构规范][2]。
+在本项目中，前端保持`vue-element-admin`模板的代码结构，同时参考了`Vue`官方文档推荐的[代码结构规范][2]。
 
 ```
 ├─web                                   ——前端源码
+├─├─build                                 ——构建目录
 ├─├─public                                ——公共目录，包含可访问的公共资源
+├─├─├─favicon.ico                           ——网站图标
 ├─├─├─index.html                            ——入口页面
 ├─├─src                                   ——源代码目录
+├─├─├─api                                   ——后端接口
 ├─├─├─assets                                ——资产
 ├─├─├─components                            ——组件
+├─├─├─directive                             ——自定义指令
+├─├─├─filters                               ——自定义过滤器
+├─├─├─icons                                 ——图标
+├─├─├─lang                                  ——国际化多语言
+├─├─├─layout                                ——布局
+├─├─├─router                                ——路由
+├─├─├─store                                 ——全局存储
+├─├─├─styles                                ——样式风格
+├─├─├─utils                                 ——工具类
+├─├─├─vendor                                ——供应商（第三方工具）
+├─├─├─views                                 ——页面视图
 ├─├─├─App.vue                               ——单页面文件
 ├─├─├─main.js                               ——执行入口
+├─├─├─permission.js                         ——权限相关
+├─├─├─settings.js                           ——设置相关
+├─├─tests                                 ——单元测试
 ├─├─package.json                          ——项目依赖
 ├─├─vue.config.js                         ——项目配置
 ```
 
 [1]:https://docs.spring.io/spring-boot/docs/2.7.10/reference/html/using.html#using.structuring-your-code.locating-the-main-class
+
 [2]:https://v2.cn.vuejs.org/v2/guide/instance.html#%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AA-Vue-%E5%AE%9E%E4%BE%8B

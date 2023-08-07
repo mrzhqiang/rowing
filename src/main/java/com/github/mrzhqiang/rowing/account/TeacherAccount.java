@@ -35,7 +35,7 @@ public class TeacherAccount extends AuditableEntity {
      */
     private String fullName;
     /**
-     * 账号。
+     * 账户。
      * <p>
      * 一对一绑定，则通过教师编号可以找到对应的系统账户。
      */

@@ -19,7 +19,7 @@ public class SessionProperties {
     private static final int DEF_MAX_SESSION = 1;
 
     /**
-     * 每个账号最多能登录的会话数量。
+     * 每个账户最多能登录的会话数量。
      */
     private Integer maxSession = DEF_MAX_SESSION;
     /**

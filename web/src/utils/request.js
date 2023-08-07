@@ -52,7 +52,7 @@ service.interceptors.response.use(
     // 如果存在响应，表示这是一个非 2xx 的错误
     if (error.response) {
       message = error.response.data.message || message;
-      if (error.response.status === 403) {
+      if (error.response.status === 401 || error.response.status === 403) {
         // to re-login
         MessageBox.confirm('You have been logged out, you can cancel to stay on this page, or log in again', 'Confirm logout', {
           confirmButtonText: 'Re-Login',

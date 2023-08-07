@@ -2,6 +2,7 @@ package com.github.mrzhqiang.rowing.account;
 
 import com.github.mrzhqiang.helper.Environments;
 import com.github.mrzhqiang.helper.random.RandomStrings;
+import com.github.mrzhqiang.rowing.domain.ThirdUserType;
 import com.github.mrzhqiang.rowing.domain.Authority;
 import com.github.mrzhqiang.rowing.domain.Gender;
 import com.github.mrzhqiang.rowing.i18n.I18nHolder;
@@ -55,7 +56,7 @@ public class AccountServiceJpaImpl implements AccountService {
                     .username(username)
                     // 每次随机密码，避免登录系统虚拟用户
                     .password(passwordEncoder.encode(UUID.randomUUID().toString()))
-                    .authority(Authority.ROLE_ADMIN)
+                    .role(Authority.ROLE_ADMIN)
                     .build();
             system.setId(-1L);
             return system;
@@ -79,7 +80,7 @@ public class AccountServiceJpaImpl implements AccountService {
         String password = UUID.randomUUID().toString();
         log.info(I18nHolder.getAccessor().getMessage(
                 "AccountService.createAdmin.password", new Object[]{password},
-                Strings.lenientFormat("创建 admin 账号并随机生成密码: %s", password)));
+                Strings.lenientFormat("创建 admin 账户并随机生成密码: %s", password)));
         Path passwordFile = Environments.getUserDir().toPath().resolve(ADMIN_PASSWORD_FILENAME);
         try {
             Files.write(passwordFile, password.getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE);
@@ -87,7 +88,7 @@ public class AccountServiceJpaImpl implements AccountService {
             throw new RuntimeException(I18nHolder.getAccessor().getMessage("AccountService.createAdmin.writeFileFailure"), e);
         }
         admin.setPassword(passwordEncoder.encode(password));
-        admin.setAuthority(Authority.ROLE_ADMIN);
+        admin.setRole(Authority.ROLE_ADMIN);
         return repository.save(admin);
     }
 
@@ -150,14 +151,14 @@ public class AccountServiceJpaImpl implements AccountService {
         }*/
 
         Account account = new Account();
-        String username = generateUsername(number, Account.STUDENT_ID_PREFIX);
+        String username = generateUsername(number, ThirdUserType.STUDENT.getPrefix());
         account.setUsername(username);
         // 身份证后 6 位作为密码
         String idCard = form.getIdCard();
         String password = idCard.substring(idCard.length() - 6);
         account.setPassword(passwordEncoder.encode(password));
         // 默认用户角色
-        account.setAuthority(Authority.ROLE_USER);
+        account.setRole(Authority.ROLE_USER);
         return Optional.of(repository.save(account));
     }
 
@@ -175,14 +176,14 @@ public class AccountServiceJpaImpl implements AccountService {
         }*/
 
         Account account = new Account();
-        String username = generateUsername(number, Account.TEACHER_ID_PREFIX);
+        String username = generateUsername(number, ThirdUserType.TEACHER.getPrefix());
         account.setUsername(username);
         // 身份证后 6 位作为密码
         String idCard = form.getIdCard();
         String password = idCard.substring(idCard.length() - 6);
         account.setPassword(passwordEncoder.encode(password));
         // 默认用户角色
-        account.setAuthority(Authority.ROLE_USER);
+        account.setRole(Authority.ROLE_USER);
         return Optional.of(repository.save(account));
     }
 

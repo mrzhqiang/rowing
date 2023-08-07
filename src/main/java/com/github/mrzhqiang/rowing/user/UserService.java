@@ -8,9 +8,9 @@ import com.github.mrzhqiang.rowing.account.Account;
 public interface UserService {
 
     /**
-     * 通过所属账号，找到用户信息。
+     * 通过所属账户，找到用户信息。
      *
-     * @param owner 所属账号。
+     * @param owner 所属账户。
      * @return 用户信息数据。
      */
     UserInfoData findByOwner(Account owner);

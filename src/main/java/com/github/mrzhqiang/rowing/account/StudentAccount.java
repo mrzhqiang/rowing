@@ -34,7 +34,7 @@ public class StudentAccount extends AuditableEntity {
      */
     private String fullName;
     /**
-     * 账号。
+     * 账户。
      * <p>
      * 一对一绑定，则通过学号可以找到对应的系统账户。
      */

@@ -18,17 +18,23 @@ public final class Authorizes {
      * 这个前缀是 Spring Security 框架的默认角色前缀。
      */
     public static final String ROLE_PREFIX = "ROLE_";
+    /**
+     * 权限前缀。
+     * <p>
+     * 这个前缀参考角色前缀设定，为了保持统一，字符长度也一样。
+     */
+    public static final String AUTH_PREFIX = "AUTH_";
 
     /**
      * 管理员角色授权。
      */
     public static final String HAS_ROLE_ADMIN = "hasRole('ROLE_ADMIN')";
     /**
-     * 普通用户角色授权。
+     * 用户角色授权。
      */
     public static final String HAS_ROLE_USER = "hasRole('ROLE_USER')";
     /**
-     * 匿名用户角色授权。
+     * 匿名人员角色授权。
      */
     public static final String HAS_ROLE_ANONYMOUS = "hasRole('ROLE_ANONYMOUS')";
 

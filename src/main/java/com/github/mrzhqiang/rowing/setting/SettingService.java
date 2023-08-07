@@ -28,11 +28,11 @@ public interface SettingService {
      */
     int DEF_MAX_LOGIN_FAILED = 5;
     /**
-     * 账号锁定持续时长。
+     * 账户锁定持续时长。
      */
     String ACCOUNT_LOCKED_DURATION = "account-locked-duration";
     /**
-     * 默认账号锁定持续时长。
+     * 默认账户锁定持续时长。
      */
     Duration DEF_ACCOUNT_LOCKED_DURATION = Duration.ofMinutes(30);
     /**

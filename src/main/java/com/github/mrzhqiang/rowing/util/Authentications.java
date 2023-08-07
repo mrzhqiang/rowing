@@ -39,7 +39,7 @@ public final class Authentications {
     public static final String UNKNOWN_HOST = "(unknown)";
 
     /**
-     * 用来判断当前 Authentication 属于匿名用户还是 RememberMe 用户。
+     * 用来判断当前 Authentication 属于匿名人员还是 RememberMe 用户。
      */
     private static final AuthenticationTrustResolver TRUST_RESOLVER = new AuthenticationTrustResolverImpl();
 
@@ -76,7 +76,7 @@ public final class Authentications {
     /**
      * 获取认证用户名。
      *
-     * @param authentication 认证信息。可能是登录用户，也可能是匿名用户。
+     * @param authentication 认证信息。可能是登录用户，也可能是匿名人员。
      * @return 可选的用户名。
      */
     public static Optional<String> findUsername(Authentication authentication) {
