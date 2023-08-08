@@ -1,6 +1,8 @@
 package com.github.mrzhqiang.rowing.menu;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.mrzhqiang.rowing.domain.AuditableEntity;
+import com.github.mrzhqiang.rowing.role.Role;
 import com.google.common.collect.Lists;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,9 +11,9 @@ import lombok.ToString;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.List;
@@ -179,5 +181,23 @@ public class Menu extends AuditableEntity {
      * 未启用的菜单，将不返回数据给前端，默认为启用。
      */
     private boolean enabled = true;
+
+    /**
+     * 菜单资源列表。
+     */
+    @JsonIgnore
+    @ToString.Exclude
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "menu", orphanRemoval = true)
+    private List<MenuResource> resourceList = Lists.newArrayList();
+
+    /**
+     * 菜单对应的角色列表。
+     * <p>
+     * 主要可以返回给前端，当前菜单支持哪些角色。
+     */
+    @JsonIgnore
+    @ToString.Exclude
+    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "menuList")
+    private List<Role> roleList = Lists.newArrayList();
 
 }

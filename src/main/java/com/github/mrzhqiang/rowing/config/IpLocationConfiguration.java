@@ -1,6 +1,6 @@
 package com.github.mrzhqiang.rowing.config;
 
-import com.github.mrzhqiang.rowing.session.WhoisApi;
+import com.github.mrzhqiang.rowing.third.WhoisApi;
 import com.google.common.collect.Lists;
 import com.maxmind.db.CHMCache;
 import com.maxmind.geoip2.DatabaseReader;

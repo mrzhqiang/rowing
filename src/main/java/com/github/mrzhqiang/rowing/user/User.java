@@ -1,12 +1,16 @@
 package com.github.mrzhqiang.rowing.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.mrzhqiang.helper.time.Ages;
 import com.github.mrzhqiang.rowing.account.Account;
 import com.github.mrzhqiang.rowing.domain.AuditableEntity;
 import com.github.mrzhqiang.rowing.domain.Gender;
+import com.github.mrzhqiang.rowing.role.Role;
+import com.github.mrzhqiang.rowing.third.ThirdUser;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.apache.commons.compress.utils.Lists;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -16,10 +20,14 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * 用户。
@@ -87,8 +95,28 @@ public class User extends AuditableEntity {
      * <p>
      * 如果是通过第三方平台登录系统，且为首次登录，也要先注册账户，并通过第三方平台的相关资料生成用户，并关联对应的账户。
      */
+    @JsonIgnore
     @ToString.Exclude
     @OneToOne(optional = false, cascade = CascadeType.ALL, orphanRemoval = true)
     private Account owner;
+
+    /**
+     * 第三方用户列表。
+     */
+    @JsonIgnore
+    @ToString.Exclude
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
+    private List<ThirdUser> thirdUserList = Lists.newArrayList();
+
+    /**
+     * 用户角色列表。
+     */
+    @JsonIgnore
+    @ToString.Exclude
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
+    private List<Role> roleList = Lists.newArrayList();
 
 }

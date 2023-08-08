@@ -1,4 +1,4 @@
-package com.github.mrzhqiang.rowing.user;
+package com.github.mrzhqiang.rowing.third;
 
 import com.github.mrzhqiang.rowing.domain.BaseRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;

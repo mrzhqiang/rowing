@@ -56,7 +56,7 @@ public class AccountServiceJpaImpl implements AccountService {
                     .username(username)
                     // 每次随机密码，避免登录系统虚拟用户
                     .password(passwordEncoder.encode(UUID.randomUUID().toString()))
-                    .role(Authority.ROLE_ADMIN)
+                    .authority(Authority.ROLE_ADMIN)
                     .build();
             system.setId(-1L);
             return system;
@@ -88,7 +88,7 @@ public class AccountServiceJpaImpl implements AccountService {
             throw new RuntimeException(I18nHolder.getAccessor().getMessage("AccountService.createAdmin.writeFileFailure"), e);
         }
         admin.setPassword(passwordEncoder.encode(password));
-        admin.setRole(Authority.ROLE_ADMIN);
+        admin.setAuthority(Authority.ROLE_ADMIN);
         return repository.save(admin);
     }
 
@@ -158,7 +158,7 @@ public class AccountServiceJpaImpl implements AccountService {
         String password = idCard.substring(idCard.length() - 6);
         account.setPassword(passwordEncoder.encode(password));
         // 默认用户角色
-        account.setRole(Authority.ROLE_USER);
+        account.setAuthority(Authority.ROLE_USER);
         return Optional.of(repository.save(account));
     }
 
@@ -183,7 +183,7 @@ public class AccountServiceJpaImpl implements AccountService {
         String password = idCard.substring(idCard.length() - 6);
         account.setPassword(passwordEncoder.encode(password));
         // 默认用户角色
-        account.setRole(Authority.ROLE_USER);
+        account.setAuthority(Authority.ROLE_USER);
         return Optional.of(repository.save(account));
     }
 

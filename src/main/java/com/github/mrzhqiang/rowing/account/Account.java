@@ -3,6 +3,7 @@ package com.github.mrzhqiang.rowing.account;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.mrzhqiang.rowing.domain.AuditableEntity;
 import com.github.mrzhqiang.rowing.domain.Authority;
+import com.github.mrzhqiang.rowing.role.Role;
 import com.github.mrzhqiang.rowing.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,6 +11,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.apache.commons.compress.utils.Lists;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,10 +21,16 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import java.time.Instant;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * 账户。
@@ -85,16 +93,16 @@ public class Account extends AuditableEntity implements UserDetails {
     @Column(nullable = false)
     private String password;
     /**
-     * 角色。
+     * 权限。
      * <p>
-     * 默认是用户角色。
+     * 默认的权限是用户角色。
      * <p>
-     * 注意：这个角色是后端角色，仅用于区别匿名人员、用户以及管理员使用，不作为菜单路由和资源权限的标识符。
+     * 注意：这个角色是后端角色，仅用于区别匿名人员、用户以及管理员使用。
      */
     @JsonIgnore
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Authority role = Authority.ROLE_USER;
+    private Authority authority = Authority.ROLE_USER;
 
     /**
      * 账户失效期限。
@@ -136,14 +144,11 @@ public class Account extends AuditableEntity implements UserDetails {
     private boolean disabled = false;
 
     /**
-     * 用户。
-     * <p>
-     * 用户通常比账户具有更丰富的特征，比如昵称、头像、性别、生日等等。
-     * <p>
-     * 另外，还可以将前端的菜单路由和资源权限，存储在用户维度，避免影响后端的角色权限。
+     * 用户资料。
      */
+    @JsonIgnore
     @ToString.Exclude
-    @OneToOne(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "owner", orphanRemoval = true)
     private User user;
 
     /**
@@ -162,9 +167,14 @@ public class Account extends AuditableEntity implements UserDetails {
     @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Optional.ofNullable(role)
+        List<GrantedAuthority> authorities = user.getRoleList().stream()
+                .flatMap(it -> it.getResourceList().stream())
+                .distinct()
+                .collect(Collectors.toList());
+        authorities.addAll(Optional.ofNullable(authority)
                 .map(it -> AuthorityUtils.createAuthorityList(it.name()))
-                .orElse(AuthorityUtils.NO_AUTHORITIES);
+                .orElse(AuthorityUtils.NO_AUTHORITIES));
+        return authorities;
     }
 
     /**
