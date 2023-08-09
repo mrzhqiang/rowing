@@ -14,4 +14,6 @@ public interface UserService {
      * @return 用户信息数据。
      */
     UserInfoData findByOwner(Account owner);
+
+    void createForAdmin(Account admin);
 }

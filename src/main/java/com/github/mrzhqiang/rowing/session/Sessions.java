@@ -20,7 +20,7 @@ public final class Sessions {
     /**
      * 会话详情的键名称，存储在会话属性中。
      */
-    public static final String SESSION_DETAILS_KEY = "SESSION_DETAILS";
+    public static final String SESSION_DETAILS_KEY = Sessions.class.getName() + ".SESSION_DETAILS";
 
     /**
      * 当前会话。

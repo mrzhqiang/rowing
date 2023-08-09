@@ -9,7 +9,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
  * 菜单仓库。
  * <p>
  */
-@PreAuthorize(Authorizes.HAS_ROLE_ADMIN)
+@PreAuthorize(Authorizes.HAS_AUTHORITY_ADMIN)
 @RepositoryRestResource(path = "menu", collectionResourceRel = "menu")
 public interface MenuRepository extends BaseRepository<Menu> {
 

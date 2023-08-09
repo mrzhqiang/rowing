@@ -20,9 +20,8 @@ public class AuditingConfiguration {
     @Bean
     public AuditorAware<String> auditor() {
         // 默认情况下返回 system 用户名称，如果存在已认证用户，则返回已认证用户名称
-        return () -> Optional.of(Authentications.SYSTEM_USERNAME)
-                .map(it -> Authentications.ofLogin()
-                        .flatMap(Authentications::findUsername)
-                        .orElse(it));
+        return () -> Optional.of(Authentications.ofLogin()
+                .flatMap(Authentications::findUsername)
+                .orElse(Authentications.SYSTEM_USERNAME));
     }
 }

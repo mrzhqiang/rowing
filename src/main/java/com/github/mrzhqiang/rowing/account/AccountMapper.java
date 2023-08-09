@@ -1,9 +1,7 @@
 package com.github.mrzhqiang.rowing.account;
 
-import com.github.mrzhqiang.rowing.domain.Authority;
-import org.mapstruct.BeanMapping;
+import com.github.mrzhqiang.rowing.domain.AccountType;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 
 /**
  * 账户映射器。
@@ -28,13 +26,10 @@ import org.mapstruct.Mapping;
  * <p>
  * 鉴于映射器应该纯粹和简单，我们推荐只使用 2.1 和 2.4 方式进行转换。
  */
-@Mapper(componentModel = "spring", imports = {Authority.class})
+@Mapper(componentModel = "spring", imports = {AccountType.class})
 public interface AccountMapper {
 
-    @BeanMapping(ignoreByDefault = true)
     Account toEntity(LoginForm form);
 
-    @BeanMapping(ignoreByDefault = true)
-    @Mapping(target = "authority", expression = "java( Authority.ROLE_USER )")
     Account toEntity(RegisterForm form);
 }

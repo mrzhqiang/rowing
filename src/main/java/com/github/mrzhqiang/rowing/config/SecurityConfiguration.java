@@ -4,12 +4,13 @@ import com.github.mrzhqiang.kaptcha.autoconfigure.KaptchaAuthenticationConverter
 import com.github.mrzhqiang.kaptcha.autoconfigure.KaptchaProperties;
 import com.github.mrzhqiang.rowing.account.LoginFailureHandler;
 import com.github.mrzhqiang.rowing.account.LoginSuccessHandler;
-import com.github.mrzhqiang.rowing.domain.Authority;
+import com.github.mrzhqiang.rowing.util.Authorizes;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyUtils;
@@ -24,7 +25,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandlerImpl;
 import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
 import org.springframework.security.web.authentication.AuthenticationFilter;
-import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -34,7 +35,7 @@ import javax.servlet.http.HttpServletResponse;
  * 安全配置。
  */
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true, jsr250Enabled = true)
 @EnableConfigurationProperties({SecurityProperties.class})
 @Configuration
 public class SecurityConfiguration {
@@ -51,13 +52,13 @@ public class SecurityConfiguration {
     @Bean
     public RoleHierarchy roleHierarchy() {
         RoleHierarchyImpl hierarchy = new RoleHierarchyImpl();
-        hierarchy.setHierarchy(RoleHierarchyUtils.roleHierarchyFromMap(Authority.hierarchy()));
+        hierarchy.setHierarchy(RoleHierarchyUtils.roleHierarchyFromMap(Authorizes.hierarchy()));
         return hierarchy;
     }
 
     @Bean
     public RoleHierarchyVoter hierarchyVoter(RoleHierarchy hierarchy) {
-        // 声明这个实例，才能具有角色等级制度
+        // 声明这个实例，才能具有等级制度
         return new RoleHierarchyVoter(hierarchy);
     }
 
@@ -108,7 +109,7 @@ public class SecurityConfiguration {
                         .successHandler(loginSuccessHandler))
                 .exceptionHandling(handlingConfigurer -> handlingConfigurer
                         .accessDeniedHandler(new AccessDeniedHandlerImpl())
-                        .authenticationEntryPoint(new Http403ForbiddenEntryPoint()))
+                        .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
                 .sessionManagement(managementConfigurer -> managementConfigurer
                         .invalidSessionStrategy((request, response) ->
                                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "invalidSessionStrategy"))

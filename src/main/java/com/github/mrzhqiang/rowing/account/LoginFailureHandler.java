@@ -44,7 +44,7 @@ public class LoginFailureHandler implements AuthenticationFailureHandler {
                                         AuthenticationException exception) throws IOException {
         String username = request.getParameter(AccountService.USERNAME_KEY);
         AuthenticationException authenticationException = Optional.ofNullable(username)
-                .map(accountService::loadUserByUsername)
+                .flatMap(accountService::findByUsername)
                 .map(it -> handleException(it, exception))
                 .orElse(exception);
         response.sendError(HttpStatus.UNAUTHORIZED.value(), authenticationException.getMessage());

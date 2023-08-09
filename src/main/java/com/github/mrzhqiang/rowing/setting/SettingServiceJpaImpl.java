@@ -134,7 +134,7 @@ public class SettingServiceJpaImpl implements SettingService {
         return Optional.ofNullable(name).flatMap(repository::findByName);
     }
 
-    @PreAuthorize(Authorizes.HAS_ROLE_ADMIN)
+    @PreAuthorize(Authorizes.HAS_AUTHORITY_ADMIN)
     @Override
     public RSAKeyData createRsaKey() {
         KeyPair keyPair = RSADecrypts.generateKeyPair();

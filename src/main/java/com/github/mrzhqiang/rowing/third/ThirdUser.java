@@ -1,9 +1,8 @@
 package com.github.mrzhqiang.rowing.third;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.github.mrzhqiang.rowing.account.Account;
 import com.github.mrzhqiang.rowing.domain.AuditableEntity;
 import com.github.mrzhqiang.rowing.domain.ThirdUserType;
-import com.github.mrzhqiang.rowing.user.User;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -19,7 +18,7 @@ import javax.validation.constraints.Size;
 /**
  * 第三方用户。
  * <p>
- * 通常包含第三方用户类型、统一标识符以及所绑定的用户。
+ * 通常包含第三方用户类型、统一标识符以及所绑定的账户。
  * <p>
  * 其他资料由于存在更新的可能，且无法实时同步到本系统，因此不进行存储——如果有需要的话，再新增字段存储也不麻烦。
  */
@@ -46,11 +45,9 @@ public class ThirdUser extends AuditableEntity {
     @Column(unique = true, updatable = false, length = 500)
     private String uid;
     /**
-     * 绑定用户。
+     * 绑定账户。
      */
-    @JsonIgnore
-    @ToString.Exclude
     @ManyToOne(optional = false, cascade = CascadeType.ALL)
-    private User user;
+    private Account account;
 
 }

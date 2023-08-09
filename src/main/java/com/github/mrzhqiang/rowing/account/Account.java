@@ -1,9 +1,10 @@
 package com.github.mrzhqiang.rowing.account;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.github.mrzhqiang.rowing.domain.AccountType;
 import com.github.mrzhqiang.rowing.domain.AuditableEntity;
-import com.github.mrzhqiang.rowing.domain.Authority;
 import com.github.mrzhqiang.rowing.role.Role;
+import com.github.mrzhqiang.rowing.third.ThirdUser;
 import com.github.mrzhqiang.rowing.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,7 +14,6 @@ import lombok.Setter;
 import lombok.ToString;
 import org.apache.commons.compress.utils.Lists;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.CascadeType;
@@ -21,35 +21,40 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * 账户。
  * <p>
- * 账户包含用户名、密码、授权角色、认证统计信息以及用户资料。
+ * 账户包含用户名、密码、账户类型、用户信息、角色列表等字段。
  * <p>
- * 1. 授权角色主要用于区分匿名人员、用户和管理员。
+ * 1. {@link AccountType 账户类型} 可以区分游客、用户、管理员。
  * <p>
- * 匿名人员访问公共资源，用户访问系统功能，管理员访问后台管理，通常后者包含前者的所有权限。
+ * 游客访问公共资源，用户访问系统功能，管理员访问后台管理，通常后者包含前者的所有权限。
  * <p>
- * 2. 认证统计信息，可以用来保证账户安全，避免账户密码被暴力破解。
+ * 2. {@link UserDetails 安全相关的用户信息} 可以用来保护账户安全。
  * <p>
- * 尽管 Spring Security 在密码验证时，已经通过限制验证频率（约 1s）来避免穷举，但加上失败次数超限锁定账户的逻辑，会更人性化一点。
+ * 2.1 认证时检测：用户名、密码是否正确，账户是否未过期、账户是否未锁定、密码是否未过期、账户是否启用。
  * <p>
- * 另外，也可以完全实现 {@link UserDetails} 接口，比如：账户是否过期、密码是否过期等，以此保证账户安全。
+ * 2.2 授权时检测：对于受限制的方法，是否包含指定角色或权限。
  * <p>
- * 3. 用户资料，包含昵称、头像等相关信息。
+ * 3. {@link User 非安全相关的用户信息} 包含更丰富的资料，比如：昵称、头像、性别、生日、简介等等。
  * <p>
- * 注意：账户在登录后，实例会存储在会话中，因此需要尽可能简单，其他逻辑应交给 {@link User} 进行处理。
+ * 非安全相关的用户信息支持扩展字段，完全不影响账户，甚至可以被新的用户信息替换。
+ * <p>
+ * 4. {@link com.github.mrzhqiang.rowing.role.Role 角色列表} 包含当前账户拥有的菜单及菜单资源。
+ * <p>
+ * 角色列表可以视为权限列表，只要账户属于某个角色，即获得角色对应的所有菜单及菜单资源（权限）。
+ * <p>
+ * 这种数据结构非常方便对账户进行授权和取消授权，避免重复且繁琐的操作。
  */
 @Getter
 @Setter
@@ -93,17 +98,13 @@ public class Account extends AuditableEntity implements UserDetails {
     @Column(nullable = false)
     private String password;
     /**
-     * 权限。
+     * 类型。
      * <p>
-     * 默认的权限是用户角色。
-     * <p>
-     * 注意：这个角色是后端角色，仅用于区别匿名人员、用户以及管理员使用。
+     * 必填，默认是用户类型。
      */
-    @JsonIgnore
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Authority authority = Authority.ROLE_USER;
-
+    private AccountType type = AccountType.USER;
     /**
      * 账户失效期限。
      * <p>
@@ -119,7 +120,6 @@ public class Account extends AuditableEntity implements UserDetails {
      * <p>
      * 账户锁定之后，不再统计次数，也不允许登录，直到锁定时间过期。
      */
-    @JsonIgnore
     private int failedCount = 0;
     /**
      * 锁定时间戳。
@@ -127,7 +127,6 @@ public class Account extends AuditableEntity implements UserDetails {
      * 这个时间戳属于未来时间，即当前时间 > 锁定时间戳，则表示账户未锁定，否则表示账户已锁定。
      */
     private Instant locked;
-
     /**
      * 密码失效期限。
      * <p>
@@ -144,7 +143,9 @@ public class Account extends AuditableEntity implements UserDetails {
     private boolean disabled = false;
 
     /**
-     * 用户资料。
+     * 用户信息。
+     * <p>
+     * 一对一关联的用户信息，属于账户的扩展数据。
      */
     @JsonIgnore
     @ToString.Exclude
@@ -152,29 +153,35 @@ public class Account extends AuditableEntity implements UserDetails {
     private User user;
 
     /**
+     * 第三方用户列表。
+     * <p>
+     * 一对多关联的第三方用户列表，通常是第三方平台注册本系统账户时关联的第三方用户信息。
+     */
+    @JsonIgnore
+    @ToString.Exclude
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "account", orphanRemoval = true)
+    private List<ThirdUser> thirdUserList = Lists.newArrayList();
+
+    /**
+     * 角色列表。
+     * <p>
+     * 实际上表示账户拥有的菜单及菜单资源列表，换句话说，就是账户的权限列表。
+     */
+    @JsonIgnore
+    @ToString.Exclude
+    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "accountList")
+    private List<Role> roleList = Lists.newArrayList();
+
+    /**
      * 获取授权列表。
-     * <p>
-     * 授权在 Spring Security 中指的是角色+权限。
-     * <p>
-     * 角色可以用来控制访问 URL 路径，权限可以用来控制访问服务层方法，它俩也可以搭配一起使用。
-     * <p>
-     * 更细粒度的权限也可以交由 Spring Security ACL 框架来实现，它包含了对数据权限的控制（读、写、创建、删除、管理以及自定义权限）。
-     * <p>
-     * 有经验的开发者也可以设计一套 AccessDecisionVoter 投票决策，它是上面所有内容的底层支撑接口。
-     * <p>
-     * 在前后端分离的模式下，这里的授权是用于角色权限和接口权限的限制访问，接口权限来自用户中存储的相关数据。
      */
     @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<GrantedAuthority> authorities = user.getRoleList().stream()
-                .flatMap(it -> it.getResourceList().stream())
+        return Stream.concat(Stream.of(type.toAuthority()),
+                        roleList.stream().flatMap(it -> it.getGrantedAuthorities().stream()))
                 .distinct()
                 .collect(Collectors.toList());
-        authorities.addAll(Optional.ofNullable(authority)
-                .map(it -> AuthorityUtils.createAuthorityList(it.name()))
-                .orElse(AuthorityUtils.NO_AUTHORITIES));
-        return authorities;
     }
 
     /**

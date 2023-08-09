@@ -1,7 +1,8 @@
 package com.github.mrzhqiang.rowing.domain;
 
-import static com.github.mrzhqiang.rowing.util.Authorizes.HAS_ROLE_ADMIN;
-import static com.github.mrzhqiang.rowing.util.Authorizes.HAS_ROLE_USER;
+import com.github.mrzhqiang.rowing.util.Authorizes;
+import static com.github.mrzhqiang.rowing.util.Authorizes.HAS_AUTHORITY_ADMIN;
+import static com.github.mrzhqiang.rowing.util.Authorizes.HAS_AUTHORITY_USER;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.NoRepositoryBean;
@@ -24,44 +25,44 @@ import javax.annotation.Nonnull;
  * <p>
  * 参考：<a href="https://docs.spring.io/spring-data/rest/docs/current/reference/html/#repository-resources">spring data rest repository-resources</a>
  * <p>
- * 注意：这里声明所有删除方法需要 {@link Authority#ROLE_ADMIN} 权限。
+ * 注意：这里声明所有删除方法需要 {@link Authorizes#HAS_AUTHORITY_ADMIN} 权限。
  *
  * @param <E> 实体类型。
  */
 @NoRepositoryBean
-@PreAuthorize(HAS_ROLE_USER)
+@PreAuthorize(HAS_AUTHORITY_USER)
 @Validated
 public interface BaseRepository<E extends BaseEntity> extends JpaRepository<E, Long> {
 
-    @PreAuthorize(HAS_ROLE_ADMIN)
+    @PreAuthorize(HAS_AUTHORITY_ADMIN)
     @Override
     void deleteAllInBatch(@Nonnull Iterable<E> entities);
 
-    @PreAuthorize(HAS_ROLE_ADMIN)
+    @PreAuthorize(HAS_AUTHORITY_ADMIN)
     @Override
     void deleteAllByIdInBatch(@Nonnull Iterable<Long> longs);
 
-    @PreAuthorize(HAS_ROLE_ADMIN)
+    @PreAuthorize(HAS_AUTHORITY_ADMIN)
     @Override
     void deleteAllInBatch();
 
-    @PreAuthorize(HAS_ROLE_ADMIN)
+    @PreAuthorize(HAS_AUTHORITY_ADMIN)
     @Override
     void deleteById(@Nonnull Long aLong);
 
-    @PreAuthorize(HAS_ROLE_ADMIN)
+    @PreAuthorize(HAS_AUTHORITY_ADMIN)
     @Override
     void delete(@Nonnull E entity);
 
-    @PreAuthorize(HAS_ROLE_ADMIN)
+    @PreAuthorize(HAS_AUTHORITY_ADMIN)
     @Override
     void deleteAllById(@Nonnull Iterable<? extends Long> longs);
 
-    @PreAuthorize(HAS_ROLE_ADMIN)
+    @PreAuthorize(HAS_AUTHORITY_ADMIN)
     @Override
     void deleteAll(@Nonnull Iterable<? extends E> entities);
 
-    @PreAuthorize(HAS_ROLE_ADMIN)
+    @PreAuthorize(HAS_AUTHORITY_ADMIN)
     @Override
     void deleteAll();
 }

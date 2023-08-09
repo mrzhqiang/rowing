@@ -24,7 +24,7 @@ public interface LogicRepository<E extends LogicEntity> extends BaseRepository<E
      *
      * @param id 主键 id。
      */
-    @PreAuthorize(Authorizes.HAS_ROLE_ADMIN)
+    @PreAuthorize(Authorizes.HAS_AUTHORITY_ADMIN)
     @Transactional
     @Modifying
     @Query("update #{#entityName} e set e.deleted = 'YES' where e.id = ?1")
@@ -33,7 +33,7 @@ public interface LogicRepository<E extends LogicEntity> extends BaseRepository<E
     /**
      * 逻辑删除所有实体。
      */
-    @PreAuthorize(Authorizes.HAS_ROLE_ADMIN)
+    @PreAuthorize(Authorizes.HAS_AUTHORITY_ADMIN)
     @Transactional
     @Modifying
     @Query("update #{#entityName} e set e.deleted = 'YES'")

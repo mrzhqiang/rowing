@@ -2,16 +2,17 @@ package com.github.mrzhqiang.rowing.account;
 
 import com.github.mrzhqiang.helper.Environments;
 import com.github.mrzhqiang.helper.random.RandomStrings;
+import com.github.mrzhqiang.rowing.domain.AccountType;
 import com.github.mrzhqiang.rowing.domain.ThirdUserType;
-import com.github.mrzhqiang.rowing.domain.Authority;
-import com.github.mrzhqiang.rowing.domain.Gender;
 import com.github.mrzhqiang.rowing.i18n.I18nHolder;
-import com.github.mrzhqiang.rowing.user.User;
-import com.github.mrzhqiang.rowing.user.UserRepository;
+import com.github.mrzhqiang.rowing.user.UserService;
 import com.github.mrzhqiang.rowing.util.Authentications;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -23,8 +24,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-import java.time.LocalDate;
-import java.time.Month;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
@@ -35,46 +34,57 @@ public class AccountServiceJpaImpl implements AccountService {
 
     private final AccountMapper mapper;
     private final AccountRepository repository;
-    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final UserService userService;
 
     public AccountServiceJpaImpl(AccountMapper mapper,
                                  AccountRepository repository,
-                                 UserRepository userRepository,
-                                 PasswordEncoder passwordEncoder) {
+                                 PasswordEncoder passwordEncoder,
+                                 UserService userService) {
         this.mapper = mapper;
         this.repository = repository;
-        this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.userService = userService;
     }
 
-    @RunAsSystem
     @Override
-    public Account loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         if (Authentications.SYSTEM_USERNAME.equals(username)) {
-            Account system = Account.builder()
-                    .username(username)
+            return User.withUsername(username)
                     // 每次随机密码，避免登录系统虚拟用户
                     .password(passwordEncoder.encode(UUID.randomUUID().toString()))
-                    .authority(Authority.ROLE_ADMIN)
+                    .authorities(AccountType.ADMIN.toAuthority())
                     .build();
-            system.setId(-1L);
-            return system;
         }
 
         return repository.findByUsername(username)
+                .map(User::withUserDetails)
+                .map(User.UserBuilder::build)
                 .orElseThrow(() -> new UsernameNotFoundException(
                         I18nHolder.getAccessor().getMessage("AccountService.UsernameNotFoundException")));
+    }
+
+    @Cacheable("account")
+    @Override
+    public Optional<Account> findByUsername(String username) {
+        if (Authentications.SYSTEM_USERNAME.equals(username)) {
+            return Optional.of(Account.builder()
+                    .username(username)
+                    .password(passwordEncoder.encode(UUID.randomUUID().toString()))
+                    .type(AccountType.ADMIN)
+                    .build());
+        }
+        return repository.findByUsername(username);
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void init() {
-        Account admin = repository.findByUsername(Authentications.ADMIN_USERNAME).orElseGet(this::createAdmin);
-        userRepository.findByOwner(admin).orElseGet(() -> createAdminUser(admin));
+        Account admin = repository.findByUsername(Authentications.ADMIN_USERNAME).orElseGet(this::createAdminAccount);
+        userService.createForAdmin(admin);
     }
 
-    private Account createAdmin() {
+    private Account createAdminAccount() {
         Account admin = new Account();
         admin.setUsername(Authentications.ADMIN_USERNAME);
         String password = UUID.randomUUID().toString();
@@ -88,19 +98,8 @@ public class AccountServiceJpaImpl implements AccountService {
             throw new RuntimeException(I18nHolder.getAccessor().getMessage("AccountService.createAdmin.writeFileFailure"), e);
         }
         admin.setPassword(passwordEncoder.encode(password));
-        admin.setAuthority(Authority.ROLE_ADMIN);
+        admin.setType(AccountType.ADMIN);
         return repository.save(admin);
-    }
-
-    private User createAdminUser(Account admin) {
-        User user = new User();
-        user.setOwner(admin);
-        user.setNickname(I18nHolder.getAccessor().getMessage("AccountService.nickname.admin", "管理员"));
-        user.setBirthday(LocalDate.of(2019, Month.of(10), 25));
-        user.setGender(Gender.MALE);
-
-        admin.setUser(user);
-        return userRepository.save(user);
     }
 
     @RunAsSystem
@@ -157,8 +156,6 @@ public class AccountServiceJpaImpl implements AccountService {
         String idCard = form.getIdCard();
         String password = idCard.substring(idCard.length() - 6);
         account.setPassword(passwordEncoder.encode(password));
-        // 默认用户角色
-        account.setAuthority(Authority.ROLE_USER);
         return Optional.of(repository.save(account));
     }
 
@@ -182,8 +179,6 @@ public class AccountServiceJpaImpl implements AccountService {
         String idCard = form.getIdCard();
         String password = idCard.substring(idCard.length() - 6);
         account.setPassword(passwordEncoder.encode(password));
-        // 默认用户角色
-        account.setAuthority(Authority.ROLE_USER);
         return Optional.of(repository.save(account));
     }
 

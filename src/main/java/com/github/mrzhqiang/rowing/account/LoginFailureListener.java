@@ -47,7 +47,7 @@ public class LoginFailureListener implements ApplicationListener<AbstractAuthent
 
     private void handleLoginFailed(Authentication authentication) {
         Authentications.findUsername(authentication)
-                .map(accountService::loadUserByUsername)
+                .flatMap(accountService::findByUsername)
                 .map(this::computeFailedCount)
                 .ifPresent(accountService::update);
     }

@@ -1,24 +1,15 @@
 package com.github.mrzhqiang.rowing.account;
 
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import static org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_PASSWORD_KEY;
-import static org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_USERNAME_KEY;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.util.Optional;
 
 /**
  * 账户服务。
- * <p>
- * 用于处理账户相关的业务：
- * <p>
- * 1. 通过用户名加载账户实体。
- * <p>
- * 2. 初始化管理员账户，如果已初始化则什么也不做。
- * <p>
- * 3. 通过登录表单注册系统账户。
- * <p>
- * 4. 通过学号注册系统账户。
  */
 public interface AccountService extends UserDetailsService {
 
@@ -29,21 +20,35 @@ public interface AccountService extends UserDetailsService {
     /**
      * 用户名参数名称。
      */
-    String USERNAME_KEY = SPRING_SECURITY_FORM_USERNAME_KEY;
+    String USERNAME_KEY = UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_USERNAME_KEY;
     /**
      * 密码参数名称。
      */
-    String PASSWORD_KEY = SPRING_SECURITY_FORM_PASSWORD_KEY;
+    String PASSWORD_KEY = UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_PASSWORD_KEY;
 
     /**
-     * 通过用户名加载账户。
+     * 通过用户名加载用户信息。
+     * <p>
+     * 这个方法在认证时调用，也就是说，登录时会调用这个方法。
+     * <p>
+     * 注意：为了保证在 {@link org.springframework.security.core.Authentication} 中的纯粹性，我们返回 {@link User} 实例。
+     * <p>
+     * 如果需要通过用户名找到账户，请使用 {@link #findByUsername(String)} 方法。
      *
      * @param username 用户名。
-     * @return 账户实例。
-     * @throws UsernameNotFoundException 当无法通过用户名找到账户时，抛出此异常，表示登录失败。
+     * @return 用户信息。
+     * @throws UsernameNotFoundException 当无法通过用户名找到用户时，抛出此异常，表示登录失败。
      */
     @Override
-    Account loadUserByUsername(String username) throws UsernameNotFoundException;
+    UserDetails loadUserByUsername(String username) throws UsernameNotFoundException;
+
+    /**
+     * 通过用户名找到账户。
+     *
+     * @param username 用户名
+     * @return 可选的账户。
+     */
+    Optional<Account> findByUsername(String username);
 
     /**
      * 初始化账户。

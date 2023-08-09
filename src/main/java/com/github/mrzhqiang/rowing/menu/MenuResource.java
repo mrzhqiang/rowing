@@ -55,7 +55,6 @@ public class MenuResource extends AuditableEntity implements GrantedAuthority {
     /**
      * 资源所属菜单。
      */
-    @JsonIgnore
     @ManyToOne(cascade = CascadeType.ALL, optional = false)
     private Menu menu;
     /**
@@ -63,7 +62,7 @@ public class MenuResource extends AuditableEntity implements GrantedAuthority {
      */
     @JsonIgnore
     @ToString.Exclude
-    @ManyToMany(mappedBy = "resourceList")
+    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "menuResourceList")
     private List<Role> roleList = Lists.newArrayList();
 
 }

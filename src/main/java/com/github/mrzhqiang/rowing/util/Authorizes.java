@@ -1,11 +1,38 @@
 package com.github.mrzhqiang.rowing.util;
 
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import com.github.mrzhqiang.rowing.domain.AccountType;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 授权工具。
  * <p>
  * 主要提供简便的授权表达式，避免编写错误带来的异常。
+ * <p>
+ * 使用方式，在注解中添加以下字符串：
+ * <p>
+ * "hasAuthority('xxx')"
+ * <p>
+ * "hasRole('ROLE_xxx')" or "hasRole('xxx')"
+ * <p>
+ * "permitAll()"
+ * <p>
+ * "denyAll()"
+ * <p>
+ * "isAnonymous()"
+ * <p>
+ * "isAuthenticated()"
+ * <p>
+ * "isRememberMe()"
+ * <p>
+ * "isFullyAuthenticated()"
+ * <p>
+ * "hasPermission(#target, 'read')" or "hasPermission(#target, 'admin')"
  */
 public final class Authorizes {
     private Authorizes() {
@@ -13,39 +40,37 @@ public final class Authorizes {
     }
 
     /**
-     * 角色前缀。
-     * <p>
-     * 这个前缀是 Spring Security 框架的默认角色前缀。
-     */
-    public static final String ROLE_PREFIX = "ROLE_";
-    /**
-     * 权限前缀。
-     * <p>
-     * 这个前缀参考角色前缀设定，为了保持统一，字符长度也一样。
-     */
-    public static final String AUTH_PREFIX = "AUTH_";
-
-    /**
      * 管理员角色授权。
      */
-    public static final String HAS_ROLE_ADMIN = "hasRole('ROLE_ADMIN')";
+    public static final String HAS_AUTHORITY_ADMIN = "hasAuthority('ADMIN')";
     /**
      * 用户角色授权。
      */
-    public static final String HAS_ROLE_USER = "hasRole('ROLE_USER')";
+    public static final String HAS_AUTHORITY_USER = "hasAuthority('USER')";
     /**
-     * 匿名人员角色授权。
+     * 游客角色授权。
      */
-    public static final String HAS_ROLE_ANONYMOUS = "hasRole('ROLE_ANONYMOUS')";
+    public static final String HAS_AUTHORITY_ANONYMOUS = "hasAuthority('ANONYMOUS')";
 
     /**
-     * 角色的权限。
+     * 等级制度。
+     * <p>
+     * 表示某一授权可以继承其他授权的所有权限，比方说经理也是员工，同样可以拥有员工的所有权限。
+     * <p>
+     * 因此，管理员可以包含非管理员的所有权限。
      *
-     * @param role 指定角色。
-     * @return 带角色前缀的权限。
+     * @return 等级制度 Map 映射关系。
      */
-    public static SimpleGrantedAuthority ofRole(String role) {
-        // 角色可以不带前缀，但 GrantedAuthority 必须携带前缀
-        return new SimpleGrantedAuthority(ROLE_PREFIX + role);
+    public static Map<String, List<String>> hierarchy() {
+        Map<String, List<String>> map = Maps.newHashMap();
+        // USER 包含 ANONYMOUS 可以访问控制的内容
+        map.put(AccountType.USER.name(), Lists.newArrayList(AccountType.ANONYMOUS.name()));
+        // ADMIN 继承除自身之外的所有权限
+        map.put(AccountType.ADMIN.name(), Arrays.stream(AccountType.values())
+                .filter(it -> !AccountType.ADMIN.equals(it))
+                .map(Enum::name)
+                .collect(Collectors.toList()));
+        return map;
     }
+
 }
