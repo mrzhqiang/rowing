@@ -1,5 +1,6 @@
 package com.github.mrzhqiang.rowing.exception;
 
+import com.github.mrzhqiang.helper.Exceptions;
 import com.github.mrzhqiang.rowing.domain.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
@@ -131,7 +132,7 @@ public class ExceptionLog extends BaseEntity {
      *
      * @see com.google.common.base.Throwables#getStackTraceAsString(Throwable)
      */
-    @Column(length = 2000)
+    @Column(length = Exceptions.MAX_TRACE_LENGTH)
     private String trace;
     /**
      * 时间戳。

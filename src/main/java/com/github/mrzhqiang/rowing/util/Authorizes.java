@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
  * <p>
  * 主要提供简便的授权表达式，避免编写错误带来的异常。
  * <p>
- * 使用方式，在注解中添加以下字符串：
+ * 使用方式，在 PreAuthorize 注解中添加以下字符串：
  * <p>
  * "hasAuthority('xxx')"
  * <p>

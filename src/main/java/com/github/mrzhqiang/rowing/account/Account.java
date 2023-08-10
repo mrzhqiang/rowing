@@ -6,13 +6,13 @@ import com.github.mrzhqiang.rowing.domain.AuditableEntity;
 import com.github.mrzhqiang.rowing.role.Role;
 import com.github.mrzhqiang.rowing.third.ThirdUser;
 import com.github.mrzhqiang.rowing.user.User;
+import com.google.common.collect.Lists;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.apache.commons.compress.utils.Lists;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -21,6 +21,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -102,6 +103,7 @@ public class Account extends AuditableEntity implements UserDetails {
      * <p>
      * 必填，默认是用户类型。
      */
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private AccountType type = AccountType.USER;
@@ -120,7 +122,8 @@ public class Account extends AuditableEntity implements UserDetails {
      * <p>
      * 账户锁定之后，不再统计次数，也不允许登录，直到锁定时间过期。
      */
-    private int failedCount = 0;
+    @Builder.Default
+    private Integer failedCount = 0;
     /**
      * 锁定时间戳。
      * <p>
@@ -140,7 +143,8 @@ public class Account extends AuditableEntity implements UserDetails {
      * <p>
      * 禁用比锁定更严重，因为这意味着，如果不手动启用，账户将始终无法使用。
      */
-    private boolean disabled = false;
+    @Builder.Default
+    private Boolean disabled = false;
 
     /**
      * 用户信息。
@@ -149,7 +153,7 @@ public class Account extends AuditableEntity implements UserDetails {
      */
     @JsonIgnore
     @ToString.Exclude
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "owner", orphanRemoval = true)
+    @OneToOne(mappedBy = "owner", orphanRemoval = true)
     private User user;
 
     /**
@@ -157,9 +161,10 @@ public class Account extends AuditableEntity implements UserDetails {
      * <p>
      * 一对多关联的第三方用户列表，通常是第三方平台注册本系统账户时关联的第三方用户信息。
      */
+    @Builder.Default
     @JsonIgnore
     @ToString.Exclude
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "account", orphanRemoval = true)
+    @OneToMany(mappedBy = "account", orphanRemoval = true)
     private List<ThirdUser> thirdUserList = Lists.newArrayList();
 
     /**
@@ -167,9 +172,10 @@ public class Account extends AuditableEntity implements UserDetails {
      * <p>
      * 实际上表示账户拥有的菜单及菜单资源列表，换句话说，就是账户的权限列表。
      */
+    @Builder.Default
     @JsonIgnore
     @ToString.Exclude
-    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "accountList")
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "accountList")
     private List<Role> roleList = Lists.newArrayList();
 
     /**

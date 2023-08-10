@@ -38,7 +38,7 @@ public class InitTask extends AuditableEntity {
      * 任务类型。
      */
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false, updatable = false, length = 100)
     private TaskType type;
     /**
      * 任务状态。

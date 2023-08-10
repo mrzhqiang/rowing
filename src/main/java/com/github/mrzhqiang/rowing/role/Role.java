@@ -16,6 +16,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -55,6 +56,12 @@ public class Role extends AuditableEntity implements GrantedAuthoritiesContainer
     @Size(max = 48)
     @Column(unique = true, nullable = false, length = 48)
     private String code;
+    /**
+     * 是否不可变。
+     * <p>
+     * 不可变的角色属于内置角色，即 {@link com.github.mrzhqiang.rowing.domain.AccountType 账户类型}。
+     */
+    private Boolean immutable = false;
 
     /**
      * 角色下的账户列表。
@@ -72,7 +79,7 @@ public class Role extends AuditableEntity implements GrantedAuthoritiesContainer
      */
     @JsonIgnore
     @ToString.Exclude
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "role_menus",
             joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "menu_id", referencedColumnName = "id"))
@@ -82,7 +89,7 @@ public class Role extends AuditableEntity implements GrantedAuthoritiesContainer
      */
     @JsonIgnore
     @ToString.Exclude
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "role_menu_resources",
             joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "menu_resource_id", referencedColumnName = "id"))

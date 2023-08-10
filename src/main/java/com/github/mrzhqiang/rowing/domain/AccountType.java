@@ -46,6 +46,10 @@ public enum AccountType {
                 .orElse(ANONYMOUS);
     }
 
+    public String getCode() {
+        return name();
+    }
+
     /**
      * 账户类型转为授权。
      *

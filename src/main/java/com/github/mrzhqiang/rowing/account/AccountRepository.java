@@ -7,7 +7,6 @@ import org.springframework.data.rest.core.annotation.RestResource;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import javax.annotation.Nonnull;
-import javax.annotation.security.PermitAll;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,7 +34,6 @@ public interface AccountRepository extends BaseRepository<Account> {
      * @param username 用户名。
      * @return 可选的账户。
      */
-    @PermitAll
     @RestResource(exported = false)
     Optional<Account> findByUsername(String username);
 

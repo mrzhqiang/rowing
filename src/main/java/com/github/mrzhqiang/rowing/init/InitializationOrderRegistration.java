@@ -3,6 +3,7 @@ package com.github.mrzhqiang.rowing.init;
 import com.github.mrzhqiang.rowing.dict.DictAutoInitializer;
 import com.github.mrzhqiang.rowing.account.AccountAutoInitializer;
 import com.github.mrzhqiang.rowing.menu.MenuAutoInitializer;
+import com.github.mrzhqiang.rowing.role.RoleAutoInitializer;
 import com.github.mrzhqiang.rowing.setting.SettingAutoInitializer;
 
 import javax.servlet.Filter;
@@ -27,6 +28,7 @@ final class InitializationOrderRegistration {
         // 以下是具有严格顺序要求的自动初始化实现
         put(DictAutoInitializer.class, order.next());
         put(SettingAutoInitializer.class, order.next());
+        put(RoleAutoInitializer.class, order.next());
         put(MenuAutoInitializer.class, order.next());
         put(AccountAutoInitializer.class, order.next());
     }

@@ -127,10 +127,10 @@ public class DictServiceJpaImpl implements DictService {
 
     @SneakyThrows
     private void syncExcel(String excelFile) {
-        Preconditions.checkNotNull(excelFile, "excel file == null");
+        Preconditions.checkNotNull(excelFile, "dict excel file == null");
         File file = ResourceUtils.getFile(excelFile);
-        Preconditions.checkArgument(file.exists(), "excel file must be exists");
-        Preconditions.checkArgument(!file.isDirectory(), "excel file must be not directory");
+        Preconditions.checkArgument(file.exists(), "dict excel file must be exists");
+        Preconditions.checkArgument(!file.isDirectory(), "dict excel file must be not directory");
 
         // WorkbookFactory 支持创建 HSSFWorkbook 和 XSSFWorkbook 实例
         try (Workbook workbook = WorkbookFactory.create(file)) {

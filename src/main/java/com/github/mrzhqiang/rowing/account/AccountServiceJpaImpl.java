@@ -47,6 +47,7 @@ public class AccountServiceJpaImpl implements AccountService {
         this.userService = userService;
     }
 
+    @RunAsSystem
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         if (Authentications.SYSTEM_USERNAME.equals(username)) {
@@ -64,6 +65,7 @@ public class AccountServiceJpaImpl implements AccountService {
                         I18nHolder.getAccessor().getMessage("AccountService.UsernameNotFoundException")));
     }
 
+    @RunAsSystem
     @Cacheable("account")
     @Override
     public Optional<Account> findByUsername(String username) {

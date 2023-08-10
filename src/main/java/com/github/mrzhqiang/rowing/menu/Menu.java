@@ -10,6 +10,7 @@ import lombok.ToString;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
@@ -45,7 +46,7 @@ public class Menu extends AuditableEntity {
      * 用于嵌套路由，生成路由的树级结构。
      */
     @ToString.Exclude
-    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "parent", orphanRemoval = true)
     private List<Menu> children = Lists.newArrayList();
 
     /**
@@ -55,9 +56,8 @@ public class Menu extends AuditableEntity {
      * <p>
      * 一般情况下和路径保持一致，可能以首字母大写的单词形式存在，比如 path 路径变成 Path 名称。
      */
-    @NotBlank
-    @Size(max = 48)
-    @Column(nullable = false, length = 48)
+    @Size(max = 50)
+    @Column(length = 50)
     private String name;
     /**
      * 路径。
@@ -67,8 +67,8 @@ public class Menu extends AuditableEntity {
      * 通常可以不限制长度，但为了与名称保持一致，所以选择限制为名称的两倍长度。
      */
     @NotBlank
-    @Size(max = 48)
-    @Column(nullable = false, length = 48)
+    @Size(max = 50)
+    @Column(nullable = false, length = 50)
     private String path;
     /**
      * 完整路径。
@@ -111,7 +111,7 @@ public class Menu extends AuditableEntity {
      * <p>
      * 隐藏的菜单不在侧边栏展示，默认为 false 表示不隐藏。
      */
-    private boolean hidden = false;
+    private Boolean hidden = false;
     /**
      * 是否始终显示。
      * <p>
@@ -121,54 +121,10 @@ public class Menu extends AuditableEntity {
      */
     private Boolean alwaysShow;
     /**
-     * 标题。
-     * <p>
-     * 标题一般展示在侧边栏以及面包屑中，由于是用户自己创建的内容，通常不支持国际化，也就意味着输入什么内容，就展示什么内容。
-     * <p>
-     * 未来或许可以借助第三方接口，来实现对应的内容国际化功能，然后再开发自己的内容国际化功能。
+     * 元数据。
      */
-    @NotBlank
-    @Size(max = 16)
-    @Column(nullable = false, length = 16)
-    private String title;
-    /**
-     * 图标。
-     * <p>
-     * 展示在标题之前的图标，属于内置数据，但不作为枚举实现。
-     * <p>
-     * 可以在前端硬编码一个图标库列表，支持预览选择，得到相应的图标字符串，传参到后端进行保存。
-     * <p>
-     * 只需要匹配对应的图标字符串，即显示对应的图标。
-     */
-    @Size(max = 50)
-    @Column(length = 50)
-    private String icon;
-    /**
-     * 不缓存。
-     * <p>
-     * 如果设置为 true 则页面将不会被缓存，默认为 false。
-     */
-    private boolean noCache = false;
-    /**
-     * 固定。
-     * <p>
-     * 如果设置为 true 则在标签栏中固定显示，不能移除。
-     */
-    private Boolean affix;
-    /**
-     * 面包屑。
-     * <p>
-     * 如果设置为 false 则在面包屑中隐藏，默认为 true。
-     */
-    private boolean breadcrumb = true;
-    /**
-     * 活动菜单。
-     * <p>
-     * 如果设置了路径，则在侧边栏高亮匹配到的路径。
-     */
-    @Size(max = 1024)
-    @Column(length = 1024)
-    private String activeMenu;
+    @Embedded
+    private MenuMeta meta;
     /**
      * 排序。
      * <p>
@@ -180,14 +136,14 @@ public class Menu extends AuditableEntity {
      * <p>
      * 未启用的菜单，将不返回数据给前端，默认为启用。
      */
-    private boolean enabled = true;
+    private Boolean enabled = true;
 
     /**
      * 菜单资源列表。
      */
     @JsonIgnore
     @ToString.Exclude
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "menu", orphanRemoval = true)
+    @OneToMany(mappedBy = "menu", orphanRemoval = true)
     private List<MenuResource> resourceList = Lists.newArrayList();
 
     /**
@@ -197,7 +153,7 @@ public class Menu extends AuditableEntity {
      */
     @JsonIgnore
     @ToString.Exclude
-    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "menuList")
+    @ManyToMany(mappedBy = "menuList")
     private List<Role> roleList = Lists.newArrayList();
 
 }

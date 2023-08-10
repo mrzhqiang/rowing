@@ -9,32 +9,45 @@ const tableRouter = {
   name: 'Table',
   meta: {
     title: 'Table',
-    icon: 'table'
+    icon: 'table',
+    roles: ['ADMIN']
   },
   children: [
     {
       path: 'dynamic-table',
       component: () => import('@/views/table/dynamic-table/index'),
       name: 'DynamicTable',
-      meta: {title: 'dynamicTable'}
+      meta: {
+        title: 'dynamicTable',
+        roles: ['ADMIN']
+      }
     },
     {
       path: 'drag-table',
       component: () => import('@/views/table/drag-table'),
       name: 'DragTable',
-      meta: {title: 'dragTable'}
+      meta: {
+        title: 'dragTable',
+        roles: ['ADMIN']
+      }
     },
     {
       path: 'inline-edit-table',
       component: () => import('@/views/table/inline-edit-table'),
       name: 'InlineEditTable',
-      meta: {title: 'inlineEditTable'}
+      meta: {
+        title: 'inlineEditTable',
+        roles: ['ADMIN']
+      }
     },
     {
       path: 'complex-table',
       component: () => import('@/views/table/complex-table'),
       name: 'ComplexTable',
-      meta: {title: 'complexTable'}
+      meta: {
+        title: 'complexTable',
+        roles: ['ADMIN']
+      }
     }
   ]
 };

@@ -10,10 +10,10 @@ public interface UserService {
     /**
      * 通过所属账户，找到用户信息。
      *
-     * @param owner 所属账户。
+     * @param username 用户名。
      * @return 用户信息数据。
      */
-    UserInfoData findByOwner(Account owner);
+    UserInfoData findByUsername(String username);
 
     void createForAdmin(Account admin);
 }

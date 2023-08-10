@@ -31,6 +31,7 @@ public class InitTaskLog extends AuditableEntity {
      * <p>
      * 记录任务执行结果，如果任务失败，则记录当前异常原因。
      */
+    @Column(length = 500)
     private String message;
     /**
      * 踪迹。

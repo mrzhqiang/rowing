@@ -1,11 +1,13 @@
 package com.github.mrzhqiang.rowing.util;
 
 import com.github.mrzhqiang.helper.Exceptions;
+import com.github.mrzhqiang.rowing.init.InitializationException;
 import com.google.common.base.Strings;
 import org.springframework.util.ObjectUtils;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -25,6 +27,9 @@ public final class Validations {
      * @return 异常消息。
      */
     public static String findMessage(Exception e) {
+        if (e instanceof InitializationException) {
+            e = (Exception) Optional.ofNullable(e.getCause()).orElse(e);
+        }
         if (e instanceof ConstraintViolationException) {
             Set<ConstraintViolation<?>> violationSet = ((ConstraintViolationException) e).getConstraintViolations();
             if (!ObjectUtils.isEmpty(violationSet)) {

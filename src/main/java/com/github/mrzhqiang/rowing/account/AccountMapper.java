@@ -2,6 +2,7 @@ package com.github.mrzhqiang.rowing.account;
 
 import com.github.mrzhqiang.rowing.domain.AccountType;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 /**
  * 账户映射器。
@@ -29,7 +30,25 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring", imports = {AccountType.class})
 public interface AccountMapper {
 
+    @Mapping(target = "user", ignore = true)
+    @Mapping(target = "type", ignore = true)
+    @Mapping(target = "thirdUserList", ignore = true)
+    @Mapping(target = "roleList", ignore = true)
+    @Mapping(target = "passwordExpired", ignore = true)
+    @Mapping(target = "locked", ignore = true)
+    @Mapping(target = "failedCount", ignore = true)
+    @Mapping(target = "expired", ignore = true)
+    @Mapping(target = "disabled", ignore = true)
     Account toEntity(LoginForm form);
 
+    @Mapping(target = "user", ignore = true)
+    @Mapping(target = "type", ignore = true)
+    @Mapping(target = "thirdUserList", ignore = true)
+    @Mapping(target = "roleList", ignore = true)
+    @Mapping(target = "passwordExpired", ignore = true)
+    @Mapping(target = "locked", ignore = true)
+    @Mapping(target = "failedCount", ignore = true)
+    @Mapping(target = "expired", ignore = true)
+    @Mapping(target = "disabled", ignore = true)
     Account toEntity(RegisterForm form);
 }

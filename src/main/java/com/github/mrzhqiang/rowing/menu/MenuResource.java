@@ -3,10 +3,10 @@ package com.github.mrzhqiang.rowing.menu;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.mrzhqiang.rowing.domain.AuditableEntity;
 import com.github.mrzhqiang.rowing.role.Role;
+import com.google.common.collect.Lists;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.apache.commons.compress.utils.Lists;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.CascadeType;
@@ -62,7 +62,7 @@ public class MenuResource extends AuditableEntity implements GrantedAuthority {
      */
     @JsonIgnore
     @ToString.Exclude
-    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "menuResourceList")
+    @ManyToMany(mappedBy = "menuResourceList")
     private List<Role> roleList = Lists.newArrayList();
 
 }

@@ -8,6 +8,7 @@ import com.github.mrzhqiang.rowing.domain.TaskStatus;
 import com.github.mrzhqiang.rowing.domain.TaskType;
 import com.github.mrzhqiang.rowing.i18n.I18nHolder;
 import com.github.mrzhqiang.rowing.util.Environments;
+import com.github.mrzhqiang.rowing.util.Validations;
 import com.google.common.base.Stopwatch;
 import com.google.common.base.Strings;
 import lombok.extern.slf4j.Slf4j;
@@ -159,7 +160,7 @@ public class InitTaskServiceJpaImpl implements InitTaskService {
             TaskStatus status = TaskMode.EACH.equals(initializer.getMode())
                     ? TaskStatus.DEFAULT : TaskStatus.FAILED;
             task.setStatus(status);
-            String cause = Exceptions.ofMessage(e);
+            String cause = Validations.findMessage(e);
             String trace = Exceptions.ofTrace(e);
             String failedMessage = I18nHolder.getAccessor().getMessage(
                     "InitTaskService.execute.failure", new Object[]{name, cause},

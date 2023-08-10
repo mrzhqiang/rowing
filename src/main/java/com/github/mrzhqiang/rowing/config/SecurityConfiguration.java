@@ -35,7 +35,7 @@ import javax.servlet.http.HttpServletResponse;
  * 安全配置。
  */
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true, jsr250Enabled = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 @EnableConfigurationProperties({SecurityProperties.class})
 @Configuration
 public class SecurityConfiguration {
@@ -112,11 +112,11 @@ public class SecurityConfiguration {
                         .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
                 .sessionManagement(managementConfigurer -> managementConfigurer
                         .invalidSessionStrategy((request, response) ->
-                                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "invalidSessionStrategy"))
+                                response.sendError(HttpStatus.FORBIDDEN.value(), "invalidSessionStrategy"))
                         .sessionConcurrency(controlConfigurer -> controlConfigurer
                                 .maximumSessions(sessionProperties.getMaxSession())
                                 .expiredSessionStrategy(event ->
-                                        event.getResponse().sendError(HttpServletResponse.SC_UNAUTHORIZED, "expiredSessionStrategy"))))
+                                        event.getResponse().sendError(HttpStatus.FORBIDDEN.value(), "expiredSessionStrategy"))))
                 .logout(logoutConfigurer -> logoutConfigurer
                         .logoutUrl(securityProperties.getLogoutPath())
                         .logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler())

@@ -21,8 +21,8 @@ public class UserServiceJpaImpl implements UserService {
     }
 
     @Override
-    public UserInfoData findByOwner(Account owner) {
-        return repository.findByOwner(owner)
+    public UserInfoData findByUsername(String username) {
+        return repository.findByOwner_Username(username)
                 .map(mapper::toData)
                 .orElse(null);
     }

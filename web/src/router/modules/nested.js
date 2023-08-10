@@ -9,40 +9,56 @@ const nestedRouter = {
   name: 'Nested',
   meta: {
     title: 'nested',
-    icon: 'nested'
+    icon: 'nested',
+    roles: ['ADMIN']
   },
   children: [
     {
       path: 'menu1',
       component: () => import('@/views/nested/menu1/index'), // Parent router-view
       name: 'Menu1',
-      meta: {title: 'menu1'},
+      meta: {
+        title: 'menu1',
+        roles: ['ADMIN']
+      },
       redirect: '/nested/menu1/menu1-1',
       children: [
         {
           path: 'menu1-1',
           component: () => import('@/views/nested/menu1/menu1-1'),
           name: 'Menu1-1',
-          meta: {title: 'menu1-1'}
+          meta: {
+            title: 'menu1-1',
+            roles: ['ADMIN']
+          }
         },
         {
           path: 'menu1-2',
           component: () => import('@/views/nested/menu1/menu1-2'),
           name: 'Menu1-2',
           redirect: '/nested/menu1/menu1-2/menu1-2-1',
-          meta: {title: 'menu1-2'},
+          meta: {
+            title: 'menu1-2',
+            roles: ['ADMIN']
+          },
           children: [
             {
               path: 'menu1-2-1',
               component: () => import('@/views/nested/menu1/menu1-2/menu1-2-1'),
               name: 'Menu1-2-1',
-              meta: {title: 'menu1-2-1'}
+              meta: {
+                title: 'menu1-2-1',
+                roles: ['ADMIN']
+              }
             },
             {
               path: 'menu1-2-2',
               component: () => import('@/views/nested/menu1/menu1-2/menu1-2-2'),
               name: 'Menu1-2-2',
-              meta: {title: 'menu1-2-2'}
+              meta: {
+                title: 'menu1-2-2',
+                roles: ['ADMIN']
+              }
             }
           ]
         },
@@ -50,7 +66,10 @@ const nestedRouter = {
           path: 'menu1-3',
           component: () => import('@/views/nested/menu1/menu1-3'),
           name: 'Menu1-3',
-          meta: {title: 'menu1-3'}
+          meta: {
+            title: 'menu1-3',
+            roles: ['ADMIN']
+          }
         }
       ]
     },
@@ -58,7 +77,10 @@ const nestedRouter = {
       path: 'menu2',
       name: 'Menu2',
       component: () => import('@/views/nested/menu2/index'),
-      meta: {title: 'menu2'}
+      meta: {
+        title: 'menu2',
+        roles: ['ADMIN']
+      }
     }
   ]
 };

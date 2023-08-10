@@ -8,6 +8,7 @@ import com.github.mrzhqiang.rowing.session.SessionDetailsService;
 import com.github.mrzhqiang.rowing.session.Sessions;
 import com.github.mrzhqiang.rowing.util.Authentications;
 import com.github.mrzhqiang.rowing.util.Jsons;
+import com.github.mrzhqiang.rowing.util.Validations;
 import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
@@ -97,7 +98,7 @@ public class ActionAspect {
         }
         if (exception != null) {
             state = ActionState.FAILED;
-            resultContent = Exceptions.ofMessage(exception);
+            resultContent = Validations.findMessage(exception);
         }
 
         ActionLog actionLog = new ActionLog();
