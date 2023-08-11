@@ -16,15 +16,17 @@ import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.UniqueConstraint;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
@@ -83,7 +85,7 @@ public class Account extends AuditableEntity implements UserDetails {
      * <p>
      * 3. 其他规则：类似学生学号，结合前缀+中缀+随机字符串后缀，组成用户名。
      */
-    @Column(updatable = false, unique = true, nullable = false, length = 24)
+    @Column(updatable = false, unique = true, nullable = false, length = MAX_USERNAME_LENGTH)
     private String username;
     /**
      * 密码。
@@ -105,7 +107,7 @@ public class Account extends AuditableEntity implements UserDetails {
      */
     @Builder.Default
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = false, length = MAX_ENUM_NAME_LENGTH)
     private AccountType type = AccountType.USER;
     /**
      * 账户失效期限。
@@ -155,27 +157,29 @@ public class Account extends AuditableEntity implements UserDetails {
     @ToString.Exclude
     @OneToOne(mappedBy = "owner", orphanRemoval = true)
     private User user;
-
     /**
      * 第三方用户列表。
      * <p>
      * 一对多关联的第三方用户列表，通常是第三方平台注册本系统账户时关联的第三方用户信息。
      */
-    @Builder.Default
     @JsonIgnore
+    @Builder.Default
     @ToString.Exclude
     @OneToMany(mappedBy = "account", orphanRemoval = true)
     private List<ThirdUser> thirdUserList = Lists.newArrayList();
-
     /**
      * 角色列表。
      * <p>
      * 实际上表示账户拥有的菜单及菜单资源列表，换句话说，就是账户的权限列表。
      */
-    @Builder.Default
     @JsonIgnore
+    @Builder.Default
     @ToString.Exclude
-    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "accountList")
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "account_roles",
+            joinColumns = @JoinColumn(name = "account_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"),
+            uniqueConstraints = @UniqueConstraint(columnNames = {"account_id", "role_id"}))
     private List<Role> roleList = Lists.newArrayList();
 
     /**

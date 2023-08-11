@@ -32,6 +32,8 @@ import java.time.Instant;
 @EntityListeners(AuditingEntityListener.class)
 public class ExceptionLog extends BaseEntity {
 
+    private static final long serialVersionUID = 8231870559049896049L;
+
     /**
      * 状态。
      * <p>
@@ -51,7 +53,7 @@ public class ExceptionLog extends BaseEntity {
      *
      * @see HttpStatus#value()
      */
-    private int status;
+    private Integer status;
     /**
      * 错误。
      * <p>
@@ -114,7 +116,7 @@ public class ExceptionLog extends BaseEntity {
      *
      * @see Exception#getMessage()
      */
-    @Column(length = 500)
+    @Column(length = MAX_EXCEPTION_MESSAGE_LENGTH)
     private String message;
     /**
      * 代码。
@@ -155,7 +157,7 @@ public class ExceptionLog extends BaseEntity {
      * @see UserDetails#getUsername()
      */
     @CreatedBy
-    @Column(length = 24)
+    @Column(length = MAX_USERNAME_LENGTH)
     private String operator;
 
     protected Instant getTimestamp() {

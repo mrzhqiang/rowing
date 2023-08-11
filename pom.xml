@@ -20,6 +20,7 @@
 
     <properties>
         <java.version>1.8</java.version>
+        <spring-boot.version>2.7.10</spring-boot.version>
 
         <bitwalker.version>1.21</bitwalker.version>
         <geoip2.version>2.15.0</geoip2.version>
@@ -109,12 +110,14 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+            <scope>compile</scope>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <!-- https://docs.spring.io/spring-boot/docs/2.7.10/reference/html/configuration-metadata.html#appendix.configuration-metadata.annotation-processor -->
             <artifactId>spring-boot-configuration-processor</artifactId>
+            <scope>compile</scope>
             <optional>true</optional>
         </dependency>
 
@@ -183,6 +186,7 @@
             <!-- 编译时对象映射器 -->
             <artifactId>mapstruct</artifactId>
             <version>${org.mapstruct.version}</version>
+            <scope>compile</scope>
             <optional>true</optional>
         </dependency>
         <dependency>
@@ -293,6 +297,11 @@
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok-mapstruct-binding</artifactId>
                             <version>${lombok-mapstruct-binding.version}</version>
+                        </path>
+                        <path>
+                            <groupId>org.springframework.boot</groupId>
+                            <artifactId>spring-boot-configuration-processor</artifactId>
+                            <version>${spring-boot.version}</version>
                         </path>
                     </annotationProcessorPaths>
                 </configuration>

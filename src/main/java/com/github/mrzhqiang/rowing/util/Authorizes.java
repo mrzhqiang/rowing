@@ -50,16 +50,17 @@ public final class Authorizes {
     /**
      * 游客角色授权。
      */
+    @SuppressWarnings("unused")
     public static final String HAS_AUTHORITY_ANONYMOUS = "hasAuthority('ANONYMOUS')";
 
     /**
-     * 等级制度。
+     * 层次结构。
      * <p>
      * 表示某一授权可以继承其他授权的所有权限，比方说经理也是员工，同样可以拥有员工的所有权限。
      * <p>
      * 因此，管理员可以包含非管理员的所有权限。
      *
-     * @return 等级制度 Map 映射关系。
+     * @return 层次结构 Map 映射关系。
      */
     public static Map<String, List<String>> hierarchy() {
         Map<String, List<String>> map = Maps.newHashMap();

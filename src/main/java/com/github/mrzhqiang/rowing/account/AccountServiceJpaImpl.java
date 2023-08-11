@@ -5,12 +5,12 @@ import com.github.mrzhqiang.helper.random.RandomStrings;
 import com.github.mrzhqiang.rowing.domain.AccountType;
 import com.github.mrzhqiang.rowing.domain.ThirdUserType;
 import com.github.mrzhqiang.rowing.i18n.I18nHolder;
+import com.github.mrzhqiang.rowing.role.RoleService;
 import com.github.mrzhqiang.rowing.user.UserService;
 import com.github.mrzhqiang.rowing.util.Authentications;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -36,15 +36,18 @@ public class AccountServiceJpaImpl implements AccountService {
     private final AccountRepository repository;
     private final PasswordEncoder passwordEncoder;
     private final UserService userService;
+    private final RoleService roleService;
 
     public AccountServiceJpaImpl(AccountMapper mapper,
                                  AccountRepository repository,
                                  PasswordEncoder passwordEncoder,
-                                 UserService userService) {
+                                 UserService userService,
+                                 RoleService roleService) {
         this.mapper = mapper;
         this.repository = repository;
         this.passwordEncoder = passwordEncoder;
         this.userService = userService;
+        this.roleService = roleService;
     }
 
     @RunAsSystem
@@ -66,7 +69,6 @@ public class AccountServiceJpaImpl implements AccountService {
     }
 
     @RunAsSystem
-    @Cacheable("account")
     @Override
     public Optional<Account> findByUsername(String username) {
         if (Authentications.SYSTEM_USERNAME.equals(username)) {
@@ -83,7 +85,9 @@ public class AccountServiceJpaImpl implements AccountService {
     @Override
     public void init() {
         Account admin = repository.findByUsername(Authentications.ADMIN_USERNAME).orElseGet(this::createAdminAccount);
-        userService.createForAdmin(admin);
+        userService.bindingAdmin(admin);
+        roleService.bindingAccount(admin);
+        repository.save(admin);
     }
 
     private Account createAdminAccount() {

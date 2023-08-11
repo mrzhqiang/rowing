@@ -21,6 +21,8 @@ import javax.persistence.ManyToOne;
 @Entity
 public class InitTaskLog extends AuditableEntity {
 
+    private static final long serialVersionUID = -3132150344457512287L;
+
     /**
      * 记录所属任务。
      */
@@ -31,7 +33,7 @@ public class InitTaskLog extends AuditableEntity {
      * <p>
      * 记录任务执行结果，如果任务失败，则记录当前异常原因。
      */
-    @Column(length = 500)
+    @Column(length = MAX_EXCEPTION_MESSAGE_LENGTH)
     private String message;
     /**
      * 踪迹。

@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -28,13 +27,15 @@ import javax.validation.constraints.Size;
 @Entity
 public class ThirdUser extends AuditableEntity {
 
+    private static final long serialVersionUID = 6978802775118282086L;
+
     /**
      * 第三方用户类型。
      * <p>
      * 属于必填项，与统一标识符结合，作为第三方平台用户是否已在本系统进行绑定的依据。
      */
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = false, length = MAX_ENUM_NAME_LENGTH)
     private ThirdUserType type;
     /**
      * 统一标识符。
@@ -47,7 +48,7 @@ public class ThirdUser extends AuditableEntity {
     /**
      * 绑定账户。
      */
-    @ManyToOne(optional = false, cascade = CascadeType.ALL)
+    @ManyToOne(optional = false)
     private Account account;
 
 }

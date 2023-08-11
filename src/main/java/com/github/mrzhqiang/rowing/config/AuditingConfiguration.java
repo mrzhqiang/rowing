@@ -17,6 +17,12 @@ import java.util.Optional;
 @Configuration
 public class AuditingConfiguration {
 
+    /**
+     * 用来填充审计字段。
+     *
+     * @see org.springframework.data.annotation.CreatedBy
+     * @see org.springframework.data.annotation.LastModifiedBy
+     */
     @Bean
     public AuditorAware<String> auditor() {
         // 默认情况下返回 system 用户名称，如果存在已认证用户，则返回已认证用户名称

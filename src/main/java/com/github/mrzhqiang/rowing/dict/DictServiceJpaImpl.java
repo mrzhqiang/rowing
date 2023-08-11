@@ -1,5 +1,6 @@
 package com.github.mrzhqiang.rowing.dict;
 
+import com.github.mrzhqiang.rowing.config.DictProperties;
 import com.github.mrzhqiang.rowing.domain.DictType;
 import com.github.mrzhqiang.rowing.domain.Logic;
 import com.github.mrzhqiang.rowing.i18n.I18nHolder;
@@ -14,7 +15,6 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.data.rest.webmvc.json.EnumTranslator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,11 +29,7 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-/**
- * 字典服务的 JPA 实现。
- */
 @Slf4j
-@EnableConfigurationProperties(DictProperties.class)
 @Service
 public class DictServiceJpaImpl implements DictService {
 
@@ -108,7 +104,7 @@ public class DictServiceJpaImpl implements DictService {
                 .orElse(Maps.newHashMap());
         // 枚举常量不可能有重复值，所以不需要再 put 到 itemMap 中
         for (Enum<?> enumConstant : enumClass.getEnumConstants()) {
-            // 通过枚举翻译器（即 rest-message.properties 国际化文件）枚举值对应的标签
+            // 通过枚举翻译器（即 rest-messages_[lang].properties 国际化文件）枚举值对应的标签
             // 比如 com.xxx.EnumClassName.ENUM_VALUE
             String label = enumTranslator.asText(enumConstant);
             String itemValue = enumConstant.name();

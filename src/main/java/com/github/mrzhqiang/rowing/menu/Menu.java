@@ -2,17 +2,14 @@ package com.github.mrzhqiang.rowing.menu;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.mrzhqiang.rowing.domain.AuditableEntity;
-import com.github.mrzhqiang.rowing.role.Role;
 import com.google.common.collect.Lists;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotBlank;
@@ -28,6 +25,8 @@ import java.util.List;
 @Entity
 public class Menu extends AuditableEntity {
 
+    private static final long serialVersionUID = 2321642972583403963L;
+
     /**
      * 非重定向值，表示在前端中，点击当前菜单的面包屑时，不具备跳转功能。
      */
@@ -38,7 +37,7 @@ public class Menu extends AuditableEntity {
      * <p>
      * 用于嵌套路由。
      */
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     private Menu parent;
     /**
      * 子级菜单。
@@ -145,15 +144,5 @@ public class Menu extends AuditableEntity {
     @ToString.Exclude
     @OneToMany(mappedBy = "menu", orphanRemoval = true)
     private List<MenuResource> resourceList = Lists.newArrayList();
-
-    /**
-     * 菜单对应的角色列表。
-     * <p>
-     * 主要可以返回给前端，当前菜单支持哪些角色。
-     */
-    @JsonIgnore
-    @ToString.Exclude
-    @ManyToMany(mappedBy = "menuList")
-    private List<Role> roleList = Lists.newArrayList();
 
 }

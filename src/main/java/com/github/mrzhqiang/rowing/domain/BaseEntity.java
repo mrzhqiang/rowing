@@ -33,10 +33,24 @@ import java.util.Objects;
  * 同时还可以被 <a href="https://docs.spring.io/spring-data/rest/docs/current/reference/html/#conditional">Spring Data Rest</a>
  * 框架用于 API 接口的响应 Header 标记，其中主要是 ETag 标记，它被用于更新时的乐观锁检测，以便于预测本次更新请求是否执行成功。
  */
+@SuppressWarnings("serial")
 @Getter
 @Setter
 @MappedSuperclass
 public abstract class BaseEntity implements Serializable {
+
+    /**
+     * 用户名最大长度。
+     */
+    public static final int MAX_USERNAME_LENGTH = 24;
+    /**
+     * 枚举名称最大长度。
+     */
+    public static final int MAX_ENUM_NAME_LENGTH = 50;
+    /**
+     * 异常消息最大长度。
+     */
+    public static final int MAX_EXCEPTION_MESSAGE_LENGTH = 500;
 
     /**
      * ID 编号。

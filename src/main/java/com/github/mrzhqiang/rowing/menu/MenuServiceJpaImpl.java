@@ -1,11 +1,11 @@
 package com.github.mrzhqiang.rowing.menu;
 
+import com.github.mrzhqiang.rowing.config.MenuProperties;
 import com.github.mrzhqiang.rowing.role.RoleService;
 import com.github.mrzhqiang.rowing.util.Jsons;
 import com.google.common.base.Preconditions;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -14,11 +14,7 @@ import org.springframework.util.ResourceUtils;
 import java.io.File;
 import java.util.List;
 
-/**
- * 菜单服务的 JPA 实现。
- */
 @Slf4j
-@EnableConfigurationProperties(MenuProperties.class)
 @Service
 public class MenuServiceJpaImpl implements MenuService {
 
@@ -98,6 +94,7 @@ public class MenuServiceJpaImpl implements MenuService {
                 return;
             }
 
+            // 不想过度设计复杂的数据结构，去实现一个角色绑定多个菜单，逐个绑定感觉更清晰
             roles.forEach(it -> roleService.bindingMenu(it, menu));
         }
     }

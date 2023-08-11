@@ -22,6 +22,7 @@ import java.time.LocalDateTime;
  * <p>
  * 注意：如果需要记录操作日志，或者统计埋点信息，应单独创建相关数据表，而不是使用审计信息。
  */
+@SuppressWarnings("serial")
 @Getter
 @Setter
 @ToString(callSuper = true)
@@ -39,7 +40,7 @@ public abstract class AuditableEntity extends BaseEntity {
      * 要解决这个问题，必须将此字段排除在 ToString 之外。
      */
     @CreatedBy
-    @Column(length = 24)
+    @Column(length = MAX_USERNAME_LENGTH)
     private String createdBy;
     /**
      * 创建时间。
@@ -56,7 +57,7 @@ public abstract class AuditableEntity extends BaseEntity {
      * 要解决这个问题，必须将此字段排除在 ToString 之外。
      */
     @LastModifiedBy
-    @Column(length = 24)
+    @Column(length = MAX_USERNAME_LENGTH)
     private String lastModifiedBy;
     /**
      * 最近修改时间。

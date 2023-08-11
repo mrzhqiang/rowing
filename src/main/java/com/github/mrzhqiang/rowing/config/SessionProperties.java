@@ -5,6 +5,9 @@ import lombok.Setter;
 import lombok.ToString;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+/**
+ * 会话属性。
+ */
 @Getter
 @Setter
 @ToString
@@ -27,6 +30,9 @@ public class SessionProperties {
      */
     private RateLimiter rateLimiter;
 
+    /**
+     * 限流器属性。
+     */
     @Getter
     @Setter
     @ToString

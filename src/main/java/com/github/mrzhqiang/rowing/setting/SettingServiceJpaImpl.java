@@ -1,5 +1,6 @@
 package com.github.mrzhqiang.rowing.setting;
 
+import com.github.mrzhqiang.rowing.account.RunAsSystem;
 import com.github.mrzhqiang.rowing.domain.SettingTab;
 import com.github.mrzhqiang.rowing.domain.SettingType;
 import com.github.mrzhqiang.rowing.i18n.I18nHolder;
@@ -129,6 +130,7 @@ public class SettingServiceJpaImpl implements SettingService {
     }
 
     @Cacheable("setting")
+    @RunAsSystem
     @Override
     public Optional<Setting> findByName(String name) {
         return Optional.ofNullable(name).flatMap(repository::findByName);

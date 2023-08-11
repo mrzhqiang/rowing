@@ -4,11 +4,13 @@ import com.github.mrzhqiang.helper.time.Ages;
 import com.github.mrzhqiang.rowing.account.Account;
 import com.github.mrzhqiang.rowing.domain.AuditableEntity;
 import com.github.mrzhqiang.rowing.domain.Gender;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -30,8 +32,18 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @ToString(callSuper = true)
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
 public class User extends AuditableEntity {
+
+    private static final long serialVersionUID = -2118789360726189512L;
+
+    /**
+     * 用户昵称最大长度。
+     */
+    public static final int MAX_NICKNAME_LENGTH = 16;
 
     /**
      * 昵称。
@@ -41,8 +53,8 @@ public class User extends AuditableEntity {
      * 用户信息可以自己修改，所以在实体字段上增加验证注解。
      */
     @NotBlank
-    @Size(max = 16)
-    @Column(nullable = false, length = 16)
+    @Size(max = MAX_NICKNAME_LENGTH)
+    @Column(nullable = false, length = MAX_NICKNAME_LENGTH)
     private String nickname;
     /**
      * 头像。
@@ -62,7 +74,9 @@ public class User extends AuditableEntity {
      * <p>
      * 此时将设置为男性默认头像。
      */
+    @Builder.Default
     @Enumerated(EnumType.STRING)
+    @Column(length = MAX_ENUM_NAME_LENGTH)
     private Gender gender = Gender.UNKNOWN;
     /**
      * 生日。
@@ -73,7 +87,7 @@ public class User extends AuditableEntity {
     /**
      * 电子邮箱。
      */
-    @Email
+    @Email(regexp = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$")
     @Size(max = 500)
     @Column(length = 500)
     private String email;
@@ -100,7 +114,7 @@ public class User extends AuditableEntity {
      * <p>
      * 如果是通过第三方平台登录系统，且为首次登录，也要先注册账户，并通过第三方平台的相关资料生成用户，并关联对应的账户。
      */
-    @OneToOne(cascade = CascadeType.ALL, optional = false, orphanRemoval = true)
+    @OneToOne(optional = false)
     private Account owner;
 
 }

@@ -1,16 +1,15 @@
 package com.github.mrzhqiang.rowing.user;
 
-import org.mapstruct.BeanMapping;
+import com.github.mrzhqiang.helper.time.Ages;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring")
+@Mapper(imports = {Ages.class}, componentModel = "spring")
 public interface UserMapper {
 
-    @BeanMapping(ignoreByDefault = true)
-    @Mapping(target = "nickname", source = "nickname")
-    @Mapping(target = "avatar", source = "avatar")
-    @Mapping(target = "gender", source = "gender")
-    @Mapping(target = "introduction", source = "introduction")
+    @Mapping(target = "roles", ignore = true)
+    @Mapping(target = "menus", ignore = true)
+    @Mapping(target = "age", expression = "java( Ages.ofFullYear(user.getBirthday()) )")
     UserInfoData toData(User user);
+
 }

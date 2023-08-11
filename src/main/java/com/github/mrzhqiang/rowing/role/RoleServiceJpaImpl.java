@@ -1,5 +1,6 @@
 package com.github.mrzhqiang.rowing.role;
 
+import com.github.mrzhqiang.rowing.account.Account;
 import com.github.mrzhqiang.rowing.domain.AccountType;
 import com.github.mrzhqiang.rowing.menu.Menu;
 import org.springframework.data.rest.webmvc.json.EnumTranslator;
@@ -7,12 +8,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.util.List;
 import java.util.stream.Stream;
 
-/**
- * 角色服务的 JPA 实现。
- * <p>
- */
 @Service
 public class RoleServiceJpaImpl implements RoleService {
 
@@ -41,12 +39,34 @@ public class RoleServiceJpaImpl implements RoleService {
         repository.save(role);
     }
 
+    @Override
+    public void bindingAccount(Account account) {
+        if (account == null) {
+            return;
+        }
+
+        String role = account.getType().name();
+        repository.findByCode(role).ifPresent(it -> {
+            List<Role> roleList = account.getRoleList();
+            if (roleList.contains(it)) {
+                return;
+            }
+            // account 是角色的拥有方，通过它添加 role 并保存比较合适
+            // 如果在 role 中添加 account 并保存，不会正确建立关联关系
+            roleList.add(it);
+        });
+    }
+
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void bindingMenu(String roleCode, Menu menu) {
         if (StringUtils.hasText(roleCode) && menu != null) {
             repository.findByCode(roleCode).ifPresent(it -> {
-                it.getMenuList().add(menu);
+                List<Menu> menuList = it.getMenuList();
+                if (menuList.contains(menu)) {
+                    return;
+                }
+                menuList.add(menu);
                 repository.save(it);
             });
         }

@@ -10,6 +10,7 @@ spring:
     redis:
       key-prefix: "rowing:"
       enable-statistics: true
+      time-to-live: 1h
   jpa:
     hibernate:
       ddl-auto: update

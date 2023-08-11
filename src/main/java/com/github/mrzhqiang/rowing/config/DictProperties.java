@@ -1,4 +1,4 @@
-package com.github.mrzhqiang.rowing.dict;
+package com.github.mrzhqiang.rowing.config;
 
 import com.github.mrzhqiang.rowing.domain.DictType;
 import com.google.common.collect.ImmutableList;

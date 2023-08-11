@@ -1,6 +1,7 @@
 package com.github.mrzhqiang.rowing.util;
 
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.crypto.Cipher;
 import java.nio.charset.StandardCharsets;
@@ -16,6 +17,7 @@ import java.util.Base64;
 /**
  * RSA 解密工具。
  */
+@Slf4j
 public final class RSADecrypts {
     private RSADecrypts() {
         // no instances.
@@ -66,12 +68,16 @@ public final class RSADecrypts {
         return Base64.getEncoder().encodeToString(cipherText);
     }
 
-    @SneakyThrows
     public static String decrypt(String cipherText, PrivateKey privateKey) {
-        byte[] bytes = Base64.getDecoder().decode(cipherText);
-        Cipher decryptCipher = Cipher.getInstance("RSA");
-        decryptCipher.init(Cipher.DECRYPT_MODE, privateKey);
-        return new String(decryptCipher.doFinal(bytes), StandardCharsets.UTF_8);
+        try {
+            byte[] bytes = Base64.getDecoder().decode(cipherText);
+            Cipher decryptCipher = Cipher.getInstance("RSA");
+            decryptCipher.init(Cipher.DECRYPT_MODE, privateKey);
+            return new String(decryptCipher.doFinal(bytes), StandardCharsets.UTF_8);
+        } catch (Exception e) {
+            log.error("RSA 解密失败！将直接返回文本：" + cipherText, e);
+            return cipherText;
+        }
     }
 
 }

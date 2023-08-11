@@ -29,8 +29,6 @@ import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-import javax.servlet.http.HttpServletResponse;
-
 /**
  * 安全配置。
  */
@@ -49,6 +47,9 @@ public class SecurityConfiguration {
         this.sessionProperties = sessionProperties;
     }
 
+    /**
+     * 角色层次结构。
+     */
     @Bean
     public RoleHierarchy roleHierarchy() {
         RoleHierarchyImpl hierarchy = new RoleHierarchyImpl();
@@ -56,12 +57,19 @@ public class SecurityConfiguration {
         return hierarchy;
     }
 
+    /**
+     * 角色层次结构投票人。
+     * <p>
+     * 声明这个实例，才能具有层次结构。
+     */
     @Bean
     public RoleHierarchyVoter hierarchyVoter(RoleHierarchy hierarchy) {
-        // 声明这个实例，才能具有等级制度
         return new RoleHierarchyVoter(hierarchy);
     }
 
+    /**
+     * 注册验证码过滤器。
+     */
     @Bean
     public AuthenticationFilter registerKaptchaFilter(AuthenticationConfiguration configuration,
                                                       KaptchaAuthenticationConverter kaptchaConverter) throws Exception {
@@ -71,6 +79,9 @@ public class SecurityConfiguration {
         return filter;
     }
 
+    /**
+     * 登录验证码过滤器。
+     */
     @Bean
     public AuthenticationFilter loginKaptchaFilter(AuthenticationConfiguration configuration,
                                                    KaptchaAuthenticationConverter kaptchaConverter) throws Exception {
@@ -80,6 +91,9 @@ public class SecurityConfiguration {
         return filter;
     }
 
+    /**
+     * 网页安全自定义器。
+     */
     @Bean
     public WebSecurityCustomizer ignoring() {
         return web -> web.ignoring()
@@ -87,6 +101,9 @@ public class SecurityConfiguration {
                 .antMatchers(securityProperties.getIgnorePath());
     }
 
+    /**
+     * 安全过滤器链。
+     */
     @Bean
     public SecurityFilterChain webFilterChain(HttpSecurity http,
                                               AuthenticationFilter registerKaptchaFilter,
@@ -124,4 +141,5 @@ public class SecurityConfiguration {
                 .csrf().disable()
                 .build();
     }
+
 }

@@ -42,7 +42,16 @@ public interface SettingService {
     /**
      * 密码传输时的 RSA 公钥。
      */
+    @SuppressWarnings("unused")
     String PASSWORD_RSA_PUBLIC_KEY = "password-rsa-public-key";
+    /**
+     * 管理员电子邮箱。
+     */
+    String ADMIN_EMAIL = "admin-email";
+    /**
+     * 管理员电话号码。
+     */
+    String ADMIN_PHONE_NUMBER = "admin-phone-number";
 
     /**
      * 初始化系统设置。
@@ -58,4 +67,5 @@ public interface SettingService {
     Optional<Setting> findByName(String name);
 
     RSAKeyData createRsaKey();
+
 }

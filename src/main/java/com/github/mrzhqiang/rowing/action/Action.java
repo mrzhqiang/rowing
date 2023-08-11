@@ -9,6 +9,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * 操作。
+ */
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
@@ -17,6 +20,8 @@ public @interface Action {
 
     /**
      * 操作名称。
+     * <p>
+     * 建议最大不超过 50 个字符。
      *
      * @return 获取操作名称，用来记录到 ActionLog 实体的 action 字段。
      */

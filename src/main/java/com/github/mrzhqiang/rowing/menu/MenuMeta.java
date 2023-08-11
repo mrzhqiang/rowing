@@ -1,13 +1,18 @@
 package com.github.mrzhqiang.rowing.menu;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.github.mrzhqiang.rowing.role.Role;
+import com.google.common.collect.Lists;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.ManyToMany;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 /**
  * 菜单元数据。
@@ -19,6 +24,11 @@ import javax.validation.constraints.Size;
 public class MenuMeta {
 
     /**
+     * 菜单标题最大长度。
+     */
+    public static final int MAX_TITLE_LENGTH = 20;
+
+    /**
      * 标题。
      * <p>
      * 标题一般展示在侧边栏以及面包屑中，由于是用户自己创建的内容，通常不支持国际化，也就意味着输入什么内容，就展示什么内容。
@@ -26,8 +36,8 @@ public class MenuMeta {
      * 未来或许可以借助第三方接口，来实现对应的内容国际化功能，然后再开发自己的内容国际化功能。
      */
     @NotBlank
-    @Size(max = 50)
-    @Column(length = 50)
+    @Size(max = MAX_TITLE_LENGTH)
+    @Column(length = MAX_TITLE_LENGTH)
     private String title;
     /**
      * 图标。
@@ -67,5 +77,15 @@ public class MenuMeta {
     @Size(max = 1024)
     @Column(length = 1024)
     private String activeMenu;
+
+    /**
+     * 菜单对应的角色列表。
+     * <p>
+     * 主要可以返回给前端，当前菜单支持哪些角色。
+     */
+    @JsonIgnore
+    @ToString.Exclude
+    @ManyToMany(mappedBy = "menuList")
+    private List<Role> roleList = Lists.newArrayList();
 
 }

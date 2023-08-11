@@ -11,6 +11,10 @@ import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 /**
  * 字典项。
@@ -19,7 +23,19 @@ import javax.persistence.ManyToOne;
 @Setter
 @ToString(callSuper = true)
 @Entity
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"group_code", "value"})})
 public class DictItem extends AuditableEntity {
+
+    private static final long serialVersionUID = -8038113027410128044L;
+
+    /**
+     * 字典项标签最大长度。
+     */
+    public static final int MAX_LABEL_LENGTH = 100;
+    /**
+     * 字典项值最大长度。
+     */
+    public static final int MAX_VALUE_LENGTH = 50;
 
     /**
      * 标签。
@@ -30,14 +46,18 @@ public class DictItem extends AuditableEntity {
      * <p>
      * 对于自定义类型，则以管理员输入的内容为主。
      */
-    @Column(nullable = false, length = 100)
+    @NotBlank
+    @Size(max = MAX_LABEL_LENGTH)
+    @Column(nullable = false, length = MAX_LABEL_LENGTH)
     private String label;
     /**
      * 值。
      * <p>
      * 字典项所代表的值。
      */
-    @Column(nullable = false, length = 50)
+    @NotBlank
+    @Size(max = MAX_VALUE_LENGTH)
+    @Column(nullable = false, length = MAX_VALUE_LENGTH)
     private String value;
 
     /**

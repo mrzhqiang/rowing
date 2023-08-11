@@ -15,5 +15,5 @@ public interface UserService {
      */
     UserInfoData findByUsername(String username);
 
-    void createForAdmin(Account admin);
+    void bindingAdmin(Account admin);
 }

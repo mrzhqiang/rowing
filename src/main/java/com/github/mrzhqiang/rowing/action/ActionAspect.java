@@ -1,6 +1,5 @@
 package com.github.mrzhqiang.rowing.action;
 
-import com.github.mrzhqiang.helper.Exceptions;
 import com.github.mrzhqiang.rowing.domain.ActionState;
 import com.github.mrzhqiang.rowing.domain.ActionType;
 import com.github.mrzhqiang.rowing.session.SessionDetails;
@@ -21,6 +20,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.data.rest.webmvc.json.EnumTranslator;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -40,17 +40,20 @@ import java.util.Optional;
 @Component
 public class ActionAspect {
 
-    private static final String UNKNOWN_ACTION = "(unknown-action)";
-    private static final String PARAMETERS_TEMPLATE = "%s=%s";
     private static final char DOT_CHAR = ',';
+    private static final String PARAMETERS_TEMPLATE = "%s=%s";
+    private static final String NO_CONTENT = "(no-content)";
 
     private final ActionLogRepository repository;
     private final SessionDetailsService sessionDetailsService;
+    private final EnumTranslator translator;
 
     public ActionAspect(ActionLogRepository repository,
-                        SessionDetailsService sessionDetailsService) {
+                        SessionDetailsService sessionDetailsService,
+                        EnumTranslator translator) {
         this.repository = repository;
         this.sessionDetailsService = sessionDetailsService;
+        this.translator = translator;
     }
 
     @Pointcut("@annotation(com.github.mrzhqiang.rowing.action.Action)")
@@ -70,12 +73,15 @@ public class ActionAspect {
     public void handleAction(JoinPoint point, Object result, Exception exception) {
         Method targetMethod = ((MethodSignature) point.getSignature()).getMethod();
         Action methodAction = AnnotationUtils.findAnnotation(targetMethod, Action.class);
-        String action = Optional.ofNullable(methodAction).map(Action::value).orElse(UNKNOWN_ACTION);
         ActionType type = Optional.ofNullable(methodAction).map(Action::type).orElse(ActionType.NONE);
+        String action = Optional.ofNullable(methodAction).map(Action::value).orElseGet(() -> translator.asText(type));
 
         Class<?> targetClass = point.getTarget().getClass();
         String target = Optional.ofNullable(targetClass.getCanonicalName()).orElseGet(targetClass::getName);
+        target = target.substring(0, Math.min(ActionLog.MAX_CLASS_NAME_LENGTH, target.length()));
+
         String method = targetMethod.getName();
+        method = method.substring(0, Math.min(ActionLog.MAX_METHOD_NAME_LENGTH, method.length()));
 
         Parameter[] parameters = targetMethod.getParameters();
         Object[] args = point.getArgs();
@@ -87,11 +93,11 @@ public class ActionAspect {
         }
         String params = Joiner.on(DOT_CHAR).join(paramList);
         if (StringUtils.hasLength(params)) {
-            params = params.substring(0, Math.min(2000, params.length()));
+            params = params.substring(0, Math.min(ActionLog.MAX_PARAMS_LENGTH, params.length()));
         }
 
         ActionState state = ActionState.UNKNOWN;
-        String resultContent = "(no-content)";
+        String resultContent = NO_CONTENT;
         if (result != null) {
             state = ActionState.PASSING;
             resultContent = Jsons.prettyPrint(Jsons.toJson(result));
