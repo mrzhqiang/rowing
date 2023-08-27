@@ -3,6 +3,7 @@ package com.github.mrzhqiang.rowing.third;
 import com.github.mrzhqiang.rowing.account.Account;
 import com.github.mrzhqiang.rowing.domain.AuditableEntity;
 import com.github.mrzhqiang.rowing.domain.ThirdUserType;
+import com.github.mrzhqiang.rowing.util.Domains;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -35,7 +36,7 @@ public class ThirdUser extends AuditableEntity {
      * 属于必填项，与统一标识符结合，作为第三方平台用户是否已在本系统进行绑定的依据。
      */
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = MAX_ENUM_NAME_LENGTH)
+    @Column(nullable = false, length = Domains.ENUM_NAME_LENGTH)
     private ThirdUserType type;
     /**
      * 统一标识符。

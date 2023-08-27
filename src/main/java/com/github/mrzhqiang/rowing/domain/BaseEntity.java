@@ -40,19 +40,6 @@ import java.util.Objects;
 public abstract class BaseEntity implements Serializable {
 
     /**
-     * 用户名最大长度。
-     */
-    public static final int MAX_USERNAME_LENGTH = 24;
-    /**
-     * 枚举名称最大长度。
-     */
-    public static final int MAX_ENUM_NAME_LENGTH = 50;
-    /**
-     * 异常消息最大长度。
-     */
-    public static final int MAX_EXCEPTION_MESSAGE_LENGTH = 500;
-
-    /**
      * ID 编号。
      * <p>
      * 作为主键，拥有非空约束，使用自增长生成策略。

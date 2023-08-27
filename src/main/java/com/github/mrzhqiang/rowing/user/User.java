@@ -4,6 +4,7 @@ import com.github.mrzhqiang.helper.time.Ages;
 import com.github.mrzhqiang.rowing.account.Account;
 import com.github.mrzhqiang.rowing.domain.AuditableEntity;
 import com.github.mrzhqiang.rowing.domain.Gender;
+import com.github.mrzhqiang.rowing.util.Domains;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -41,11 +42,6 @@ public class User extends AuditableEntity {
     private static final long serialVersionUID = -2118789360726189512L;
 
     /**
-     * 用户昵称最大长度。
-     */
-    public static final int MAX_NICKNAME_LENGTH = 16;
-
-    /**
      * 昵称。
      * <p>
      * 为避免昵称过长，需要限制长度为 16 个字符。
@@ -53,8 +49,8 @@ public class User extends AuditableEntity {
      * 用户信息可以自己修改，所以在实体字段上增加验证注解。
      */
     @NotBlank
-    @Size(max = MAX_NICKNAME_LENGTH)
-    @Column(nullable = false, length = MAX_NICKNAME_LENGTH)
+    @Size(max = Domains.USER_NICKNAME_LENGTH)
+    @Column(nullable = false, length = Domains.USER_NICKNAME_LENGTH)
     private String nickname;
     /**
      * 头像。
@@ -65,7 +61,7 @@ public class User extends AuditableEntity {
      * <p>
      * 对于 text 文本类型的字段，通常占据 L + 2 个字节的空间，其中 L < 2^16 字节。
      */
-    @Column(columnDefinition = "text")
+    @Column(columnDefinition = Domains.TEXT_COLUMN_TYPE)
     private String avatar;
     /**
      * 性别。
@@ -76,7 +72,7 @@ public class User extends AuditableEntity {
      */
     @Builder.Default
     @Enumerated(EnumType.STRING)
-    @Column(length = MAX_ENUM_NAME_LENGTH)
+    @Column(length = Domains.ENUM_NAME_LENGTH)
     private Gender gender = Gender.UNKNOWN;
     /**
      * 生日。
@@ -88,23 +84,23 @@ public class User extends AuditableEntity {
      * 电子邮箱。
      */
     @Email(regexp = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$")
-    @Size(max = 500)
-    @Column(length = 500)
+    @Size(max = Domains.EMAIL_LENGTH)
+    @Column(length = Domains.EMAIL_LENGTH)
     private String email;
     /**
      * 电话号码。
      */
     @Pattern(regexp = "^\\+[0-9]{2}[0-9]{11}")
-    @Size(max = 20)
-    @Column(length = 20)
+    @Size(max = Domains.PHONE_NUMBER_LENGTH)
+    @Column(length = Domains.PHONE_NUMBER_LENGTH)
     private String phoneNumber;
     /**
      * 简介。
      * <p>
      * 简介的最大长度为 200 个字符。
      */
-    @Size(max = 200)
-    @Column(length = 200)
+    @Size(max = Domains.USER_INTRODUCTION_LENGTH)
+    @Column(length = Domains.USER_INTRODUCTION_LENGTH)
     private String introduction;
 
     /**

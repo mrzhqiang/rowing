@@ -1,6 +1,7 @@
 package com.github.mrzhqiang.rowing.dict;
 
 import com.github.mrzhqiang.rowing.domain.AuditableEntity;
+import com.github.mrzhqiang.rowing.util.Domains;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -29,15 +30,6 @@ public class DictItem extends AuditableEntity {
     private static final long serialVersionUID = -8038113027410128044L;
 
     /**
-     * 字典项标签最大长度。
-     */
-    public static final int MAX_LABEL_LENGTH = 100;
-    /**
-     * 字典项值最大长度。
-     */
-    public static final int MAX_VALUE_LENGTH = 50;
-
-    /**
      * 标签。
      * <p>
      * 标签是字典项的文字说明。
@@ -47,8 +39,8 @@ public class DictItem extends AuditableEntity {
      * 对于自定义类型，则以管理员输入的内容为主。
      */
     @NotBlank
-    @Size(max = MAX_LABEL_LENGTH)
-    @Column(nullable = false, length = MAX_LABEL_LENGTH)
+    @Size(max = Domains.DICT_LABEL_LENGTH)
+    @Column(nullable = false, length = Domains.DICT_LABEL_LENGTH)
     private String label;
     /**
      * 值。
@@ -56,8 +48,8 @@ public class DictItem extends AuditableEntity {
      * 字典项所代表的值。
      */
     @NotBlank
-    @Size(max = MAX_VALUE_LENGTH)
-    @Column(nullable = false, length = MAX_VALUE_LENGTH)
+    @Size(max = Domains.DICT_VALUE_LENGTH)
+    @Column(nullable = false, length = Domains.DICT_VALUE_LENGTH)
     private String value;
 
     /**

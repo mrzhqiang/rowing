@@ -1,5 +1,6 @@
-package com.github.mrzhqiang.rowing.session;
+package com.github.mrzhqiang.rowing.util;
 
+import com.github.mrzhqiang.rowing.session.SessionDetails;
 import org.springframework.web.context.request.RequestAttributes;
 import static org.springframework.web.context.request.RequestAttributes.REFERENCE_SESSION;
 import static org.springframework.web.context.request.RequestAttributes.SCOPE_SESSION;

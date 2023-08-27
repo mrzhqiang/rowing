@@ -1,5 +1,6 @@
 package com.github.mrzhqiang.rowing.domain;
 
+import com.github.mrzhqiang.rowing.util.Domains;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -40,7 +41,7 @@ public abstract class AuditableEntity extends BaseEntity {
      * 要解决这个问题，必须将此字段排除在 ToString 之外。
      */
     @CreatedBy
-    @Column(length = MAX_USERNAME_LENGTH)
+    @Column(length = Domains.USERNAME_LENGTH)
     private String createdBy;
     /**
      * 创建时间。
@@ -57,7 +58,7 @@ public abstract class AuditableEntity extends BaseEntity {
      * 要解决这个问题，必须将此字段排除在 ToString 之外。
      */
     @LastModifiedBy
-    @Column(length = MAX_USERNAME_LENGTH)
+    @Column(length = Domains.USERNAME_LENGTH)
     private String lastModifiedBy;
     /**
      * 最近修改时间。

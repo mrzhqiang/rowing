@@ -28,6 +28,7 @@ public interface MenuMapper {
     Menu toEntity(MenuData data);
 
     @Mapping(target = "meta.roles", source = "meta.roleList")
+    @Mapping(target = "parentId", source = "parent.id")
     MenuData toData(Menu menu);
 
     default List<String> convertRoleList(List<Role> roleList) {

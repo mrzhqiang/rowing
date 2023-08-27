@@ -1,7 +1,7 @@
 package com.github.mrzhqiang.rowing.exception;
 
-import com.github.mrzhqiang.helper.Exceptions;
 import com.github.mrzhqiang.rowing.domain.BaseEntity;
+import com.github.mrzhqiang.rowing.util.Domains;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -61,7 +61,7 @@ public class ExceptionLog extends BaseEntity {
      *
      * @see HttpStatus#getReasonPhrase()
      */
-    @Column(length = 100)
+    @Column(length = Domains.HTTP_STATUS_REASON_PHRASE_LENGTH)
     private String error;
     /**
      * 请求方法。
@@ -71,7 +71,7 @@ public class ExceptionLog extends BaseEntity {
      * @see org.springframework.http.HttpMethod
      * @see HttpServletRequest#getMethod()
      */
-    @Column(length = 10)
+    @Column(length = Domains.HTTP_METHOD_LENGTH)
     private String method;
     /**
      * 请求 URL。
@@ -84,21 +84,21 @@ public class ExceptionLog extends BaseEntity {
      *
      * @see HttpServletRequest#getRequestURL()
      */
-    @Column(length = 2 * 1024)
+    @Column(length = Domains.HTTP_URL_PATH_LENGTH)
     private String url;
     /**
      * 请求的查询参数。
      *
      * @see HttpServletRequest#getQueryString()
      */
-    @Column(length = 6 * 1024)
+    @Column(length = Domains.HTTP_URL_QUERY_LENGTH)
     private String query;
     /**
      * 请求的地址。
      *
      * @see HttpServletRequest#getRemoteAddr()
      */
-    @Column(length = 128)
+    @Column(length = Domains.IP_ADDRESS_LENGTH)
     private String address;
     /**
      * 请求的会话 ID。
@@ -107,7 +107,7 @@ public class ExceptionLog extends BaseEntity {
      *
      * @see HttpServletRequest#getRequestedSessionId()
      */
-    @Column(length = 36)
+    @Column(length = Domains.SESSION_ID_LENGTH)
     private String sessionId;
     /**
      * 消息。
@@ -116,7 +116,7 @@ public class ExceptionLog extends BaseEntity {
      *
      * @see Exception#getMessage()
      */
-    @Column(length = MAX_EXCEPTION_MESSAGE_LENGTH)
+    @Column(length = Domains.EXCEPTION_MESSAGE_LENGTH)
     private String message;
     /**
      * 代码。
@@ -125,7 +125,7 @@ public class ExceptionLog extends BaseEntity {
      * <p>
      * 这里保存一份异常代码，用于未来对异常情况进行分析时，提取经典的异常情况，用于公示。
      */
-    @Column(length = 20)
+    @Column(length = Domains.EXCEPTION_CODE_LENGTH)
     private String code;
     /**
      * 痕迹。
@@ -134,7 +134,7 @@ public class ExceptionLog extends BaseEntity {
      *
      * @see com.google.common.base.Throwables#getStackTraceAsString(Throwable)
      */
-    @Column(length = Exceptions.MAX_TRACE_LENGTH)
+    @Column(length = Domains.EXCEPTION_TRACE_LENGTH)
     private String trace;
     /**
      * 时间戳。
@@ -157,11 +157,7 @@ public class ExceptionLog extends BaseEntity {
      * @see UserDetails#getUsername()
      */
     @CreatedBy
-    @Column(length = MAX_USERNAME_LENGTH)
+    @Column(length = Domains.USERNAME_LENGTH)
     private String operator;
-
-    protected Instant getTimestamp() {
-        return timestamp;
-    }
 
 }

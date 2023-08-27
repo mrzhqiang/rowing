@@ -5,6 +5,7 @@ import com.github.mrzhqiang.rowing.account.Account;
 import com.github.mrzhqiang.rowing.domain.AuditableEntity;
 import com.github.mrzhqiang.rowing.menu.Menu;
 import com.github.mrzhqiang.rowing.menu.MenuResource;
+import com.github.mrzhqiang.rowing.util.Domains;
 import com.google.common.collect.Lists;
 import lombok.Getter;
 import lombok.Setter;
@@ -41,31 +42,18 @@ public class Role extends AuditableEntity implements GrantedAuthoritiesContainer
     private static final long serialVersionUID = -2682925657637319638L;
 
     /**
-     * 角色名称最大长度。
-     */
-    public static final int MAX_NAME_LENGTH = 24;
-    /**
-     * 角色代码最大长度。
-     */
-    public static final int MAX_CODE_LENGTH = 48;
-
-    /**
-     * 名称。
-     * <p>
-     * 唯一，必填，最大长度 24 个字符。
+     * 角色名称。
      */
     @NotBlank
-    @Size(max = MAX_NAME_LENGTH)
-    @Column(unique = true, nullable = false, length = MAX_NAME_LENGTH)
+    @Size(max = Domains.ROLE_NAME_LENGTH)
+    @Column(unique = true, nullable = false, length = Domains.ROLE_NAME_LENGTH)
     private String name;
     /**
-     * 代码。
-     * <p>
-     * 唯一，必填，最大长度 48 个字符。
+     * 角色代码。
      */
     @NotBlank
-    @Size(max = MAX_CODE_LENGTH)
-    @Column(unique = true, nullable = false, length = MAX_CODE_LENGTH)
+    @Size(max = Domains.ROLE_CODE_LENGTH)
+    @Column(unique = true, nullable = false, length = Domains.ROLE_CODE_LENGTH)
     private String code;
     /**
      * 是否不可变。

@@ -2,11 +2,15 @@ package com.github.mrzhqiang.rowing.menu;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * 菜单资源数据。
  */
 @Data
-public class MenuResourceData {
+public class MenuResourceData implements Serializable {
+
+    private static final long serialVersionUID = 3687600128449897237L;
 
     /**
      * 资源 ID

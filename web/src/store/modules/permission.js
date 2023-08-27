@@ -1,9 +1,9 @@
-import {asyncRoutes, constantRoutes} from '@/router';
+import {constantRoutes} from '@/router';
+import {listAllMenu} from '@/api/menu';
+import Layout from '@/layout/Layout';
 
 /**
  * Use meta.role to determine if the current user has permission
- * @param roles
- * @param route
  */
 function hasPermission(roles, route) {
   if (route.meta && route.meta.roles) {
@@ -15,10 +15,8 @@ function hasPermission(roles, route) {
 
 /**
  * Filter asynchronous routing tables by recursion
- * @param routes asyncRoutes
- * @param roles
  */
-export function filterAsyncRoutes(routes, roles) {
+function filterAsyncRoutes(routes, roles) {
   const res = [];
 
   routes.forEach(route => {
@@ -32,6 +30,72 @@ export function filterAsyncRoutes(routes, roles) {
   });
 
   return res;
+}
+
+const parseComponent = (view) => { // 路由懒加载
+  return (resolve) => require([`@/views/${view}`], resolve);
+};
+
+function parseMenus(menus) {
+  if (!menus || !menus.length) {
+    return [];
+  }
+
+  const routes = [];
+  menus.forEach(menu => {
+    const route = {
+      path: menu.path,
+      hidden: menu.hidden
+    };
+    if (menu.name) {
+      route.name = menu.name;
+    }
+    if (menu.parentId && menu.component) {
+      route.component = parseComponent(menu.component);
+    } else {
+      route.component = Layout;
+    }
+    if (menu.redirect) {
+      route.redirect = menu.redirect;
+    }
+    if (menu.alwaysShow) {
+      route.alwaysShow = menu.alwaysShow;
+    }
+    if (menu.meta) {
+      route.meta = parseMenuMeta(menu.meta);
+    }
+    if (menu.children && menu.children.length) {
+      route.children = parseMenus(menu.children);
+    }
+    routes.push(route);
+  });
+  return routes;
+}
+
+function parseMenuMeta(data) {
+  const meta = {};
+  if (data.title) {
+    meta.title = data.title;
+  }
+  if (data.icon) {
+    meta.icon = data.icon;
+  }
+  if (data.noCache) {
+    meta.noCache = data.noCache;
+  }
+  if (data.affix) {
+    meta.affix = data.affix;
+  }
+  if (data.breadcrumb) {
+    meta.breadcrumb = data.breadcrumb;
+  }
+  if (data.activeMenu) {
+    meta.activeMenu = data.activeMenu;
+  }
+  if (data.roles && data.roles.length) {
+    meta.roles = data.roles;
+  }
+  return meta;
 }
 
 const state = {
@@ -49,14 +113,17 @@ const mutations = {
 const actions = {
   generateRoutes({commit}, roles) {
     return new Promise(resolve => {
-      let accessedRoutes;
-      if (roles.includes('ADMIN')) {
-        accessedRoutes = asyncRoutes || [];
-      } else {
-        accessedRoutes = filterAsyncRoutes(asyncRoutes, roles);
-      }
-      commit('SET_ROUTES', accessedRoutes);
-      resolve(accessedRoutes);
+      listAllMenu().then(menus => {
+        let accessedRoutes = parseMenus(menus);
+        if (roles.includes('ADMIN')) {
+          accessedRoutes = accessedRoutes || [];
+        } else {
+          accessedRoutes = filterAsyncRoutes(accessedRoutes, roles);
+        }
+        accessedRoutes.push({path: '*', redirect: '/404', hidden: true});
+        commit('SET_ROUTES', accessedRoutes);
+        resolve(accessedRoutes);
+      });
     });
   }
 };

@@ -6,6 +6,8 @@ import com.github.mrzhqiang.rowing.util.Jsons;
 import com.google.common.base.Preconditions;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -13,6 +15,7 @@ import org.springframework.util.ResourceUtils;
 
 import java.io.File;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -130,4 +133,13 @@ public class MenuServiceJpaImpl implements MenuService {
         return fullPath.concat(PATH_SEPARATOR).concat(data.getPath());
     }
 
+    @Cacheable("menu")
+    @Override
+    public List<MenuData> listRoot() {
+        Sort sort = Sort.sort(Menu.class).by(Menu::getOrdered).ascending()
+                .and(Sort.sort(Menu.class).by(Menu::getCreated).descending());
+        return repository.findAllByEnabledIsTrueAndParentIsNull(sort).stream()
+                .map(mapper::toData)
+                .collect(Collectors.toList());
+    }
 }

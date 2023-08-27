@@ -3,6 +3,7 @@ package com.github.mrzhqiang.rowing.menu;
 import com.google.common.collect.Lists;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -20,12 +21,20 @@ import java.util.List;
  * </p>
  */
 @Data
-public class MenuData {
+public class MenuData implements Serializable {
+
+    private static final long serialVersionUID = 4045471755425912647L;
 
     /**
-     * 菜单 ID
+     * 菜单 ID。
      */
     private Long id;
+    /**
+     * 上级菜单 ID。
+     * <p>
+     * 如果为 null 表示当前菜单为顶级菜单。
+     */
+    private Long parentId;
     /**
      * 名称。
      * <p>

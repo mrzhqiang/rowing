@@ -3,6 +3,7 @@ package com.github.mrzhqiang.rowing.dict;
 import com.github.mrzhqiang.rowing.domain.Logic;
 import com.github.mrzhqiang.rowing.domain.AuditableEntity;
 import com.github.mrzhqiang.rowing.domain.DictType;
+import com.github.mrzhqiang.rowing.util.Domains;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -29,22 +30,13 @@ public class DictGroup extends AuditableEntity {
     private static final long serialVersionUID = -7487255455106320549L;
 
     /**
-     * 字典组名称最大长度。
-     */
-    public static final int MAX_NAME_LENGTH = 100;
-    /**
-     * 字典组代码最大长度。
-     */
-    public static final int MAX_CODE_LENGTH = 50;
-
-    /**
      * 名称。
      * <p>
      * 通常用于界面展示。
      */
     @NotBlank
-    @Size(max = MAX_NAME_LENGTH)
-    @Column(nullable = false, length = MAX_NAME_LENGTH)
+    @Size(max = Domains.DICT_NAME_LENGTH)
+    @Column(nullable = false, length = Domains.DICT_NAME_LENGTH)
     private String name;
     /**
      * 代码。
@@ -52,15 +44,15 @@ public class DictGroup extends AuditableEntity {
      * 可以用来查询相关字典项，因此必须保证全局唯一。
      */
     @NotBlank
-    @Size(max = MAX_CODE_LENGTH)
-    @Column(unique = true, nullable = false, length = MAX_CODE_LENGTH)
+    @Size(max = Domains.DICT_CODE_LENGTH)
+    @Column(unique = true, nullable = false, length = Domains.DICT_CODE_LENGTH)
     private String code;
     /**
      * 类型。
      */
     @NonNull
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = MAX_ENUM_NAME_LENGTH)
+    @Column(nullable = false, length = Domains.ENUM_NAME_LENGTH)
     private DictType type;
     /**
      * 冻结。
@@ -68,7 +60,7 @@ public class DictGroup extends AuditableEntity {
      * 冻结的字典不允许更新，包括初始化同步以及后台编辑时的操作。
      */
     @Enumerated(EnumType.STRING)
-    @Column(length = MAX_ENUM_NAME_LENGTH)
+    @Column(length = Domains.ENUM_NAME_LENGTH)
     private Logic freeze;
 
     /**

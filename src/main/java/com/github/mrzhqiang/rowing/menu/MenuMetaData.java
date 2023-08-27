@@ -3,13 +3,16 @@ package com.github.mrzhqiang.rowing.menu;
 import com.google.common.collect.Lists;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * 菜单元数据的数据。
  */
 @Data
-public class MenuMetaData {
+public class MenuMetaData implements Serializable {
+
+    private static final long serialVersionUID = -3043726683161620090L;
 
     /**
      * 标题。

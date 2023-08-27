@@ -45,11 +45,6 @@ public class UserServiceJpaImpl implements UserService {
         data.setRoles(user.getOwner().getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList()));
-        List<MenuData> menuDataList = user.getOwner().getRoleList().stream()
-                .flatMap(it -> it.getMenuList().stream())
-                .map(menuMapper::toData)
-                .collect(Collectors.toList());
-        data.setMenus(menuDataList);
         return data;
     }
 

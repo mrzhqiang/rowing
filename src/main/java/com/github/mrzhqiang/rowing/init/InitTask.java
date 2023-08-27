@@ -5,6 +5,7 @@ import com.github.mrzhqiang.rowing.domain.AuditableEntity;
 import com.github.mrzhqiang.rowing.domain.Logic;
 import com.github.mrzhqiang.rowing.domain.TaskStatus;
 import com.github.mrzhqiang.rowing.domain.TaskType;
+import com.github.mrzhqiang.rowing.util.Domains;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -34,29 +35,29 @@ public class InitTask extends AuditableEntity {
      * 路径。
      */
     @NotBlank
-    @Size(max = 500)
-    @Column(unique = true, nullable = false, updatable = false, length = 500)
+    @Size(max = Domains.CLASS_NAME_LENGTH)
+    @Column(unique = true, nullable = false, updatable = false, length = Domains.CLASS_NAME_LENGTH)
     private String path;
     /**
      * 名称。
      */
     @NotBlank
-    @Size(max = 200)
-    @Column(nullable = false, length = 200)
+    @Size(max = Domains.INIT_TASK_NAME_LENGTH)
+    @Column(nullable = false, length = Domains.INIT_TASK_NAME_LENGTH)
     private String name;
     /**
      * 任务类型。
      */
     @NonNull
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, updatable = false, length = MAX_ENUM_NAME_LENGTH)
+    @Column(nullable = false, updatable = false, length = Domains.ENUM_NAME_LENGTH)
     private TaskType type;
     /**
      * 任务状态。
      */
     @NonNull
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = MAX_ENUM_NAME_LENGTH)
+    @Column(nullable = false, length = Domains.ENUM_NAME_LENGTH)
     private TaskStatus status;
     /**
      * 执行顺序。
@@ -68,7 +69,7 @@ public class InitTask extends AuditableEntity {
      * 是否废弃。
      */
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = MAX_ENUM_NAME_LENGTH)
+    @Column(nullable = false, length = Domains.ENUM_NAME_LENGTH)
     private Logic discard;
 
     /**

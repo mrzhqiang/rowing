@@ -4,8 +4,9 @@ import com.github.mrzhqiang.rowing.domain.ActionState;
 import com.github.mrzhqiang.rowing.domain.ActionType;
 import com.github.mrzhqiang.rowing.session.SessionDetails;
 import com.github.mrzhqiang.rowing.session.SessionDetailsService;
-import com.github.mrzhqiang.rowing.session.Sessions;
+import com.github.mrzhqiang.rowing.util.Sessions;
 import com.github.mrzhqiang.rowing.util.Authentications;
+import com.github.mrzhqiang.rowing.util.Domains;
 import com.github.mrzhqiang.rowing.util.Jsons;
 import com.github.mrzhqiang.rowing.util.Validations;
 import com.google.common.base.Joiner;
@@ -78,10 +79,10 @@ public class ActionAspect {
 
         Class<?> targetClass = point.getTarget().getClass();
         String target = Optional.ofNullable(targetClass.getCanonicalName()).orElseGet(targetClass::getName);
-        target = target.substring(0, Math.min(ActionLog.MAX_CLASS_NAME_LENGTH, target.length()));
+        target = target.substring(0, Math.min(Domains.CLASS_NAME_LENGTH, target.length()));
 
         String method = targetMethod.getName();
-        method = method.substring(0, Math.min(ActionLog.MAX_METHOD_NAME_LENGTH, method.length()));
+        method = method.substring(0, Math.min(Domains.METHOD_NAME_LENGTH, method.length()));
 
         Parameter[] parameters = targetMethod.getParameters();
         Object[] args = point.getArgs();
@@ -93,7 +94,7 @@ public class ActionAspect {
         }
         String params = Joiner.on(DOT_CHAR).join(paramList);
         if (StringUtils.hasLength(params)) {
-            params = params.substring(0, Math.min(ActionLog.MAX_PARAMS_LENGTH, params.length()));
+            params = params.substring(0, Math.min(Domains.METHOD_PARAMS_LENGTH, params.length()));
         }
 
         ActionState state = ActionState.UNKNOWN;

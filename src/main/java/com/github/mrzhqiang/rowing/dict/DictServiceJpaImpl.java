@@ -4,7 +4,9 @@ import com.github.mrzhqiang.rowing.config.DictProperties;
 import com.github.mrzhqiang.rowing.domain.DictType;
 import com.github.mrzhqiang.rowing.domain.Logic;
 import com.github.mrzhqiang.rowing.i18n.I18nHolder;
+import com.github.mrzhqiang.rowing.init.InitializationException;
 import com.github.mrzhqiang.rowing.util.Cells;
+import com.github.mrzhqiang.rowing.util.Domains;
 import com.google.common.base.CaseFormat;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
@@ -108,6 +110,13 @@ public class DictServiceJpaImpl implements DictService {
             // 比如 com.xxx.EnumClassName.ENUM_VALUE
             String label = enumTranslator.asText(enumConstant);
             String itemValue = enumConstant.name();
+            if (itemValue.length() > Domains.ENUM_NAME_LENGTH) {
+                String defaultMessage = Strings.lenientFormat(
+                        "同步失败！内置字典项 %s-%s 名称长度大于指定长度 %s",
+                        code, enumConstant.name(), Domains.ENUM_NAME_LENGTH);
+                String message = I18nHolder.getAccessor().getMessage("DictService.syncInternal.item.failure", defaultMessage);
+                throw new InitializationException(message);
+            }
             // 存在即更新，否则就创建
             DictItem dictItem = Optional.ofNullable(itemMap.get(itemValue)).orElseGet(DictItem::new);
             dictItem.setGroup(dictGroup);

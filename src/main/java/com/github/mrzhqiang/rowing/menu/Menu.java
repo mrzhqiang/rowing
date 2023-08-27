@@ -2,6 +2,7 @@ package com.github.mrzhqiang.rowing.menu;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.mrzhqiang.rowing.domain.AuditableEntity;
+import com.github.mrzhqiang.rowing.util.Domains;
 import com.google.common.collect.Lists;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,6 +13,7 @@ import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.List;
@@ -28,16 +30,11 @@ public class Menu extends AuditableEntity {
     private static final long serialVersionUID = 2321642972583403963L;
 
     /**
-     * 非重定向值，表示在前端中，点击当前菜单的面包屑时，不具备跳转功能。
-     */
-    public static final String NO_REDIRECT = "noRedirect";
-
-    /**
      * 父级菜单。
      * <p>
      * 用于嵌套路由。
      */
-    @ManyToOne()
+    @ManyToOne
     private Menu parent;
     /**
      * 子级菜单。
@@ -45,6 +42,7 @@ public class Menu extends AuditableEntity {
      * 用于嵌套路由，生成路由的树级结构。
      */
     @ToString.Exclude
+    @OrderBy("ordered ASC, created DESC")
     @OneToMany(mappedBy = "parent", orphanRemoval = true)
     private List<Menu> children = Lists.newArrayList();
 
@@ -55,19 +53,17 @@ public class Menu extends AuditableEntity {
      * <p>
      * 一般情况下和路径保持一致，可能以首字母大写的单词形式存在，比如 path 路径变成 Path 名称。
      */
-    @Size(max = 50)
-    @Column(length = 50)
+    @Size(max = Domains.MENU_PATH_LENGTH)
+    @Column(length = Domains.MENU_PATH_LENGTH)
     private String name;
     /**
      * 路径。
      * <p>
-     * 路由路径，拼接上级路径后，直接展示在浏览器中。
-     * <p>
-     * 通常可以不限制长度，但为了与名称保持一致，所以选择限制为名称的两倍长度。
+     * 路由路径，拼接上级路径后，就变成在浏览器中看到的路径。
      */
     @NotBlank
-    @Size(max = 50)
-    @Column(nullable = false, length = 50)
+    @Size(max = Domains.MENU_PATH_LENGTH)
+    @Column(nullable = false, length = Domains.MENU_PATH_LENGTH)
     private String path;
     /**
      * 完整路径。
@@ -79,8 +75,8 @@ public class Menu extends AuditableEntity {
      * 但如果保留完整路径，则在修改上级菜单路径时，也要遍历子级菜单同步路径，否则将导致子级菜单失效。
      */
     @NotBlank
-    @Size(max = 1024)
-    @Column(nullable = false, length = 1024)
+    @Size(max = Domains.HTTP_URL_PATH_LENGTH)
+    @Column(nullable = false, length = Domains.HTTP_URL_PATH_LENGTH)
     private String fullPath;
     /**
      * 组件。
@@ -90,8 +86,8 @@ public class Menu extends AuditableEntity {
      * 注意：这个字段非常关键，如果设置错误，将无法正确展示页面。
      */
     @NotBlank
-    @Size(max = 200)
-    @Column(nullable = false, length = 200)
+    @Size(max = Domains.MENU_COMPONENT_LENGTH)
+    @Column(nullable = false, length = Domains.MENU_COMPONENT_LENGTH)
     private String component;
     /**
      * 重定向。
@@ -102,8 +98,8 @@ public class Menu extends AuditableEntity {
      * <p>
      * 注意：与路径不同的是，这里必须是一个完整路径，即从顶级菜单开始，一级级拼接到指定菜单的路径。
      */
-    @Size(max = 1024)
-    @Column(length = 1024)
+    @Size(max = Domains.HTTP_URL_PATH_LENGTH)
+    @Column(length = Domains.HTTP_URL_PATH_LENGTH)
     private String redirect;
     /**
      * 是否隐藏。

@@ -6,6 +6,7 @@ import com.github.mrzhqiang.rowing.domain.AuditableEntity;
 import com.github.mrzhqiang.rowing.role.Role;
 import com.github.mrzhqiang.rowing.third.ThirdUser;
 import com.github.mrzhqiang.rowing.user.User;
+import com.github.mrzhqiang.rowing.util.Domains;
 import com.google.common.collect.Lists;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -85,7 +86,7 @@ public class Account extends AuditableEntity implements UserDetails {
      * <p>
      * 3. 其他规则：类似学生学号，结合前缀+中缀+随机字符串后缀，组成用户名。
      */
-    @Column(updatable = false, unique = true, nullable = false, length = MAX_USERNAME_LENGTH)
+    @Column(updatable = false, unique = true, nullable = false, length = Domains.USERNAME_LENGTH)
     private String username;
     /**
      * 密码。
@@ -107,7 +108,7 @@ public class Account extends AuditableEntity implements UserDetails {
      */
     @Builder.Default
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = MAX_ENUM_NAME_LENGTH)
+    @Column(nullable = false, length = Domains.ENUM_NAME_LENGTH)
     private AccountType type = AccountType.USER;
     /**
      * 账户失效期限。

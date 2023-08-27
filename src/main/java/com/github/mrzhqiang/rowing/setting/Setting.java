@@ -3,6 +3,7 @@ package com.github.mrzhqiang.rowing.setting;
 import com.github.mrzhqiang.rowing.domain.AuditableEntity;
 import com.github.mrzhqiang.rowing.domain.SettingTab;
 import com.github.mrzhqiang.rowing.domain.SettingType;
+import com.github.mrzhqiang.rowing.util.Domains;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -29,39 +30,39 @@ public class Setting extends AuditableEntity {
      * 标签。
      */
     @NotBlank
-    @Size(max = 100)
-    @Column(nullable = false, length = 100)
+    @Size(max = Domains.SETTING_LABEL_LENGTH)
+    @Column(nullable = false, length = Domains.SETTING_LABEL_LENGTH)
     private String label;
     /**
      * 类型。
      */
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = Domains.ENUM_NAME_LENGTH)
     private SettingType type;
     /**
      * 名称。
      */
     @NotBlank
-    @Size(max = 50)
-    @Column(nullable = false, unique = true, length = 50)
+    @Size(max = Domains.SETTING_NAME_LENGTH)
+    @Column(nullable = false, unique = true, length = Domains.SETTING_NAME_LENGTH)
     private String name;
     /**
      * 内容。
      */
-    @Size(max = 5000)
-    @Column(nullable = false, length = 5000)
+    @Size(max = Domains.SETTING_CONTENT_LENGTH)
+    @Column(nullable = false, length = Domains.SETTING_CONTENT_LENGTH)
     private String content;
     /**
      * 选项。
      */
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = MAX_ENUM_NAME_LENGTH)
+    @Column(nullable = false, length = Domains.ENUM_NAME_LENGTH)
     private SettingTab tab;
     /**
      * 风格。
      */
-    @Size(max = 100)
-    @Column(length = 100)
+    @Size(max = Domains.SETTING_STYLE_LENGTH)
+    @Column(length = Domains.SETTING_STYLE_LENGTH)
     private String style;
 
 }

@@ -30,7 +30,6 @@ const mutations = {
 };
 
 const actions = {
-  // user login
   login({commit}, userInfo) {
     const {username} = userInfo;
     const password = encrypt(userInfo.password);
@@ -45,19 +44,18 @@ const actions = {
     });
   },
 
-  // get user info
   getInfo({commit, state}) {
     return new Promise((resolve, reject) => {
       getInfo(state.token).then(response => {
-        const {roles, nickname, gender, avatar, introduction} = response;
+        const {nickname, avatar, gender, introduction, roles} = response;
 
         // roles must be a non-empty array
         if (!roles || roles.length <= 0) {
           reject('getInfo: roles must be a non-null array!');
         }
 
-        const avatarUrl = avatar || gender && gender === 'FEMALE'
-          ? require('@/assets/images/def_avatar_female.png') : require('@/assets/images/def_avatar_male.png');
+        const avatarUrl = avatar || (gender && gender === 'FEMALE'
+          ? require('@/assets/images/def_avatar_female.png') : require('@/assets/images/def_avatar_male.png'));
         commit('SET_ROLES', roles);
         commit('SET_NAME', nickname);
         commit('SET_AVATAR', avatarUrl);
