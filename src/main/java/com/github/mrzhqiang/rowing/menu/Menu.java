@@ -2,6 +2,7 @@ package com.github.mrzhqiang.rowing.menu;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.mrzhqiang.rowing.domain.AuditableEntity;
+import com.github.mrzhqiang.rowing.domain.Logic;
 import com.github.mrzhqiang.rowing.util.Domains;
 import com.google.common.collect.Lists;
 import lombok.Getter;
@@ -11,6 +12,8 @@ import lombok.ToString;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
@@ -131,13 +134,16 @@ public class Menu extends AuditableEntity {
      * <p>
      * 未启用的菜单，将不返回数据给前端，默认为启用。
      */
-    private Boolean enabled = true;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = Domains.ENUM_NAME_LENGTH)
+    private Logic enabled = Logic.YES;
 
     /**
      * 菜单资源列表。
      */
     @JsonIgnore
     @ToString.Exclude
+    @OrderBy("ordered ASC, created DESC")
     @OneToMany(mappedBy = "menu", orphanRemoval = true)
     private List<MenuResource> resourceList = Lists.newArrayList();
 

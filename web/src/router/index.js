@@ -121,7 +121,31 @@ export const constantRoutes = [
         meta: {title: 'profile', icon: 'user', noCache: true}
       }
     ]
-  }
+  },
+  {
+    path: '/menu',
+    component: Layout,
+    redirect: '/menu/list',
+    name: 'Menu',
+    meta: {
+      title: 'menu',
+      icon: 'el-icon-s-help',
+      roles: ['ADMIN']
+    },
+    children: [
+      {
+        path: 'list',
+        component: () => import('@/views/menu/listMenu'),
+        name: 'ListMenu',
+        meta: {
+          title: 'listMenu',
+          icon: 'list',
+          roles: ['ADMIN']
+        }
+      }
+    ]
+  },
+
 ];
 
 /**
@@ -195,52 +219,6 @@ export const asyncRoutes = [
   chartsRouter,
   nestedRouter,
   tableRouter,
-
-  {
-    path: '/example',
-    component: Layout,
-    redirect: '/example/list',
-    name: 'Example',
-    meta: {
-      title: 'example',
-      icon: 'el-icon-s-help',
-      roles: ['ADMIN']
-    },
-    children: [
-      {
-        path: 'create',
-        component: () => import('@/views/example/create'),
-        name: 'CreateArticle',
-        meta: {
-          title: 'createArticle',
-          icon: 'edit',
-          roles: ['ADMIN']
-        }
-      },
-      {
-        path: 'edit/:id(\\d+)',
-        component: () => import('@/views/example/edit'),
-        name: 'EditArticle',
-        meta: {
-          title: 'editArticle',
-          noCache: true,
-          activeMenu: '/example/list',
-          roles: ['ADMIN']
-        },
-        hidden: true
-      },
-      {
-        path: 'list',
-        component: () => import('@/views/example/list'),
-        name: 'ArticleList',
-        meta: {
-          title: 'articleList',
-          icon: 'list',
-          roles: ['ADMIN']
-        }
-      }
-    ]
-  },
 
   {
     path: '/tab',
@@ -471,10 +449,7 @@ export const asyncRoutes = [
         }
       }
     ]
-  },
-
-  // 404 page must be placed at the end !!!
-  {path: '*', redirect: '/404', hidden: true}
+  }
 ];
 
 const createRouter = () => new Router({

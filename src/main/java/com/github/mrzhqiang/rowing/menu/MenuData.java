@@ -36,27 +36,17 @@ public class MenuData implements Serializable {
      */
     private Long parentId;
     /**
-     * 名称。
-     * <p>
-     * 用于前端的 {@code <keep-alive>} 属性。
-     */
-    private String name;
-    /**
      * 路径。
      * <p>
      * 即浏览器中的 URL 路径，通常顶级菜单包含 / 前缀，子级菜单不包含。
      */
     private String path;
     /**
-     * 完整路径。
+     * 组件。
      * <p>
-     * 根据上级菜单的完整路径拼接当前菜单的路径，进行补全的完整路径。
-     */
-    private String fullPath;
-    /**
-     * 前端组件。
+     * 即前端组件，通常是 <code>@/views/xxx</code> 中的 xxx 内容。
      * <p>
-     * 导入页面时需要，通常是 <code>@/layout/**</code> 以及 <code>@/views/**</code> 组件地址。
+     * 注意：顶级菜单不需要指定这个值，但由于菜单实体设定组件字段必填，因此顶级菜单的组件默认是 Layout 值。
      */
     private String component;
     /**
@@ -64,11 +54,17 @@ public class MenuData implements Serializable {
      * <p>
      * 由上级菜单指定，通常是第一个子级菜单的完整路径，表示访问上级菜单路径时，重定向到这个子级菜单。
      * <p>
-     * 因为上级菜单通常不作为页面显示，仅作为"目录"存在，所以需要一个默认页面。
+     * 因为上级菜单通常不作为页面显示，仅作为 "目录" 存在，所以需要一个默认页面。
      * <p>
      * 当设置为 noRedirect 常量时，将无法从面包屑中跳转到当前菜单。
      */
     private String redirect;
+    /**
+     * 名称。
+     * <p>
+     * 用于前端的 {@code <keep-alive>} 属性。
+     */
+    private String name;
     /**
      * 是否隐藏。
      * <p>
@@ -88,16 +84,8 @@ public class MenuData implements Serializable {
      */
     private MenuMetaData meta;
     /**
-     * 排序。
-     */
-    private Integer ordered;
-    /**
      * 子级菜单列表。
      */
     private List<MenuData> children = Lists.newArrayList();
-    /**
-     * 菜单资源列表。
-     */
-    private List<MenuResourceData> resourceList = Lists.newArrayList();
 
 }

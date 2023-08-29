@@ -25,7 +25,7 @@
         <bitwalker.version>1.21</bitwalker.version>
         <geoip2.version>2.15.0</geoip2.version>
         <kaptcha-spring-boot-starter.version>2023.1.0</kaptcha-spring-boot-starter.version>
-        <helper.version>2022.1.2</helper.version>
+        <helper.version>2023.1.0</helper.version>
         <retrofit.version>2.9.0</retrofit.version>
 
         <snakeyaml.version>2.0</snakeyaml.version>
@@ -47,10 +47,12 @@
 
     <dependencies>
         <!-- Spring 框架依赖 -->
+        <!--suppress VulnerableLibrariesLocal -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
+        <!--suppress VulnerableLibrariesLocal -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
@@ -71,6 +73,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
+        <!--suppress VulnerableLibrariesLocal -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-rest</artifactId>
@@ -244,6 +247,7 @@
             <artifactId>spring-restdocs-mockmvc</artifactId>
             <scope>test</scope>
         </dependency>
+        <!--suppress VulnerableLibrariesLocal -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>

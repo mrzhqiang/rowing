@@ -1,17 +1,13 @@
 import request from '@/utils/request';
+import {findAll, create, findOne, update, remove, search} from '@/api/rest';
 
 /**
- * 列出所有菜单。
+ * 查询菜单路由。
  *
- * 不分页，慎用，数据量大可能导致性能下降。
- *
- * 这个接口不是 RESTFul 风格，属于自定义接口。
+ * 排序，但不分页，一次性查询所有数据。
  */
-export const listAllMenu = () => {
-  return request({
-    url: `/menu/list`,
-    method: 'get'
-  });
+export const findMenuRoutes = () => {
+  return request.get('/menu/routes');
 };
 
 /**
@@ -19,21 +15,29 @@ export const listAllMenu = () => {
  *
  * 作为与 Spring Boot Data REST 对接的模板，在这里提供名称，以便遵循 RESTFul 统一风格。
  */
-const restApi = 'menu';
+const API_NAME = 'menu';
 
-/**
- * 查询所有数据。支持分页、排序、投影（即 VO 对象）。
- *
- * 接口示例：
- *
- * /api/menu?{page=0&size=20&sort=createTime,desc&projection=noRoles}
- *
- * 其中 noRoles 代表后端定义的投影名称，可以设定多个投影适应不同的应用场景。
- */
-export function findAll(param) {
-  return request({
-    url: `/api/${restApi}`,
-    method: 'get',
-    param: param
-  });
-}
+export const findAllMenu = (params) => {
+  return findAll(API_NAME, params);
+};
+
+export const createMenu = (data) => {
+  return create(API_NAME, data);
+};
+
+export const findOneMenu = (id) => {
+  // 如果需要屏蔽某些字段，则传递对应的 {projection: 'xxx'} 投影名称
+  return findOne(API_NAME, id);
+};
+
+export const updateMenu = (id, data) => {
+  return update(API_NAME, id, data);
+};
+
+export const removeMenu = (id) => {
+  return remove(API_NAME, id);
+};
+
+export const searchMenu = (path, params) => {
+  return search(API_NAME, path, params);
+};

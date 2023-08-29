@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * 菜单元数据的数据。
+ * 菜单元数据。
  */
 @Data
 public class MenuMetaData implements Serializable {

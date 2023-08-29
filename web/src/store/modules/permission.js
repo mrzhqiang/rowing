@@ -1,5 +1,5 @@
-import {constantRoutes} from '@/router';
-import {listAllMenu} from '@/api/menu';
+import {asyncRoutes, constantRoutes} from '@/router';
+import {findMenuRoutes} from '@/api/menu';
 import Layout from '@/layout/Layout';
 
 /**
@@ -36,7 +36,7 @@ const parseComponent = (view) => { // 路由懒加载
   return (resolve) => require([`@/views/${view}`], resolve);
 };
 
-function parseMenus(menus) {
+function parseRoutes(menus) {
   if (!menus || !menus.length) {
     return [];
   }
@@ -65,7 +65,7 @@ function parseMenus(menus) {
       route.meta = parseMenuMeta(menu.meta);
     }
     if (menu.children && menu.children.length) {
-      route.children = parseMenus(menu.children);
+      route.children = parseRoutes(menu.children);
     }
     routes.push(route);
   });
@@ -113,13 +113,14 @@ const mutations = {
 const actions = {
   generateRoutes({commit}, roles) {
     return new Promise(resolve => {
-      listAllMenu().then(menus => {
-        let accessedRoutes = parseMenus(menus);
+      findMenuRoutes().then(menus => {
+        let accessedRoutes = parseRoutes(menus);
         if (roles.includes('ADMIN')) {
-          accessedRoutes = accessedRoutes || [];
+          accessedRoutes = (accessedRoutes || []).concat(asyncRoutes);
         } else {
           accessedRoutes = filterAsyncRoutes(accessedRoutes, roles);
         }
+        // 404 page must be placed at the end !!!
         accessedRoutes.push({path: '*', redirect: '/404', hidden: true});
         commit('SET_ROUTES', accessedRoutes);
         resolve(accessedRoutes);

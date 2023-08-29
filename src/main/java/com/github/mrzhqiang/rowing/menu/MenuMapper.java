@@ -14,17 +14,17 @@ import java.util.stream.Collectors;
 @Mapper(componentModel = "spring")
 public interface MenuMapper {
 
-    @Mapping(target = "id", ignore = true)
     @Mapping(target = "version", ignore = true)
-    @Mapping(target = "meta.roleList", ignore = true)
+    @Mapping(target = "resourceList", ignore = true)
     @Mapping(target = "parent", ignore = true)
-    @Mapping(target = "children", ignore = true)
+    @Mapping(target = "ordered", ignore = true)
     @Mapping(target = "lastModifiedBy", ignore = true)
     @Mapping(target = "lastModified", ignore = true)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "fullPath", ignore = true)
     @Mapping(target = "enabled", ignore = true)
     @Mapping(target = "createdBy", ignore = true)
     @Mapping(target = "created", ignore = true)
-    @Mapping(target = "resourceList", ignore = true)
     Menu toEntity(MenuData data);
 
     @Mapping(target = "meta.roles", source = "meta.roleList")
@@ -34,7 +34,5 @@ public interface MenuMapper {
     default List<String> convertRoleList(List<Role> roleList) {
         return roleList.stream().map(Role::getCode).collect(Collectors.toList());
     }
-
-    MenuResourceData toData(MenuResource menuResource);
 
 }

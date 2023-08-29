@@ -9,6 +9,7 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.util.ProxyUtils;
 
 /**
  * 缓存配置。
@@ -28,7 +29,8 @@ public class CacheConfiguration extends CachingConfigurerSupport {
     @Override
     public KeyGenerator keyGenerator() {
         return (target, method, params) -> {
-            String className = target.getClass().getSimpleName();
+            Class<?> userClass = ProxyUtils.getUserClass(target);
+            String className = userClass.getSimpleName();
             // classLowerHyphen -- CacheConfiguration >> cache-configuration
             String classLowerHyphen = UPPER_CAMEL.to(LOWER_HYPHEN, className);
             String methodName = method.getName();

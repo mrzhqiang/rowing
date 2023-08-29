@@ -1,8 +1,8 @@
 package com.github.mrzhqiang.rowing.action;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import com.github.mrzhqiang.rowing.domain.BaseRepository;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
-@Repository
-public interface ActionLogRepository extends JpaRepository<ActionLog, Long> {
+@RepositoryRestResource(path = "action-log", collectionResourceRel = "action-log")
+public interface ActionLogRepository extends BaseRepository<ActionLog> {
 }

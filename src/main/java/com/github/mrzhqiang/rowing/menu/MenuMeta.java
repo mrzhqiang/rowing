@@ -13,6 +13,7 @@ import javax.persistence.Embeddable;
 import javax.persistence.ManyToMany;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -22,7 +23,9 @@ import java.util.List;
 @Setter
 @ToString
 @Embeddable
-public class MenuMeta {
+public class MenuMeta implements Serializable {
+
+    private static final long serialVersionUID = 5481918890966660279L;
 
     /**
      * 标题。

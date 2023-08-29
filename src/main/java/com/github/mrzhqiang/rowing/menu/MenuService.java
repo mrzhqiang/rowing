@@ -19,11 +19,10 @@ public interface MenuService {
     void init();
 
     /**
-     * 列出所有顶级菜单。
-     * <p>
-     * 顶级菜单下包含子级菜单。
+     * 查询菜单路由。
      *
-     * @return 顶级菜单列表。
+     * @return 菜单数据列表。
      */
-    List<MenuData> listRoot();
+    List<MenuData> findRoutes();
+
 }
