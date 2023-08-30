@@ -3,8 +3,6 @@ package com.github.mrzhqiang.rowing.user;
 import com.github.mrzhqiang.rowing.account.Account;
 import com.github.mrzhqiang.rowing.domain.Gender;
 import com.github.mrzhqiang.rowing.i18n.I18nHolder;
-import com.github.mrzhqiang.rowing.menu.MenuData;
-import com.github.mrzhqiang.rowing.menu.MenuMapper;
 import com.github.mrzhqiang.rowing.setting.Setting;
 import com.github.mrzhqiang.rowing.setting.SettingService;
 import org.springframework.security.core.GrantedAuthority;
@@ -12,23 +10,19 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class UserServiceJpaImpl implements UserService {
 
     private final UserMapper mapper;
-    private final MenuMapper menuMapper;
     private final UserRepository repository;
     private final SettingService settingService;
 
     public UserServiceJpaImpl(UserMapper mapper,
-                              MenuMapper menuMapper,
                               UserRepository repository,
                               SettingService settingService) {
         this.mapper = mapper;
-        this.menuMapper = menuMapper;
         this.repository = repository;
         this.settingService = settingService;
     }

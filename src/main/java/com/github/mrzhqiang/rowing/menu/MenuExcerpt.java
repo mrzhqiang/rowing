@@ -21,10 +21,10 @@ public interface MenuExcerpt {
     @Value("#{target.parent?.id}")
     Long getParentId();
 
-    @Value("#{target.meta.title}")
+    @SuppressWarnings("unused")
     String getTitle();
 
-    @Value("#{target.meta.icon}")
+    @SuppressWarnings("unused")
     String getIcon();
 
     @SuppressWarnings("unused")

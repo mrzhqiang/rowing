@@ -14,6 +14,13 @@ import java.util.stream.Collectors;
 @Mapper(componentModel = "spring")
 public interface MenuMapper {
 
+    @Mapping(target = "title", source = "route.meta.title")
+    @Mapping(target = "noCache", source = "route.meta.noCache")
+    @Mapping(target = "icon", source = "route.meta.icon")
+    @Mapping(target = "breadcrumb", source = "route.meta.breadcrumb")
+    @Mapping(target = "affix", source = "route.meta.affix")
+    @Mapping(target = "activeMenu", source = "route.meta.activeMenu")
+    @Mapping(target = "roleList", ignore = true)
     @Mapping(target = "version", ignore = true)
     @Mapping(target = "resourceList", ignore = true)
     @Mapping(target = "parent", ignore = true)
@@ -25,11 +32,18 @@ public interface MenuMapper {
     @Mapping(target = "enabled", ignore = true)
     @Mapping(target = "createdBy", ignore = true)
     @Mapping(target = "created", ignore = true)
-    Menu toEntity(MenuData data);
+    Menu toEntity(MenuRoute route);
 
-    @Mapping(target = "meta.roles", source = "meta.roleList")
+    @Mapping(target = "meta", ignore = true)
+    @Mapping(target = "meta.roles", source = "roleList")
+    @Mapping(target = "meta.title", source = "title")
+    @Mapping(target = "meta.noCache", source = "noCache")
+    @Mapping(target = "meta.icon", source = "icon")
+    @Mapping(target = "meta.breadcrumb", source = "breadcrumb")
+    @Mapping(target = "meta.affix", source = "affix")
+    @Mapping(target = "meta.activeMenu", source = "activeMenu")
     @Mapping(target = "parentId", source = "parent.id")
-    MenuData toData(Menu menu);
+    MenuRoute toRoute(Menu menu);
 
     default List<String> convertRoleList(List<Role> roleList) {
         return roleList.stream().map(Role::getCode).collect(Collectors.toList());

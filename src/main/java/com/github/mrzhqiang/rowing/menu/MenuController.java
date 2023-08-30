@@ -25,7 +25,7 @@ public class MenuController {
     }
 
     @GetMapping("/routes")
-    public ResponseEntity<List<MenuData>> routes() {
+    public ResponseEntity<List<MenuRoute>> routes() {
         return ResponseEntity.ok(service.findRoutes());
     }
 

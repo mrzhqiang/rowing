@@ -23,6 +23,6 @@ public interface MenuService {
      *
      * @return 菜单数据列表。
      */
-    List<MenuData> findRoutes();
+    List<MenuRoute> findRoutes();
 
 }

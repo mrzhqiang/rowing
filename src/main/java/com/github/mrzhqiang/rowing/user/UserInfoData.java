@@ -1,6 +1,6 @@
 package com.github.mrzhqiang.rowing.user;
 
-import com.github.mrzhqiang.rowing.menu.MenuData;
+import com.github.mrzhqiang.rowing.menu.MenuRoute;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -51,6 +51,6 @@ public class UserInfoData {
     /**
      * 用户菜单列表。
      */
-    private List<MenuData> menus;
+    private List<MenuRoute> menus;
 
 }

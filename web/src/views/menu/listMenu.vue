@@ -1,21 +1,23 @@
 <template>
   <div class="app-container">
-    <el-table v-loading="menuLoading" :data="menuData" row-key="id" stripe size="mini" default-expand-all>
-      <el-table-column prop="title" label="标题" width="200" show-overflow-tooltip>
+    <el-table v-loading="menuLoading" :data="menuData" row-key="id" stripe default-expand-all>
+      <el-table-column prop="id" label="#" width="48" :align="'right'"/>
+      <el-table-column prop="title" label="标题" min-width="120" show-overflow-tooltip>
         <template v-slot="data">
           <span>{{ generateTitle(data.row.title) }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="icon" label="图标" width="100">
+      <el-table-column prop="icon" label="图标" min-width="96">
         <template v-slot="data">
-          <svg-icon :icon-class="data.row.icon"/>
+          <i v-if="data.row.icon && data.row.icon.includes('el-icon')" :class="data.row.icon"/>
+          <svg-icon v-else-if="data.row.icon" :icon-class="data.row.icon"/>
         </template>
       </el-table-column>
-      <el-table-column prop="fullPath" label="路径" width="300" show-overflow-tooltip/>
-      <el-table-column prop="created" label="创建时间" width="150"/>
-      <el-table-column prop="updated" label="更新时间" width="150"/>
-      <el-table-column prop="enabled" label="是否启用" width="100"/>
-      <el-table-column prop="ordered" label="排序"/>
+      <el-table-column prop="fullPath" label="路径" min-width="240" show-overflow-tooltip/>
+      <el-table-column prop="created" label="创建时间" min-width="120"/>
+      <el-table-column prop="updated" label="更新时间" min-width="120"/>
+      <el-table-column prop="enabled" label="是否启用" min-width="96"/>
+      <el-table-column prop="ordered" label="排序" min-width="48"/>
     </el-table>
     <pagination v-show="menuData.length" :total="page.totalElements"
                 :page.sync="params.page" :size.sync="params.size"

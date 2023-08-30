@@ -2,7 +2,7 @@ package com.github.mrzhqiang.rowing.menu;
 
 import com.github.mrzhqiang.rowing.config.MenuProperties;
 import com.github.mrzhqiang.rowing.domain.Logic;
-import com.github.mrzhqiang.rowing.role.RoleService;
+import com.github.mrzhqiang.rowing.role.RoleRepository;
 import com.github.mrzhqiang.rowing.util.Jsons;
 import com.google.common.base.Preconditions;
 import lombok.SneakyThrows;
@@ -24,16 +24,16 @@ public class MenuServiceJpaImpl implements MenuService {
     private final MenuProperties properties;
     private final MenuMapper mapper;
     private final MenuRepository repository;
-    private final RoleService roleService;
+    private final RoleRepository roleRepository;
 
     public MenuServiceJpaImpl(MenuProperties properties,
                               MenuMapper mapper,
                               MenuRepository repository,
-                              RoleService roleService) {
+                              RoleRepository roleRepository) {
         this.properties = properties;
         this.mapper = mapper;
         this.repository = repository;
-        this.roleService = roleService;
+        this.roleRepository = roleRepository;
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -41,42 +41,42 @@ public class MenuServiceJpaImpl implements MenuService {
     public void init() {
         List<String> jsonPaths = properties.getJsonPaths();
         if (!CollectionUtils.isEmpty(jsonPaths)) {
-            jsonPaths.forEach(this::initFromJson);
+            jsonPaths.forEach(this::createMenu);
         }
     }
 
     @SneakyThrows
-    private void initFromJson(String jsonPath) {
+    private void createMenu(String jsonPath) {
         Preconditions.checkNotNull(jsonPath, "menu json file == null");
 
         File jsonFile = ResourceUtils.getFile(jsonPath);
         Preconditions.checkArgument(jsonFile.exists(), "menu json file must be exists");
         Preconditions.checkArgument(!jsonFile.isDirectory(), "menu json file must be not directory");
 
-        List<MenuData> menuDataList = Jsons.listFrom(jsonFile, MenuData.class);
-        if (CollectionUtils.isEmpty(menuDataList)) {
-            log.warn("cannot find menu data list from {}", jsonPath);
+        List<MenuRoute> menuRoutes = Jsons.listFrom(jsonFile, MenuRoute.class);
+        if (CollectionUtils.isEmpty(menuRoutes)) {
+            log.warn("cannot parse menu routes from {}", jsonPath);
             return;
         }
 
-        for (int i = 0; i < menuDataList.size(); i++) {
-            createRootMenu(i, menuDataList.get(i));
+        for (int i = 0; i < menuRoutes.size(); i++) {
+            createRootMenu(i, menuRoutes.get(i));
         }
     }
 
-    private void createRootMenu(int ordered, MenuData data) {
-        Menu rootMenu = mapper.toEntity(data);
+    private void createRootMenu(int ordered, MenuRoute route) {
+        Menu rootMenu = mapper.toEntity(route);
         // 顶级菜单，完整路径就是它自己的路径
-        rootMenu.setFullPath(data.getPath());
+        rootMenu.setFullPath(route.getPath());
         rootMenu.setOrdered(ordered);
         repository.save(rootMenu);
         log.info("create the root menu {} is successful", rootMenu);
 
-        bindingRole(data, rootMenu);
+        bindingRole(route, rootMenu);
 
-        List<MenuData> children = data.getChildren();
+        List<MenuRoute> children = route.getChildren();
         if (CollectionUtils.isEmpty(children)) {
-            log.warn("this root rootMenu {} cannot find children", data);
+            log.info("this menu route {} without children", route);
             return;
         }
 
@@ -85,12 +85,12 @@ public class MenuServiceJpaImpl implements MenuService {
         }
     }
 
-    private void bindingRole(MenuData data, Menu menu) {
-        if (menu == null || data == null) {
+    private void bindingRole(MenuRoute route, Menu menu) {
+        if (route == null || menu == null) {
             return;
         }
 
-        MenuMetaData meta = data.getMeta();
+        MenuRoute.Meta meta = route.getMeta();
         if (meta != null) {
             List<String> roles = meta.getRoles();
             if (CollectionUtils.isEmpty(roles)) {
@@ -98,11 +98,18 @@ public class MenuServiceJpaImpl implements MenuService {
             }
 
             // 不想过度设计复杂的数据结构，去实现一个角色绑定多个菜单，逐个绑定感觉更清晰
-            roles.forEach(it -> roleService.bindingMenu(it, menu));
+            roleRepository.findAllByCodeIn(roles).forEach(it -> {
+                List<Menu> menuList = it.getMenuList();
+                if (menuList.contains(menu)) {
+                    return;
+                }
+                menuList.add(menu);
+                roleRepository.save(it);
+            });
         }
     }
 
-    private void createChildrenMenu(int ordered, Menu parent, MenuData data) {
+    private void createChildrenMenu(int ordered, Menu parent, MenuRoute data) {
         Menu menu = mapper.toEntity(data);
         // 子级菜单，使用上级菜单路径拼接当前菜单路径，作为完整路径
         menu.setFullPath(concatFullPath(parent, data));
@@ -113,7 +120,7 @@ public class MenuServiceJpaImpl implements MenuService {
 
         bindingRole(data, menu);
 
-        List<MenuData> children = data.getChildren();
+        List<MenuRoute> children = data.getChildren();
         if (CollectionUtils.isEmpty(children)) {
             log.warn("this menu {} cannot find children", data);
             return;
@@ -124,7 +131,7 @@ public class MenuServiceJpaImpl implements MenuService {
         }
     }
 
-    private String concatFullPath(Menu parent, MenuData data) {
+    private String concatFullPath(Menu parent, MenuRoute data) {
         String fullPath = parent.getFullPath();
         if (PATH_SEPARATOR.equals(fullPath)) {
             return fullPath.concat(data.getPath());
@@ -133,11 +140,11 @@ public class MenuServiceJpaImpl implements MenuService {
     }
 
     @Override
-    public List<MenuData> findRoutes() {
+    public List<MenuRoute> findRoutes() {
         Sort sort = Sort.sort(Menu.class).by(Menu::getOrdered).ascending()
                 .and(Sort.sort(Menu.class).by(Menu::getCreated).descending());
         return repository.findAllByParentIsNullAndEnabled(Logic.YES, sort).stream()
-                .map(mapper::toData)
+                .map(mapper::toRoute)
                 .collect(Collectors.toList());
     }
 

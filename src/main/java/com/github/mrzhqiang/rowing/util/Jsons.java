@@ -10,7 +10,6 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import static com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter.serializeAllExcept;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
-import com.fasterxml.jackson.databind.type.ArrayType;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import com.fasterxml.jackson.databind.type.MapType;
 import com.google.common.base.Preconditions;
@@ -18,9 +17,9 @@ import lombok.SneakyThrows;
 import org.springframework.util.StringUtils;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -107,7 +106,8 @@ public final class Jsons {
         Preconditions.checkNotNull(content, "content == null");
         Preconditions.checkArgument(StringUtils.hasText(content), "content has not text");
         Preconditions.checkNotNull(clazz, "clazz == null");
-        ArrayType type = OBJECT_MAPPER.getTypeFactory().constructArrayType(clazz);
+        // 通常 LinkedList 和 ArrayList 的遍历效率相同，但增删效率 LinkedList 比 ArrayList 好一些
+        CollectionType type = OBJECT_MAPPER.getTypeFactory().constructCollectionType(LinkedList.class, clazz);
         return OBJECT_MAPPER.readValue(content, type);
     }
 
@@ -120,7 +120,8 @@ public final class Jsons {
         Preconditions.checkArgument(jsonFile.exists(), "json file is not exists");
         Preconditions.checkArgument(jsonFile.isFile(), "json file is not file");
         Preconditions.checkNotNull(clazz, "clazz == null");
-        CollectionType type = OBJECT_MAPPER.getTypeFactory().constructCollectionType(ArrayList.class, clazz);
+        // 通常 LinkedList 和 ArrayList 的遍历效率相同，但增删效率 LinkedList 比 ArrayList 好一些
+        CollectionType type = OBJECT_MAPPER.getTypeFactory().constructCollectionType(LinkedList.class, clazz);
         return OBJECT_MAPPER.readValue(jsonFile, type);
     }
 
