@@ -122,30 +122,6 @@ export const constantRoutes = [
       }
     ]
   },
-  {
-    path: '/menu',
-    component: Layout,
-    redirect: '/menu/list',
-    name: 'Menu',
-    meta: {
-      title: 'menu',
-      icon: 'el-icon-s-help',
-      roles: ['ADMIN']
-    },
-    children: [
-      {
-        path: 'list',
-        component: () => import('@/views/menu'),
-        name: 'ListMenu',
-        meta: {
-          title: 'listMenu',
-          icon: 'list',
-          roles: ['ADMIN']
-        }
-      }
-    ]
-  },
-
 ];
 
 /**

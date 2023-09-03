@@ -11,7 +11,7 @@
         <el-button type="primary" icon="el-icon-search" size="mini" @click="onSearch">
           {{ $t('搜索') }}
         </el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="onReset">
+        <el-button icon="el-icon-refresh" size="mini" @click="onResetSearch">
           {{ $t('重置') }}
         </el-button>
       </el-form-item>
@@ -211,15 +211,15 @@ export default {
       page: {totalElements: 0, totalPages: 0},
       dialogTitle: this.$t('创建菜单'),
       dialogVisible: false,
-      form: {
-        id: undefined,
+      initForm: {
+        id: null,
         parent: '',
         icon: '',
         title: '',
         path: '',
         component: '',
-        redirect: '',
-        activeMenu: '',
+        redirect: null,
+        activeMenu: null,
         hidden: false,
         alwaysShow: undefined,
         noCache: false,
@@ -228,6 +228,7 @@ export default {
         ordered: 1,
         enabled: 'YES'
       },
+      form: {...this.initForm},
       rules: {
         title: [{required: true, message: this.$t('菜单名称不能为空'), trigger: 'blur'}],
         path: [{required: true, message: this.$t('菜单路径不能为空'), trigger: 'blur'}],
@@ -283,7 +284,7 @@ export default {
     onSearch() {
       this.findMenuData();
     },
-    onReset() {
+    onResetSearch() {
       this.params = {title: '', path: '', page: 0, size: 20};
       if (this.$refs.searchForm) {
         this.$refs.searchForm.resetFields();
@@ -294,6 +295,7 @@ export default {
       if (this.$refs.form) {
         this.$refs.form.resetFields();
       }
+      this.form = {...this.initForm};
       this.formOther = '';
     },
     fillForm(form) {
@@ -326,10 +328,11 @@ export default {
       this.dialogVisible = true;
     },
     onEdit({row}, readonly = true) {
+      this.resetForm();
       this.formEditable = !readonly;
       findMenu(row.id, 'menu-detail').then(response => {
-        this.resetForm();
         this.fillForm(response);
+        this.form.id = row.id;
         this.dialogTitle = readonly ? this.$t('查看菜单') : this.$t('编辑菜单');
         this.dialogVisible = true;
       });

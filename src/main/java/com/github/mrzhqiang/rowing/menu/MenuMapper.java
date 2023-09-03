@@ -38,6 +38,7 @@ public interface MenuMapper {
     @Mapping(target = "meta.breadcrumb", source = "breadcrumb")
     @Mapping(target = "meta.affix", source = "affix")
     @Mapping(target = "meta.activeMenu", source = "activeMenu")
+    @Mapping(target = "parentId", source = "menu.parent.id")
     MenuRoute toRoute(Menu menu);
 
 }

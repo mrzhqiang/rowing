@@ -37,7 +37,7 @@ public final class Menus {
 
         Menu parent = menu.getParent();
         if (parent != null) {
-            Preconditions.checkArgument(Validations.validateUrl(parent.getPath()),
+            Preconditions.checkArgument(!Validations.validUrl(parent.getPath()),
                     "操作失败！上级菜单不能是一个外部链接，无法创建");
         }
     }
@@ -90,7 +90,7 @@ public final class Menus {
      * @return 完整路径。
      */
     public static String concatFullPath(String parentFullPath, String path) {
-        if (Validations.validateUrl(path)) {
+        if (Validations.validUrl(path)) {
             return path;
         }
         if (PATH_SEPARATOR.equals(parentFullPath) || parentFullPath.endsWith(PATH_SEPARATOR)) {
