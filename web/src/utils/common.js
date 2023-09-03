@@ -678,7 +678,18 @@ const utils = {
             .replace(/>/gm, '&gt;')
             .replace(/"/g, '&quot;');
     },
-
+    findTreeNode: function (tree, id) {
+        let result = null;
+        if (tree.id === id) {
+            result = tree;
+        } else if (tree.children) {
+            tree.children.some((node) => {
+                result = utils.findTreeNode(node, id);
+                return result; // break loop
+            });
+        }
+        return result;
+    },
 };
 
 module.exports = utils;
