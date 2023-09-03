@@ -1,50 +1,27 @@
 [
   {
-    "path": "/example",
+    "path": "/system",
     "component": "Layout",
-    "redirect": "/example/list",
-    "name": "Example",
+    "redirect": "/system/menu",
+    "name": "System",
+    "alwaysShow": true,
+    "breadcrumb": true,
     "meta": {
-      "title": "example",
-      "icon": "el-icon-s-help",
+      "title": "system",
+      "icon": "el-icon-s-management",
       "roles": [
         "ADMIN"
       ]
     },
     "children": [
       {
-        "path": "create",
-        "component": "example/create",
-        "name": "CreateArticle",
+        "path": "menu",
+        "component": "menu/index",
+        "name": "Menu",
+        "breadcrumb": true,
         "meta": {
-          "title": "createArticle",
-          "icon": "edit",
-          "roles": [
-            "ADMIN"
-          ]
-        }
-      },
-      {
-        "path": "edit/:id(\\d+)",
-        "component": "example/edit",
-        "name": "EditArticle",
-        "meta": {
-          "title": "editArticle",
-          "noCache": true,
-          "activeMenu": "/example/list",
-          "roles": [
-            "ADMIN"
-          ]
-        },
-        "hidden": true
-      },
-      {
-        "path": "list",
-        "component": "example/list",
-        "name": "ArticleList",
-        "meta": {
-          "title": "articleList",
-          "icon": "list",
+          "title": "menu",
+          "icon": "el-icon-menu",
           "roles": [
             "ADMIN"
           ]
