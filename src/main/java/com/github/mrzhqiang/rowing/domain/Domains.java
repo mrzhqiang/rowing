@@ -1,4 +1,4 @@
-package com.github.mrzhqiang.rowing.util;
+package com.github.mrzhqiang.rowing.domain;
 
 import com.github.mrzhqiang.helper.Exceptions;
 

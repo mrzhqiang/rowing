@@ -15,8 +15,9 @@ import router from './router';
 
 import i18n from './lang'; // internationalization
 import './icons'; // icon
-import './permission'; // permission control
+import './routes'; // router config
 import './utils/error-log'; // error-log
+import './directive'; // directive
 
 import * as filters from './filters'; // global filters
 

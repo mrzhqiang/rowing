@@ -4,7 +4,7 @@ import com.github.mrzhqiang.helper.time.Ages;
 import com.github.mrzhqiang.rowing.account.Account;
 import com.github.mrzhqiang.rowing.domain.AuditableEntity;
 import com.github.mrzhqiang.rowing.domain.Gender;
-import com.github.mrzhqiang.rowing.util.Domains;
+import com.github.mrzhqiang.rowing.domain.Domains;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

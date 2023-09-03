@@ -41,8 +41,8 @@
 
 <script>
 import clipboard from '@/utils/clipboard';
-import svgIcons from './svg-icons';
-import elementIcons from './element-icons';
+import svgIcons from '@/icons/svg-icons';
+import elementIcons from '@/icons/element-icons';
 
 export default {
   name: 'Icons',

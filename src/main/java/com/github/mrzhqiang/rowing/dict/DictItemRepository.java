@@ -9,9 +9,10 @@ import java.util.Optional;
 /**
  * 字典项仓库。
  */
-@RepositoryRestResource(path = "dict-item", collectionResourceRel = "dict-item")
+@RepositoryRestResource(path = "dict-item", collectionResourceRel = "dict-item", excerptProjection = DictItemExcerpt.class)
 public interface DictItemRepository extends BaseRepository<DictItem> {
 
     @RestResource(path = "code-value", rel = "code-value")
     Optional<DictItem> findByGroup_CodeAndValue(String code, String value);
+
 }

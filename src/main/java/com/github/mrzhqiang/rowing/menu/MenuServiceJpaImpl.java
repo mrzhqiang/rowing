@@ -7,24 +7,29 @@ import com.github.mrzhqiang.rowing.util.Jsons;
 import com.google.common.base.Preconditions;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.rest.core.event.BeforeCreateEvent;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ResourceUtils;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-public class MenuServiceJpaImpl implements MenuService {
+public class MenuServiceJpaImpl implements MenuService, ApplicationEventPublisherAware {
 
     private final MenuProperties properties;
     private final MenuMapper mapper;
     private final MenuRepository repository;
     private final RoleRepository roleRepository;
+    private ApplicationEventPublisher eventPublisher;
 
     public MenuServiceJpaImpl(MenuProperties properties,
                               MenuMapper mapper,
@@ -66,9 +71,8 @@ public class MenuServiceJpaImpl implements MenuService {
 
     private void createRootMenu(int ordered, MenuRoute route) {
         Menu rootMenu = mapper.toEntity(route);
-        // 顶级菜单，完整路径就是它自己的路径
-        rootMenu.setFullPath(route.getPath());
         rootMenu.setOrdered(ordered);
+        eventPublisher.publishEvent(new BeforeCreateEvent(rootMenu));
         repository.save(rootMenu);
         log.info("create the root menu {} is successful", rootMenu);
 
@@ -85,8 +89,8 @@ public class MenuServiceJpaImpl implements MenuService {
         }
     }
 
-    private void bindingRole(MenuRoute route, Menu menu) {
-        if (route == null || menu == null) {
+    private void bindingRole(MenuRoute route, Menu newMenu) {
+        if (route == null || newMenu == null) {
             return;
         }
 
@@ -97,24 +101,17 @@ public class MenuServiceJpaImpl implements MenuService {
                 return;
             }
 
-            // 不想过度设计复杂的数据结构，去实现一个角色绑定多个菜单，逐个绑定感觉更清晰
-            roleRepository.findAllByCodeIn(roles).forEach(it -> {
-                List<Menu> menuList = it.getMenuList();
-                if (menuList.contains(menu)) {
-                    return;
-                }
-                menuList.add(menu);
-                roleRepository.save(it);
-            });
+            roleRepository.findAllByCodeIn(roles).stream()
+                    .peek(it -> it.getMenuList().add(newMenu))
+                    .forEach(roleRepository::save);
         }
     }
 
     private void createChildrenMenu(int ordered, Menu parent, MenuRoute data) {
         Menu menu = mapper.toEntity(data);
-        // 子级菜单，使用上级菜单路径拼接当前菜单路径，作为完整路径
-        menu.setFullPath(concatFullPath(parent, data));
         menu.setOrdered(ordered);
         menu.setParent(parent);
+        eventPublisher.publishEvent(new BeforeCreateEvent(menu));
         repository.save(menu);
         log.info("create the menu {} is successful", menu);
 
@@ -131,14 +128,6 @@ public class MenuServiceJpaImpl implements MenuService {
         }
     }
 
-    private String concatFullPath(Menu parent, MenuRoute data) {
-        String fullPath = parent.getFullPath();
-        if (PATH_SEPARATOR.equals(fullPath)) {
-            return fullPath.concat(data.getPath());
-        }
-        return fullPath.concat(PATH_SEPARATOR).concat(data.getPath());
-    }
-
     @Override
     public List<MenuRoute> findRoutes() {
         Sort sort = Sort.sort(Menu.class).by(Menu::getOrdered).ascending()
@@ -146,6 +135,11 @@ public class MenuServiceJpaImpl implements MenuService {
         return repository.findAllByParentIsNullAndEnabled(Logic.YES, sort).stream()
                 .map(mapper::toRoute)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void setApplicationEventPublisher(@Nonnull ApplicationEventPublisher eventPublisher) {
+        this.eventPublisher = eventPublisher;
     }
 
 }

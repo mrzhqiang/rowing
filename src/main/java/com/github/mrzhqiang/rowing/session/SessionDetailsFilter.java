@@ -1,8 +1,7 @@
 package com.github.mrzhqiang.rowing.session;
 
+import com.github.mrzhqiang.helper.Splitters;
 import com.github.mrzhqiang.rowing.util.Authentications;
-import com.github.mrzhqiang.rowing.util.Sessions;
-import com.github.mrzhqiang.rowing.util.Splitters;
 import com.google.common.base.Strings;
 import com.google.common.net.HttpHeaders;
 import eu.bitwalker.useragentutils.UserAgent;

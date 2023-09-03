@@ -6,7 +6,7 @@ import com.github.mrzhqiang.rowing.domain.AuditableEntity;
 import com.github.mrzhqiang.rowing.role.Role;
 import com.github.mrzhqiang.rowing.third.ThirdUser;
 import com.github.mrzhqiang.rowing.user.User;
-import com.github.mrzhqiang.rowing.util.Domains;
+import com.github.mrzhqiang.rowing.domain.Domains;
 import com.google.common.collect.Lists;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

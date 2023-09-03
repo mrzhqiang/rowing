@@ -1,17 +1,13 @@
 package com.github.mrzhqiang.rowing.menu;
 
-import com.github.mrzhqiang.rowing.role.Role;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 菜单映射器。
  * <p>
  */
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", imports = {Menus.class})
 public interface MenuMapper {
 
     @Mapping(target = "title", source = "route.meta.title")
@@ -35,18 +31,13 @@ public interface MenuMapper {
     Menu toEntity(MenuRoute route);
 
     @Mapping(target = "meta", ignore = true)
-    @Mapping(target = "meta.roles", source = "roleList")
+    @Mapping(target = "meta.roles", expression = "java( Menus.convertRoles(menu.getRoleList()) )")
     @Mapping(target = "meta.title", source = "title")
     @Mapping(target = "meta.noCache", source = "noCache")
     @Mapping(target = "meta.icon", source = "icon")
     @Mapping(target = "meta.breadcrumb", source = "breadcrumb")
     @Mapping(target = "meta.affix", source = "affix")
     @Mapping(target = "meta.activeMenu", source = "activeMenu")
-    @Mapping(target = "parentId", source = "parent.id")
     MenuRoute toRoute(Menu menu);
-
-    default List<String> convertRoleList(List<Role> roleList) {
-        return roleList.stream().map(Role::getCode).collect(Collectors.toList());
-    }
 
 }

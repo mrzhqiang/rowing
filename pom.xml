@@ -165,7 +165,7 @@
         </dependency>
         <dependency>
             <groupId>com.squareup.retrofit2</groupId>
-            <!-- 声明式 REST 框架 -->
+            <!-- 声明式 REST 客户端 -->
             <artifactId>retrofit</artifactId>
             <version>${retrofit.version}</version>
         </dependency>

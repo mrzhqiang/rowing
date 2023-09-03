@@ -26,16 +26,6 @@ public class MenuRoute implements Serializable {
     private static final long serialVersionUID = 4045471755425912647L;
 
     /**
-     * 菜单 ID。
-     */
-    private Long id;
-    /**
-     * 上级菜单 ID。
-     * <p>
-     * 如果为 null 表示当前菜单为顶级菜单。
-     */
-    private Long parentId;
-    /**
      * 路径。
      * <p>
      * 即浏览器中的 URL 路径，通常顶级菜单包含 / 前缀，子级菜单不包含。

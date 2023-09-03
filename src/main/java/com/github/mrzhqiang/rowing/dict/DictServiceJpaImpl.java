@@ -6,7 +6,7 @@ import com.github.mrzhqiang.rowing.domain.Logic;
 import com.github.mrzhqiang.rowing.i18n.I18nHolder;
 import com.github.mrzhqiang.rowing.init.InitializationException;
 import com.github.mrzhqiang.rowing.util.Cells;
-import com.github.mrzhqiang.rowing.util.Domains;
+import com.github.mrzhqiang.rowing.domain.Domains;
 import com.google.common.base.CaseFormat;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;

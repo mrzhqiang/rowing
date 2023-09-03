@@ -3,7 +3,7 @@ package com.github.mrzhqiang.rowing.setting;
 import com.github.mrzhqiang.rowing.domain.AuditableEntity;
 import com.github.mrzhqiang.rowing.domain.SettingTab;
 import com.github.mrzhqiang.rowing.domain.SettingType;
-import com.github.mrzhqiang.rowing.util.Domains;
+import com.github.mrzhqiang.rowing.domain.Domains;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

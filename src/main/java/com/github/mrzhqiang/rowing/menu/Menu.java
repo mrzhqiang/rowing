@@ -4,11 +4,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.mrzhqiang.rowing.domain.AuditableEntity;
 import com.github.mrzhqiang.rowing.domain.Logic;
 import com.github.mrzhqiang.rowing.role.Role;
-import com.github.mrzhqiang.rowing.util.Domains;
+import com.github.mrzhqiang.rowing.domain.Domains;
 import com.google.common.collect.Lists;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.data.rest.core.annotation.RestResource;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -51,15 +52,28 @@ public class Menu extends AuditableEntity {
     private List<Menu> children = Lists.newArrayList();
 
     /**
-     * 名称。
+     * 图标。
      * <p>
-     * 路由名称，用于 {@code <keep-alive>} 属性。
+     * 展示在标题之前的图标，属于内置数据，但不作为枚举实现。
      * <p>
-     * 一般情况下和路径保持一致，可能以首字母大写的单词形式存在，比如 path 路径变成 Path 名称。
+     * 可以在前端硬编码一个图标库列表，支持预览选择，得到相应的图标字符串，传参到后端进行保存。
+     * <p>
+     * 只需要匹配对应的图标字符串，即显示对应的图标。
      */
-    @Size(max = Domains.MENU_PATH_LENGTH)
-    @Column(length = Domains.MENU_PATH_LENGTH)
-    private String name;
+    @Size(max = Domains.MENU_ICON_LENGTH)
+    @Column(length = Domains.MENU_ICON_LENGTH)
+    private String icon;
+    /**
+     * 标题。
+     * <p>
+     * 标题一般展示在侧边栏以及面包屑中，由于是用户自己创建的内容，通常不支持国际化，也就意味着输入什么内容，就展示什么内容。
+     * <p>
+     * 未来或许可以借助第三方接口，来实现对应的内容国际化功能，然后再开发自己的内容国际化功能。
+     */
+    @NotBlank
+    @Size(max = Domains.MENU_TITLE_LENGTH)
+    @Column(length = Domains.MENU_TITLE_LENGTH)
+    private String title;
     /**
      * 路径。
      * <p>
@@ -70,6 +84,16 @@ public class Menu extends AuditableEntity {
     @Column(nullable = false, length = Domains.MENU_PATH_LENGTH)
     private String path;
     /**
+     * 名称。
+     * <p>
+     * 路由名称，用于 {@code <keep-alive>} 属性。
+     * <p>
+     * 一般情况下和路径保持一致，可能以首字母大写的单词形式存在，比如 path 路径变成 Path 名称。
+     */
+    @Size(max = Domains.MENU_PATH_LENGTH)
+    @Column(length = Domains.MENU_PATH_LENGTH)
+    private String name;
+    /**
      * 完整路径。
      * <p>
      * 通常路径是一个相对路径，除顶级菜单外，其他路径都不包含路径标识符，即 '/' 符号。
@@ -78,7 +102,6 @@ public class Menu extends AuditableEntity {
      * <p>
      * 但如果保留完整路径，则在修改上级菜单路径时，也要遍历子级菜单同步路径，否则将导致子级菜单失效。
      */
-    @NotBlank
     @Size(max = Domains.HTTP_URL_PATH_LENGTH)
     @Column(nullable = false, length = Domains.HTTP_URL_PATH_LENGTH)
     private String fullPath;
@@ -106,6 +129,14 @@ public class Menu extends AuditableEntity {
     @Column(length = Domains.HTTP_URL_PATH_LENGTH)
     private String redirect;
     /**
+     * 活动菜单。
+     * <p>
+     * 如果设置了路径，则在侧边栏高亮匹配到的路径。
+     */
+    @Size(max = Domains.HTTP_URL_PATH_LENGTH)
+    @Column(length = Domains.HTTP_URL_PATH_LENGTH)
+    private String activeMenu;
+    /**
      * 是否隐藏。
      * <p>
      * 隐藏的菜单不在侧边栏展示，默认为 false 表示不隐藏。
@@ -119,29 +150,6 @@ public class Menu extends AuditableEntity {
      * 如果未设置此项，或设置为 false 时，当超过一个子菜单，以嵌套的方式展示，只有一个子菜单，仅显示子菜单（隐藏当前菜单）。
      */
     private Boolean alwaysShow;
-    /**
-     * 标题。
-     * <p>
-     * 标题一般展示在侧边栏以及面包屑中，由于是用户自己创建的内容，通常不支持国际化，也就意味着输入什么内容，就展示什么内容。
-     * <p>
-     * 未来或许可以借助第三方接口，来实现对应的内容国际化功能，然后再开发自己的内容国际化功能。
-     */
-    @NotBlank
-    @Size(max = Domains.MENU_TITLE_LENGTH)
-    @Column(length = Domains.MENU_TITLE_LENGTH)
-    private String title;
-    /**
-     * 图标。
-     * <p>
-     * 展示在标题之前的图标，属于内置数据，但不作为枚举实现。
-     * <p>
-     * 可以在前端硬编码一个图标库列表，支持预览选择，得到相应的图标字符串，传参到后端进行保存。
-     * <p>
-     * 只需要匹配对应的图标字符串，即显示对应的图标。
-     */
-    @Size(max = Domains.MENU_ICON_LENGTH)
-    @Column(length = Domains.MENU_ICON_LENGTH)
-    private String icon;
     /**
      * 不缓存。
      * <p>
@@ -160,14 +168,6 @@ public class Menu extends AuditableEntity {
      * 如果设置为 false 则在面包屑中隐藏，默认为 true。
      */
     private Boolean breadcrumb = true;
-    /**
-     * 活动菜单。
-     * <p>
-     * 如果设置了路径，则在侧边栏高亮匹配到的路径。
-     */
-    @Size(max = Domains.HTTP_URL_PATH_LENGTH)
-    @Column(length = Domains.HTTP_URL_PATH_LENGTH)
-    private String activeMenu;
     /**
      * 排序。
      * <p>
@@ -190,6 +190,7 @@ public class Menu extends AuditableEntity {
      */
     @JsonIgnore
     @ToString.Exclude
+    @RestResource(path = "roles", rel = "roles")
     @ManyToMany(mappedBy = "menuList")
     private List<Role> roleList = Lists.newArrayList();
     /**

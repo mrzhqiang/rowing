@@ -5,7 +5,7 @@ import com.github.mrzhqiang.rowing.account.Account;
 import com.github.mrzhqiang.rowing.domain.AuditableEntity;
 import com.github.mrzhqiang.rowing.menu.Menu;
 import com.github.mrzhqiang.rowing.menu.MenuResource;
-import com.github.mrzhqiang.rowing.util.Domains;
+import com.github.mrzhqiang.rowing.domain.Domains;
 import com.google.common.collect.Lists;
 import lombok.Getter;
 import lombok.Setter;

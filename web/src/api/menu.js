@@ -11,33 +11,45 @@ export function findMenuRoutes() {
 }
 
 /**
- * 接口名称。
+ * 菜单接口名称。
  *
  * 作为与 Spring Boot Data REST 对接的模板，在这里提供名称，以便遵循 RESTFul 统一风格。
  */
-const API_NAME = 'menu';
+const MENU_API_NAME = 'menu';
 
-export function findAllMenu(params) {
-  return rest.findAll(API_NAME, params);
+export function pageMenu(params) {
+  // 分页查询数据（菜单有层级关系，通常只需要查询顶级菜单列表，通过 search 接口可以实现）
+  // 如果需要屏蔽某些字段，则在 params 中包含对应的 {projection: 'xxx'} 投影名称
+  return rest.findAll(MENU_API_NAME, params);
 }
 
 export function createMenu(data) {
-  return rest.create(API_NAME, data);
+  // 创建新的数据
+  return rest.create(MENU_API_NAME, data);
 }
 
-export function findOneMenu(id) {
-  // 如果需要屏蔽某些字段，则传递对应的 {projection: 'xxx'} 投影名称
-  return rest.findOne(API_NAME, id);
+export function findMenu(id, projection = '') {
+  // 查询数据详情
+  return rest.findOne(MENU_API_NAME, id, {projection});
+}
+
+export function editMenu(id, data) {
+  // 编辑部分字段
+  return rest.edit(MENU_API_NAME, id, data);
 }
 
 export function updateMenu(id, data) {
-  return rest.update(API_NAME, id, data);
+  // 更新所有字段
+  return rest.update(MENU_API_NAME, id, data);
 }
 
-export function removeMenu(id) {
-  return rest.remove(API_NAME, id);
+export function deleteMenu(id) {
+  // 删除已有数据
+  return rest.remove(MENU_API_NAME, id);
 }
 
 export function searchMenu(path, params) {
-  return rest.search(API_NAME, path, params);
+  // 搜索数据
+  // 如果需要屏蔽某些字段，则在 params 中包含对应的 {projection: 'xxx'} 投影名称
+  return rest.search(MENU_API_NAME, path, params);
 }

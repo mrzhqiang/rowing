@@ -336,7 +336,7 @@ export function createUniqueString() {
 
 /**
  * Check if an element has a class
- * @param {HTMLElement} elm
+ * @param {HTMLElement} ele
  * @param {string} cls
  * @returns {boolean}
  */
@@ -346,7 +346,7 @@ export function hasClass(ele, cls) {
 
 /**
  * Add class to element
- * @param {HTMLElement} elm
+ * @param {HTMLElement} ele
  * @param {string} cls
  */
 export function addClass(ele, cls) {
@@ -355,7 +355,7 @@ export function addClass(ele, cls) {
 
 /**
  * Remove class from element
- * @param {HTMLElement} elm
+ * @param {HTMLElement} ele
  * @param {string} cls
  */
 export function removeClass(ele, cls) {

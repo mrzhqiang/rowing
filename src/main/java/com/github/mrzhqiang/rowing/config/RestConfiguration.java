@@ -7,6 +7,7 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.github.mrzhqiang.helper.time.DateTimes;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.convert.support.ConfigurableConversionService;
 import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurer;
 
 import java.time.LocalDateTime;
@@ -27,6 +28,11 @@ public class RestConfiguration {
                 javaTimeModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(DateTimes.BASIC_FORMATTER));
                 javaTimeModule.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(DateTimes.BASIC_FORMATTER));
                 objectMapper.registerModule(javaTimeModule);
+            }
+
+            @Override
+            public void configureConversionService(ConfigurableConversionService conversionService) {
+                //conversionService.addConverter(new StringToExampleConverter());
             }
         };
     }

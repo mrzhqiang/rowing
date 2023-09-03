@@ -3,7 +3,7 @@ package com.github.mrzhqiang.rowing.third;
 import com.github.mrzhqiang.rowing.account.Account;
 import com.github.mrzhqiang.rowing.domain.AuditableEntity;
 import com.github.mrzhqiang.rowing.domain.ThirdUserType;
-import com.github.mrzhqiang.rowing.util.Domains;
+import com.github.mrzhqiang.rowing.domain.Domains;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

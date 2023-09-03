@@ -1,4 +1,4 @@
-package com.github.mrzhqiang.rowing.util;
+package com.github.mrzhqiang.rowing.setting;
 
 /**
  * 设置工具。

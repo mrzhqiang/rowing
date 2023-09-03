@@ -3,19 +3,18 @@ package com.github.mrzhqiang.rowing.util;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.util.CollectionUtils;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
- * 环境工具。
+ * 查询器。
  */
-public final class Environments {
-    private Environments() {
+public final class Finders {
+    private Finders() {
         // no instances.
     }
 
     /**
-     * 判断是否存在指定参数并且参数为 true 值。
+     * 查询是否存在指定参数并且参数为 true 值。
      *
      * @param args       Spring Application 参数。
      * @param optionName 选项名称。
@@ -26,7 +25,7 @@ public final class Environments {
     }
 
     /**
-     * 判断是否存在指定参数并且参数为指定值。
+     * 查询是否存在指定参数并且参数为指定值。
      *
      * @param args       Spring Application 参数。
      * @param optionName 选项名称。

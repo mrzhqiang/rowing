@@ -135,7 +135,7 @@ export const constantRoutes = [
     children: [
       {
         path: 'list',
-        component: () => import('@/views/menu/listMenu'),
+        component: () => import('@/views/menu'),
         name: 'ListMenu',
         meta: {
           title: 'listMenu',

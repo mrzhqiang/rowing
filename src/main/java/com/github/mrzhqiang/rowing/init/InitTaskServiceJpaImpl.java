@@ -6,7 +6,7 @@ import com.github.mrzhqiang.rowing.domain.TaskMode;
 import com.github.mrzhqiang.rowing.domain.TaskStatus;
 import com.github.mrzhqiang.rowing.domain.TaskType;
 import com.github.mrzhqiang.rowing.i18n.I18nHolder;
-import com.github.mrzhqiang.rowing.util.Environments;
+import com.github.mrzhqiang.rowing.util.Finders;
 import com.github.mrzhqiang.rowing.util.Validations;
 import com.google.common.base.Stopwatch;
 import com.google.common.base.Strings;
@@ -43,7 +43,7 @@ public class InitTaskServiceJpaImpl implements InitTaskService {
     @Override
     public void sync(ApplicationArguments args) {
         // 从运行参数或环境变量中判断是否包含指定参数
-        if (Environments.hasTrue(args, SKIP_SYNC_ARGS_NAME)) {
+        if (Finders.hasTrue(args, SKIP_SYNC_ARGS_NAME)) {
             // 根据 ServletRequest 的 getLocale 方法指示：
             // 当请求头中包含 Accept-Language 值时，返回指定的语言代码，否则返回系统默认语言代码
             // Spring 包装的 SavedRequest 会将返回的语言代码保存到本地线程中
@@ -103,7 +103,7 @@ public class InitTaskServiceJpaImpl implements InitTaskService {
     @Override
     public void execute(ApplicationArguments args) {
         // 从运行参数或环境变量中判断是否包含指定参数
-        if (Environments.hasTrue(args, SKIP_EXECUTE_ARGS_NAME)) {
+        if (Finders.hasTrue(args, SKIP_EXECUTE_ARGS_NAME)) {
             log.warn(I18nHolder.getAccessor().getMessage(
                     "InitTaskService.execute.skipMessage", new Object[]{SKIP_EXECUTE_ARGS_NAME},
                     Strings.lenientFormat("发现 --%s=true 将跳过自动执行", SKIP_EXECUTE_ARGS_NAME)));

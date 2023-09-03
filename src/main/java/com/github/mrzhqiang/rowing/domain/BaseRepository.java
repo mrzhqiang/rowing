@@ -4,7 +4,7 @@ import com.github.mrzhqiang.rowing.util.Authorizes;
 import static com.github.mrzhqiang.rowing.util.Authorizes.HAS_AUTHORITY_ADMIN;
 import static com.github.mrzhqiang.rowing.util.Authorizes.HAS_AUTHORITY_USER;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,7 +17,8 @@ import javax.annotation.Nonnull;
  * <p>
  * 设定如果继承此基础仓库，则必须使用 {@link BaseEntity} 的扩展实体，以规范主键和版本字段。
  * <p>
- * 这样做可以方便未来对继承的接口进行改进，比如增加 {@link JpaSpecificationExecutor} 接口，或降级为 {@link PagingAndSortingRepository} 分页排序仓库。
+ * 这样做可以方便未来对继承的接口进行改进，比如增加 {@link QuerydslPredicateExecutor} 接口，
+ * 或降级为 {@link PagingAndSortingRepository} 分页排序仓库。
  * <p>
  * 参考：<a href="https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories">spring data jpa repositories</a>
  * <p>

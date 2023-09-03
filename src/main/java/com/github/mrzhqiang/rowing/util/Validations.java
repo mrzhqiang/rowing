@@ -3,7 +3,9 @@ package com.github.mrzhqiang.rowing.util;
 import com.github.mrzhqiang.helper.Exceptions;
 import com.github.mrzhqiang.rowing.init.InitializationException;
 import com.google.common.base.Strings;
+import okhttp3.HttpUrl;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -16,6 +18,16 @@ import java.util.Set;
 public final class Validations {
     private Validations() {
         // no instances.
+    }
+
+    /**
+     * 验证 URL 地址。
+     *
+     * @param url URL 地址字符串。
+     * @return 返回 true 表示传入参数为 URL 地址；返回 false 则表示不是。
+     */
+    public static boolean validateUrl(String url) {
+        return StringUtils.hasText(url) && HttpUrl.parse(url) != null;
     }
 
     /**
