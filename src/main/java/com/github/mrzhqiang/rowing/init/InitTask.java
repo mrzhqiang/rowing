@@ -16,6 +16,7 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.List;
@@ -73,18 +74,20 @@ public class InitTask extends AuditableEntity {
     private Logic discard;
 
     /**
-     * 执行历史。
+     * 执行日志。
      */
     @JsonIgnore
     @ToString.Exclude
+    @OrderBy("created desc")
     @OneToMany(mappedBy = "task", orphanRemoval = true)
-    private List<InitTaskLog> logHistories;
+    private List<InitTaskLog> logs;
 
     /**
      * 判断任务是否可执行。
      *
      * @return 返回 true 表示任务可以执行；否则需要忽略执行。
      */
+    @JsonIgnore
     public boolean isExecutable() {
         return Logic.NO.equals(discard) && TaskStatus.DEFAULT.equals(status);
     }

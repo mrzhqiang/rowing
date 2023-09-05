@@ -182,6 +182,14 @@ public class Menu extends AuditableEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = Domains.ENUM_NAME_LENGTH)
     private Logic enabled = Logic.YES;
+    /**
+     * 是否内置。
+     * <p>
+     * 内置的菜单不允许更新和删除，避免系统出现故障。
+     */
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, updatable = false, length = Domains.ENUM_NAME_LENGTH)
+    private Logic internal = Logic.NO;
 
     /**
      * 菜单角色列表。
@@ -198,6 +206,7 @@ public class Menu extends AuditableEntity {
      */
     @JsonIgnore
     @ToString.Exclude
+    @RestResource(path = "resources", rel = "resources")
     @OneToMany(mappedBy = "menu", orphanRemoval = true)
     private List<MenuResource> resourceList = Lists.newArrayList();
 

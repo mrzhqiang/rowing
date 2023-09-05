@@ -17,7 +17,7 @@ import java.util.List;
  * <p>
  */
 @PreAuthorize(Authorizes.HAS_AUTHORITY_ADMIN)
-@RepositoryRestResource(path = "menu", collectionResourceRel = "menu", excerptProjection = MenuExcerpt.class)
+@RepositoryRestResource(path = "menu", excerptProjection = MenuExcerpt.class)
 public interface MenuRepository extends BaseRepository<Menu> {
 
     @RestResource(exported = false)

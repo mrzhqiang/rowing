@@ -72,6 +72,7 @@ public class MenuServiceJpaImpl implements MenuService, ApplicationEventPublishe
     private void createRootMenu(int ordered, MenuRoute route) {
         Menu rootMenu = mapper.toEntity(route);
         rootMenu.setOrdered(ordered);
+        rootMenu.setInternal(Logic.YES);
         eventPublisher.publishEvent(new BeforeCreateEvent(rootMenu));
         repository.save(rootMenu);
         log.info("create the root menu {} is successful", rootMenu);
@@ -110,6 +111,7 @@ public class MenuServiceJpaImpl implements MenuService, ApplicationEventPublishe
     private void createChildrenMenu(int ordered, Menu parent, MenuRoute data) {
         Menu menu = mapper.toEntity(data);
         menu.setOrdered(ordered);
+        menu.setInternal(Logic.YES);
         menu.setParent(parent);
         eventPublisher.publishEvent(new BeforeCreateEvent(menu));
         repository.save(menu);

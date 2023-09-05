@@ -82,3 +82,9 @@
 .el-range-separator {
   box-sizing: content-box;
 }
+
+.el-drawer {
+  .el-drawer__body {
+    overflow: auto;
+  }
+}

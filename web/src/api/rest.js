@@ -4,22 +4,23 @@ import common from '@/utils/common';
 /**
  * 转为相对地址。
  *
- * 链接通常是绝对地址，直接调用会触发跨域防御策略，需要转为相对地址，通过代理去访问。
+ * 绝对地址如果直接调用会触发跨域防御策略，需要转为相对地址，通过代理去访问。
  *
- * @param link 链接。格式：{href: 'http://localhost:8888/api/path/to', templated: true}。
+ * @param url HTTP 地址。
+ * @return {string} 相对地址。
  */
-export function toRelative(link) {
-  let tempUrl = link.href;
-  if (common.isAbsoluteUrl(tempUrl)) {
-    if (tempUrl.includes('/api')) {
+export function toRelative(url) {
+  if (url && common.isAbsoluteUrl(url)) {
+    if (url.includes('/api')) {
       // 如果包含 /api 说明是后端接口，则替换到 /api 开头的地址
-      link.href = tempUrl.substring(tempUrl.indexOf('/api'));
+      url = url.substring(url.indexOf('/api'));
     } else {
       // 如果不包含 /api 说明是外部链接（后端返回的外部资源），则忽略域名及端口，即第一个路径分隔符 / 之前的内容
-      tempUrl = tempUrl.replace('//', '');
-      link.href = tempUrl.substring(tempUrl.indexOf('/'));
+      url = url.replace('//', '');
+      url = url.substring(url.indexOf('/'));
     }
   }
+  return url;
 }
 
 /**
@@ -29,13 +30,14 @@ export function toRelative(link) {
  *
  * 包含模板占位符的链接：http(s)://your-domain/api/path/to{?page,size,sort,projection}。
  *
- * @param link 链接。
+ * @param href link 中的 href 属性。
+ * @return {string} 清理后的 href 字符串。
  */
-export function clearTemplate(link) {
-  const tempUrl = link.href;
-  if (link.templated && tempUrl.endsWith('{?')) {
-    link.href = tempUrl.substring(0, tempUrl.lastIndexOf('{?'));
+export function clearTemplate(href) {
+  if (href && href.includes('{?')) {
+    href = href.substring(0, href.lastIndexOf('{?'));
   }
+  return href;
 }
 
 /** 按照 Spring Boot Data REST 框架实现的接口工具。*/
@@ -150,7 +152,7 @@ const rest = {
     return request.get(`/api/${resource}/search/${path}`, {params: params});
   },
   /**
-   * 直接请求链接。
+   * 访问链接地址。
    *
    * 链接名称：
    * self 表示自身；
@@ -162,15 +164,15 @@ const rest = {
    * search 表示当前资源的自定义查询方法；
    * xxx 表示各种资源定义中的 rel 名称
    *
-   * 链接内容：{href: 'http://localhost:8888/api/path/to', templated: true}。
+   * 参考：self: {href: 'http://localhost:8888/api/path/to', templated: true}。
    *
-   * @param link 链接。
+   * @param url 通常是链接中的 href 属性。
    * @return {AxiosPromise<any>} 链接请求。
    */
-  request: function (link) {
-    toRelative(link);
-    clearTemplate(link);
-    return request.get(link.href);
+  link: function (url) {
+    url = toRelative(url);
+    url = clearTemplate(url);
+    return request.get(url);
   }
 };
 

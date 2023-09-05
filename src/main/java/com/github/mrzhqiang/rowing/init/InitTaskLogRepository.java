@@ -9,7 +9,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
  * 初始化任务日志仓库。
  */
 @PreAuthorize(Authorizes.HAS_AUTHORITY_ADMIN)
-@RepositoryRestResource(path = "init-task-log", collectionResourceRel = "init-task-log")
+@RepositoryRestResource(path = "init-task-log", excerptProjection = InitTaskLogExcerpt.class)
 public interface InitTaskLogRepository extends BaseRepository<InitTaskLog> {
 
 }

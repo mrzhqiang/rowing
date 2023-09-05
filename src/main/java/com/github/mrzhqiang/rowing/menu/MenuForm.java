@@ -5,11 +5,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.rest.core.config.Projection;
 
 /**
- * 菜单详情。
+ * 菜单表单。
  * <p>
- * 用于查看、编辑的菜单详情，屏蔽无关字段，避免信息泄露。
+ * 用于查看、编辑的菜单表单，屏蔽无关字段，避免信息泄露。
  */
-@Projection(name = "menu-detail", types = {Menu.class})
+@Projection(name = "menu-form", types = {Menu.class})
 public interface MenuForm extends BaseExcerpt {
 
     @Value("#{target.parent?.id}")

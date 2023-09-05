@@ -24,7 +24,7 @@ public interface InitTaskMapper {
     @Mapping(target = "created", ignore = true)
     @Mapping(target = "version", ignore = true)
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "logHistories", ignore = true)
+    @Mapping(target = "logs", ignore = true)
     @Mapping(target = "discard", expression = "java(Logic.NO)")
     @Mapping(target = "status", expression = "java(TaskStatus.DEFAULT)")
     @Mapping(target = "type", source = "initializer.type")

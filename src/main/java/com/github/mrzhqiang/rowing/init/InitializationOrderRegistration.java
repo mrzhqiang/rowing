@@ -5,6 +5,7 @@ import com.github.mrzhqiang.rowing.account.AccountAutoInitializer;
 import com.github.mrzhqiang.rowing.menu.MenuAutoInitializer;
 import com.github.mrzhqiang.rowing.role.RoleAutoInitializer;
 import com.github.mrzhqiang.rowing.setting.SettingAutoInitializer;
+import org.springframework.data.util.ProxyUtils;
 
 import javax.servlet.Filter;
 import java.util.HashMap;
@@ -77,7 +78,7 @@ final class InitializationOrderRegistration {
      */
     static Integer find(Object obj) {
         return Optional.ofNullable(obj)
-                .map(Object::getClass)
+                .map(ProxyUtils::getUserClass)
                 .map(Class::getName)
                 .map(INITIALIZER_TO_ORDER::get)
                 .orElse(Integer.MAX_VALUE);

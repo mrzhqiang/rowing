@@ -30,6 +30,11 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+    properties:
+      hibernate:
+        query:
+          jpaql_strict_compliance=false: false
+
   data:
     rest:
       base-path: /api

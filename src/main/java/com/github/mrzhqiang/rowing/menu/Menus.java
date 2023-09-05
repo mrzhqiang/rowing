@@ -1,5 +1,6 @@
 package com.github.mrzhqiang.rowing.menu;
 
+import com.github.mrzhqiang.rowing.domain.Logic;
 import com.github.mrzhqiang.rowing.role.Role;
 import com.github.mrzhqiang.rowing.util.Validations;
 import static com.google.common.base.CaseFormat.LOWER_HYPHEN;
@@ -30,7 +31,7 @@ public final class Menus {
     /**
      * 验证菜单创建。
      *
-     * @param menu 菜单实体。
+     * @param menu 新的菜单实体。
      */
     public static void validateCreate(Menu menu) {
         Preconditions.checkNotNull(menu, "menu == null");
@@ -42,11 +43,29 @@ public final class Menus {
         }
     }
 
+    /**
+     * 验证菜单更新。
+     * <p>
+     * 注意：对于 PATCH 接口，菜单实体是合并了更新内容的数据，如果用户恶意传递内置字段为 false 的话，这个校验会得到通过，
+     * 因此我们设定内置字段无法更新，保证即使这里的校验得到通过，也会因为触发无法修改内置字段策略，而使得恶意攻击无效。
+     *
+     * @param menu 菜单实体。
+     */
+    public static void validateSave(Menu menu) {
+        Preconditions.checkNotNull(menu, "menu == null");
+        // 建议通过修改 classpath:data/menu-routes.json 文件更新内置菜单，然后重新执行一次菜单初始化即可
+        Preconditions.checkArgument(Logic.NO.equals(menu.getInternal()), "操作失败！内置菜单，无法更新");
+    }
+
+    /**
+     * 验证菜单删除。
+     *
+     * @param menu 菜单实体。
+     */
     public static void validateDelete(Menu menu) {
         Preconditions.checkNotNull(menu, "menu == null");
-
-        List<Menu> children = menu.getChildren();
-        Preconditions.checkArgument(CollectionUtils.isEmpty(children),
+        Preconditions.checkArgument(Logic.NO.equals(menu.getInternal()), "操作失败！内置菜单，无法删除");
+        Preconditions.checkArgument(CollectionUtils.isEmpty(menu.getChildren()),
                 "操作失败！当前菜单存在下级菜单，无法删除");
     }
 

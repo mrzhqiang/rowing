@@ -4,7 +4,9 @@ const DICT_API = 'dict';
 const DICT_ITEM_API = 'dict-item';
 
 export const DICT_CODES = {
-  logic: 'LOGIC'
+  logic: 'LOGIC',
+  taskType: 'TASK_TYPE',
+  taskStatus: 'TASK_STATUS',
 };
 
 export function pageDict(params) {

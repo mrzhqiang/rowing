@@ -9,7 +9,7 @@ import java.util.Optional;
 /**
  * 字典组仓库。
  */
-@RepositoryRestResource(path = "dict", collectionResourceRel = "dict", excerptProjection = DictExcerpt.class)
+@RepositoryRestResource(path = "dict", excerptProjection = DictExcerpt.class)
 public interface DictGroupRepository extends BaseRepository<DictGroup> {
 
     @RestResource(path = "code", rel = "code")

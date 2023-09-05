@@ -11,9 +11,7 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
 /**
- * 初始化任务记录。
- * <p>
- * 继承自审计实体，用于审计操作初始化任务的相关信息，比如操作人及操作时间。
+ * 初始化任务日志。
  */
 @Getter
 @Setter
@@ -24,7 +22,7 @@ public class InitTaskLog extends AuditableEntity {
     private static final long serialVersionUID = -3132150344457512287L;
 
     /**
-     * 记录所属任务。
+     * 任务。
      */
     @ManyToOne(optional = false)
     private InitTask task;

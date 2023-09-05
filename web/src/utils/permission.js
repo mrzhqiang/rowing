@@ -16,6 +16,9 @@ export const PERMISSION_MARK = {
         edit: [ADMIN_ROLE, 'system:menu:edit'],
         delete: [ADMIN_ROLE, 'system:menu:delete'],
     },
+    initTask: {
+        edit: [ADMIN_ROLE, 'system:initTask:edit'],
+    }
 };
 
 /**
