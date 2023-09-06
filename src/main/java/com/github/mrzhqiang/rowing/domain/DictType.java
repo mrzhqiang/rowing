@@ -38,4 +38,5 @@ public enum DictType {
      * 通过字典模块进行 CURD 管理。
      */
     CUSTOM,
+
 }

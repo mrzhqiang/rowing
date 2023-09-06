@@ -10,7 +10,7 @@ public enum TaskType {
     /**
      * 系统任务。
      * <p>
-     * 表示在系统启动时自动执行。
+     * 表示在系统启动时自动执行，也支持手动执行。
      */
     SYSTEM,
     /**
@@ -19,4 +19,5 @@ public enum TaskType {
      * 表示需要通过手动执行，
      */
     OPTIONAL,
+
 }

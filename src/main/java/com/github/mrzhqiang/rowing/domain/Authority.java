@@ -3,7 +3,7 @@ package com.github.mrzhqiang.rowing.domain;
 /**
  * 权限枚举。
  * <p>
- * 对于权限，以 AUTH_ 作为前缀，具有一定的格式，比如中间是 {@link BaseRepository 仓库} 的实现类名称，以方法名称结尾，以此保证唯一。
+ * 对于权限，以 AUTH_ 作为前缀，具有一定的格式，比如中间是 {@link BaseRepository 仓库} 的扩展类名称，以对应操作名称结尾，需保证唯一。
  * <p>
  * 权限用于接口授权：通常是执行方法之前，进行预授权，只有拥有相关权限标识符，才能执行成功，避免越权操作。
  * <p>
@@ -15,5 +15,8 @@ package com.github.mrzhqiang.rowing.domain;
  */
 public enum Authority {
 
+    AUTH_MENU_CREATE,
+    AUTH_MENU_EDIT,
+    AUTH_MENU_DELETE,
 
 }

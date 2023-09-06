@@ -42,6 +42,12 @@
           <el-button size="mini" icon="el-icon-notebook-2" type="text"
                      @click="onInitTaskLog(scope)">{{ $t('日志') }}
           </el-button>
+          <el-popconfirm style="margin: 0 10px" :title="$t('确定执行吗？')"
+                         @onConfirm="onInitTaskExecute(scope)">
+            <el-button slot="reference" v-permission="initTaskPermission.execute"
+                       size="mini" icon="el-icon-caret-right" type="text">{{ $t('执行') }}
+            </el-button>
+          </el-popconfirm>
           <el-button v-permission="initTaskPermission.edit"
                      size="mini" icon="el-icon-edit" type="text"
                      @click="onInitTaskEdit(scope)">{{ $t('编辑') }}
@@ -98,7 +104,7 @@
     </el-dialog>
 
     <el-drawer :title="initTaskLogTitle" :visible.sync="initTaskLogVisible" destroy-on-close>
-      <el-timeline reverse>
+      <el-timeline>
         <el-timeline-item v-for="log in initTaskLogList" :key="log.id"
                           placement="top" :timestamp="log.created"
                           :type="log.trace ? 'danger' : 'success'">
@@ -134,7 +140,7 @@
 import elDragDialog from '@/directive/el-drag-dialog';
 import {PERMISSION_MARK} from '@/utils/permission';
 import {searchDict, DICT_CODES} from '@/api/dict';
-import {findInitTask, editInitTask, searchInitTask, createInitTask} from '@/api/init';
+import {findInitTask, editInitTask, searchInitTask, createInitTask, executeInitTask} from '@/api/init';
 import rest from '@/api/rest';
 import Pagination from '@/components/Pagination';
 
@@ -205,6 +211,11 @@ export default {
         this.$refs.initTaskSearchForm.resetFields();
       }
       this.findInitTaskList();
+    },
+    onInitTaskExecute({row}) {
+      executeInitTask(row.path).then(() => {
+        this.$message.success('执行成功！');
+      });
     },
     onInitTaskLog({row}) {
       rest.link(row._links.logs.href).then(response => {
@@ -291,5 +302,6 @@ export default {
 .stack-trace {
   overflow: auto;
   font-family: monospace;
+  background-color: #f5f7fa;
 }
 </style>

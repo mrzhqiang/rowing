@@ -2,11 +2,17 @@ package com.github.mrzhqiang.rowing.init;
 
 import com.github.mrzhqiang.rowing.account.RunAsSystem;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeansException;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.Nonnull;
 
 /**
  * 初始化运行器。
@@ -18,9 +24,11 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE + 1)
-public class InitializationRunner implements ApplicationRunner {
+public class InitializationRunner implements ApplicationRunner, ApplicationContextAware {
 
     private final InitTaskService service;
+
+    private ApplicationContext context;
 
     public InitializationRunner(InitTaskService service) {
         this.service = service;
@@ -29,9 +37,20 @@ public class InitializationRunner implements ApplicationRunner {
     @RunAsSystem
     @Override
     public void run(ApplicationArguments args) {
-        // 同步初始化任务
-        service.sync(args);
-        // 执行初始化任务
-        service.execute(args);
+        try {
+            // 同步初始化任务
+            service.sync(args);
+            // 执行初始化任务
+            service.execute(args);
+        } catch (Exception exception) {
+            log.error("初始化运行器运行出错！系统即将退出...", exception);
+            SpringApplication.exit(context);
+        }
     }
+
+    @Override
+    public void setApplicationContext(@Nonnull ApplicationContext applicationContext) throws BeansException {
+        this.context = applicationContext;
+    }
+
 }

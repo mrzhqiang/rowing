@@ -23,4 +23,5 @@ public class RoleAutoInitializer extends AutoInitializer {
     protected void onExecute() {
         service.init();
     }
+
 }

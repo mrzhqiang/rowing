@@ -29,4 +29,12 @@ public interface InitTaskService {
      * @param args 系统启动时的运行参数以及环境变量。
      */
     void execute(ApplicationArguments args);
+
+    /**
+     * 通过路径执行初始化。
+     *
+     * @param path 初始化任务的唯一路径。
+     */
+    void executeByPath(String path);
+
 }

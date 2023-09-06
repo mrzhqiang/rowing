@@ -45,4 +45,5 @@ public enum Logic {
     public static boolean no(String code) {
         return !StringUtils.hasText(code) || NO.name().equalsIgnoreCase(code);
     }
+
 }

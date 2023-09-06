@@ -72,7 +72,7 @@ public final class Domains {
     /**
      * HTTP URL 请求路径长度。
      */
-    public static final int HTTP_URL_PATH_LENGTH = 2 * 1024;
+    public static final int HTTP_URL_PATH_LENGTH = 1024;
     /**
      * HTTP URL 查询参数长度。
      */

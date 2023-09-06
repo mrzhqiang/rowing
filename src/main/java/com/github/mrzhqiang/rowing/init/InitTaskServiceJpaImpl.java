@@ -118,19 +118,25 @@ public class InitTaskServiceJpaImpl implements InitTaskService {
 
         initializers.stream()
                 .filter(it -> TaskType.SYSTEM.equals(it.getType()))
-                .forEach(this::attemptExecute);
+                .forEach(this::executeSystem);
     }
 
-    private void attemptExecute(Initializer initializer) {
-        String path = initializer.getPath();
-        InitTask task = repository.findByPath(path);
-        if (task == null || !task.isExecutable()) {
+    private void executeSystem(Initializer initializer) {
+        InitTask task = repository.findByPath(initializer.getPath());
+        // 对于系统任务：如果它不存在，或已废弃，或非默认状态，则无需执行
+        if (task == null || Logic.YES.equals(task.getDiscard())
+                || !TaskStatus.DEFAULT.equals(task.getStatus())) {
             log.warn(I18nHolder.getAccessor().getMessage(
                     "InitTaskService.execute.skipped", new Object[]{task},
-                    String.format("初始化任务 %s，无需执行", task)));
+                    String.format("初始化任务 %s 无需执行", task)));
             return;
         }
 
+        attemptExecute(initializer, task);
+    }
+
+    private void attemptExecute(Initializer initializer, InitTask task) {
+        String path = task.getPath();
         String name = task.getName();
         log.info(I18nHolder.getAccessor().getMessage(
                 "InitTaskService.execute.started", new Object[]{name, path},
@@ -170,4 +176,24 @@ public class InitTaskServiceJpaImpl implements InitTaskService {
             logRepository.save(taskLog);
         }
     }
+
+    @Override
+    public void executeByPath(String path) {
+        InitTask task = repository.findByPath(path);
+        // 对于所有任务：如果它不存在，或已废弃，或已经开始执行，则无需执行
+        if (task == null || Logic.YES.equals(task.getDiscard())
+                || TaskStatus.STARTED.equals(task.getStatus())) {
+            log.warn(I18nHolder.getAccessor().getMessage(
+                    "InitTaskService.execute.skipped", new Object[]{task},
+                    String.format("初始化任务 %s 无需执行", task)));
+            return;
+        }
+
+        // 根据路径找到唯一的初始化任务，尝试执行
+        initializers.stream()
+                .filter(it -> it.getPath().equals(path))
+                .findFirst()
+                .ifPresent(it -> attemptExecute(it, task));
+    }
+
 }

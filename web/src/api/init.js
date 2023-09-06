@@ -1,4 +1,14 @@
+import request from '@/utils/request';
 import rest from '@/api/rest';
+
+/**
+ * 执行指定路径的初始化任务。
+ * @param path 路径。
+ * @returns {AxiosPromise<any>} 执行请求。
+ */
+export function executeInitTask(path) {
+  return request.get('/init-task/execute', {params: {path}});
+}
 
 /**
  * 初始化任务接口名称。

@@ -56,4 +56,5 @@ public class SecurityProperties {
      * 公开的地址表示任何人都可以访问，没有权限相关的限制，通常来说是登录、注册以及报错页面。
      */
     private String[] publicPath = new String[]{DEF_ERROR_PATH, DEF_ERROR_DETAIL_PATH};
+
 }

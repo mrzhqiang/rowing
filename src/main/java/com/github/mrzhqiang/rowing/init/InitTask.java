@@ -82,13 +82,4 @@ public class InitTask extends AuditableEntity {
     @OneToMany(mappedBy = "task", orphanRemoval = true)
     private List<InitTaskLog> logs;
 
-    /**
-     * 判断任务是否可执行。
-     *
-     * @return 返回 true 表示任务可以执行；否则需要忽略执行。
-     */
-    @JsonIgnore
-    public boolean isExecutable() {
-        return Logic.NO.equals(discard) && TaskStatus.DEFAULT.equals(status);
-    }
 }

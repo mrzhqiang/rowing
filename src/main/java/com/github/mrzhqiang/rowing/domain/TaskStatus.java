@@ -31,4 +31,5 @@ public enum TaskStatus {
      * 表示任务执行成功。
      */
     COMPLETED,
+
 }

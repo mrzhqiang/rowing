@@ -17,4 +17,8 @@ public final class InitializationException extends RuntimeException {
         super(cause);
     }
 
+    public InitializationException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
 }

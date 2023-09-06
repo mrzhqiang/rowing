@@ -104,6 +104,7 @@ final class InitializationOrderRegistration {
             this.value += this.stepSize;
             return value;
         }
+
     }
 
 }

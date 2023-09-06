@@ -8,12 +8,13 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestAttributes;
 import static org.springframework.web.context.request.RequestAttributes.REFERENCE_SESSION;
 import static org.springframework.web.context.request.RequestAttributes.SCOPE_SESSION;
 import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
 
@@ -38,26 +39,31 @@ public class RateLimitAspect {
     }
 
     @Pointcut("@annotation(org.springframework.web.bind.annotation.GetMapping)")
-    public void getMappingPoint() {
+    public void getPoint() {
         // 切中 GetMapping 注解标记的方法
     }
 
     @Pointcut("@annotation(org.springframework.web.bind.annotation.PostMapping)")
-    public void postMappingPoint() {
+    public void postPoint() {
         // 切中 PostMapping 注解标记的方法
     }
 
     @Pointcut("@annotation(org.springframework.web.bind.annotation.PutMapping)")
-    public void putMappingPoint() {
+    public void putPoint() {
         // 切中 PutMapping 注解标记的方法
     }
 
+    @Pointcut("@annotation(org.springframework.web.bind.annotation.PatchMapping)")
+    public void patchPoint() {
+        // 切中 PatchMapping 注解标记的方法
+    }
+
     @Pointcut("@annotation(org.springframework.web.bind.annotation.DeleteMapping)")
-    public void deleteMappingPoint() {
+    public void deletePoint() {
         // 切中 DeleteMapping 注解标记的方法
     }
 
-    @Around("getMappingPoint() || postMappingPoint() || putMappingPoint() || deleteMappingPoint()")
+    @Around("getPoint() || postPoint() || putPoint() || patchPoint() || deletePoint()")
     public Object handle(ProceedingJoinPoint point) throws Throwable {
         RequestAttributes requestAttributes = RequestContextHolder.currentRequestAttributes();
         HttpSession session = (HttpSession) requestAttributes.getAttribute(REFERENCE_SESSION, SCOPE_SESSION);
@@ -77,7 +83,8 @@ public class RateLimitAspect {
         if (acquire) {
             return point.proceed();
         }
-        // todo 这里需要一个公共返回类
-        return new ModelAndView("refresh");
+        // HTTP 状态码 429 表示请求过于频繁
+        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
     }
+
 }

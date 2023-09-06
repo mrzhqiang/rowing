@@ -9,9 +9,9 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Nonnull;
 
 /**
- * 国际化消息持有者。
+ * 国际化持有者。
  * <p>
- * 事实上，它在应用初始化时，获取消息源并作为消息源访问器的参数，可以通过获取这个访问器来处理国际化消息。
+ * 此类持有一个消息源访问器，通过消息源访问器，可以获取当前环境下的语言标签所对应的国际化消息。
  */
 @Component
 @Order(Integer.MIN_VALUE)
@@ -29,4 +29,5 @@ public final class I18nHolder implements MessageSourceAware {
             accessor = new MessageSourceAccessor(messageSource);
         }
     }
+
 }

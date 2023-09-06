@@ -40,4 +40,5 @@ public class CacheConfiguration extends CachingConfigurerSupport {
             return Joiners.CACHE.join(classLowerHyphen, methodLowerHyphen, params);
         };
     }
+
 }

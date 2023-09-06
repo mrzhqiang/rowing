@@ -30,4 +30,5 @@ public class AuditingConfiguration {
                 .flatMap(Authentications::findUsername)
                 .orElse(Authentications.SYSTEM_USERNAME));
     }
+
 }

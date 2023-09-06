@@ -32,4 +32,5 @@ public interface InitTaskMapper {
     @Mapping(target = "path", source = "initializer.path")
     @Mapping(target = "ordered", expression = "java(InitializationOrderRegistration.find(initializer))")
     InitTask toEntity(Initializer initializer);
+
 }

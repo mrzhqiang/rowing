@@ -12,12 +12,13 @@ const ADMIN_ROLE = 'ADMIN';
  */
 export const PERMISSION_MARK = {
     menu: {
-        create: [ADMIN_ROLE, 'system:menu:create'],
-        edit: [ADMIN_ROLE, 'system:menu:edit'],
-        delete: [ADMIN_ROLE, 'system:menu:delete'],
+        create: [ADMIN_ROLE, 'AUTH_MENU_CREATE'],
+        edit: [ADMIN_ROLE, 'AUTH_MENU_EDIT'],
+        delete: [ADMIN_ROLE, 'AUTH_MENU_DELETE'],
     },
     initTask: {
-        edit: [ADMIN_ROLE, 'system:initTask:edit'],
+        edit: [ADMIN_ROLE, 'AUTH_INIT_TASK_EDIT'],
+        execute: [ADMIN_ROLE, 'AUTH_INIT_TASK_EXECUTE'],
     }
 };
 

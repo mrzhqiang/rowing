@@ -22,4 +22,5 @@ public enum ActionType {
      * 注销。
      */
     LOGOUT,
+
 }

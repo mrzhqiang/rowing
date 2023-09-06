@@ -24,8 +24,9 @@ public abstract class AutoInitializer implements Initializer, Ordered {
      * <p>
      * 在执行自动初始化器之前回调此方法。
      * <p>
-     * 注意：这个方法如果抛出异常，将中断当前初始化，不会调用执行回调。
-     * 只有 {@link InitializationException} 异常才会触发事务回滚。
+     * 注意：这个方法如果抛出异常，将中断当前初始化，不会调用 {@link #onExecute()} 方法。
+     * <p>
+     * 只有抛出 {@link InitializationException} 异常才会触发事务回滚。
      */
     protected void onStart() {
         // do nothing
@@ -49,11 +50,12 @@ public abstract class AutoInitializer implements Initializer, Ordered {
      * 也就是说，在一次调用过程中，要么回调完成方法，要么回调错误方法，不会同时回调。
      * <p>
      * 注意：这个方法如果抛出异常，将中止当前初始化，不会影响执行回调。
-     * 但如果是 {@link InitializationException} 异常，则会触发事务回滚。
+     * <p>
+     * 但如果是抛出 {@link InitializationException} 异常，则会触发事务回滚。
      *
      * @param error 执行方法时的原始异常。
      */
-    protected void onError(Throwable error) {
+    protected void onError(@SuppressWarnings("unused") Throwable error) {
         // do nothing
     }
 
@@ -66,7 +68,8 @@ public abstract class AutoInitializer implements Initializer, Ordered {
      * 也就是说，在一次调用过程中，要么回调完成方法，要么回调错误方法，不会同时回调。
      * <p>
      * 注意：这个方法如果抛出异常，将中止当前初始化，不会影响执行回调。
-     * 但如果是 {@link InitializationException} 异常，则会触发事务回滚。
+     * <p>
+     * 但如果是抛出 {@link InitializationException} 异常，则会触发事务回滚。
      */
     protected void onComplete() {
         // do nothing
@@ -77,13 +80,9 @@ public abstract class AutoInitializer implements Initializer, Ordered {
      * <p>
      * 关于事务：
      * <p>
-     * 1. 此方法每次被调用时，都将创建新的事务，因此自动初始化器的实现类，应保持独立。
+     * 1. 此方法每次被调用时，都将创建新的事务，因此自动初始化器的实现类，应保证单一职责原则。
      * <p>
      * 2. 只有遇到 {@link InitializationException} 异常才会回滚。
-     * <p>
-     * 关于系统用户模拟：
-     * <p>
-     * 自动初始化在系统启动时执行，可能由于未认证而无法执行，此时需要模拟系统用户。
      */
     @Transactional(rollbackFor = InitializationException.class, propagation = Propagation.REQUIRES_NEW)
     @Override
@@ -113,4 +112,5 @@ public abstract class AutoInitializer implements Initializer, Ordered {
         // 从注册登记中获得执行顺序，有执行要求的初始化器必须注册登记
         return InitializationOrderRegistration.find(this);
     }
+
 }

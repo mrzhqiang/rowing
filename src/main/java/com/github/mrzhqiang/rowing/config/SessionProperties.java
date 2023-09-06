@@ -59,5 +59,7 @@ public class SessionProperties {
          * 许可：平均每秒访问次数不超过 N 次。
          */
         private Double permits = DEF_RATE_LIMITER_PERMITS;
+
     }
+
 }

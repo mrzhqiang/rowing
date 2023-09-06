@@ -137,6 +137,16 @@ public class DictServiceJpaImpl implements DictService {
         Preconditions.checkArgument(file.exists(), "dict excel file must be exists");
         Preconditions.checkArgument(!file.isDirectory(), "dict excel file must be not directory");
 
+        if (excelFile.contains("dict")) {
+            syncDictExcel(file);
+        } else if (excelFile.contains("iso-639")) {
+            syncISO639Excel(file);
+        } else if (excelFile.contains("iso-3166")) {
+            syncISO3166Excel(file);
+        }
+    }
+
+    private void syncDictExcel(File file) {
         // WorkbookFactory 支持创建 HSSFWorkbook 和 XSSFWorkbook 实例
         try (Workbook workbook = WorkbookFactory.create(file)) {
             Sheet group = workbook.getSheet(GROUP_SHEET_NAME);
@@ -150,10 +160,11 @@ public class DictServiceJpaImpl implements DictService {
             // 尝试处理字典组，生成相关实体，并返回以名称为 key 的映射
             Map<String, DictGroup> groupMap = attemptHandleGroup(group);
             if (groupMap.isEmpty()) {
-                String invalidMessage = I18nHolder.getAccessor().getMessage(
-                        "DictService.syncExcel.invalid", new Object[]{excelFile},
-                        Strings.lenientFormat("Excel 文件 %s 不存在有效字典组数据", excelFile));
-                throw new RuntimeException(invalidMessage);
+                String invalidGroupMessage = I18nHolder.getAccessor().getMessage(
+                        "DictService.syncExcel.invalid", new Object[]{file.getName()},
+                        Strings.lenientFormat("Excel 文件 %s 不存在有效字典组数据", file.getName()));
+                log.warn(invalidGroupMessage);
+                return;
             }
 
             Sheet item = workbook.getSheet(ITEM_SHEET_NAME);
@@ -167,9 +178,9 @@ public class DictServiceJpaImpl implements DictService {
             attemptHandleItem(groupMap, item);
         } catch (IOException e) {
             String exceptionMessage = I18nHolder.getAccessor().getMessage(
-                    "DictService.syncExcel.exception", new Object[]{excelFile},
-                    Strings.lenientFormat("读取 Excel 文件 %s 出错", excelFile));
-            throw new RuntimeException(exceptionMessage, e);
+                    "DictService.syncExcel.exception", new Object[]{file.getName()},
+                    Strings.lenientFormat("读取 Excel 文件 %s 出错", file.getName()));
+            throw new InitializationException(exceptionMessage, e);
         }
     }
 
@@ -273,5 +284,13 @@ public class DictServiceJpaImpl implements DictService {
                     "DictService.syncExcel.item", new Object[]{label, value, code},
                     Strings.lenientFormat("Excel 字典项 %s-%s 已同步到 %s 字典组", label, value, code)));
         }
+    }
+
+    private void syncISO639Excel(File file) {
+
+    }
+
+    private void syncISO3166Excel(File file) {
+
     }
 }

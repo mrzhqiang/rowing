@@ -46,4 +46,5 @@ public class InitTaskLog extends AuditableEntity {
         log.setTask(task);
         return log;
     }
+
 }
