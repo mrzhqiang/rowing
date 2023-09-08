@@ -4,6 +4,7 @@ import com.github.mrzhqiang.rowing.domain.Logic;
 import com.github.mrzhqiang.rowing.domain.AuditableEntity;
 import com.github.mrzhqiang.rowing.domain.DictType;
 import com.github.mrzhqiang.rowing.domain.Domains;
+import com.google.common.collect.Lists;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -70,6 +71,6 @@ public class DictGroup extends AuditableEntity {
      */
     @ToString.Exclude
     @OneToMany(mappedBy = "group", orphanRemoval = true)
-    private List<DictItem> items;
+    private List<DictItem> items = Lists.newArrayList();
 
 }

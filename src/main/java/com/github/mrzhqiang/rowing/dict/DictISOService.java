@@ -1,9 +1,10 @@
 package com.github.mrzhqiang.rowing.dict;
 
 /**
- * 字典服务。
+ * ISO 服务。
+ * <p>
  */
-public interface DictService {
+public interface DictISOService {
 
     /**
      * 同步数据。

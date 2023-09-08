@@ -1,9 +1,10 @@
 package com.github.mrzhqiang.rowing.dict;
 
 /**
- * 字典服务。
+ * GB/T 标准服务。
+ * <p>
  */
-public interface DictService {
+public interface DictGBTService {
 
     /**
      * 同步数据。

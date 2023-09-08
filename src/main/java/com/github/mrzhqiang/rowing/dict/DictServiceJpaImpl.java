@@ -2,11 +2,10 @@ package com.github.mrzhqiang.rowing.dict;
 
 import com.github.mrzhqiang.rowing.config.DictProperties;
 import com.github.mrzhqiang.rowing.domain.DictType;
+import com.github.mrzhqiang.rowing.domain.Domains;
 import com.github.mrzhqiang.rowing.domain.Logic;
 import com.github.mrzhqiang.rowing.i18n.I18nHolder;
-import com.github.mrzhqiang.rowing.init.InitializationException;
 import com.github.mrzhqiang.rowing.util.Cells;
-import com.github.mrzhqiang.rowing.domain.Domains;
 import com.google.common.base.CaseFormat;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
@@ -111,12 +110,12 @@ public class DictServiceJpaImpl implements DictService {
             String label = enumTranslator.asText(enumConstant);
             String itemValue = enumConstant.name();
             if (itemValue.length() > Domains.ENUM_NAME_LENGTH) {
-                String defaultMessage = Strings.lenientFormat(
-                        "同步失败！内置字典项 %s-%s 名称长度大于指定长度 %s",
-                        code, enumConstant.name(), Domains.ENUM_NAME_LENGTH);
-                String message = I18nHolder.getAccessor().getMessage("DictService.syncInternal.item.failure", defaultMessage);
-                throw new InitializationException(message);
+                String message = I18nHolder.getAccessor().getMessage(
+                        "DictService.syncInternal.item.failure", new Object[]{code, enumConstant.name(), Domains.ENUM_NAME_LENGTH},
+                        Strings.lenientFormat("同步失败！内置字典项 %s-%s 名称长度大于指定长度 %s", code, enumConstant.name(), Domains.ENUM_NAME_LENGTH));
+                throw new RuntimeException(message);
             }
+
             // 存在即更新，否则就创建
             DictItem dictItem = Optional.ofNullable(itemMap.get(itemValue)).orElseGet(DictItem::new);
             dictItem.setGroup(dictGroup);
@@ -130,57 +129,55 @@ public class DictServiceJpaImpl implements DictService {
         }
     }
 
-    @SneakyThrows
     private void syncExcel(String excelFile) {
-        Preconditions.checkNotNull(excelFile, "dict excel file == null");
-        File file = ResourceUtils.getFile(excelFile);
-        Preconditions.checkArgument(file.exists(), "dict excel file must be exists");
-        Preconditions.checkArgument(!file.isDirectory(), "dict excel file must be not directory");
+        Preconditions.checkNotNull(excelFile, "excel file == null");
 
-        if (excelFile.contains("dict")) {
-            syncDictExcel(file);
-        } else if (excelFile.contains("iso-639")) {
-            syncISO639Excel(file);
-        } else if (excelFile.contains("iso-3166")) {
-            syncISO3166Excel(file);
+        if (excelFile.contains(Dicts.DICT_FILENAME)) {
+            syncDictExcel(excelFile);
         }
     }
 
-    private void syncDictExcel(File file) {
+    @SneakyThrows
+    private void syncDictExcel(String excelFile) {
+        Preconditions.checkNotNull(excelFile, "dict excel file == null");
+        File file = ResourceUtils.getFile(excelFile);
+
+        Preconditions.checkArgument(file.exists(), "dict excel file must be exists");
+        Preconditions.checkArgument(!file.isDirectory(), "dict excel file must be not directory");
+
         // WorkbookFactory 支持创建 HSSFWorkbook 和 XSSFWorkbook 实例
         try (Workbook workbook = WorkbookFactory.create(file)) {
-            Sheet group = workbook.getSheet(GROUP_SHEET_NAME);
+            Sheet group = workbook.getSheet(Dicts.GROUP_SHEET_NAME);
             if (group == null) {
                 log.warn(I18nHolder.getAccessor().getMessage(
-                        "DictService.importExcel.notFound", new Object[]{GROUP_SHEET_NAME},
-                        Strings.lenientFormat("未找到名为 %s 的 Sheet 页", GROUP_SHEET_NAME)));
+                        "DictService.importExcel.notFound", new Object[]{Dicts.GROUP_SHEET_NAME},
+                        Strings.lenientFormat("未找到名为 %s 的 Sheet 页", Dicts.GROUP_SHEET_NAME)));
                 return;
             }
 
             // 尝试处理字典组，生成相关实体，并返回以名称为 key 的映射
             Map<String, DictGroup> groupMap = attemptHandleGroup(group);
             if (groupMap.isEmpty()) {
-                String invalidGroupMessage = I18nHolder.getAccessor().getMessage(
+                log.warn(I18nHolder.getAccessor().getMessage(
                         "DictService.syncExcel.invalid", new Object[]{file.getName()},
-                        Strings.lenientFormat("Excel 文件 %s 不存在有效字典组数据", file.getName()));
-                log.warn(invalidGroupMessage);
+                        Strings.lenientFormat("Excel 文件 %s 不存在有效字典组数据", file.getName())));
                 return;
             }
 
-            Sheet item = workbook.getSheet(ITEM_SHEET_NAME);
+            Sheet item = workbook.getSheet(Dicts.ITEM_SHEET_NAME);
             if (item == null) {
                 log.warn(I18nHolder.getAccessor().getMessage(
-                        "DictService.syncExcel.notFound", new Object[]{ITEM_SHEET_NAME},
-                        Strings.lenientFormat("未找到名为 %s 的 Sheet 页", ITEM_SHEET_NAME)));
+                        "DictService.syncExcel.notFound", new Object[]{Dicts.ITEM_SHEET_NAME},
+                        Strings.lenientFormat("未找到名为 %s 的 Sheet 页", Dicts.ITEM_SHEET_NAME)));
                 return;
             }
 
             attemptHandleItem(groupMap, item);
-        } catch (IOException e) {
-            String exceptionMessage = I18nHolder.getAccessor().getMessage(
+        } catch (IOException cause) {
+            String message = I18nHolder.getAccessor().getMessage(
                     "DictService.syncExcel.exception", new Object[]{file.getName()},
                     Strings.lenientFormat("读取 Excel 文件 %s 出错", file.getName()));
-            throw new InitializationException(exceptionMessage, e);
+            throw new RuntimeException(message, cause);
         }
     }
 
@@ -201,8 +198,7 @@ public class DictServiceJpaImpl implements DictService {
             if (Strings.isNullOrEmpty(name)) {
                 log.info(I18nHolder.getAccessor().getMessage(
                         "DictService.syncExcel.empty.name", new Object[]{cells.getRowNum()},
-                        Strings.lenientFormat(
-                                "发现第 %s 行 name 列存在空字符串，判断为结束行，终止解析", cells.getRowNum())));
+                        Strings.lenientFormat("发现第 %s 行 name 列存在空字符串，判断为结束行，终止解析", cells.getRowNum())));
                 break;
             }
 
@@ -210,8 +206,7 @@ public class DictServiceJpaImpl implements DictService {
             if (Strings.isNullOrEmpty(code)) {
                 log.info(I18nHolder.getAccessor().getMessage(
                         "DictService.syncExcel.empty.code", new Object[]{cells.getRowNum()},
-                        Strings.lenientFormat(
-                                "发现第 %s 行 code 列存在空字符串，判断为结束行，终止解析", cells.getRowNum())));
+                        Strings.lenientFormat("发现第 %s 行 code 列存在空字符串，判断为结束行，终止解析", cells.getRowNum())));
                 break;
             }
 
@@ -243,8 +238,7 @@ public class DictServiceJpaImpl implements DictService {
             if (Strings.isNullOrEmpty(code)) {
                 log.info(I18nHolder.getAccessor().getMessage(
                         "DictService.syncExcel.empty.code", new Object[]{cells.getRowNum()},
-                        Strings.lenientFormat(
-                                "发现第 %s 行 code 列存在空字符串，判断为结束行，终止解析", cells.getRowNum())));
+                        Strings.lenientFormat("发现第 %s 行 code 列存在空字符串，判断为结束行，终止解析", cells.getRowNum())));
                 break;
             }
 
@@ -260,8 +254,7 @@ public class DictServiceJpaImpl implements DictService {
             if (Strings.isNullOrEmpty(label)) {
                 log.info(I18nHolder.getAccessor().getMessage(
                         "DictService.syncExcel.empty.label", new Object[]{cells.getRowNum()},
-                        Strings.lenientFormat(
-                                "发现第 %s 行 label 列存在空字符串，判断为结束行，终止解析", cells.getRowNum())));
+                        Strings.lenientFormat("发现第 %s 行 label 列存在空字符串，判断为结束行，终止解析", cells.getRowNum())));
                 break;
             }
 
@@ -269,8 +262,7 @@ public class DictServiceJpaImpl implements DictService {
             if (Strings.isNullOrEmpty(value)) {
                 log.info(I18nHolder.getAccessor().getMessage(
                         "DictService.syncExcel.empty.value", new Object[]{cells.getRowNum()},
-                        Strings.lenientFormat(
-                                "发现第 %s 行 value 列存在空字符串，判断为结束行，终止解析", cells.getRowNum())));
+                        Strings.lenientFormat("发现第 %s 行 value 列存在空字符串，判断为结束行，终止解析", cells.getRowNum())));
                 break;
             }
 
@@ -286,11 +278,4 @@ public class DictServiceJpaImpl implements DictService {
         }
     }
 
-    private void syncISO639Excel(File file) {
-
-    }
-
-    private void syncISO3166Excel(File file) {
-
-    }
 }

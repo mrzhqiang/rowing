@@ -14,15 +14,23 @@ import org.springframework.stereotype.Component;
 public class DictAutoInitializer extends AutoInitializer {
 
     private final DictService service;
+    private final DictISOService isoService;
+    private final DictGBTService gbtService;
 
-    public DictAutoInitializer(DictService service) {
+    public DictAutoInitializer(DictService service,
+                               DictISOService isoService,
+                               DictGBTService gbtService) {
         this.service = service;
+        this.isoService = isoService;
+        this.gbtService = gbtService;
     }
 
     @RunAsSystem
     @Override
     protected void onExecute() {
         service.sync();
+        isoService.sync();
+        gbtService.sync();
     }
 
     @Override
