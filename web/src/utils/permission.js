@@ -19,6 +19,11 @@ export const PERMISSION_MARK = {
     initTask: {
         edit: [ADMIN_ROLE, 'AUTH_INIT_TASK_EDIT'],
         execute: [ADMIN_ROLE, 'AUTH_INIT_TASK_EXECUTE'],
+    },
+    dict: {
+        create: [ADMIN_ROLE, 'AUTH_DICT_CREATE'],
+        edit: [ADMIN_ROLE, 'AUTH_DICT_EDIT'],
+        delete: [ADMIN_ROLE, 'AUTH_DICT_DELETE'],
     }
 };
 

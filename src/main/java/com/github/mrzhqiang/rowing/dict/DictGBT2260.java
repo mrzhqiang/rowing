@@ -13,6 +13,7 @@ import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -81,6 +82,7 @@ public class DictGBT2260 extends AuditableEntity {
      * 下级单位列表。
      */
     @ToString.Exclude
+    @OrderBy("code ASC, created DESC")
     @OneToMany(mappedBy = "parent", orphanRemoval = true)
     private List<DictGBT2260> children = Lists.newArrayList();
 

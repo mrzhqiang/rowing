@@ -1,6 +1,8 @@
 package com.github.mrzhqiang.rowing.dict;
 
 import com.github.mrzhqiang.rowing.config.DictProperties;
+import com.github.mrzhqiang.rowing.domain.DictType;
+import com.github.mrzhqiang.rowing.domain.Logic;
 import com.github.mrzhqiang.rowing.i18n.I18nHolder;
 import com.github.mrzhqiang.rowing.util.Cells;
 import com.google.common.base.Preconditions;
@@ -12,6 +14,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -27,11 +30,14 @@ import java.util.Map;
 public class DictGBTServiceJpaImpl implements DictGBTService {
 
     private final DictProperties properties;
+    private final DictGroupRepository groupRepository;
     private final DictGBT2260Repository gbt2260Repository;
 
     public DictGBTServiceJpaImpl(DictProperties properties,
+                                 DictGroupRepository groupRepository,
                                  DictGBT2260Repository gbt2260Repository) {
         this.properties = properties;
+        this.groupRepository = groupRepository;
         this.gbt2260Repository = gbt2260Repository;
     }
 
@@ -48,7 +54,19 @@ public class DictGBTServiceJpaImpl implements DictGBTService {
         Preconditions.checkNotNull(excelFile, "excel file == null");
 
         if (excelFile.contains(Dicts.GBT_2260_FILENAME)) {
+            if (groupRepository.findByCode(Dicts.GBT_2260_FILENAME).isPresent()) {
+                log.info("检测到 GB/T 2260 字典已经存在，跳过更新");
+                return;
+            }
+
             syncGBT2260Excel(excelFile);
+
+            DictGroup entity = new DictGroup();
+            entity.setCode(Dicts.GBT_2260_FILENAME);
+            entity.setName(Dicts.GBT_2260_FILENAME);
+            entity.setType(DictType.EXCEL);
+            entity.setFreeze(Logic.NO);
+            groupRepository.save(entity);
         }
     }
 
@@ -100,6 +118,7 @@ public class DictGBTServiceJpaImpl implements DictGBTService {
 
                 DictGBT2260 entity = new DictGBT2260();
                 entity.setCode(code);
+                entity = gbt2260Repository.findOne(Example.of(entity)).orElse(entity);
                 entity.setName(name);
                 String level = Dicts.findLevel(code);
                 entity.setLevel(level);
@@ -113,18 +132,20 @@ public class DictGBTServiceJpaImpl implements DictGBTService {
                         break;
                     case Dicts.THIRD_LEVEL:
                         DictGBT2260 parent = data.findParent(code);
-                        entity.setParent(parent);
-                        gbt2260Repository.save(entity);
                         Dicts.findSummaryCode(code)
                                 .filter(it -> !data.summaryMap.containsKey(it))
                                 .ifPresent(summaryCode -> {
                                     DictGBT2260 summary = new DictGBT2260();
-                                    summary.setParent(parent);
                                     summary.setCode(summaryCode);
+                                    summary.setSummary(true);
+                                    summary = gbt2260Repository.findOne(Example.of(summary)).orElse(summary);
+                                    summary.setParent(parent);
                                     String summaryName = Dicts.findSummaryName(summaryCode);
+                                    if (parent != null) {
+                                        summaryName = parent.getName() + summaryName;
+                                    }
                                     summary.setName(summaryName);
                                     summary.setLevel(level);
-                                    summary.setSummary(true);
                                     data.summaryMap.put(summaryCode, gbt2260Repository.save(summary));
                                     log.info(I18nHolder.getAccessor().getMessage(
                                             "DictService.syncExcel.gbt-2260.summary",
@@ -132,6 +153,8 @@ public class DictGBTServiceJpaImpl implements DictGBTService {
                                             Strings.lenientFormat("Excel GB/T 2260 汇总码 %s-%s 已同步",
                                                     summaryName, summaryCode)));
                                 });
+                        entity.setParent(parent);
+                        gbt2260Repository.save(entity);
                         break;
                 }
                 log.info(I18nHolder.getAccessor().getMessage(

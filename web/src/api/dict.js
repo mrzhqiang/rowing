@@ -2,6 +2,9 @@ import rest from '@/api/rest';
 
 const DICT_API = 'dict';
 const DICT_ITEM_API = 'dict-item';
+const DICT_GBT_2260_API = 'dict-gbt-2260';
+const DICT_ISO_639_API = 'dict-iso-639';
+const DICT_ISO_3166_API = 'dict-iso-3166';
 
 export const DICT_CODES = {
   logic: 'LOGIC',
@@ -63,4 +66,40 @@ export function deleteDictItem(id) {
 
 export function searchDictItem(path, params) {
   return rest.search(DICT_ITEM_API, path, params);
+}
+
+export function pageDictGBT2260(params) {
+  return rest.findAll(DICT_GBT_2260_API, params);
+}
+
+export function createDictGBT2260(data) {
+  return rest.create(DICT_GBT_2260_API, data);
+}
+
+export function findDictGBT2260(id, projection = null) {
+  return rest.findOne(DICT_GBT_2260_API, id, {projection});
+}
+
+export function editDictGBT2260(id, data) {
+  return rest.edit(DICT_GBT_2260_API, id, data);
+}
+
+export function updateDictGBT2260(id, data) {
+  return rest.update(DICT_GBT_2260_API, id, data);
+}
+
+export function deleteDictGBT2260(id) {
+  return rest.remove(DICT_GBT_2260_API, id);
+}
+
+export function searchDictGBT2260(path, params) {
+  return rest.search(DICT_GBT_2260_API, path, params);
+}
+
+export function searchDictISO639(path, params) {
+  return rest.search(DICT_ISO_639_API, path, params);
+}
+
+export function searchDictISO3166(path, params) {
+  return rest.search(DICT_ISO_3166_API, path, params);
 }

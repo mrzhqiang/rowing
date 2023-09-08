@@ -32,16 +32,14 @@ router.beforeEach(async (to, from, next) => {
         next();
       } else {
         try {
-          store.dispatch('user/getInfo').then(userInfo => {
-            // generate accessible routes map based on roles
-            store.dispatch('permission/generateRoutes', userInfo.roles).then(accessRoutes => {
-              // dynamically add accessible routes
-              router.addRoutes(accessRoutes);
-              // hack method to ensure that addRoutes is complete
-              // set the replacement: true, so the navigation will not leave a history record
-              next({...to, replace: true});
-            });
-          });
+          const userInfo = await store.dispatch('user/getInfo');
+          // generate accessible routes map based on roles
+          const accessRoutes = await store.dispatch('permission/generateRoutes', userInfo.roles);
+          // dynamically add accessible routes
+          router.addRoutes(accessRoutes);
+          // hack method to ensure that addRoutes is complete
+          // set the replacement: true, so the navigation will not leave a history record
+          next({...to, replace: true});
         } catch (error) {
           // remove token and go to login page to re-login
           await store.dispatch('user/resetToken');

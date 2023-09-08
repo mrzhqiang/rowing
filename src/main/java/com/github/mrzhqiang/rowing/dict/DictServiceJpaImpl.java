@@ -60,10 +60,22 @@ public class DictServiceJpaImpl implements DictService {
             innerPaths.forEach(this::syncInternal);
         }
 
+        if (groupRepository.findByCode(Dicts.DICT_FILENAME).isPresent()) {
+            log.info("检测到 Excel 字典已经存在，跳过更新");
+            return;
+        }
+
         List<String> excelPaths = properties.getExcelPaths();
         if (!CollectionUtils.isEmpty(excelPaths)) {
             excelPaths.forEach(this::syncExcel);
         }
+
+        DictGroup entity = new DictGroup();
+        entity.setCode(Dicts.DICT_FILENAME);
+        entity.setName(Dicts.DICT_FILENAME);
+        entity.setType(DictType.EXCEL);
+        entity.setFreeze(Logic.NO);
+        groupRepository.save(entity);
     }
 
     private void syncInternal(String basePackage) {

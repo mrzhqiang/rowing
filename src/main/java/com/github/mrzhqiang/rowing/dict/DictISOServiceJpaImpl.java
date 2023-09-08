@@ -1,6 +1,8 @@
 package com.github.mrzhqiang.rowing.dict;
 
 import com.github.mrzhqiang.rowing.config.DictProperties;
+import com.github.mrzhqiang.rowing.domain.DictType;
+import com.github.mrzhqiang.rowing.domain.Logic;
 import com.github.mrzhqiang.rowing.i18n.I18nHolder;
 import com.github.mrzhqiang.rowing.util.Cells;
 import com.google.common.base.Preconditions;
@@ -26,13 +28,16 @@ import java.util.List;
 public class DictISOServiceJpaImpl implements DictISOService {
 
     private final DictProperties properties;
+    private final DictGroupRepository groupRepository;
     private final DictISO639Repository iso639Repository;
     private final DictISO3166Repository iso3166Repository;
 
     public DictISOServiceJpaImpl(DictProperties properties,
+                                 DictGroupRepository groupRepository,
                                  DictISO639Repository iso639Repository,
                                  DictISO3166Repository iso3166Repository) {
         this.properties = properties;
+        this.groupRepository = groupRepository;
         this.iso639Repository = iso639Repository;
         this.iso3166Repository = iso3166Repository;
     }
@@ -50,11 +55,35 @@ public class DictISOServiceJpaImpl implements DictISOService {
         Preconditions.checkNotNull(excelFile, "excel file == null");
 
         if (excelFile.contains(Dicts.ISO_639_FILENAME)) {
+            if (groupRepository.findByCode(Dicts.ISO_639_FILENAME).isPresent()) {
+                log.info("检测到 ISO 639 字典已经存在，跳过更新");
+                return;
+            }
+
             syncISO639Excel(excelFile);
+
+            DictGroup entity = new DictGroup();
+            entity.setName(Dicts.ISO_639_FILENAME);
+            entity.setCode(Dicts.ISO_639_FILENAME);
+            entity.setType(DictType.EXCEL);
+            entity.setFreeze(Logic.NO);
+            groupRepository.save(entity);
             return;
         }
         if (excelFile.contains(Dicts.ISO_3166_FILENAME)) {
+            if (groupRepository.findByCode(Dicts.ISO_3166_FILENAME).isPresent()) {
+                log.info("检测到 ISO 3166 字典已经存在，跳过更新");
+                return;
+            }
+
             syncISO3166Excel(excelFile);
+
+            DictGroup entity = new DictGroup();
+            entity.setName(Dicts.ISO_3166_FILENAME);
+            entity.setCode(Dicts.ISO_3166_FILENAME);
+            entity.setType(DictType.EXCEL);
+            entity.setFreeze(Logic.NO);
+            groupRepository.save(entity);
         }
     }
 
