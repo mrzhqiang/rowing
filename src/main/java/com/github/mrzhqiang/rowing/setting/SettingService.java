@@ -22,7 +22,7 @@ public interface SettingService {
     /**
      * 最大登录失败次数的设置名称。
      */
-    String MAX_LOGIN_FAILED = "max-login-failed";
+    String MAX_LOGIN_FAILED = "maxLoginFailed";
     /**
      * 默认最大登录失败次数。
      */
@@ -30,7 +30,7 @@ public interface SettingService {
     /**
      * 账户锁定持续时长。
      */
-    String ACCOUNT_LOCKED_DURATION = "account-locked-duration";
+    String ACCOUNT_LOCKED_DURATION = "accountLockedDuration";
     /**
      * 默认账户锁定持续时长。
      */
@@ -38,20 +38,20 @@ public interface SettingService {
     /**
      * 密码传输时的 RSA 私钥。
      */
-    String PASSWORD_RSA_PRIVATE_KEY = "password-rsa-private-key";
+    String PASSWORD_RSA_PRIVATE_KEY = "passwordRsaPrivateKey";
     /**
      * 密码传输时的 RSA 公钥。
      */
     @SuppressWarnings("unused")
-    String PASSWORD_RSA_PUBLIC_KEY = "password-rsa-public-key";
+    String PASSWORD_RSA_PUBLIC_KEY = "passwordRsaPublicKey";
     /**
      * 管理员电子邮箱。
      */
-    String ADMIN_EMAIL = "admin-email";
+    String ADMIN_EMAIL = "adminEmail";
     /**
      * 管理员电话号码。
      */
-    String ADMIN_PHONE_NUMBER = "admin-phone-number";
+    String ADMIN_PHONE_NUMBER = "adminPhoneNumber";
 
     /**
      * 初始化系统设置。
@@ -59,12 +59,12 @@ public interface SettingService {
     void init();
 
     /**
-     * 通过设置名称找到设置。
+     * 通过设置代码找到可选的设置。
      *
-     * @param name 名称。
-     * @return 可选的设置实例。
+     * @param code 代码。
+     * @return 可选的设置。
      */
-    Optional<Setting> findByName(String name);
+    Optional<Setting> findByCode(String code);
 
     RSAKeyData createRsaKey();
 

@@ -28,4 +28,6 @@ public interface MenuExcerpt extends AuditableExcerpt {
 
     Logic getEnabled();
 
+    Logic getInternal();
+
 }

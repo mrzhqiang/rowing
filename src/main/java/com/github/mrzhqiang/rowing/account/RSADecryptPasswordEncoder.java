@@ -32,7 +32,7 @@ public class RSADecryptPasswordEncoder implements PasswordEncoder {
     @Override
     public boolean matches(CharSequence rawPassword, String encodedPassword) {
         String passwordString = rawPassword.toString();
-        String password = settingService.findByName(SettingService.PASSWORD_RSA_PRIVATE_KEY)
+        String password = settingService.findByCode(SettingService.PASSWORD_RSA_PRIVATE_KEY)
                 .map(Setting::getContent)
                 .map(RSADecrypts::parsePrivateKey)
                 .map(it -> RSADecrypts.decrypt(passwordString, it))

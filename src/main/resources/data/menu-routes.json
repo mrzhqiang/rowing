@@ -5,10 +5,10 @@
     "redirect": "/system/menu",
     "name": "System",
     "alwaysShow": true,
-    "breadcrumb": true,
     "meta": {
-      "title": "system",
+      "title": "系统管理",
       "icon": "el-icon-s-management",
+      "breadcrumb": true,
       "roles": [
         "ADMIN"
       ]
@@ -16,12 +16,77 @@
     "children": [
       {
         "path": "menu",
-        "component": "menu/index",
+        "component": "system/menu/menu-list",
         "name": "Menu",
-        "breadcrumb": true,
         "meta": {
-          "title": "menu",
+          "title": "菜单管理",
           "icon": "el-icon-menu",
+          "breadcrumb": true,
+          "roles": [
+            "ADMIN"
+          ]
+        }
+      },
+      {
+        "path": "init-task",
+        "component": "system/init/init-task-list",
+        "name": "InitTask",
+        "meta": {
+          "title": "初始化任务",
+          "icon": "el-icon-s-open",
+          "breadcrumb": true,
+          "roles": [
+            "ADMIN"
+          ]
+        }
+      },
+      {
+        "path": "dict-gbt-2260",
+        "component": "system/dict/dict-gbt-2260",
+        "name": "DictGbt2260",
+        "meta": {
+          "title": "行政区划代码",
+          "icon": "el-icon-s-data",
+          "breadcrumb": true,
+          "roles": [
+            "ADMIN"
+          ]
+        }
+      },
+      {
+        "path": "dict-iso-3166",
+        "component": "system/dict/dict-iso-3166",
+        "name": "DictIso3166",
+        "meta": {
+          "title": "国家地区代码",
+          "icon": "el-icon-film",
+          "breadcrumb": true,
+          "roles": [
+            "ADMIN"
+          ]
+        }
+      },
+      {
+        "path": "dict-iso-639",
+        "component": "system/dict/dict-iso-639",
+        "name": "DictIso639",
+        "meta": {
+          "title": "语言代码",
+          "icon": "el-icon-s-flag",
+          "breadcrumb": true,
+          "roles": [
+            "ADMIN"
+          ]
+        }
+      },
+      {
+        "path": "setting",
+        "component": "system/setting/setting",
+        "name": "Setting",
+        "meta": {
+          "title": "系统设置",
+          "icon": "el-icon-setting",
+          "breadcrumb": true,
           "roles": [
             "ADMIN"
           ]

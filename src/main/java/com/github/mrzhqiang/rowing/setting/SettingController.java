@@ -18,4 +18,5 @@ public class SettingController {
     public RSAKeyData newRsaKey() {
         return service.createRsaKey();
     }
+
 }

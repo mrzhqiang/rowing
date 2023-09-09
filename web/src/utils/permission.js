@@ -24,7 +24,12 @@ export const PERMISSION_MARK = {
         create: [ADMIN_ROLE, 'AUTH_DICT_CREATE'],
         edit: [ADMIN_ROLE, 'AUTH_DICT_EDIT'],
         delete: [ADMIN_ROLE, 'AUTH_DICT_DELETE'],
-    }
+    },
+    setting: {
+        create: [ADMIN_ROLE, 'AUTH_SETTING_CREATE'],
+        edit: [ADMIN_ROLE, 'AUTH_SETTING_EDIT'],
+        delete: [ADMIN_ROLE, 'AUTH_SETTING_DELETE'],
+    },
 };
 
 /**

@@ -122,13 +122,13 @@ public final class Domains {
      */
     public static final int ROLE_CODE_LENGTH = 48;
     /**
-     * 设置标签长度。
-     */
-    public static final int SETTING_LABEL_LENGTH = 100;
-    /**
      * 设置名称长度。
      */
-    public static final int SETTING_NAME_LENGTH = 50;
+    public static final int SETTING_NAME_LENGTH = 100;
+    /**
+     * 设置代码长度。
+     */
+    public static final int SETTING_CODE_LENGTH = 50;
     /**
      * 设置内容长度。
      */
@@ -136,7 +136,7 @@ public final class Domains {
     /**
      * 设置风格长度。
      */
-    public static final int SETTING_STYLE_LENGTH = 100;
+    public static final int SETTING_STYLE_LENGTH = 200;
     /**
      * 用户昵称长度。
      */

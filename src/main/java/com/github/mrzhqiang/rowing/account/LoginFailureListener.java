@@ -56,7 +56,7 @@ public class LoginFailureListener implements ApplicationListener<AbstractAuthent
         int hasFailedCount = account.getFailedCount();
         // 账户未锁定，统计失败次数，并判断是否超过最大失败次数，如果超过则锁定账户
         if (account.isAccountNonLocked()) {
-            int maxLoginFailed = settingService.findByName(SettingService.MAX_LOGIN_FAILED)
+            int maxLoginFailed = settingService.findByCode(SettingService.MAX_LOGIN_FAILED)
                     .map(Setting::getContent)
                     .map(Integer::parseInt)
                     .orElse(SettingService.DEF_MAX_LOGIN_FAILED);
@@ -64,7 +64,7 @@ public class LoginFailureListener implements ApplicationListener<AbstractAuthent
                 account.setFailedCount(hasFailedCount + 1);
             }
             if (account.getFailedCount() >= maxLoginFailed) {
-                Duration duration = settingService.findByName(SettingService.ACCOUNT_LOCKED_DURATION)
+                Duration duration = settingService.findByCode(SettingService.ACCOUNT_LOCKED_DURATION)
                         .map(Setting::getContent)
                         .map(DurationStyle::detectAndParse)
                         .orElse(SettingService.DEF_ACCOUNT_LOCKED_DURATION);

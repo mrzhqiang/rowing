@@ -2,9 +2,8 @@
   <div class="app-container">
     <el-form ref="initTaskSearchForm" v-model="initTaskParams" inline>
       <el-form-item :label="$t('名称')" prop="name">
-        <el-input v-model="initTaskParams.name"/>
+        <el-input v-model="initTaskParams.name" clearable/>
       </el-form-item>
-      <!-- TODO 支持多条件搜索 -->
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini"
                    @click="onInitTaskSearch">{{ $t('搜索') }}
@@ -199,6 +198,7 @@ export default {
       });
     },
     onInitTaskSearch() {
+      this.initTaskParams.page = 0;
       this.findInitTaskList();
     },
     onResetInitTaskSearch() {

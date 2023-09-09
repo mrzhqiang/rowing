@@ -1,14 +1,17 @@
 <template>
   <div class="app-container">
     <el-form ref="searchDictForm" v-model="dictParams" inline>
-      <el-form-item :label="$t('单位名称')" prop="name">
-        <el-input v-model="dictParams.name" maxlength="100"/>
+      <el-form-item :label="$t('名称')" prop="name">
+        <el-input v-model="dictParams.name" clearable/>
       </el-form-item>
-      <el-form-item :label="$t('代码')" prop="code">
-        <el-input v-model="dictParams.code" minlength="6" maxlength="6"/>
+      <el-form-item :label="$t('代码')" prop="alpha2Code">
+        <el-input v-model="dictParams.alpha2Code" clearable/>
       </el-form-item>
-      <el-form-item :label="$t('等级')" prop="level">
-        <el-input v-model="dictParams.level" minlength="1" maxlength="1" min="1" max="3"/>
+      <el-form-item :label="$t('中文名称')" prop="cnName">
+        <el-input v-model="dictParams.cnName" clearable/>
+      </el-form-item>
+      <el-form-item :label="$t('数字代码')" prop="numericCode">
+        <el-input v-model="dictParams.numericCode" clearable/>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="onDictSearch">
@@ -32,17 +35,17 @@
 
     <el-table v-loading="dictLoading" :data="dictList" row-key="id" size="mini" stripe border highlight-current-row>
       <el-table-column prop="id" label="#" min-width="20" :align="'right'"/>
-      <el-table-column prop="name" :label="$t('单位名称')" min-width="50" :align="'center'">
+      <el-table-column prop="name" :label="$t('名称')" min-width="80">
         <template v-slot="scope">
           <el-button size="mini" type="text" @click="onDictEdit(scope, true)">
             {{ scope.row.name }}
           </el-button>
         </template>
       </el-table-column>
-      <el-table-column prop="code" :label="$t('代码')" min-width="40" :align="'center'"/>
-      <el-table-column prop="parentName" :label="$t('上级单位名称')" min-width="40" :align="'center'"/>
-      <el-table-column prop="parentCode" :label="$t('上级代码')" min-width="40" :align="'center'"/>
-      <el-table-column prop="level" :label="$t('级别')" min-width="20" :align="'center'"/>
+      <el-table-column prop="alpha2Code" :label="$t('代码')" min-width="20" :align="'center'"/>
+      <el-table-column prop="cnName" :label="$t('中文名称')" min-width="80" show-overflow-tooltip/>
+      <el-table-column prop="alpha3Code" :label="$t('三位代码')" min-width="40" :align="'center'"/>
+      <el-table-column prop="numericCode" :label="$t('数字代码')" min-width="20" :align="'center'"/>
       <el-table-column prop="createdBy" :label="$t('创建人')" min-width="40" :align="'center'"/>
       <el-table-column prop="created" :label="$t('创建时间')" min-width="80" :align="'center'"/>
       <el-table-column prop="updatedBy" :label="$t('更新人')" min-width="40" :align="'center'"/>
@@ -76,25 +79,31 @@
       <el-form ref="dictForm" :model="dictForm" :rules="dictRules"
                :disabled="!dictFormEditable" label-width="80px">
         <el-row :gutter="10">
-          <!--<el-col :span="8">
-            <el-form-item :label="$t('上级单位')" prop="parent">
-              <tree-select v-model="dictForm.parent" :options="dictTreeOptions" :normalizer="normalizer"
-                           :disabled="!dictFormEditable" :show-count="true" :placeholder="$t('选择上级单位')"/>
-            </el-form-item>
-          </el-col>-->
           <el-col :span="8">
-            <el-form-item :label="$t('单位名称')" prop="name">
-              <el-input v-model="dictForm.name" maxlength="100"/>
+            <el-form-item :label="$t('名称')" prop="name">
+              <el-input v-model="dictForm.name"/>
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item :label="$t('代码')" prop="code">
-              <el-input v-model="dictForm.code" maxlength="6" minlength="6"/>
+            <el-form-item :label="$t('代码')" prop="alpha2Code">
+              <el-input v-model="dictForm.alpha2Code"/>
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item :label="$t('等级')" prop="level">
-              <el-input v-model="dictForm.level" minlength="1" maxlength="1"/>
+            <el-form-item :label="$t('中文名称')" prop="cnName">
+              <el-input v-model="dictForm.cnName"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="10">
+          <el-col :span="8">
+            <el-form-item :label="$t('三位代码')" prop="alpha3Code">
+              <el-input v-model="dictForm.alpha3Code"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item :label="$t('数字代码')" prop="numericCode">
+              <el-input v-model="dictForm.numericCode"/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -109,25 +118,20 @@
 </template>
 
 <script>
-import {createDictGBT2260, deleteDictGBT2260, editDictGBT2260, findDictGBT2260, searchDictGBT2260} from '@/api/dict';
-import {clearTemplate} from '@/api/rest';
+import {createDictISO3166, deleteDictISO3166, editDictISO3166, findDictISO3166, searchDictISO3166} from '@/api/dict';
 import Pagination from '@/components/Pagination';
-import utils from '@/utils/common';
-import {generateTitle} from '@/utils/i18n';
 import {PERMISSION_MARK} from '@/utils/permission';
-// import TreeSelect from '@riophae/vue-treeselect';
-// import '@riophae/vue-treeselect/dist/vue-treeselect.css';
 
 export default {
-  name: 'DivisionCode',
+  name: 'CountryRegionCode',
   components: {Pagination},
   data() {
     return {
       dictParams: {
-        // 注意：搜索的所有条件参数必须传 '' 值，否则将导致查询不到任何数据
         name: '',
-        code: '',
-        level: '',
+        alpha2Code: '',
+        cnName: '',
+        numericCode: '',
         page: 0,
         size: 20,
       },
@@ -139,48 +143,28 @@ export default {
       dictVisible: false,
       dictForm: {
         id: null,
-        parent: '',
         name: '',
-        code: '',
-        level: ''
+        alpha2Code: '',
+        cnName: '',
+        alpha3Code: '',
+        numericCode: '',
       },
       dictRules: {
-        name: [{required: true, message: this.$t('单位名称不能为空'), trigger: 'blur'}],
-        code: [{required: true, message: this.$t('行政区划代码不能为空'), trigger: 'blur'}],
+        name: [{required: true, message: this.$t('名称不能为空'), trigger: 'blur'}],
+        alpha2Code: [{required: true, message: this.$t('代码不能为空'), trigger: 'blur'}],
+        alpha3Code: [{required: true, message: this.$t('三位代码不能为空'), trigger: 'blur'}],
+        numericCode: [{required: true, message: this.$t('数字代码不能为空'), trigger: 'blur'}],
       },
       dictFormEditable: false,
-      dictTreeOptions: [],
     };
   },
   created() {
-    // this.findDictTree();
     this.findDictList();
   },
   methods: {
-    generateTitle,
-    normalizer(node) {
-      if (node.childrenList && !node.childrenList.length) {
-        delete node.children;
-      }
-      if (node.id === '') {
-        return node;
-      }
-      return {
-        id: clearTemplate(node._links.self.href),
-        label: node.label,
-        children: node.childrenList,
-        isDisabled: node.isDisabled
-      };
-    },
-    findDictTree() {
-      searchDictGBT2260('tree', {projection: 'dict-gbt-2260-option'}).then(response => {
-        const dict = {id: '', label: this.generateTitle('(无)'), isDisabled: false};
-        this.dictTreeOptions = [dict, ...response._embedded.dicts];
-      });
-    },
     findDictList() {
       this.dictLoading = true;
-      searchDictGBT2260('page', this.dictParams).then(response => {
+      searchDictISO3166('page', this.dictParams).then(response => {
         this.dictList = response._embedded.dicts;
         this.dictPage = response.page;
         this.dictLoading = false;
@@ -193,8 +177,9 @@ export default {
     onResetDictSearch() {
       this.dictParams = {
         name: '',
-        code: '',
-        level: '',
+        alpha2Code: '',
+        cnName: '',
+        numericCode: '',
         page: 0,
         size: 20,
       };
@@ -209,51 +194,41 @@ export default {
       }
       this.dictForm = {
         id: null,
-        parent: '',
         name: '',
-        code: '',
-        level: ''
+        alpha2Code: '',
+        cnName: '',
+        alpha3Code: '',
+        numericCode: '',
       };
     },
     fillDictForm(form) {
       this.dictForm = form;
-      this.dictForm.parent = '';
-      if (form.parentId) {
-        for (const option of this.dictTreeOptions) {
-          const node = utils.findTreeNode(option, form.parentId);
-          if (node) {
-            this.dictForm.parent = clearTemplate(node._links.self.href);
-            break;
-          }
-        }
-      }
     },
     onDictCreate() {
       this.resetDictForm();
       this.dictFormEditable = true;
-      this.dictTitle = this.$t('创建行政区划代码');
+      this.dictTitle = this.$t('创建国家地区代码');
       this.dictVisible = true;
     },
     onDictAdd({row}) {
       this.resetDictForm();
       this.dictFormEditable = true;
-      this.dictForm.parent = clearTemplate(row._links.self.href);
-      this.dictTitle = this.$t('添加行政区划代码');
+      this.dictTitle = this.$t('添加国家地区代码');
       this.dictVisible = true;
     },
     onDictEdit({row}, readonly = false) {
       this.resetDictForm();
       this.dictFormEditable = !readonly;
-      findDictGBT2260(row.id, 'dict-gbt-2260-form').then(response => {
+      findDictISO3166(row.id, 'dict-iso-3166-form').then(response => {
         this.fillDictForm(response);
         this.dictForm.id = row.id;
-        this.dictTitle = readonly ? this.$t('查看行政区划代码') : this.$t('编辑行政区划代码');
+        this.dictTitle = readonly ? this.$t('查看国家地区代码') : this.$t('编辑国家地区代码');
         this.dictVisible = true;
       });
     },
     onDictDelete({row}) {
-      deleteDictGBT2260(row.id).then(() => {
-        this.$message.success(this.$t('行政区划代码 {code} 删除成功！', {code: row.code}));
+      deleteDictISO3166(row.id).then(() => {
+        this.$message.success(this.$t('国家地区代码 {code} 删除成功！', {code: row.code}));
         this.findDictList();
       });
     },
@@ -265,20 +240,21 @@ export default {
         if (valid) {
           // 只修改页面上的字段
           const data = {
-            // parent: this.dictForm.parent,
             name: this.dictForm.name,
-            code: this.dictForm.code,
-            level: this.dictForm.level
+            alpha2Code: this.dictForm.alpha2Code,
+            cnName: this.dictForm.cnName,
+            alpha3Code: this.dictForm.alpha3Code,
+            numericCode: this.dictForm.numericCode
           };
           if (this.dictForm.id) {
-            editDictGBT2260(this.dictForm.id, data).then(() => {
-              this.$message.success(this.$t('行政区划代码 {code} 更新成功！', {code: this.dictForm.code}));
+            editDictISO3166(this.dictForm.id, data).then(() => {
+              this.$message.success(this.$t('国家地区代码 {code} 更新成功！', {code: this.dictForm.code}));
               this.dictVisible = false;
               this.findDictList();
             });
           } else {
-            createDictGBT2260(data).then(() => {
-              this.$message.success(this.$t('行政区划代码 {code} 创建成功！', {code: this.dictForm.code}));
+            createDictISO3166(data).then(() => {
+              this.$message.success(this.$t('国家地区代码 {code} 创建成功！', {code: this.dictForm.code}));
               this.dictVisible = false;
               this.findDictList();
             });

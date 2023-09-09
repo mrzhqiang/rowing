@@ -1,7 +1,6 @@
 package com.github.mrzhqiang.rowing.setting;
 
 import com.github.mrzhqiang.rowing.account.RunAsSystem;
-import com.github.mrzhqiang.rowing.domain.SettingTab;
 import com.github.mrzhqiang.rowing.domain.SettingType;
 import com.github.mrzhqiang.rowing.i18n.I18nHolder;
 import com.github.mrzhqiang.rowing.util.Authorizes;
@@ -21,6 +20,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ResourceUtils;
+import org.springframework.util.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -66,59 +66,40 @@ public class SettingServiceJpaImpl implements SettingService {
                     continue;
                 }
 
-                String label = Cells.ofString(cells.getCell(0));
-                if (Strings.isNullOrEmpty(label)) {
-                    log.info(I18nHolder.getAccessor().getMessage(
-                            "SettingService.importExcel.empty.label", new Object[]{cells.getRowNum()},
-                            Strings.lenientFormat(
-                                    "发现第 %s 行 label 列存在空字符串，判断为结束行，终止解析", cells.getRowNum())));
-                    break;
-                }
-
-                String type = Cells.ofString(cells.getCell(1));
-                if (Strings.isNullOrEmpty(type)) {
-                    log.info(I18nHolder.getAccessor().getMessage(
-                            "SettingService.importExcel.empty.type", new Object[]{cells.getRowNum()},
-                            Strings.lenientFormat(
-                                    "发现第 %s 行 type 列存在空字符串，判断为结束行，终止解析", cells.getRowNum())));
-                    break;
-                }
-
-                String name = Cells.ofString(cells.getCell(2));
+                String name = Cells.ofString(cells.getCell(0));
                 if (Strings.isNullOrEmpty(name)) {
                     log.info(I18nHolder.getAccessor().getMessage(
-                            "SettingService.importExcel.empty.name", new Object[]{cells.getRowNum()},
+                            "SettingService.importExcel.emptyData", new Object[]{cells.getRowNum(), "name"},
                             Strings.lenientFormat(
                                     "发现第 %s 行 name 列存在空字符串，判断为结束行，终止解析", cells.getRowNum())));
                     break;
                 }
 
-                String content = Cells.ofString(cells.getCell(3));
-                /*if (Strings.isNullOrEmpty(content)) {
+                String code = Cells.ofString(cells.getCell(1));
+                if (Strings.isNullOrEmpty(code)) {
                     log.info(I18nHolder.getAccessor().getMessage(
-                            "SettingService.importExcel.empty.content", new Object[]{cells.getRowNum()},
+                            "SettingService.importExcel.emptyData", new Object[]{cells.getRowNum(), "code"},
                             Strings.lenientFormat(
-                                    "发现第 %s 行 content 列存在空字符串，判断为结束行，终止解析", cells.getRowNum())));
+                                    "发现第 %s 行 code 列存在空字符串，判断为结束行，终止解析", cells.getRowNum())));
                     break;
-                }*/
+                }
 
-                String tab = Cells.ofString(cells.getCell(4));
-                if (Strings.isNullOrEmpty(tab)) {
+                String content = Cells.ofString(cells.getCell(2));
+                String type = Cells.ofString(cells.getCell(3));
+                if (Strings.isNullOrEmpty(type)) {
                     log.info(I18nHolder.getAccessor().getMessage(
-                            "SettingService.importExcel.empty.tab", new Object[]{cells.getRowNum()},
+                            "SettingService.importExcel.emptyData", new Object[]{cells.getRowNum(), "type"},
                             Strings.lenientFormat(
-                                    "发现第 %s 行 tab 列存在空字符串，判断为结束行，终止解析", cells.getRowNum())));
+                                    "发现第 %s 行 type 列存在空字符串，判断为结束行，终止解析", cells.getRowNum())));
                     break;
                 }
 
                 Setting entity = new Setting();
-                entity.setName(name);
-                // Example 表示查询示例，只有匹配传入参数的非空属性，才返回对应数据
+                entity.setCode(code);
                 entity = repository.findOne(Example.of(entity)).orElse(entity);
                 entity.setType(SettingType.of(type));
-                entity.setLabel(label);
+                entity.setName(name);
                 entity.setContent(content);
-                entity.setTab(SettingTab.of(tab));
                 repository.save(entity);
             }
         } catch (IOException e) {
@@ -132,8 +113,11 @@ public class SettingServiceJpaImpl implements SettingService {
     @Cacheable("setting")
     @RunAsSystem
     @Override
-    public Optional<Setting> findByName(String name) {
-        return Optional.ofNullable(name).flatMap(repository::findByName);
+    public Optional<Setting> findByCode(String code) {
+        return Optional.ofNullable(code)
+                .filter(StringUtils::hasText)
+                .map(it -> Example.of(Setting.builder().code(code).build()))
+                .flatMap(repository::findOne);
     }
 
     @PreAuthorize(Authorizes.HAS_AUTHORITY_ADMIN)

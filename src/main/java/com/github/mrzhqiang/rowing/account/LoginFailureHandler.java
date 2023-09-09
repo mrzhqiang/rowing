@@ -66,7 +66,7 @@ public class LoginFailureHandler implements AuthenticationFailureHandler {
 
     private BadCredentialsException parseBadCredentials(Account account, BadCredentialsException exception) {
         int currentFailedCount = account.getFailedCount();
-        Integer maxLoginFailed = settingService.findByName(SettingService.MAX_LOGIN_FAILED)
+        Integer maxLoginFailed = settingService.findByCode(SettingService.MAX_LOGIN_FAILED)
                 .map(Setting::getContent)
                 .map(Integer::parseInt)
                 .orElse(SettingService.DEF_MAX_LOGIN_FAILED);

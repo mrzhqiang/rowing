@@ -53,10 +53,10 @@ public class UserServiceJpaImpl implements UserService {
                         "AccountService.nickname.admin", "管理员"))
                 .gender(Gender.MALE)
                 .birthday(LocalDate.of(2019, Month.of(10), 25))
-                .email(settingService.findByName(SettingService.ADMIN_EMAIL)
+                .email(settingService.findByCode(SettingService.ADMIN_EMAIL)
                         .map(Setting::getContent)
                         .orElse(""))
-                .phoneNumber(settingService.findByName(SettingService.ADMIN_PHONE_NUMBER)
+                .phoneNumber(settingService.findByCode(SettingService.ADMIN_PHONE_NUMBER)
                         .map(Setting::getContent)
                         .orElse(""))
                 .introduction(I18nHolder.getAccessor().getMessage(

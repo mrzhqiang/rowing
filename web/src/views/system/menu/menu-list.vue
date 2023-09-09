@@ -2,10 +2,10 @@
   <div class="app-container">
     <el-form ref="searchMenuForm" v-model="menuParams" inline>
       <el-form-item :label="$t('标题')" prop="title">
-        <el-input v-model="menuParams.title"/>
+        <el-input v-model="menuParams.title" clearable/>
       </el-form-item>
       <el-form-item :label="$t('路径')" prop="path">
-        <el-input v-model="menuParams.path"/>
+        <el-input v-model="menuParams.path" clearable/>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="onMenuSearch">
@@ -286,6 +286,7 @@ export default {
       });
     },
     onMenuSearch() {
+      this.menuParams.page = 0;
       this.findMenuList();
     },
     onResetMenuSearch() {

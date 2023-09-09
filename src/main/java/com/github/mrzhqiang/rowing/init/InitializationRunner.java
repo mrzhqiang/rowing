@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
-import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.Ordered;
@@ -44,7 +43,8 @@ public class InitializationRunner implements ApplicationRunner, ApplicationConte
             service.execute(args);
         } catch (Exception exception) {
             log.error("初始化运行器运行出错！系统即将退出...", exception);
-            SpringApplication.exit(context);
+            //SpringApplication.exit(context);
+            throw exception;
         }
     }
 
