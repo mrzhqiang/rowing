@@ -15,9 +15,10 @@ import org.springframework.data.rest.core.annotation.RestResource;
 public interface DictISO3166Repository extends BaseRepository<DictISO3166> {
 
     @RestResource(path = "page", rel = "page")
-    Page<DictISO3166> findAllByNameContainingAndAlpha2CodeContainingAndCnNameContaining(String name,
-                                                                                        String alpha2Code,
-                                                                                        String cnName,
-                                                                                        Pageable pageable);
+    Page<DictISO3166> findAllByNameContainingAndAlpha2CodeContainingAndCnNameContainingAndNumericCodeContaining(String name,
+                                                                                                                String alpha2Code,
+                                                                                                                String cnName,
+                                                                                                                String numericCode,
+                                                                                                                Pageable pageable);
 
 }

@@ -10,6 +10,9 @@
       <el-form-item :label="$t('中文名称')" prop="cnName">
         <el-input v-model="dictParams.cnName"/>
       </el-form-item>
+      <el-form-item :label="$t('数字代码')" prop="numericCode">
+        <el-input v-model="dictParams.numericCode"/>
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="onDictSearch">
           {{ $t('搜索') }}
@@ -128,6 +131,7 @@ export default {
         name: '',
         alpha2Code: '',
         cnName: '',
+        numericCode: '',
         page: 0,
         size: 20,
       },
@@ -175,6 +179,7 @@ export default {
         name: '',
         alpha2Code: '',
         cnName: '',
+        numericCode: '',
         page: 0,
         size: 20,
       };
