@@ -96,8 +96,56 @@ export function searchDictGBT2260(path, params) {
   return rest.search(DICT_GBT_2260_API, path, params);
 }
 
+export function pageDictISO639(params) {
+  return rest.findAll(DICT_ISO_639_API, params);
+}
+
+export function createDictISO639(data) {
+  return rest.create(DICT_ISO_639_API, data);
+}
+
+export function findDictISO639(id, projection = null) {
+  return rest.findOne(DICT_ISO_639_API, id, {projection});
+}
+
+export function editDictISO639(id, data) {
+  return rest.edit(DICT_ISO_639_API, id, data);
+}
+
+export function updateDictISO639(id, data) {
+  return rest.update(DICT_ISO_639_API, id, data);
+}
+
+export function deleteDictISO639(id) {
+  return rest.remove(DICT_ISO_639_API, id);
+}
+
 export function searchDictISO639(path, params) {
   return rest.search(DICT_ISO_639_API, path, params);
+}
+
+export function pageDictISO3166(params) {
+  return rest.findAll(DICT_ISO_3166_API, params);
+}
+
+export function createDictISO3166(data) {
+  return rest.create(DICT_ISO_3166_API, data);
+}
+
+export function findDictISO3166(id, projection = null) {
+  return rest.findOne(DICT_ISO_3166_API, id, {projection});
+}
+
+export function editDictISO3166(id, data) {
+  return rest.edit(DICT_ISO_3166_API, id, data);
+}
+
+export function updateDictISO3166(id, data) {
+  return rest.update(DICT_ISO_3166_API, id, data);
+}
+
+export function deleteDictISO3166(id) {
+  return rest.remove(DICT_ISO_3166_API, id);
 }
 
 export function searchDictISO3166(path, params) {

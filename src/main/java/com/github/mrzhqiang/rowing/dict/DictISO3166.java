@@ -8,6 +8,8 @@ import lombok.ToString;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 /**
  * ISO 3166 是一个国际标准，用于定义国家和其子区域的代码。
@@ -42,26 +44,35 @@ public class DictISO3166 extends AuditableEntity {
     /**
      * 英文短名称。
      */
-    @Column(length = 100)
+    @NotBlank
+    @Size(max = 100)
+    @Column(nullable = false, length = 100)
     private String name;
     /**
      * 中文名称。
      */
+    @Size(max = 100)
     @Column(length = 100)
     private String cnName;
     /**
      * 两位字母代码。
      */
+    @NotBlank
+    @Size(max = 2, min = 2)
     @Column(unique = true, nullable = false, length = 2)
     private String alpha2Code;
     /**
      * 三位字母代码。
      */
+    @NotBlank
+    @Size(max = 3, min = 3)
     @Column(unique = true, nullable = false, length = 3)
     private String alpha3Code;
     /**
      * 三位数字代码。
      */
+    @NotBlank
+    @Size(max = 3, min = 3)
     @Column(unique = true, nullable = false, length = 3)
     private String numericCode;
 
