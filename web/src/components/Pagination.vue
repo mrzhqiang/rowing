@@ -60,9 +60,7 @@ export default {
         return this.page;
       },
       set(val) {
-        // 后端接口分页起始数从 0 开始，前端页码从 1 开始
-        // 回调时需要减 1 并控制页码不能低于 0 值
-        this.$emit('update:page', Math.max(0, val - 1));
+        this.$emit('update:page', Math.max(0, val));
       }
     },
     pageSize: {
@@ -70,21 +68,19 @@ export default {
         return this.size;
       },
       set(val) {
-        this.$emit('update:size', val || 20);
+        this.$emit('update:size', Math.max(20, val));
       }
     }
   },
   methods: {
     handleSizeChange(val) {
-      // 回调时需要减 1 并控制页码不能低于 0 值
-      this.$emit('pagination', {page: Math.max(0, this.currentPage - 1), size: val});
+      this.$emit('pagination', {page: Math.max(0, this.currentPage), size: val});
       if (this.autoScroll) {
         scrollTo(0, 800, null);
       }
     },
     handleCurrentChange(val) {
-      // 回调时需要减 1 并控制页码不能低于 0 值
-      this.$emit('pagination', {page: Math.max(0, val - 1), size: this.pageSize});
+      this.$emit('pagination', {page: Math.max(0, val), size: this.pageSize});
       if (this.autoScroll) {
         scrollTo(0, 800, null);
       }

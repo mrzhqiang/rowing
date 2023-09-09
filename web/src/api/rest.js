@@ -66,7 +66,12 @@ const rest = {
    * @returns {AxiosPromise<any>} 查询请求。
    */
   findAll: function (resource, params = {page: 0, size: 20, sort: 'created,desc'}) {
-    return request.get(`/api/${resource}`, {params: params});
+    // 注意：Pagination 组件默认从 1 开始作为第一页，所以 page 需要减 1 操作
+    const config = {params: {...params}};
+    if (params.page && params.page > 0) {
+      config.params.page = params.page - 1;
+    }
+    return request.get(`/api/${resource}`, config);
   },
   /**
    * 创建对应资源的新数据。
@@ -149,7 +154,12 @@ const rest = {
    * @return {AxiosPromise<any>} 搜索请求。
    */
   search: function (resource, path, params = {page: 0, size: 20, sort: 'created,desc'}) {
-    return request.get(`/api/${resource}/search/${path}`, {params: params});
+    // 注意：Pagination 组件默认从 1 开始作为第一页，所以 page 需要减 1 操作
+    const config = {params: {...params}};
+    if (params.page && params.page > 0) {
+      config.params.page = params.page - 1;
+    }
+    return request.get(`/api/${resource}/search/${path}`, config);
   },
   /**
    * 访问链接地址。
