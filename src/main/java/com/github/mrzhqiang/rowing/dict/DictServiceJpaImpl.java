@@ -16,6 +16,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.springframework.data.domain.Example;
 import org.springframework.data.rest.webmvc.json.EnumTranslator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -60,7 +61,9 @@ public class DictServiceJpaImpl implements DictService {
             innerPaths.forEach(this::syncInternal);
         }
 
-        if (groupRepository.findByCode(Dicts.DICT_FILENAME).isPresent()) {
+        DictGroup entity = new DictGroup();
+        entity.setCode(Dicts.DICT_FILENAME);
+        if (groupRepository.findOne(Example.of(entity)).isPresent()) {
             log.info("检测到 Excel 字典已经存在，跳过更新");
             return;
         }
@@ -70,8 +73,6 @@ public class DictServiceJpaImpl implements DictService {
             excelPaths.forEach(this::syncExcel);
         }
 
-        DictGroup entity = new DictGroup();
-        entity.setCode(Dicts.DICT_FILENAME);
         entity.setName(Dicts.DICT_FILENAME);
         entity.setType(DictType.EXCEL);
         entity.setFreeze(Logic.NO);
@@ -92,7 +93,9 @@ public class DictServiceJpaImpl implements DictService {
         String name = I18nHolder.getAccessor().getMessage(enumClass.getName(), simpleName);
 
         // 通过 code 找到数据字典组，如果存在就更新，如果不存在就创建
-        DictGroup dictGroup = groupRepository.findByCode(code).orElseGet(DictGroup::new);
+        DictGroup dictGroup = new DictGroup();
+        dictGroup.setCode(code);
+        dictGroup = groupRepository.findOne(Example.of(dictGroup)).orElse(dictGroup);
         // 已设置冻结，不进行更新
         if (Logic.YES.equals(dictGroup.getFreeze())) {
             log.info(I18nHolder.getAccessor().getMessage(
@@ -102,7 +105,6 @@ public class DictServiceJpaImpl implements DictService {
         }
 
         dictGroup.setName(name);
-        dictGroup.setCode(code);
         dictGroup.setType(DictType.INTERNAL);
         dictGroup.setFreeze(Logic.NO);
         groupRepository.save(dictGroup);
@@ -222,9 +224,10 @@ public class DictServiceJpaImpl implements DictService {
                 break;
             }
 
-            DictGroup entity = groupRepository.findByCode(code).orElseGet(DictGroup::new);
-            entity.setName(name);
+            DictGroup entity = new DictGroup();
             entity.setCode(code);
+            entity = groupRepository.findOne(Example.of(entity)).orElse(entity);
+            entity.setName(name);
             entity.setType(DictType.EXCEL);
             entity.setFreeze(Logic.NO);
             // save 方法本身带有事务，然后当前 service public 方法也带有事务

@@ -54,15 +54,15 @@ public class DictGBTServiceJpaImpl implements DictGBTService {
         Preconditions.checkNotNull(excelFile, "excel file == null");
 
         if (excelFile.contains(Dicts.GBT_2260_FILENAME)) {
-            if (groupRepository.findByCode(Dicts.GBT_2260_FILENAME).isPresent()) {
+            DictGroup entity = new DictGroup();
+            entity.setCode(Dicts.GBT_2260_FILENAME);
+            if (groupRepository.findOne(Example.of(entity)).isPresent()) {
                 log.info("检测到 GB/T 2260 字典已经存在，跳过更新");
                 return;
             }
 
             syncGBT2260Excel(excelFile);
 
-            DictGroup entity = new DictGroup();
-            entity.setCode(Dicts.GBT_2260_FILENAME);
             entity.setName(Dicts.GBT_2260_FILENAME);
             entity.setType(DictType.EXCEL);
             entity.setFreeze(Logic.NO);

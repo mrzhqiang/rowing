@@ -165,7 +165,7 @@ export default {
     findDictList() {
       this.dictLoading = true;
       searchDictISO3166('page', this.dictParams).then(response => {
-        this.dictList = response._embedded.dicts;
+        this.dictList = response._embedded.dictISO3166s;
         this.dictPage = response.page;
         this.dictLoading = false;
       });

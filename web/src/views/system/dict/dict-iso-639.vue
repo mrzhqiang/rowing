@@ -155,7 +155,7 @@ export default {
     findDictList() {
       this.dictLoading = true;
       searchDictISO639('page', this.dictParams).then(response => {
-        this.dictList = response._embedded.dicts;
+        this.dictList = response._embedded.dictISO639s;
         this.dictPage = response.page;
         this.dictLoading = false;
       });

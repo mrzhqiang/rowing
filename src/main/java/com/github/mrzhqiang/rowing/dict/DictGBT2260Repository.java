@@ -12,8 +12,7 @@ import java.util.List;
  * 行政区划代码仓库。
  * <p>
  */
-@RepositoryRestResource(path = "dict-gbt-2260", collectionResourceRel = "dicts",
-        excerptProjection = DictGBT2260Excerpt.class)
+@RepositoryRestResource(path = "dict-gbt-2260", excerptProjection = DictGBT2260Excerpt.class)
 public interface DictGBT2260Repository extends BaseRepository<DictGBT2260> {
 
     @RestResource(path = "tree", rel = "tree")

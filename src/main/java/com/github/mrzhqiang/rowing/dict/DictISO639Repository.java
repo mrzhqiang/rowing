@@ -10,8 +10,7 @@ import org.springframework.data.rest.core.annotation.RestResource;
  * 语言代码仓库。
  * <p>
  */
-@RepositoryRestResource(path = "dict-iso-639", collectionResourceRel = "dicts",
-        excerptProjection = DictISO639Excerpt.class)
+@RepositoryRestResource(path = "dict-iso-639", excerptProjection = DictISO639Excerpt.class)
 public interface DictISO639Repository extends BaseRepository<DictISO639> {
 
     @RestResource(path = "page", rel = "page")

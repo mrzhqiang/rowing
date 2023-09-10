@@ -55,32 +55,32 @@ public class DictISOServiceJpaImpl implements DictISOService {
         Preconditions.checkNotNull(excelFile, "excel file == null");
 
         if (excelFile.contains(Dicts.ISO_639_FILENAME)) {
-            if (groupRepository.findByCode(Dicts.ISO_639_FILENAME).isPresent()) {
+            DictGroup entity = new DictGroup();
+            entity.setCode(Dicts.ISO_639_FILENAME);
+            if (groupRepository.findOne(Example.of(entity)).isPresent()) {
                 log.info("检测到 ISO 639 字典已经存在，跳过更新");
                 return;
             }
 
             syncISO639Excel(excelFile);
 
-            DictGroup entity = new DictGroup();
             entity.setName(Dicts.ISO_639_FILENAME);
-            entity.setCode(Dicts.ISO_639_FILENAME);
             entity.setType(DictType.EXCEL);
             entity.setFreeze(Logic.NO);
             groupRepository.save(entity);
             return;
         }
         if (excelFile.contains(Dicts.ISO_3166_FILENAME)) {
-            if (groupRepository.findByCode(Dicts.ISO_3166_FILENAME).isPresent()) {
+            DictGroup entity = new DictGroup();
+            entity.setCode(Dicts.ISO_3166_FILENAME);
+            if (groupRepository.findOne(Example.of(entity)).isPresent()) {
                 log.info("检测到 ISO 3166 字典已经存在，跳过更新");
                 return;
             }
 
             syncISO3166Excel(excelFile);
 
-            DictGroup entity = new DictGroup();
             entity.setName(Dicts.ISO_3166_FILENAME);
-            entity.setCode(Dicts.ISO_3166_FILENAME);
             entity.setType(DictType.EXCEL);
             entity.setFreeze(Logic.NO);
             groupRepository.save(entity);

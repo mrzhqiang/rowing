@@ -1,9 +1,9 @@
 package com.github.mrzhqiang.rowing.dict;
 
-import com.github.mrzhqiang.rowing.domain.Logic;
 import com.github.mrzhqiang.rowing.domain.AuditableEntity;
 import com.github.mrzhqiang.rowing.domain.DictType;
 import com.github.mrzhqiang.rowing.domain.Domains;
+import com.github.mrzhqiang.rowing.domain.Logic;
 import com.google.common.collect.Lists;
 import lombok.Getter;
 import lombok.NonNull;

@@ -5,8 +5,6 @@ import com.github.mrzhqiang.rowing.domain.DictType;
 import com.github.mrzhqiang.rowing.domain.Logic;
 import org.springframework.data.rest.core.config.Projection;
 
-import java.util.List;
-
 /**
  * 字典摘要。
  * <p>
@@ -24,7 +22,5 @@ public interface DictExcerpt extends AuditableExcerpt {
     DictType getType();
 
     Logic getFreeze();
-
-    List<DictItemExcerpt> getItems();
 
 }

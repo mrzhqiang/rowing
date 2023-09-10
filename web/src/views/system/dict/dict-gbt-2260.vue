@@ -175,13 +175,13 @@ export default {
     findDictTree() {
       searchDictGBT2260('tree', {projection: 'dict-gbt-2260-option'}).then(response => {
         const dict = {id: '', label: this.generateTitle('(无)'), isDisabled: false};
-        this.dictTreeOptions = [dict, ...response._embedded.dicts];
+        this.dictTreeOptions = [dict, ...response._embedded.dictGBT2260s];
       });
     },
     findDictList() {
       this.dictLoading = true;
       searchDictGBT2260('page', this.dictParams).then(response => {
-        this.dictList = response._embedded.dicts;
+        this.dictList = response._embedded.dictGBT2260s;
         this.dictPage = response.page;
         this.dictLoading = false;
       });
