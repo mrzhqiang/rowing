@@ -1,17 +1,14 @@
 <template>
   <div class="app-container">
     <el-form ref="searchDictForm" v-model="dictParams" inline>
-      <el-form-item :label="$t('名称')" prop="name">
+      <el-form-item :label="$t('英文名称')" prop="name">
         <el-input v-model="dictParams.name" clearable/>
       </el-form-item>
-      <el-form-item :label="$t('代码')" prop="alpha2Code">
-        <el-input v-model="dictParams.alpha2Code" clearable/>
+      <el-form-item :label="$t('语言代码')" prop="code">
+        <el-input v-model="dictParams.code" clearable/>
       </el-form-item>
       <el-form-item :label="$t('中文名称')" prop="cnName">
         <el-input v-model="dictParams.cnName" clearable/>
-      </el-form-item>
-      <el-form-item :label="$t('数字代码')" prop="numericCode">
-        <el-input v-model="dictParams.numericCode" clearable/>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="onDictSearch">
@@ -35,17 +32,18 @@
 
     <el-table v-loading="dictLoading" :data="dictList" row-key="id" size="mini" stripe border highlight-current-row>
       <el-table-column prop="id" label="#" min-width="20" :align="'right'"/>
-      <el-table-column prop="name" :label="$t('名称')" min-width="80">
+      <el-table-column prop="family" :label="$t('语言系属分类')" min-width="50" show-overflow-tooltip/>
+      <el-table-column prop="name" :label="$t('英文名称')" min-width="100">
         <template v-slot="scope">
           <el-button size="mini" type="text" @click="onDictEdit(scope, true)">
             {{ scope.row.name }}
           </el-button>
         </template>
       </el-table-column>
-      <el-table-column prop="alpha2Code" :label="$t('代码')" min-width="20" :align="'center'"/>
-      <el-table-column prop="cnName" :label="$t('中文名称')" min-width="80" show-overflow-tooltip/>
-      <el-table-column prop="alpha3Code" :label="$t('三位代码')" min-width="40" :align="'center'"/>
-      <el-table-column prop="numericCode" :label="$t('数字代码')" min-width="20" :align="'center'"/>
+      <el-table-column prop="code" :label="$t('语言代码')" min-width="40" :align="'center'"/>
+      <el-table-column prop="cnName" :label="$t('中文名称')" min-width="100" show-overflow-tooltip/>
+      <el-table-column prop="selfName" :label="$t('该语言自称')" min-width="50" show-overflow-tooltip/>
+      <el-table-column prop="notes" :label="$t('注释')" min-width="120" show-overflow-tooltip/>
       <el-table-column prop="createdBy" :label="$t('创建人')" min-width="40" :align="'center'"/>
       <el-table-column prop="created" :label="$t('创建时间')" min-width="80" :align="'center'"/>
       <el-table-column prop="updatedBy" :label="$t('更新人')" min-width="40" :align="'center'"/>
@@ -80,13 +78,13 @@
                :disabled="!dictFormEditable" label-width="80px">
         <el-row :gutter="10">
           <el-col :span="8">
-            <el-form-item :label="$t('名称')" prop="name">
+            <el-form-item :label="$t('英文名称')" prop="name">
               <el-input v-model="dictForm.name"/>
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item :label="$t('代码')" prop="alpha2Code">
-              <el-input v-model="dictForm.alpha2Code"/>
+            <el-form-item :label="$t('语言代码')" prop="code">
+              <el-input v-model="dictForm.code"/>
             </el-form-item>
           </el-col>
           <el-col :span="8">
@@ -95,15 +93,10 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row :gutter="10">
-          <el-col :span="8">
-            <el-form-item :label="$t('三位代码')" prop="alpha3Code">
-              <el-input v-model="dictForm.alpha3Code"/>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item :label="$t('数字代码')" prop="numericCode">
-              <el-input v-model="dictForm.numericCode"/>
+        <el-row :gutte="10">
+          <el-col :span="24">
+            <el-form-item :label="$t('注释')" prop="notes">
+              <el-input v-model="dictForm.notes" type="textarea" rows="3"/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -118,20 +111,20 @@
 </template>
 
 <script>
-import {createDictISO3166, deleteDictISO3166, editDictISO3166, findDictISO3166, searchDictISO3166} from '@/api/dict';
+import {createDictISO639, deleteDictISO639, editDictISO639, findDictISO639, searchDictISO639} from '@/api/dict';
 import Pagination from '@/components/Pagination';
 import {PERMISSION_MARK} from '@/utils/permission';
 
 export default {
-  name: 'CountryRegionCode',
+  name: 'DictISO639List',
   components: {Pagination},
   data() {
     return {
       dictParams: {
+        // 注意：搜索的所有条件参数必须传 '' 值，否则将导致查询不到任何数据
         name: '',
-        alpha2Code: '',
+        code: '',
         cnName: '',
-        numericCode: '',
         page: 0,
         size: 20,
       },
@@ -144,16 +137,13 @@ export default {
       dictForm: {
         id: null,
         name: '',
-        alpha2Code: '',
+        code: '',
         cnName: '',
-        alpha3Code: '',
-        numericCode: '',
+        notes: '',
       },
       dictRules: {
-        name: [{required: true, message: this.$t('名称不能为空'), trigger: 'blur'}],
-        alpha2Code: [{required: true, message: this.$t('代码不能为空'), trigger: 'blur'}],
-        alpha3Code: [{required: true, message: this.$t('三位代码不能为空'), trigger: 'blur'}],
-        numericCode: [{required: true, message: this.$t('数字代码不能为空'), trigger: 'blur'}],
+        name: [{required: true, message: this.$t('英文名称不能为空'), trigger: 'blur'}],
+        code: [{required: true, message: this.$t('语言代码不能为空'), trigger: 'blur'}],
       },
       dictFormEditable: false,
     };
@@ -164,8 +154,8 @@ export default {
   methods: {
     findDictList() {
       this.dictLoading = true;
-      searchDictISO3166('page', this.dictParams).then(response => {
-        this.dictList = response._embedded.dictISO3166s;
+      searchDictISO639('page', this.dictParams).then(response => {
+        this.dictList = response._embedded.dictISO639s;
         this.dictPage = response.page;
         this.dictLoading = false;
       });
@@ -177,9 +167,8 @@ export default {
     onResetDictSearch() {
       this.dictParams = {
         name: '',
-        alpha2Code: '',
+        code: '',
         cnName: '',
-        numericCode: '',
         page: 0,
         size: 20,
       };
@@ -195,10 +184,9 @@ export default {
       this.dictForm = {
         id: null,
         name: '',
-        alpha2Code: '',
+        code: '',
         cnName: '',
-        alpha3Code: '',
-        numericCode: '',
+        notes: '',
       };
     },
     fillDictForm(form) {
@@ -207,28 +195,28 @@ export default {
     onDictCreate() {
       this.resetDictForm();
       this.dictFormEditable = true;
-      this.dictTitle = this.$t('创建国家地区代码');
+      this.dictTitle = this.$t('创建语言代码');
       this.dictVisible = true;
     },
     onDictAdd({row}) {
       this.resetDictForm();
       this.dictFormEditable = true;
-      this.dictTitle = this.$t('添加国家地区代码');
+      this.dictTitle = this.$t('添加语言代码');
       this.dictVisible = true;
     },
     onDictEdit({row}, readonly = false) {
       this.resetDictForm();
       this.dictFormEditable = !readonly;
-      findDictISO3166(row.id, 'dict-iso-3166-form').then(response => {
+      findDictISO639(row.id, 'dict-iso-639-form').then(response => {
         this.fillDictForm(response);
         this.dictForm.id = row.id;
-        this.dictTitle = readonly ? this.$t('查看国家地区代码') : this.$t('编辑国家地区代码');
+        this.dictTitle = readonly ? this.$t('查看语言代码') : this.$t('编辑语言代码');
         this.dictVisible = true;
       });
     },
     onDictDelete({row}) {
-      deleteDictISO3166(row.id).then(() => {
-        this.$message.success(this.$t('国家地区代码 {code} 删除成功！', {code: row.code}));
+      deleteDictISO639(row.id).then(() => {
+        this.$message.success(this.$t('语言代码 {code} 删除成功！', {code: row.code}));
         this.findDictList();
       });
     },
@@ -240,21 +228,21 @@ export default {
         if (valid) {
           // 只修改页面上的字段
           const data = {
+            // parent: this.dictForm.parent,
             name: this.dictForm.name,
-            alpha2Code: this.dictForm.alpha2Code,
+            code: this.dictForm.code,
             cnName: this.dictForm.cnName,
-            alpha3Code: this.dictForm.alpha3Code,
-            numericCode: this.dictForm.numericCode
+            notes: this.dictForm.notes
           };
           if (this.dictForm.id) {
-            editDictISO3166(this.dictForm.id, data).then(() => {
-              this.$message.success(this.$t('国家地区代码 {code} 更新成功！', {code: this.dictForm.code}));
+            editDictISO639(this.dictForm.id, data).then(() => {
+              this.$message.success(this.$t('语言代码 {code} 更新成功！', {code: this.dictForm.code}));
               this.dictVisible = false;
               this.findDictList();
             });
           } else {
-            createDictISO3166(data).then(() => {
-              this.$message.success(this.$t('国家地区代码 {code} 创建成功！', {code: this.dictForm.code}));
+            createDictISO639(data).then(() => {
+              this.$message.success(this.$t('语言代码 {code} 创建成功！', {code: this.dictForm.code}));
               this.dictVisible = false;
               this.findDictList();
             });

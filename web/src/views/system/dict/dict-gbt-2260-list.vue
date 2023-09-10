@@ -1,14 +1,14 @@
 <template>
   <div class="app-container">
     <el-form ref="searchDictForm" v-model="dictParams" inline>
-      <el-form-item :label="$t('英文名称')" prop="name">
-        <el-input v-model="dictParams.name" clearable/>
+      <el-form-item :label="$t('单位名称')" prop="name">
+        <el-input v-model="dictParams.name" maxlength="100" clearable/>
       </el-form-item>
-      <el-form-item :label="$t('语言代码')" prop="code">
-        <el-input v-model="dictParams.code" clearable/>
+      <el-form-item :label="$t('代码')" prop="code">
+        <el-input v-model="dictParams.code" minlength="6" maxlength="6" clearable/>
       </el-form-item>
-      <el-form-item :label="$t('中文名称')" prop="cnName">
-        <el-input v-model="dictParams.cnName" clearable/>
+      <el-form-item :label="$t('等级')" prop="level">
+        <el-input v-model="dictParams.level" minlength="1" maxlength="1" min="1" max="3" clearable/>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="onDictSearch">
@@ -32,18 +32,17 @@
 
     <el-table v-loading="dictLoading" :data="dictList" row-key="id" size="mini" stripe border highlight-current-row>
       <el-table-column prop="id" label="#" min-width="20" :align="'right'"/>
-      <el-table-column prop="family" :label="$t('语言系属分类')" min-width="50" show-overflow-tooltip/>
-      <el-table-column prop="name" :label="$t('英文名称')" min-width="100">
+      <el-table-column prop="name" :label="$t('单位名称')" min-width="50" :align="'center'">
         <template v-slot="scope">
           <el-button size="mini" type="text" @click="onDictEdit(scope, true)">
             {{ scope.row.name }}
           </el-button>
         </template>
       </el-table-column>
-      <el-table-column prop="code" :label="$t('语言代码')" min-width="40" :align="'center'"/>
-      <el-table-column prop="cnName" :label="$t('中文名称')" min-width="100" show-overflow-tooltip/>
-      <el-table-column prop="selfName" :label="$t('该语言自称')" min-width="50" show-overflow-tooltip/>
-      <el-table-column prop="notes" :label="$t('注释')" min-width="120" show-overflow-tooltip/>
+      <el-table-column prop="code" :label="$t('代码')" min-width="40" :align="'center'"/>
+      <el-table-column prop="parentName" :label="$t('上级单位名称')" min-width="40" :align="'center'"/>
+      <el-table-column prop="parentCode" :label="$t('上级代码')" min-width="40" :align="'center'"/>
+      <el-table-column prop="level" :label="$t('级别')" min-width="20" :align="'center'"/>
       <el-table-column prop="createdBy" :label="$t('创建人')" min-width="40" :align="'center'"/>
       <el-table-column prop="created" :label="$t('创建时间')" min-width="80" :align="'center'"/>
       <el-table-column prop="updatedBy" :label="$t('更新人')" min-width="40" :align="'center'"/>
@@ -77,26 +76,25 @@
       <el-form ref="dictForm" :model="dictForm" :rules="dictRules"
                :disabled="!dictFormEditable" label-width="80px">
         <el-row :gutter="10">
+          <!--<el-col :span="8">
+            <el-form-item :label="$t('上级单位')" prop="parent">
+              <tree-select v-model="dictForm.parent" :options="dictTreeOptions" :normalizer="normalizer"
+                           :disabled="!dictFormEditable" :show-count="true" :placeholder="$t('选择上级单位')"/>
+            </el-form-item>
+          </el-col>-->
           <el-col :span="8">
-            <el-form-item :label="$t('英文名称')" prop="name">
-              <el-input v-model="dictForm.name"/>
+            <el-form-item :label="$t('单位名称')" prop="name">
+              <el-input v-model="dictForm.name" maxlength="100"/>
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item :label="$t('语言代码')" prop="code">
-              <el-input v-model="dictForm.code"/>
+            <el-form-item :label="$t('代码')" prop="code">
+              <el-input v-model="dictForm.code" maxlength="6" minlength="6"/>
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item :label="$t('中文名称')" prop="cnName">
-              <el-input v-model="dictForm.cnName"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row :gutte="10">
-          <el-col :span="24">
-            <el-form-item :label="$t('注释')" prop="notes">
-              <el-input v-model="dictForm.notes" type="textarea" rows="3"/>
+            <el-form-item :label="$t('等级')" prop="level">
+              <el-input v-model="dictForm.level" minlength="1" maxlength="1"/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -111,12 +109,17 @@
 </template>
 
 <script>
-import {createDictISO639, deleteDictISO639, editDictISO639, findDictISO639, searchDictISO639} from '@/api/dict';
+import {createDictGBT2260, deleteDictGBT2260, editDictGBT2260, findDictGBT2260, searchDictGBT2260} from '@/api/dict';
+import {clearTemplate} from '@/api/rest';
 import Pagination from '@/components/Pagination';
+import utils from '@/utils/common';
+import {generateTitle} from '@/utils/i18n';
 import {PERMISSION_MARK} from '@/utils/permission';
+// import TreeSelect from '@riophae/vue-treeselect';
+// import '@riophae/vue-treeselect/dist/vue-treeselect.css';
 
 export default {
-  name: 'LanguageCode',
+  name: 'DictGBT2260List',
   components: {Pagination},
   data() {
     return {
@@ -124,7 +127,7 @@ export default {
         // 注意：搜索的所有条件参数必须传 '' 值，否则将导致查询不到任何数据
         name: '',
         code: '',
-        cnName: '',
+        level: '',
         page: 0,
         size: 20,
       },
@@ -136,26 +139,49 @@ export default {
       dictVisible: false,
       dictForm: {
         id: null,
+        parent: '',
         name: '',
         code: '',
-        cnName: '',
-        notes: '',
+        level: ''
       },
       dictRules: {
-        name: [{required: true, message: this.$t('英文名称不能为空'), trigger: 'blur'}],
-        code: [{required: true, message: this.$t('语言代码不能为空'), trigger: 'blur'}],
+        name: [{required: true, message: this.$t('单位名称不能为空'), trigger: 'blur'}],
+        code: [{required: true, message: this.$t('行政区划代码不能为空'), trigger: 'blur'}],
       },
       dictFormEditable: false,
+      dictTreeOptions: [],
     };
   },
   created() {
+    // this.findDictTree();
     this.findDictList();
   },
   methods: {
+    generateTitle,
+    normalizer(node) {
+      if (node.childrenList && !node.childrenList.length) {
+        delete node.children;
+      }
+      if (node.id === '') {
+        return node;
+      }
+      return {
+        id: clearTemplate(node._links.self.href),
+        label: node.label,
+        children: node.childrenList,
+        isDisabled: node.isDisabled
+      };
+    },
+    findDictTree() {
+      searchDictGBT2260('tree', {projection: 'dict-gbt-2260-option'}).then(response => {
+        const dict = {id: '', label: this.generateTitle('(无)'), isDisabled: false};
+        this.dictTreeOptions = [dict, ...response._embedded.dictGBT2260s];
+      });
+    },
     findDictList() {
       this.dictLoading = true;
-      searchDictISO639('page', this.dictParams).then(response => {
-        this.dictList = response._embedded.dictISO639s;
+      searchDictGBT2260('page', this.dictParams).then(response => {
+        this.dictList = response._embedded.dictGBT2260s;
         this.dictPage = response.page;
         this.dictLoading = false;
       });
@@ -168,7 +194,7 @@ export default {
       this.dictParams = {
         name: '',
         code: '',
-        cnName: '',
+        level: '',
         page: 0,
         size: 20,
       };
@@ -183,40 +209,51 @@ export default {
       }
       this.dictForm = {
         id: null,
+        parent: '',
         name: '',
         code: '',
-        cnName: '',
-        notes: '',
+        level: ''
       };
     },
     fillDictForm(form) {
       this.dictForm = form;
+      this.dictForm.parent = '';
+      if (form.parentId) {
+        for (const option of this.dictTreeOptions) {
+          const node = utils.findTreeNode(option, form.parentId);
+          if (node) {
+            this.dictForm.parent = clearTemplate(node._links.self.href);
+            break;
+          }
+        }
+      }
     },
     onDictCreate() {
       this.resetDictForm();
       this.dictFormEditable = true;
-      this.dictTitle = this.$t('创建语言代码');
+      this.dictTitle = this.$t('创建行政区划代码');
       this.dictVisible = true;
     },
     onDictAdd({row}) {
       this.resetDictForm();
       this.dictFormEditable = true;
-      this.dictTitle = this.$t('添加语言代码');
+      this.dictForm.parent = clearTemplate(row._links.self.href);
+      this.dictTitle = this.$t('添加行政区划代码');
       this.dictVisible = true;
     },
     onDictEdit({row}, readonly = false) {
       this.resetDictForm();
       this.dictFormEditable = !readonly;
-      findDictISO639(row.id, 'dict-iso-639-form').then(response => {
+      findDictGBT2260(row.id, 'dict-gbt-2260-form').then(response => {
         this.fillDictForm(response);
         this.dictForm.id = row.id;
-        this.dictTitle = readonly ? this.$t('查看语言代码') : this.$t('编辑语言代码');
+        this.dictTitle = readonly ? this.$t('查看行政区划代码') : this.$t('编辑行政区划代码');
         this.dictVisible = true;
       });
     },
     onDictDelete({row}) {
-      deleteDictISO639(row.id).then(() => {
-        this.$message.success(this.$t('语言代码 {code} 删除成功！', {code: row.code}));
+      deleteDictGBT2260(row.id).then(() => {
+        this.$message.success(this.$t('行政区划代码 {code} 删除成功！', {code: row.code}));
         this.findDictList();
       });
     },
@@ -231,18 +268,17 @@ export default {
             // parent: this.dictForm.parent,
             name: this.dictForm.name,
             code: this.dictForm.code,
-            cnName: this.dictForm.cnName,
-            notes: this.dictForm.notes
+            level: this.dictForm.level
           };
           if (this.dictForm.id) {
-            editDictISO639(this.dictForm.id, data).then(() => {
-              this.$message.success(this.$t('语言代码 {code} 更新成功！', {code: this.dictForm.code}));
+            editDictGBT2260(this.dictForm.id, data).then(() => {
+              this.$message.success(this.$t('行政区划代码 {code} 更新成功！', {code: this.dictForm.code}));
               this.dictVisible = false;
               this.findDictList();
             });
           } else {
-            createDictISO639(data).then(() => {
-              this.$message.success(this.$t('语言代码 {code} 创建成功！', {code: this.dictForm.code}));
+            createDictGBT2260(data).then(() => {
+              this.$message.success(this.$t('行政区划代码 {code} 创建成功！', {code: this.dictForm.code}));
               this.dictVisible = false;
               this.findDictList();
             });

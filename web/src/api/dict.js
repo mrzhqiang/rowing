@@ -10,6 +10,7 @@ export const DICT_CODES = {
   logic: 'LOGIC',
   taskType: 'TASK_TYPE',
   taskStatus: 'TASK_STATUS',
+  accountType: 'ACCOUNT_TYPE',
 };
 
 export function pageDict(params) {

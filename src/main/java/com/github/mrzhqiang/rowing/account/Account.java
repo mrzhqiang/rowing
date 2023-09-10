@@ -28,6 +28,9 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
@@ -86,6 +89,8 @@ public class Account extends AuditableEntity implements UserDetails {
      * <p>
      * 3. 其他规则：类似学生学号，结合前缀+中缀+随机字符串后缀，组成用户名。
      */
+    @NotBlank
+    @Size(max = Domains.USERNAME_LENGTH)
     @Column(updatable = false, unique = true, nullable = false, length = Domains.USERNAME_LENGTH)
     private String username;
     /**
@@ -97,7 +102,8 @@ public class Account extends AuditableEntity implements UserDetails {
      * <p>
      * 由于是加密存储，这里无法指定字段长度，只能交给服务层进行处理。
      */
-    @JsonIgnore
+    @NotBlank
+    @JsonIgnore()
     @ToString.Exclude
     @Column(nullable = false)
     private String password;
@@ -106,6 +112,7 @@ public class Account extends AuditableEntity implements UserDetails {
      * <p>
      * 必填，默认是用户类型。
      */
+    @NotNull
     @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = Domains.ENUM_NAME_LENGTH)
