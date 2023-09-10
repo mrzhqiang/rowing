@@ -22,5 +22,13 @@ public enum ActionType {
      * 注销。
      */
     LOGOUT,
+    /**
+     * 创建账户。
+     */
+    CREATE_ACCOUNT,
+    /**
+     * 创建菜单。
+     */
+    CREATE_MENU,
 
 }

@@ -2,11 +2,11 @@ package com.github.mrzhqiang.rowing.action;
 
 import com.github.mrzhqiang.rowing.domain.ActionState;
 import com.github.mrzhqiang.rowing.domain.ActionType;
+import com.github.mrzhqiang.rowing.domain.Domains;
 import com.github.mrzhqiang.rowing.session.SessionDetails;
 import com.github.mrzhqiang.rowing.session.SessionDetailsService;
 import com.github.mrzhqiang.rowing.session.Sessions;
 import com.github.mrzhqiang.rowing.util.Authentications;
-import com.github.mrzhqiang.rowing.domain.Domains;
 import com.github.mrzhqiang.rowing.util.Jsons;
 import com.github.mrzhqiang.rowing.util.Validations;
 import com.google.common.base.Joiner;
@@ -43,7 +43,7 @@ public class ActionAspect {
 
     private static final char DOT_CHAR = ',';
     private static final String PARAMETERS_TEMPLATE = "%s=%s";
-    private static final String NO_CONTENT = "(no-content)";
+    private static final String NO_CONTENT = "(void)";
 
     private final ActionLogRepository repository;
     private final SessionDetailsService sessionDetailsService;
@@ -116,7 +116,6 @@ public class ActionAspect {
         actionLog.setParams(params);
         actionLog.setState(state);
         actionLog.setResult(resultContent);
-        actionLog.setOperator(Authentications.currentUsername());
         Optional<SessionDetails> sessionDetails = Sessions.ofCurrentDetails();
         if (sessionDetails.isPresent()) {
             SessionDetails details = sessionDetails.get();
@@ -128,6 +127,13 @@ public class ActionAspect {
         }
         // 可能还没查到 IP 地址的地理位置，此时手动发起转换请求
         String host = Authentications.currentHost();
+        if ("127.0.0.1".equals(host) || "localhost".equals(host)) {
+            actionLog.setIp(host);
+            actionLog.setLocation("本机地址");
+            actionLog.setDevice("本地机器");
+            repository.save(actionLog);
+            return;
+        }
         if (!Authentications.UNKNOWN_HOST.equals(host)) {
             sessionDetailsService.observeApi(host)
                     .onErrorResumeNext(sessionDetailsService.observeDb(host))

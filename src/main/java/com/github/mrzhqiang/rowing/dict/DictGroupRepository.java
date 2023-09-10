@@ -8,9 +8,6 @@ import org.springframework.data.rest.core.annotation.RestResource;
 
 import java.util.Optional;
 
-/**
- * 字典组仓库。
- */
 @RepositoryRestResource(path = "dict", collectionResourceRel = "dicts", excerptProjection = DictExcerpt.class)
 public interface DictGroupRepository extends BaseRepository<DictGroup> {
 

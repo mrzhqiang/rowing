@@ -6,9 +6,6 @@ import org.springframework.data.rest.core.annotation.RestResource;
 
 import java.util.Optional;
 
-/**
- * 字典项仓库。
- */
 @RepositoryRestResource(path = "dict-item", excerptProjection = DictItemExcerpt.class)
 public interface DictItemRepository extends BaseRepository<DictItem> {
 

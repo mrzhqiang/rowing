@@ -7,11 +7,16 @@ import com.github.mrzhqiang.rowing.domain.Domains;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import java.time.Instant;
 
 /**
  * 操作日志。
@@ -22,6 +27,7 @@ import javax.persistence.Enumerated;
 @Setter
 @ToString(callSuper = true)
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 public class ActionLog extends BaseEntity {
 
     private static final long serialVersionUID = 7299201576558653855L;
@@ -73,6 +79,7 @@ public class ActionLog extends BaseEntity {
      * <p>
      * 操作人的用户名称.
      */
+    @CreatedBy
     @Column(length = Domains.USERNAME_LENGTH)
     private String operator;
     /**
@@ -98,5 +105,11 @@ public class ActionLog extends BaseEntity {
      */
     @Column(length = Domains.DEVICE_INFO_LENGTH)
     private String device;
+
+    /**
+     * 操作时间戳。
+     */
+    @CreatedDate
+    private Instant timestamp;
 
 }

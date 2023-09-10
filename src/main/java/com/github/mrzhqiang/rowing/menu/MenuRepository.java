@@ -12,10 +12,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 
-/**
- * 菜单仓库。
- * <p>
- */
 @PreAuthorize(Authorizes.HAS_AUTHORITY_ADMIN)
 @RepositoryRestResource(path = "menu", excerptProjection = MenuExcerpt.class)
 public interface MenuRepository extends BaseRepository<Menu> {

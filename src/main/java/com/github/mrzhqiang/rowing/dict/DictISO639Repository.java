@@ -6,10 +6,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 
-/**
- * 语言代码仓库。
- * <p>
- */
 @RepositoryRestResource(path = "dict-iso-639", excerptProjection = DictISO639Excerpt.class)
 public interface DictISO639Repository extends BaseRepository<DictISO639> {
 

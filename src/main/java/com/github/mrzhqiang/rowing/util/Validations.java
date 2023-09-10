@@ -4,6 +4,7 @@ import com.github.mrzhqiang.helper.Exceptions;
 import com.github.mrzhqiang.rowing.init.InitializationException;
 import com.google.common.base.Strings;
 import okhttp3.HttpUrl;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
@@ -39,7 +40,8 @@ public final class Validations {
      * @return 异常消息。
      */
     public static String findMessage(Exception e) {
-        if (e instanceof InitializationException) {
+        if (e instanceof InitializationException
+                || e instanceof DataIntegrityViolationException) {
             e = (Exception) Optional.ofNullable(e.getCause()).orElse(e);
         }
         if (e instanceof ConstraintViolationException) {

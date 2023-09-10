@@ -10,9 +10,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.Optional;
 
-/**
- * 账户仓库。
- */
 @PreAuthorize(HAS_AUTHORITY_ADMIN)
 @RepositoryRestResource(path = "account", excerptProjection = AccountExcerpt.class)
 public interface AccountRepository extends BaseRepository<Account> {

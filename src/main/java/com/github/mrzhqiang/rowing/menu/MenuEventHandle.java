@@ -1,5 +1,7 @@
 package com.github.mrzhqiang.rowing.menu;
 
+import com.github.mrzhqiang.rowing.action.Action;
+import com.github.mrzhqiang.rowing.domain.ActionType;
 import org.springframework.data.rest.core.annotation.HandleBeforeCreate;
 import org.springframework.data.rest.core.annotation.HandleBeforeDelete;
 import org.springframework.data.rest.core.annotation.HandleBeforeSave;
@@ -24,6 +26,7 @@ public class MenuEventHandle {
         this.repository = repository;
     }
 
+    @Action(value = "创建菜单", type = ActionType.CREATE_MENU)
     @HandleBeforeCreate
     public void onBeforeCreate(Menu menu) {
         Menus.validateCreate(menu);

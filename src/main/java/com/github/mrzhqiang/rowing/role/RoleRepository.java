@@ -7,9 +7,6 @@ import org.springframework.data.rest.core.annotation.RestResource;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * 角色仓库。
- */
 @RepositoryRestResource(path = "role", collectionResourceRel = "role", excerptProjection = RoleExcerpt.class)
 public interface RoleRepository extends BaseRepository<Role> {
 

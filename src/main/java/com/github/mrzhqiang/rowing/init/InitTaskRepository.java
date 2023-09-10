@@ -11,9 +11,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 
-/**
- * 初始化任务仓库。
- */
 @PreAuthorize(Authorizes.HAS_AUTHORITY_ADMIN)
 @RepositoryRestResource(path = "init-task", excerptProjection = InitTaskExcerpt.class)
 public interface InitTaskRepository extends BaseRepository<InitTask> {
