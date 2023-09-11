@@ -40,6 +40,14 @@ export const PERMISSION_MARK = {
         edit: [ADMIN_ROLE, 'AUTH_ACCOUNT_EDIT'],
         delete: [ADMIN_ROLE, 'AUTH_ACCOUNT_DELETE'],
     },
+    role: {
+        create: [ADMIN_ROLE, 'AUTH_ROLE_CREATE'],
+        edit: [ADMIN_ROLE, 'AUTH_ROLE_EDIT'],
+        delete: [ADMIN_ROLE, 'AUTH_ROLE_DELETE'],
+        account: [ADMIN_ROLE, 'AUTH_ROLE_ACCOUNT'],
+        menu: [ADMIN_ROLE, 'AUTH_ROLE_MENU'],
+        menuResource: [ADMIN_ROLE, 'AUTH_ROLE_MENU_RESOURCE'],
+    }
 };
 
 /**

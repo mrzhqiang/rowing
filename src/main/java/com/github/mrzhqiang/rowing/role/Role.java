@@ -10,6 +10,7 @@ import com.google.common.collect.Lists;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.data.rest.core.annotation.RestResource;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.GrantedAuthoritiesContainer;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -67,34 +68,37 @@ public class Role extends AuditableEntity implements GrantedAuthoritiesContainer
      */
     @JsonIgnore
     @ToString.Exclude
-    @ManyToMany(mappedBy = "roleList")
-    private List<Account> accountList = Lists.newArrayList();
+    @RestResource(path = "accounts")
+    @ManyToMany(mappedBy = "roles")
+    private List<Account> accounts = Lists.newArrayList();
     /**
      * 菜单列表。
      */
     @JsonIgnore
     @ToString.Exclude
+    @RestResource(path = "menus")
     @ManyToMany()
     @JoinTable(name = "role_menus",
             joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "menu_id", referencedColumnName = "id"),
             uniqueConstraints = @UniqueConstraint(columnNames = {"role_id", "menu_id"}))
-    private List<Menu> menuList = Lists.newArrayList();
+    private List<Menu> menus = Lists.newArrayList();
     /**
      * 菜单资源列表。
      */
     @JsonIgnore
     @ToString.Exclude
+    @RestResource(path = "menu-resources")
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "role_menu_resources",
             joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "menu_resource_id", referencedColumnName = "id"),
             uniqueConstraints = @UniqueConstraint(columnNames = {"role_id", "menu_resource_id"}))
-    private List<MenuResource> menuResourceList = Lists.newArrayList();
+    private List<MenuResource> menuResources = Lists.newArrayList();
 
     @Override
     public Collection<GrantedAuthority> getGrantedAuthorities() {
-        return Stream.concat(Stream.of(code), menuResourceList.stream().map(MenuResource::getAuthority))
+        return Stream.concat(Stream.of(code), menuResources.stream().map(MenuResource::getAuthority))
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
     }

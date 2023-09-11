@@ -199,8 +199,8 @@ public class Menu extends AuditableEntity {
     @JsonIgnore
     @ToString.Exclude
     @RestResource(path = "roles", rel = "roles")
-    @ManyToMany(mappedBy = "menuList")
-    private List<Role> roleList = Lists.newArrayList();
+    @ManyToMany(mappedBy = "menus")
+    private List<Role> roles = Lists.newArrayList();
     /**
      * 菜单资源列表。
      */
@@ -208,6 +208,6 @@ public class Menu extends AuditableEntity {
     @ToString.Exclude
     @RestResource(path = "resources", rel = "resources")
     @OneToMany(mappedBy = "menu", orphanRemoval = true)
-    private List<MenuResource> resourceList = Lists.newArrayList();
+    private List<MenuResource> resources = Lists.newArrayList();
 
 }

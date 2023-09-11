@@ -174,7 +174,7 @@ public class Account extends AuditableEntity implements UserDetails {
     @Builder.Default
     @ToString.Exclude
     @OneToMany(mappedBy = "account", orphanRemoval = true)
-    private List<ThirdUser> thirdUserList = Lists.newArrayList();
+    private List<ThirdUser> thirdUsers = Lists.newArrayList();
     /**
      * 角色列表。
      * <p>
@@ -188,7 +188,7 @@ public class Account extends AuditableEntity implements UserDetails {
             joinColumns = @JoinColumn(name = "account_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"),
             uniqueConstraints = @UniqueConstraint(columnNames = {"account_id", "role_id"}))
-    private List<Role> roleList = Lists.newArrayList();
+    private List<Role> roles = Lists.newArrayList();
 
     /**
      * 获取授权列表。
@@ -197,7 +197,7 @@ public class Account extends AuditableEntity implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Stream.concat(Stream.of(type.toAuthority()),
-                        roleList.stream().flatMap(it -> it.getGrantedAuthorities().stream()))
+                        roles.stream().flatMap(it -> it.getGrantedAuthorities().stream()))
                 .distinct()
                 .collect(Collectors.toList());
     }

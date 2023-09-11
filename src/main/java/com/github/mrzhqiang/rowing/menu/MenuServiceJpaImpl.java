@@ -103,7 +103,7 @@ public class MenuServiceJpaImpl implements MenuService, ApplicationEventPublishe
             }
 
             roleRepository.findAllByCodeIn(roles).stream()
-                    .peek(it -> it.getMenuList().add(newMenu))
+                    .peek(it -> it.getMenus().add(newMenu))
                     .forEach(roleRepository::save);
         }
     }

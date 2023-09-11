@@ -45,7 +45,7 @@ public class RoleServiceJpaImpl implements RoleService {
 
         String role = account.getType().name();
         repository.findByCode(role).ifPresent(it -> {
-            List<Role> roleList = account.getRoleList();
+            List<Role> roleList = account.getRoles();
             if (roleList.contains(it)) {
                 return;
             }

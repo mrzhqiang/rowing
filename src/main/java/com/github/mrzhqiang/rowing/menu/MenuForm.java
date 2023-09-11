@@ -43,6 +43,6 @@ public interface MenuForm extends BaseProjection {
 
     Boolean getBreadcrumb();
 
-    List<MenuResourceExcerpt> getResourceList();
+    List<MenuResourceExcerpt> getResources();
 
 }

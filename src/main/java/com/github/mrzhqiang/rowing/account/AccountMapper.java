@@ -30,10 +30,10 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring", imports = {AccountType.class})
 public interface AccountMapper {
 
+    @Mapping(target = "roles", ignore = true)
     @Mapping(target = "user", ignore = true)
     @Mapping(target = "type", ignore = true)
-    @Mapping(target = "thirdUserList", ignore = true)
-    @Mapping(target = "roleList", ignore = true)
+    @Mapping(target = "thirdUsers", ignore = true)
     @Mapping(target = "passwordExpired", ignore = true)
     @Mapping(target = "locked", ignore = true)
     @Mapping(target = "failedCount", ignore = true)
@@ -41,14 +41,15 @@ public interface AccountMapper {
     @Mapping(target = "disabled", ignore = true)
     Account toEntity(LoginForm form);
 
+    @Mapping(target = "roles", ignore = true)
     @Mapping(target = "user", ignore = true)
     @Mapping(target = "type", ignore = true)
-    @Mapping(target = "thirdUserList", ignore = true)
-    @Mapping(target = "roleList", ignore = true)
+    @Mapping(target = "thirdUsers", ignore = true)
     @Mapping(target = "passwordExpired", ignore = true)
     @Mapping(target = "locked", ignore = true)
     @Mapping(target = "failedCount", ignore = true)
     @Mapping(target = "expired", ignore = true)
     @Mapping(target = "disabled", ignore = true)
     Account toEntity(RegisterForm form);
+
 }

@@ -72,7 +72,7 @@ public class MenuResource extends AuditableEntity implements GrantedAuthority {
      */
     @JsonIgnore
     @ToString.Exclude
-    @ManyToMany(mappedBy = "menuResourceList")
-    private List<Role> roleList = Lists.newArrayList();
+    @ManyToMany(mappedBy = "menuResources")
+    private List<Role> roles = Lists.newArrayList();
 
 }
