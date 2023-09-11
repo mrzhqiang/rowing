@@ -4,6 +4,9 @@
       <el-form-item :label="$t('用户名')" prop="username">
         <el-input v-model="accountParams.username" clearable/>
       </el-form-item>
+      <el-form-item :label="$t('昵称')" prop="nickname">
+        <el-input v-model="accountParams.nickname" clearable/>
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="onAccountSearch">
           {{ $t('搜索') }}
@@ -34,7 +37,11 @@
       </el-table-column>
       <el-table-column prop="password" :label="$t('密码')" min-width="100" show-overflow-tooltip/>
       <el-table-column prop="type" :label="$t('类型')" min-width="40" :align="'center'"/>
-      <el-table-column prop="nickname" :label="$t('用户昵称')" min-width="50" show-overflow-tooltip/>
+      <el-table-column prop="user.nickname" :label="$t('昵称')" min-width="50" show-overflow-tooltip/>
+      <el-table-column prop="user.gender" :label="$t('性别')" min-width="50" show-overflow-tooltip/>
+      <el-table-column prop="user.birthday" :label="$t('生日')" min-width="50" show-overflow-tooltip/>
+      <el-table-column prop="user.email" :label="$t('邮箱')" min-width="50" show-overflow-tooltip/>
+      <el-table-column prop="user.phoneNumber" :label="$t('手机号')" min-width="50" show-overflow-tooltip/>
       <el-table-column prop="createdBy" :label="$t('创建人')" min-width="40" :align="'center'"/>
       <el-table-column prop="created" :label="$t('创建时间')" min-width="80" :align="'center'"/>
       <el-table-column prop="updatedBy" :label="$t('更新人')" min-width="40" :align="'center'"/>
@@ -69,6 +76,11 @@
               <el-input v-model="accountForm.username" :disabled="!accountFormCreate"/>
             </el-form-item>
           </el-col>
+          <el-col v-if="!accountFormCreate" :span="8">
+            <el-form-item :label="$t('密码')" prop="password">
+              <el-input v-model="accountForm.password" :disabled="!accountFormCreate"/>
+            </el-form-item>
+          </el-col>
           <el-col :span="8">
             <el-form-item :label="$t('类型')" prop="type">
               <el-select v-model="accountForm.type">
@@ -86,7 +98,7 @@
           </el-col>
           <el-col :span="8">
             <el-form-item :label="$t('失败次数')" prop="failedCount">
-              <el-input-number v-model="accountForm.failedCount" controls-position="right" min="0"/>
+              <el-input-number v-model="accountForm.failedCount" controls-position="right"/>
             </el-form-item>
           </el-col>
           <el-col :span="8">
@@ -107,6 +119,44 @@
             </el-form-item>
           </el-col>
         </el-row>
+        <el-divider v-if="!accountFormCreate" content-position="left">{{ $t('用户信息') }}</el-divider>
+        <el-row v-if="!accountFormCreate" :gutte="10">
+          <el-col :span="8">
+            <el-form-item :label="$t('昵称')" prop="user.nickname">
+              <el-input v-model="accountForm.user.nickname"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item :label="$t('性别')" prop="user.gender">
+              <el-select v-model="accountForm.user.gender">
+                <el-option v-for="item in genderOptions"
+                           :key="item.value" :label="item.label" :value="item.value"/>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item :label="$t('生日')" prop="user.birthday">
+              <el-date-picker v-model="accountForm.user.birthday"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row v-if="!accountFormCreate" :gutte="10">
+          <el-col :span="8">
+            <el-form-item :label="$t('邮箱')" prop="user.email">
+              <el-input v-model="accountForm.user.email"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item :label="$t('手机号')" prop="user.phoneNumber">
+              <el-input v-model="accountForm.user.phoneNumber"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item :label="$t('简介')" prop="user.introduction">
+              <el-input v-model="accountForm.user.introduction"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button v-if="accountFormEditable" type="primary" @click="onAccountSubmit">{{ $t('提交') }}</el-button>
@@ -118,7 +168,7 @@
 </template>
 
 <script>
-import {createAccount, deleteAccount, editAccount, findAccount, searchAccount} from '@/api/account';
+import {createAccount, deleteAccount, editAccount, editUser, findAccount, searchAccount} from '@/api/account';
 import {DICT_CODES, searchDict} from '@/api/dict';
 import Pagination from '@/components/Pagination';
 import {PERMISSION_MARK} from '@/utils/permission';
@@ -130,6 +180,7 @@ export default {
     return {
       accountParams: {
         username: '',
+        nickname: '',
         page: 0,
         size: 20,
       },
@@ -147,25 +198,34 @@ export default {
         failedCount: 0,
         locked: null,
         passwordExpired: null,
-        disabled: false
+        disabled: false,
+        user: {}
       },
       accountRules: {
         username: [{required: true, message: this.$t('用户名不能为空'), trigger: 'blur'}],
-        type: [{required: true, message: this.$t('账户类型不能为空'), trigger: 'blur'}]
+        type: [{required: true, message: this.$t('账户类型不能为空'), trigger: 'blur'}],
+        'user.nickname': [{required: true, message: this.$t('昵称不能为空'), trigger: 'blur'}]
       },
       accountFormEditable: false,
       accountFormCreate: false,
       accountTypeOptions: [],
+      genderOptions: [],
     };
   },
   created() {
     this.findAccountType();
+    this.findGender();
     this.findAccountList();
   },
   methods: {
     findAccountType() {
       searchDict('code', {code: DICT_CODES.accountType}).then(response => {
         this.accountTypeOptions = response._embedded.items;
+      });
+    },
+    findGender() {
+      searchDict('code', {code: DICT_CODES.gender}).then(response => {
+        this.genderOptions = response._embedded.items;
       });
     },
     findAccountList() {
@@ -183,6 +243,7 @@ export default {
     onResetAccountSearch() {
       this.accountParams = {
         username: '',
+        nickname: '',
         page: 0,
         size: 20,
       };
@@ -203,7 +264,8 @@ export default {
         failedCount: 0,
         locked: null,
         passwordExpired: null,
-        disabled: false
+        disabled: false,
+        user: {}
       };
     },
     fillAccountForm(form) {
@@ -246,15 +308,26 @@ export default {
             failedCount: this.accountForm.failedCount,
             locked: this.accountForm.locked,
             passwordExpired: this.accountForm.passwordExpired,
-            disabled: this.accountForm.disabled
+            disabled: this.accountForm.disabled,
           };
           if (this.accountForm.id) {
-            editAccount(this.accountForm.id, data).then(() => {
-              this.$message.success(this.$t('账户 {title} 更新成功！', {title: this.accountForm.username}));
-              this.accountVisible = false;
-              this.findAccountList();
+            const userData = {
+              nickname: this.accountForm.user.nickname,
+              gender: this.accountForm.user.gender,
+              birthday: this.accountForm.user.birthday,
+              email: this.accountForm.user.email,
+              phoneNumber: this.accountForm.user.phoneNumber,
+              introduction: this.accountForm.user.introduction
+            };
+            editUser(this.accountForm.user.id, userData).then(() => {
+              editAccount(this.accountForm.id, data).then(() => {
+                this.$message.success(this.$t('账户 {title} 更新成功！', {title: this.accountForm.username}));
+                this.accountVisible = false;
+                this.findAccountList();
+              });
             });
           } else {
+            // 用户名：可以创建，不能编辑
             data.username = this.accountForm.username;
             createAccount(data).then(() => {
               this.$message.success(this.$t('账户 {title} 创建成功！', {title: this.accountForm.username}));

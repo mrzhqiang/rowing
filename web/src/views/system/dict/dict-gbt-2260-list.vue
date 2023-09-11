@@ -8,7 +8,7 @@
         <el-input v-model="dictParams.code" minlength="6" maxlength="6" clearable/>
       </el-form-item>
       <el-form-item :label="$t('等级')" prop="level">
-        <el-input v-model="dictParams.level" minlength="1" maxlength="1" min="1" max="3" clearable/>
+        <el-input v-model="dictParams.level" minlength="1" maxlength="1" clearable/>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="onDictSearch">

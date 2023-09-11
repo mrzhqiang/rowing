@@ -1,5 +1,7 @@
 package com.github.mrzhqiang.rowing.account;
 
+import com.github.mrzhqiang.rowing.action.Action;
+import com.github.mrzhqiang.rowing.domain.ActionType;
 import com.github.mrzhqiang.rowing.setting.Setting;
 import com.github.mrzhqiang.rowing.setting.SettingService;
 import com.github.mrzhqiang.rowing.util.Authentications;
@@ -35,6 +37,7 @@ public class LoginFailureListener implements ApplicationListener<AbstractAuthent
     /**
      * 注意：通常是先发出登录失败的事件，再执行登录失败的回调。
      */
+    @Action(value = "登录失败处理", type = ActionType.LOGIN)
     @RunAsSystem
     @Override
     public void onApplicationEvent(@Nonnull AbstractAuthenticationFailureEvent event) {

@@ -1,6 +1,7 @@
 package com.github.mrzhqiang.rowing.account;
 
 import com.github.mrzhqiang.rowing.domain.AuditableExcerpt;
+import com.github.mrzhqiang.rowing.user.UserForm;
 import org.springframework.data.rest.core.config.Projection;
 
 /**
@@ -10,6 +11,8 @@ import org.springframework.data.rest.core.config.Projection;
 public interface AccountForm extends AuditableExcerpt {
 
     String getUsername();
+
+    String getPassword();
 
     String getType();
 
@@ -22,5 +25,7 @@ public interface AccountForm extends AuditableExcerpt {
     String getPasswordExpired();
 
     Boolean getDisabled();
+
+    UserForm getUser();
 
 }

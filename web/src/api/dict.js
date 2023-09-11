@@ -11,6 +11,7 @@ export const DICT_CODES = {
   taskType: 'TASK_TYPE',
   taskStatus: 'TASK_STATUS',
   accountType: 'ACCOUNT_TYPE',
+  gender: 'GENDER',
 };
 
 export function pageDict(params) {

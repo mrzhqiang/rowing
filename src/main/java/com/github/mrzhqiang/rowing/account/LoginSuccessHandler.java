@@ -30,4 +30,5 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         jsonNodes.put("token", session.getId());
         response.getWriter().write(Jsons.stringify(jsonNodes));
     }
+
 }

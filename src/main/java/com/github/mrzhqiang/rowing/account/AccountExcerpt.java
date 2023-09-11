@@ -2,7 +2,7 @@ package com.github.mrzhqiang.rowing.account;
 
 import com.github.mrzhqiang.rowing.domain.AccountType;
 import com.github.mrzhqiang.rowing.domain.AuditableExcerpt;
-import org.springframework.beans.factory.annotation.Value;
+import com.github.mrzhqiang.rowing.user.UserExcerpt;
 import org.springframework.data.rest.core.config.Projection;
 
 /**
@@ -17,7 +17,6 @@ public interface AccountExcerpt extends AuditableExcerpt {
 
     AccountType getType();
 
-    @Value("#{target.user.nickname}")
-    String getNickname();
+    UserExcerpt getUser();
 
 }

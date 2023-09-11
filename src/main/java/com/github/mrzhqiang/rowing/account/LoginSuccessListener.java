@@ -1,5 +1,7 @@
 package com.github.mrzhqiang.rowing.account;
 
+import com.github.mrzhqiang.rowing.action.Action;
+import com.github.mrzhqiang.rowing.domain.ActionType;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
 import org.springframework.security.core.Authentication;
@@ -16,6 +18,7 @@ public class LoginSuccessListener implements ApplicationListener<AuthenticationS
         this.accountRepository = accountRepository;
     }
 
+    @Action(value = "登录成功处理", type = ActionType.LOGIN)
     @RunAsSystem
     @Override
     public void onApplicationEvent(@Nonnull AuthenticationSuccessEvent event) {

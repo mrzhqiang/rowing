@@ -127,7 +127,7 @@
         <el-row :gutter="10">
           <el-col :span="8">
             <el-form-item :label="$t('排序')" prop="ordered">
-              <el-input-number v-model="menuForm.ordered" controls-position="right" :min="1"/>
+              <el-input-number v-model="menuForm.ordered" controls-position="right"/>
             </el-form-item>
           </el-col>
           <el-col :span="8">

@@ -7,7 +7,7 @@ import org.springframework.data.rest.core.annotation.RestResource;
 
 import java.util.Optional;
 
-@RepositoryRestResource(path = "user", collectionResourceRel = "user")
+@RepositoryRestResource(path = "user", excerptProjection = UserExcerpt.class)
 public interface UserRepository extends BaseRepository<User> {
 
     @RestResource(exported = false)
