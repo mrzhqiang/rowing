@@ -1,6 +1,6 @@
 package com.github.mrzhqiang.rowing.init;
 
-import com.github.mrzhqiang.rowing.domain.BaseExcerpt;
+import com.github.mrzhqiang.rowing.domain.BaseProjection;
 import org.springframework.data.rest.core.config.Projection;
 
 /**
@@ -8,7 +8,7 @@ import org.springframework.data.rest.core.config.Projection;
  * <p>
  */
 @Projection(name = "init-task-form", types = {InitTask.class})
-public interface InitTaskForm extends BaseExcerpt {
+public interface InitTaskForm extends BaseProjection {
 
     String getName();
 

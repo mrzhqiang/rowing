@@ -1,6 +1,6 @@
 package com.github.mrzhqiang.rowing.dict;
 
-import com.github.mrzhqiang.rowing.domain.AuditableExcerpt;
+import com.github.mrzhqiang.rowing.domain.AuditableProjection;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.rest.core.config.Projection;
 
@@ -9,7 +9,7 @@ import org.springframework.data.rest.core.config.Projection;
  * <p>
  */
 @Projection(name = "dict-item-excerpt", types = {DictItem.class})
-public interface DictItemExcerpt extends AuditableExcerpt {
+public interface DictItemExcerpt extends AuditableProjection {
 
     String getLabel();
 

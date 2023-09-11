@@ -6,12 +6,12 @@ import org.springframework.data.rest.core.config.Projection;
 import java.time.LocalDateTime;
 
 /**
- * 审计摘要。
+ * 审计投影。
  * <p>
- * 将审计字段转为审计摘要字段时，提供统一的风格。
+ * 转换审计实体时，提供统一的风格。
  */
-@Projection(name = "auditable-excerpt", types = {AuditableEntity.class})
-public interface AuditableExcerpt extends BaseExcerpt {
+@Projection(name = "auditable-projection", types = {AuditableEntity.class})
+public interface AuditableProjection extends BaseProjection {
 
     LocalDateTime getCreated();
 

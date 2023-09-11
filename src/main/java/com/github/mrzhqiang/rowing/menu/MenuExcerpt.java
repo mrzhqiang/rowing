@@ -1,8 +1,7 @@
 package com.github.mrzhqiang.rowing.menu;
 
-import com.github.mrzhqiang.rowing.domain.AuditableExcerpt;
+import com.github.mrzhqiang.rowing.domain.AuditableProjection;
 import com.github.mrzhqiang.rowing.domain.Logic;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.rest.core.config.Projection;
 
 
@@ -11,10 +10,7 @@ import org.springframework.data.rest.core.config.Projection;
  * <p>
  */
 @Projection(name = "menu-excerpt", types = {Menu.class})
-public interface MenuExcerpt extends AuditableExcerpt {
-
-    @Value("#{target.parent?.id}")
-    String getParentId();
+public interface MenuExcerpt extends AuditableProjection {
 
     String getIcon();
 

@@ -21,7 +21,7 @@
       <el-col :span="2">
         <el-button v-permission="menuPermission.create"
                    type="primary" icon="el-icon-plus" plain
-                   @click="onMenuCreate">{{ $t('创建') }}
+                   @click="onMenuCreate">{{ $t('创建菜单') }}
         </el-button>
       </el-col>
     </el-row>
@@ -177,6 +177,41 @@
             </el-row>
           </el-collapse-item>
         </el-collapse>
+
+        <el-divider v-if="!menuFormCreate" content-position="left">{{ $t('菜单资源列表') }}</el-divider>
+        <el-row v-if="!menuFormCreate && menuFormEditable" :gutter="10" style="margin-bottom: 1rem">
+          <el-col :span="2">
+            <el-button v-permission="menuResourcePermission.create"
+                       type="primary" icon="el-icon-plus" plain
+                       @click="onMenuResourceCreate">{{ $t('新增菜单资源') }}
+            </el-button>
+          </el-col>
+        </el-row>
+        <el-table v-if="!menuFormCreate" :data="menuResourceList" size="mini" max-height="240"
+                  row-key="id" stripe border>
+          <el-table-column prop="id" label="#" min-width="20" :align="'right'"/>
+          <el-table-column prop="name" :label="$t('名称')" min-width="50" show-overflow-tooltip/>
+          <el-table-column prop="authority" :label="$t('权限')" min-width="100" show-overflow-tooltip/>
+          <el-table-column prop="ordered" :label="$t('排序')" min-width="30" :align="'center'"/>
+          <el-table-column prop="createdBy" :label="$t('创建人')" min-width="40" :align="'center'"/>
+          <el-table-column prop="created" :label="$t('创建时间')" min-width="80" :align="'center'"/>
+          <el-table-column prop="updatedBy" :label="$t('更新人')" min-width="40" :align="'center'"/>
+          <el-table-column prop="updated" :label="$t('更新时间')" min-width="80" :align="'center'"/>
+          <el-table-column :label="$t('操作')" min-width="100" :align="'center'">
+            <template v-slot="scope">
+              <el-button v-permission="menuResourcePermission.edit"
+                         size="mini" icon="el-icon-edit" type="text"
+                         @click="onMenuResourceEdit(scope, false)">{{ $t('编辑') }}
+              </el-button>
+              <el-popconfirm style="margin-left: 10px" :title="$t('确定删除吗？')"
+                             @onConfirm="onMenuResourceDelete(scope)">
+                <el-button slot="reference" v-permission="menuResourcePermission.delete"
+                           size="mini" icon="el-icon-delete" type="text">{{ $t('删除') }}
+                </el-button>
+              </el-popconfirm>
+            </template>
+          </el-table-column>
+        </el-table>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button v-if="menuFormEditable" type="primary" @click="onMenuSubmit">{{ $t('提交') }}</el-button>
@@ -184,20 +219,63 @@
         <el-button v-if="!menuFormEditable" @click="menuVisible = false">{{ $t('关闭') }}</el-button>
       </div>
     </el-dialog>
+
+    <el-dialog :title="menuResourceTitle" :visible.sync="menuResourceVisible"
+               :close-on-click-modal="!menuResourceFormEditable"
+               append-to-body @close="onMenuResourceClose">
+      <el-form ref="menuResourceForm" :model="menuResourceForm" :rules="menuResourceRules"
+               :disabled="!menuResourceFormEditable" label-width="80px">
+        <el-row :gutter="10">
+          <el-col :span="8">
+            <el-form-item :label="$t('名称')" prop="name">
+              <el-input v-model="menuResourceForm.name"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item :label="$t('权限')" prop="authority">
+              <el-input v-model="menuResourceForm.authority"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item :label="$t('排序')" prop="ordered">
+              <el-input-number v-model="menuResourceForm.ordered"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button v-if="menuResourceFormEditable" type="primary"
+                   @click="onMenuResourceSubmit">{{ $t('提交') }}
+        </el-button>
+        <el-button v-if="menuResourceFormEditable" @click="menuResourceVisible = false">{{ $t('取消') }}</el-button>
+        <el-button v-if="!menuResourceFormEditable" @click="menuResourceVisible = false">{{ $t('关闭') }}</el-button>
+      </div>
+    </el-dialog>
+
   </div>
 </template>
 
 <script>
+import {DICT_CODES, searchDict} from '@/api/dict';
+import {
+  createMenu,
+  createMenuResource,
+  deleteMenu,
+  deleteMenuResource,
+  editMenu,
+  editMenuResource,
+  findMenu,
+  findMenuResource,
+  searchMenu
+} from '@/api/menu';
+import {clearTemplate} from '@/api/rest';
+import IconSelect from '@/components/IconSelect';
+import Pagination from '@/components/Pagination';
 import utils from '@/utils/common';
 import {generateTitle} from '@/utils/i18n';
 import {PERMISSION_MARK} from '@/utils/permission';
-import {DICT_CODES, searchDict} from '@/api/dict';
-import {createMenu, deleteMenu, editMenu, findMenu, searchMenu} from '@/api/menu';
-import {clearTemplate} from '@/api/rest';
-import Pagination from '@/components/Pagination';
 import TreeSelect from '@riophae/vue-treeselect';
 import '@riophae/vue-treeselect/dist/vue-treeselect.css';
-import IconSelect from '@/components/IconSelect';
 
 export default {
   name: 'MenuList',
@@ -212,11 +290,15 @@ export default {
         size: 20,
       },
       menuPermission: {...PERMISSION_MARK.menu},
+      menuResourcePermission: {...PERMISSION_MARK.menuResource},
       menuLoading: true,
       menuList: [],
+      menuResourceList: [],
       menuPage: {totalElements: 0, totalPages: 0},
       menuTitle: '',
+      menuResourceTitle: '',
       menuVisible: false,
+      menuResourceVisible: false,
       menuForm: {
         id: null,
         parent: '',
@@ -234,12 +316,25 @@ export default {
         ordered: 1,
         enabled: 'YES'
       },
+      menuResourceForm: {
+        id: null,
+        menu: '',
+        name: '',
+        authority: '',
+        ordered: 1
+      },
       menuRules: {
-        title: [{required: true, message: this.$t('菜单名称不能为空'), trigger: 'blur'}],
+        title: [{required: true, message: this.$t('菜单标题不能为空'), trigger: 'blur'}],
         path: [{required: true, message: this.$t('菜单路径不能为空'), trigger: 'blur'}],
         component: [{required: true, message: this.$t('菜单组件不能为空'), trigger: 'blur'}]
       },
+      menuResourceRules: {
+        name: [{required: true, message: this.$t('菜单资源名称不能为空'), trigger: 'blur'}],
+        authority: [{required: true, message: this.$t('菜单资源权限不能为空'), trigger: 'blur'}]
+      },
       menuFormEditable: false,
+      menuResourceFormEditable: false,
+      menuFormCreate: false,
       menuFormOther: '',
       menuTreeOptions: [],
       logicDict: [],
@@ -323,9 +418,24 @@ export default {
         enabled: 'YES'
       };
       this.menuFormOther = '';
+      this.menuResourceList = [];
+    },
+    resetMenuResourceForm() {
+      if (this.$refs.menuResourceForm) {
+        this.$refs.menuResourceForm.resetFields();
+      }
+      this.menuResourceForm = {
+        id: null,
+        menu: clearTemplate(this.menuForm._links.self.href),
+        name: '',
+        authority: '',
+        ordered: 1
+      };
     },
     fillMenuForm(form) {
       this.menuForm = form;
+      this.menuResourceList = form.resourceList;
+      this.menuResourceForm.menu = clearTemplate(form._links.self.href);
       this.menuForm.parent = '';
       if (form.parentId) {
         for (const option of this.menuTreeOptions) {
@@ -337,15 +447,27 @@ export default {
         }
       }
     },
+    fillMenuResourceForm(form) {
+      this.menuResourceForm = form;
+      this.menuResourceForm.menu = clearTemplate(form._links.menu.href);
+    },
     onMenuCreate() {
       this.resetMenuForm();
       this.menuFormEditable = true;
+      this.menuFormCreate = true;
       this.menuTitle = this.$t('创建菜单');
       this.menuVisible = true;
+    },
+    onMenuResourceCreate() {
+      this.resetMenuResourceForm();
+      this.menuResourceFormEditable = true;
+      this.menuResourceTitle = this.$t('新增菜单资源');
+      this.menuResourceVisible = true;
     },
     onMenuAdd({row}) {
       this.resetMenuForm();
       this.menuFormEditable = true;
+      this.menuFormCreate = true;
       // spring data rest 在添加其他实体时，需要使用 URL 而不是实体 id
       this.menuForm.parent = clearTemplate(row._links.self.href);
       this.menuTitle = this.$t('添加菜单');
@@ -354,11 +476,22 @@ export default {
     onMenuEdit({row}, readonly = false) {
       this.resetMenuForm();
       this.menuFormEditable = !readonly;
+      this.menuFormCreate = false;
       findMenu(row.id, 'menu-form').then(response => {
         this.fillMenuForm(response);
         this.menuForm.id = row.id;
         this.menuTitle = readonly ? this.$t('查看菜单') : this.$t('编辑菜单');
         this.menuVisible = true;
+      });
+    },
+    onMenuResourceEdit({row}, readonly = false) {
+      this.resetMenuResourceForm();
+      this.menuResourceFormEditable = !readonly;
+      findMenuResource(row.id, 'menu-resource-form').then(response => {
+        this.fillMenuResourceForm(response);
+        this.menuResourceForm.id = row.id;
+        this.menuResourceTitle = readonly ? this.$t('查看菜单资源') : this.$t('编辑菜单资源');
+        this.menuResourceVisible = true;
       });
     },
     onMenuDelete({row}) {
@@ -367,11 +500,27 @@ export default {
         this.findMenuList();
       });
     },
+    reloadMenuForm() {
+      if (this.menuForm.id) {
+        findMenu(this.menuForm.id, 'menu-form').then(response => {
+          this.fillMenuForm(response);
+        });
+      }
+    },
+    onMenuResourceDelete({row}) {
+      deleteMenuResource(row.id).then(() => {
+        this.$message.success(this.$t('菜单资源 {title} 删除成功！', {title: row.title}));
+        this.reloadMenuForm();
+      });
+    },
     onMenuClose() {
       this.menuFormOther = '';
       if (this.$refs.iconPopover) {
         this.$refs.iconPopover.doClose();
       }
+    },
+    onMenuResourceClose() {
+      // do something
     },
     onMenuIconSelected(name) {
       this.menuForm.icon = name;
@@ -421,6 +570,32 @@ export default {
               this.$message.success(this.$t('菜单 {title} 创建成功！', {title: this.menuForm.title}));
               this.menuVisible = false;
               this.findMenuList();
+            });
+          }
+        }
+      });
+    },
+    onMenuResourceSubmit() {
+      this.$refs.menuResourceForm.validate(valid => {
+        if (valid) {
+          // 只修改页面上的字段
+          const data = {
+            menu: this.menuResourceForm.menu,
+            name: this.menuResourceForm.name,
+            authority: this.menuResourceForm.authority,
+            ordered: this.menuResourceForm.ordered
+          };
+          if (this.menuResourceForm.id) {
+            editMenuResource(this.menuResourceForm.id, data).then(() => {
+              this.$message.success(this.$t('菜单资源 {title} 更新成功！', {title: this.menuResourceForm.title}));
+              this.menuResourceVisible = false;
+              this.reloadMenuForm();
+            });
+          } else {
+            createMenuResource(data).then(() => {
+              this.$message.success(this.$t('菜单资源 {title} 创建成功！', {title: this.menuResourceForm.title}));
+              this.menuResourceVisible = false;
+              this.reloadMenuForm();
             });
           }
         }

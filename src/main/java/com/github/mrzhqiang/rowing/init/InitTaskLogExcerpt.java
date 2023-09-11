@@ -1,6 +1,6 @@
 package com.github.mrzhqiang.rowing.init;
 
-import com.github.mrzhqiang.rowing.domain.AuditableExcerpt;
+import com.github.mrzhqiang.rowing.domain.AuditableProjection;
 import org.springframework.data.rest.core.config.Projection;
 
 /**
@@ -8,7 +8,7 @@ import org.springframework.data.rest.core.config.Projection;
  * <p>
  */
 @Projection(name = "init-task-log-excerpt", types = {InitTaskLog.class})
-public interface InitTaskLogExcerpt extends AuditableExcerpt {
+public interface InitTaskLogExcerpt extends AuditableProjection {
 
     String getMessage();
 

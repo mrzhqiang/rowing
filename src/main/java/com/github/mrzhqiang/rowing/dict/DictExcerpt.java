@@ -1,6 +1,6 @@
 package com.github.mrzhqiang.rowing.dict;
 
-import com.github.mrzhqiang.rowing.domain.AuditableExcerpt;
+import com.github.mrzhqiang.rowing.domain.AuditableProjection;
 import com.github.mrzhqiang.rowing.domain.DictType;
 import com.github.mrzhqiang.rowing.domain.Logic;
 import org.springframework.data.rest.core.config.Projection;
@@ -13,7 +13,7 @@ import org.springframework.data.rest.core.config.Projection;
  * 为了解决以上问题，字典组需要一个字典摘要。
  */
 @Projection(name = "dict-excerpt", types = {DictGroup.class})
-public interface DictExcerpt extends AuditableExcerpt {
+public interface DictExcerpt extends AuditableProjection {
 
     String getName();
 

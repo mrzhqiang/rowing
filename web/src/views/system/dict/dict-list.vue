@@ -266,7 +266,7 @@ export default {
         id: null,
         label: '',
         value: '',
-        group: this.dictForm._links.self.href
+        group: clearTemplate(this.dictForm._links.self.href)
       };
     },
     fillDictItemForm(form) {
@@ -313,12 +313,17 @@ export default {
         this.findDictList();
       });
     },
-    onDictItemDelete({row}) {
-      deleteDictItem(row.id).then(() => {
-        this.$message.success(this.$t('字典项 {code} 删除成功！', {code: row.code}));
+    reloadDictForm() {
+      if (this.dictForm.id) {
         findDict(this.dictForm.id, 'dict-form').then(response => {
           this.fillDictForm(response);
         });
+      }
+    },
+    onDictItemDelete({row}) {
+      deleteDictItem(row.id).then(() => {
+        this.$message.success(this.$t('字典项 {code} 删除成功！', {code: row.code}));
+        this.reloadDictForm();
       });
     },
     onDictClose() {
@@ -365,17 +370,13 @@ export default {
             editDictItem(this.dictItemForm.id, data).then(() => {
               this.$message.success(this.$t('字典项 {label} 更新成功！', {label: this.dictItemForm.label}));
               this.dictItemVisible = false;
-              findDict(this.dictForm.id, 'dict-form').then(response => {
-                this.fillDictForm(response);
-              });
+              this.reloadDictForm();
             });
           } else {
             createDictItem(data).then(() => {
               this.$message.success(this.$t('字典组 {label} 创建成功！', {label: this.dictItemForm.label}));
               this.dictItemVisible = false;
-              findDict(this.dictForm.id, 'dict-form').then(response => {
-                this.fillDictForm(response);
-              });
+              this.reloadDictForm();
             });
           }
         }

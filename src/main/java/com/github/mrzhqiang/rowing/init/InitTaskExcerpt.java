@@ -1,6 +1,6 @@
 package com.github.mrzhqiang.rowing.init;
 
-import com.github.mrzhqiang.rowing.domain.AuditableExcerpt;
+import com.github.mrzhqiang.rowing.domain.AuditableProjection;
 import com.github.mrzhqiang.rowing.domain.Logic;
 import com.github.mrzhqiang.rowing.domain.TaskStatus;
 import com.github.mrzhqiang.rowing.domain.TaskType;
@@ -12,7 +12,7 @@ import org.springframework.data.rest.core.config.Projection;
  * <p>
  */
 @Projection(name = "init-task-excerpt", types = {InitTask.class})
-public interface InitTaskExcerpt extends AuditableExcerpt {
+public interface InitTaskExcerpt extends AuditableProjection {
 
     String getName();
 

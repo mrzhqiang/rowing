@@ -1,6 +1,6 @@
 package com.github.mrzhqiang.rowing.exception;
 
-import com.github.mrzhqiang.rowing.domain.BaseExcerpt;
+import com.github.mrzhqiang.rowing.domain.BaseProjection;
 import org.springframework.data.rest.core.config.Projection;
 
 import java.time.LocalDateTime;
@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
  * 异常日志摘要。
  */
 @Projection(name = "exception-log-excerpt", types = {ExceptionLog.class})
-public interface ExceptionLogExcerpt extends BaseExcerpt {
+public interface ExceptionLogExcerpt extends BaseProjection {
 
     Integer getStatus();
 
