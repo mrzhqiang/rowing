@@ -1,0 +1,58 @@
+# Tomcat 配置
+server:
+  port: 80
+
+# 日志配置
+logging:
+  level:
+    ROOT: INFO
+    web: INFO
+  file:
+    name: application.log
+    path: ./logs
+
+# Spring 配置
+spring:
+  application:
+    name: "Rowing Prod"
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${db_url:127.0.0.1}:${db_port:3306}/${db_schema:rowing}?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useUnicode=true&useSSL=false&allowMultiQueries=true
+    username: ${db_username:root}
+    password: ${db_password:123456}
+  redis:
+    client-type: lettuce
+    database: ${redis_db:0}
+    host: ${redis_host:127.0.0.1}
+    password: ${redis_password:123456}
+    connect-timeout: 10s
+  # 账户中心是需要会话的，但不需要 Cookie 自动登录
+  session:
+    # 1 hours
+    timeout: 3600s
+
+# 验证码配置
+kaptcha:
+  enabled: true
+  config:
+    kaptcha:
+      border: "no"
+      image:
+        width: "150"
+        height: "40"
+      textproducer:
+        font:
+          color: "black"
+          size: "30"
+        char:
+          space: "5"
+          length: 4
+  parameter: "kaptcha"
+
+# 项目配置
+rowing:
+  okhttp:
+    cache-path: ${user.dir}/.cache
+    cache-max-size: 1GB
+    call-timeout: 5s
+    logging-level: BASIC
