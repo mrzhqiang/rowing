@@ -42,7 +42,7 @@
       },
       {
         "path": "dict-gbt-2260",
-        "component": "system/dict/dict-gbt-2260",
+        "component": "system/dict/dict-gbt-2260-list",
         "name": "DictGbt2260",
         "meta": {
           "title": "行政区划代码",
@@ -55,7 +55,7 @@
       },
       {
         "path": "dict-iso-3166",
-        "component": "system/dict/dict-iso-3166",
+        "component": "system/dict/dict-iso-3166-list",
         "name": "DictIso3166",
         "meta": {
           "title": "国家地区代码",
@@ -68,7 +68,7 @@
       },
       {
         "path": "dict-iso-639",
-        "component": "system/dict/dict-iso-639",
+        "component": "system/dict/dict-iso-639-list",
         "name": "DictIso639",
         "meta": {
           "title": "语言代码",
@@ -81,11 +81,76 @@
       },
       {
         "path": "setting",
-        "component": "system/setting/setting",
+        "component": "system/setting/setting-list",
         "name": "Setting",
         "meta": {
           "title": "系统设置",
           "icon": "el-icon-setting",
+          "breadcrumb": true,
+          "roles": [
+            "ADMIN"
+          ]
+        }
+      },
+      {
+        "path": "dict",
+        "component": "system/dict/dict-list",
+        "name": "Dict",
+        "meta": {
+          "title": "数据字典",
+          "icon": "el-icon-notebook-2",
+          "breadcrumb": true,
+          "roles": [
+            "ADMIN"
+          ]
+        }
+      },
+      {
+        "path": "account",
+        "component": "system/account/account-list",
+        "name": "Account",
+        "meta": {
+          "title": "账户管理",
+          "icon": "el-icon-bank-card",
+          "breadcrumb": true,
+          "roles": [
+            "ADMIN"
+          ]
+        }
+      },
+      {
+        "path": "exception-log",
+        "component": "system/logging/exception-log-list",
+        "name": "ExceptionLog",
+        "meta": {
+          "title": "异常日志",
+          "icon": "bug",
+          "breadcrumb": true,
+          "roles": [
+            "ADMIN"
+          ]
+        }
+      },
+      {
+        "path": "action-log",
+        "component": "system/logging/action-log-list",
+        "name": "ActionLog",
+        "meta": {
+          "title": "操作日志",
+          "icon": "el-icon-s-operation",
+          "breadcrumb": true,
+          "roles": [
+            "ADMIN"
+          ]
+        }
+      },
+      {
+        "path": "role",
+        "component": "system/role/role-list",
+        "name": "Role",
+        "meta": {
+          "title": "角色管理",
+          "icon": "el-icon-s-opportunity",
           "breadcrumb": true,
           "roles": [
             "ADMIN"

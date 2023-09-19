@@ -8,12 +8,8 @@
         <el-input v-model="menuParams.path" clearable/>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="onMenuSearch">
-          {{ $t('搜索') }}
-        </el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="onResetMenuSearch">
-          {{ $t('重置') }}
-        </el-button>
+        <el-button type="primary" icon="el-icon-search" @click="onMenuSearch">{{ $t('搜索') }}</el-button>
+        <el-button icon="el-icon-refresh" @click="onResetMenuSearch">{{ $t('重置') }}</el-button>
       </el-form-item>
     </el-form>
 
@@ -26,7 +22,8 @@
       </el-col>
     </el-row>
 
-    <el-table v-loading="menuLoading" :data="menuList" row-key="id" stripe border highlight-current-row>
+    <el-table v-loading="menuLoading" :data="menuList" row-key="id" size="mini"
+              stripe border highlight-current-row>
       <el-table-column prop="id" label="#" min-width="20" :align="'right'"/>
       <el-table-column prop="icon" :label="$t('图标')" min-width="20" :align="'center'">
         <template v-slot="scope">
@@ -41,9 +38,9 @@
           </el-button>
         </template>
       </el-table-column>
-      <el-table-column prop="path" :label="$t('路径')" min-width="100" show-overflow-tooltip/>
+      <el-table-column prop="path" :label="$t('路径')" min-width="50" show-overflow-tooltip/>
       <el-table-column prop="fullPath" :label="$t('完整路径')" min-width="100" show-overflow-tooltip/>
-      <el-table-column prop="component" :label="$t('组件')" min-width="50" show-overflow-tooltip/>
+      <el-table-column prop="component" :label="$t('组件')" min-width="100" show-overflow-tooltip/>
       <el-table-column prop="enabled" :label="$t('是否启用')" min-width="40" :align="'center'"/>
       <el-table-column prop="internal" :label="$t('是否内置')" min-width="40" :align="'center'"/>
       <el-table-column prop="createdBy" :label="$t('创建人')" min-width="40" :align="'center'"/>
@@ -213,7 +210,7 @@
           </el-table-column>
         </el-table>
       </el-form>
-      <div slot="footer" class="dialog-footer">
+      <div slot="footer">
         <el-button v-if="menuFormEditable" type="primary" @click="onMenuSubmit">{{ $t('提交') }}</el-button>
         <el-button v-if="menuFormEditable" @click="menuVisible = false">{{ $t('取消') }}</el-button>
         <el-button v-if="!menuFormEditable" @click="menuVisible = false">{{ $t('关闭') }}</el-button>
@@ -291,7 +288,7 @@ export default {
       },
       menuPermission: {...PERMISSION_MARK.menu},
       menuResourcePermission: {...PERMISSION_MARK.menuResource},
-      menuLoading: true,
+      menuLoading: false,
       menuList: [],
       menuResourceList: [],
       menuPage: {totalElements: 0, totalPages: 0},
@@ -496,7 +493,7 @@ export default {
     },
     onMenuDelete({row}) {
       deleteMenu(row.id).then(() => {
-        this.$message.success(this.$t('菜单 {title} 删除成功！', {title: row.title}));
+        this.$message.success(`菜单 [${row.title}] 删除成功！`);
         this.findMenuList();
       });
     },
@@ -509,7 +506,7 @@ export default {
     },
     onMenuResourceDelete({row}) {
       deleteMenuResource(row.id).then(() => {
-        this.$message.success(this.$t('菜单资源 {title} 删除成功！', {title: row.title}));
+        this.$message.success(`菜单资源 [${row.title}] 删除成功！`);
         this.reloadMenuForm();
       });
     },
@@ -534,11 +531,11 @@ export default {
           if (!utils.isAbsoluteUrl(path)) {
             // 如果设置上级菜单，则 path 不能以 / 开头
             if (parent && path.startsWith('/')) {
-              this.$message.error(this.$t('子级菜单的路径不能以 {path} 开头！', {path: '/'}));
+              this.$message.error('子级菜单的路径不能以 \\/ 开头！');
               return;
             }
             if (!parent && !path.startsWith('/')) {
-              this.$message.error(this.$t('顶级菜单的路径必须以 {path} 开头！', {path: '/'}));
+              this.$message.error('顶级菜单的路径必须以 \\/ 开头！');
               return;
             }
           }
@@ -561,13 +558,13 @@ export default {
           };
           if (this.menuForm.id) {
             editMenu(this.menuForm.id, data).then(() => {
-              this.$message.success(this.$t('菜单 {title} 更新成功！', {title: this.menuForm.title}));
+              this.$message.success(`菜单 [${data.title}] 更新成功！`);
               this.menuVisible = false;
               this.findMenuList();
             });
           } else {
             createMenu(data).then(() => {
-              this.$message.success(this.$t('菜单 {title} 创建成功！', {title: this.menuForm.title}));
+              this.$message.success(`菜单 [${data.title}] 创建成功！`);
               this.menuVisible = false;
               this.findMenuList();
             });
@@ -587,13 +584,13 @@ export default {
           };
           if (this.menuResourceForm.id) {
             editMenuResource(this.menuResourceForm.id, data).then(() => {
-              this.$message.success(this.$t('菜单资源 {title} 更新成功！', {title: this.menuResourceForm.title}));
+              this.$message.success(`菜单资源 [${data.name}] 更新成功！`);
               this.menuResourceVisible = false;
               this.reloadMenuForm();
             });
           } else {
             createMenuResource(data).then(() => {
-              this.$message.success(this.$t('菜单资源 {title} 创建成功！', {title: this.menuResourceForm.title}));
+              this.$message.success(`菜单资源 [${data.name}] 创建成功！`);
               this.menuResourceVisible = false;
               this.reloadMenuForm();
             });

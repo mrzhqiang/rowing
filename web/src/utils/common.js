@@ -690,6 +690,8 @@ const utils = {
         }
         return result;
     },
+    momentDateTimeFormat: 'yyyy-MM-DD HH:mm:ss',
+    dateTimeFormat: 'yyyy-MM-dd HH:mm:ss',
 };
 
 module.exports = utils;

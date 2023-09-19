@@ -57,7 +57,8 @@ public class DictItem extends AuditableEntity {
      */
     @ManyToOne(optional = false)
     @JoinColumn(name = "group_code", referencedColumnName = "code",
-            nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+            nullable = false, updatable = false,
+            foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private DictGroup group;
 
 }

@@ -1,6 +1,7 @@
 package com.github.mrzhqiang.rowing.dict;
 
 import com.github.mrzhqiang.rowing.domain.AuditableEntity;
+import com.github.mrzhqiang.rowing.domain.Domains;
 import com.google.common.collect.Lists;
 import lombok.Getter;
 import lombok.Setter;
@@ -116,7 +117,7 @@ public class DictGBT2260 extends AuditableEntity {
     /**
      * 是否为汇总码。
      */
-    @Column(columnDefinition = "bit(1) default 0")
+    @Column(columnDefinition = Domains.BOOL_COLUMN_FALSE)
     private Boolean summary = false;
 
 }

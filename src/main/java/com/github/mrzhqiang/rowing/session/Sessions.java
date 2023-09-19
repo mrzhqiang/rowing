@@ -28,16 +28,20 @@ public final class Sessions {
      * @return 返回可选的当前会话。
      */
     public static Optional<HttpSession> ofCurrent() {
-        RequestAttributes requestAttributes = RequestContextHolder.currentRequestAttributes();
-        if (requestAttributes instanceof ServletRequestAttributes) {
+        try {
+            RequestAttributes requestAttributes = RequestContextHolder.currentRequestAttributes();
+            if (requestAttributes instanceof ServletRequestAttributes) {
+                return Optional.of(requestAttributes)
+                        .map(it -> ((ServletRequestAttributes) it))
+                        .map(ServletRequestAttributes::getRequest)
+                        .map(it -> it.getSession(false));
+            }
             return Optional.of(requestAttributes)
-                    .map(it -> ((ServletRequestAttributes) it))
-                    .map(ServletRequestAttributes::getRequest)
-                    .map(it -> it.getSession(false));
+                    .map(it -> it.getAttribute(REFERENCE_SESSION, SCOPE_SESSION))
+                    .map(it -> (HttpSession) it);
+        } catch (IllegalStateException ignored) {
+            return Optional.empty();
         }
-        return Optional.of(requestAttributes)
-                .map(it -> it.getAttribute(REFERENCE_SESSION, SCOPE_SESSION))
-                .map(it -> (HttpSession) it);
     }
 
     /**

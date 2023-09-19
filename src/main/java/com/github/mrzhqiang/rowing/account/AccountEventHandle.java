@@ -1,8 +1,6 @@
 package com.github.mrzhqiang.rowing.account;
 
 import com.github.mrzhqiang.helper.random.RandomNumbers;
-import com.github.mrzhqiang.rowing.action.Action;
-import com.github.mrzhqiang.rowing.domain.ActionType;
 import com.github.mrzhqiang.rowing.domain.Domains;
 import com.github.mrzhqiang.rowing.setting.Setting;
 import com.github.mrzhqiang.rowing.setting.SettingService;
@@ -40,7 +38,6 @@ public class AccountEventHandle {
         this.settingService = settingService;
     }
 
-    @Action(value = "创建账户", type = ActionType.CREATE_ACCOUNT)
     @HandleBeforeCreate
     public void onBeforeCreate(Account account) {
         if (repository.findByUsername(account.getUsername()).isPresent()) {

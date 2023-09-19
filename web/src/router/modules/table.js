@@ -15,7 +15,7 @@ const tableRouter = {
   children: [
     {
       path: 'dynamic-table',
-      component: () => import('@/views/table/dynamic-table/index'),
+      component: () => import('@/views/base/table/DynamicTable'),
       name: 'DynamicTable',
       meta: {
         title: 'dynamicTable',
@@ -24,7 +24,7 @@ const tableRouter = {
     },
     {
       path: 'drag-table',
-      component: () => import('@/views/table/drag-table'),
+      component: () => import('@/views/base/table/drag-table'),
       name: 'DragTable',
       meta: {
         title: 'dragTable',
@@ -33,7 +33,7 @@ const tableRouter = {
     },
     {
       path: 'inline-edit-table',
-      component: () => import('@/views/table/inline-edit-table'),
+      component: () => import('@/views/base/table/inline-edit-table'),
       name: 'InlineEditTable',
       meta: {
         title: 'inlineEditTable',
@@ -42,7 +42,7 @@ const tableRouter = {
     },
     {
       path: 'complex-table',
-      component: () => import('@/views/table/complex-table'),
+      component: () => import('@/views/base/table/complex-table'),
       name: 'ComplexTable',
       meta: {
         title: 'complexTable',

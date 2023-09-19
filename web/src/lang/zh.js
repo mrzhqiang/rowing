@@ -1,4 +1,11 @@
 export default {
+  exam: {
+    difficultyLv1: '轻松',
+    difficultyLv2: '简单',
+    difficultyLv3: '普通',
+    difficultyLv4: '困难',
+    difficultyLv5: '噩梦',
+  },
   route: {
     dashboard: '首页',
     documentation: '文档',

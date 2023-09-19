@@ -14,6 +14,7 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
 
@@ -60,7 +61,9 @@ public class MenuResource extends AuditableEntity implements GrantedAuthority {
      * <p>
      * 主要影响在菜单下的列表顺序，如果未设置的话，将以创建时间作为默认排序条件。
      */
-    private Integer ordered;
+    @NotNull
+    @Column(nullable = false)
+    private Integer ordered = 0;
 
     /**
      * 资源所属菜单。

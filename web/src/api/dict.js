@@ -1,4 +1,4 @@
-import rest from '@/api/rest';
+import rest, {clearTemplate} from '@/api/rest';
 
 const DICT_API = 'dict';
 const DICT_ITEM_API = 'dict-item';
@@ -12,6 +12,10 @@ export const DICT_CODES = {
   taskStatus: 'TASK_STATUS',
   accountType: 'ACCOUNT_TYPE',
   gender: 'GENDER',
+  examSubject: 'EXAM_SUBJECT',
+  examType: 'EXAM_TYPE',
+  examStrategy: 'EXAM_STRATEGY',
+  examQuestionType: 'EXAM_QUESTION_TYPE',
 };
 
 export function pageDict(params) {
@@ -152,4 +156,15 @@ export function deleteDictISO3166(id) {
 
 export function searchDictISO3166(path, params) {
   return rest.search(DICT_ISO_3166_API, path, params);
+}
+
+export function findDictItemUri(options, value) {
+  if (options && options.length > 0) {
+    for (const option of options) {
+      if (option.value === value) {
+        return clearTemplate(option._links.self.href);
+      }
+    }
+  }
+  return '';
 }

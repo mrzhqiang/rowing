@@ -5,12 +5,8 @@
         <el-input v-model="initTaskParams.name" clearable/>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini"
-                   @click="onInitTaskSearch">{{ $t('搜索') }}
-        </el-button>
-        <el-button icon="el-icon-refresh" size="mini"
-                   @click="onResetInitTaskSearch">{{ $t('重置') }}
-        </el-button>
+        <el-button type="primary" icon="el-icon-search" @click="onInitTaskSearch">{{ $t('搜索') }}</el-button>
+        <el-button icon="el-icon-refresh" @click="onResetInitTaskSearch">{{ $t('重置') }}</el-button>
       </el-form-item>
     </el-form>
 
@@ -24,7 +20,8 @@
       </el-col>
     </el-row>-->
 
-    <el-table v-loading="initTaskLoading" :data="initTaskList" row-key="id" stripe border>
+    <el-table v-loading="initTaskLoading" :data="initTaskList" row-key="id" size="mini"
+              stripe border highlight-current-row>
       <el-table-column prop="id" label="#" min-width="20" :align="'right'"/>
       <el-table-column prop="name" :label="$t('名称')" min-width="80" show-overflow-tooltip/>
       <el-table-column prop="path" :label="$t('路径')" min-width="120" show-overflow-tooltip/>
@@ -109,12 +106,10 @@
                           :type="log.trace ? 'danger' : 'success'">
           <el-card>
             <div slot="header" class="clearfix">
-              <span :style="log.trace ? 'color: red' : ''">{{ log.message }}</span>
+              <span style="margin-right: 8px">{{ $t('执行人') }}</span>
+              <el-tag :type="log.trace ? 'danger' : 'success'">{{ log.createdBy }}</el-tag>
             </div>
-            <span style="margin-right: 8px">{{ $t('执行人') }}</span>
-            <el-tag :type="log.trace ? 'danger' : 'success'">{{ log.createdBy }}</el-tag>
-            <span style="margin-left: 8px; margin-right: 8px">{{ $t('执行时间') }}</span>
-            <el-tag :type="log.trace ? 'danger' : 'success'">{{ log.created }}</el-tag>
+            <span :style="log.trace ? 'color: red' : ''">{{ log.message }}</span>
             <el-button v-if="log.trace" type="text" style="float: right; padding: 3px 0"
                        @click="onInitTaskLogTraceOpen(log.trace)">{{ $t('查看详情') }}
             </el-button>
@@ -136,12 +131,12 @@
 </template>
 
 <script>
-import elDragDialog from '@/directive/el-drag-dialog';
-import {PERMISSION_MARK} from '@/utils/permission';
-import {searchDict, DICT_CODES} from '@/api/dict';
-import {findInitTask, editInitTask, searchInitTask, createInitTask, executeInitTask} from '@/api/init';
+import {DICT_CODES, searchDict} from '@/api/dict';
+import {createInitTask, editInitTask, executeInitTask, findInitTask, searchInitTask} from '@/api/init';
 import rest from '@/api/rest';
 import Pagination from '@/components/Pagination';
+import elDragDialog from '@/directive/el-drag-dialog';
+import {PERMISSION_MARK} from '@/utils/permission';
 
 export default {
   name: 'InitTaskList',
@@ -155,7 +150,7 @@ export default {
         size: 20,
       },
       initTaskPermission: {...PERMISSION_MARK.initTask},
-      initTaskLoading: true,
+      initTaskLoading: false,
       initTaskList: [],
       initTaskPage: {totalElements: 0, totalPages: 0},
       initTaskTitle: '',
@@ -254,8 +249,8 @@ export default {
       if (row && row.id) {
         editInitTask(row.id, {discard}).then(() => {
           const message = row.discardCode === 'YES'
-              ? this.$t('初始化任务 {title} 启用成功！', {title: this.initTaskForm.title})
-              : this.$t('初始化任务 {title} 废弃成功！', {title: this.initTaskForm.title});
+              ? `初始化任务 ${this.initTaskForm.title} 启用成功！`
+              : `初始化任务 ${this.initTaskForm.title} 废弃成功！`;
           this.$message.success(message);
           this.findInitTaskList();
         });
@@ -272,13 +267,13 @@ export default {
           };
           if (this.initTaskForm.id) {
             editInitTask(this.initTaskForm.id, data).then(() => {
-              this.$message.success(this.$t('初始化任务 {title} 更新成功！', {title: this.initTaskForm.title}));
+              this.$message.success(`初始化任务 [${data.name}] 更新成功！`);
               this.initTaskVisible = false;
               this.findInitTaskList();
             });
           } else {
             createInitTask(this.initTaskForm).then(() => {
-              this.$message.success(this.$t('初始化任务 {title} 创建成功！', {title: this.initTaskForm.title}));
+              this.$message.success(`初始化任务 [${data.name}] 创建成功！`);
               this.initTaskVisible = false;
               this.findInitTaskList();
             });

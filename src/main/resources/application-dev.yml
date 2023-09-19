@@ -50,8 +50,8 @@ spring:
     # 在 TRACE 日志级别，打印信息包含请求的 Header 信息
     log-request-details: true
   session:
-    # 5 minutes
-    timeout: 300s
+    # 1 hours
+    timeout: 3600s
   devtools:
     restart:
       additional-exclude: data/**

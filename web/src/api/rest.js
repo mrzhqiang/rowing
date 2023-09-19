@@ -9,15 +9,11 @@ import common from '@/utils/common';
  * @param url HTTP 地址。
  * @return {string} 相对地址。
  */
-export function toRelative(url) {
+function toRelative(url) {
   if (url && common.isAbsoluteUrl(url)) {
     if (url.includes('/api')) {
       // 如果包含 /api 说明是后端接口，则替换到 /api 开头的地址
       url = url.substring(url.indexOf('/api'));
-    } else {
-      // 如果不包含 /api 说明是外部链接（后端返回的外部资源），则忽略域名及端口，即第一个路径分隔符 / 之前的内容
-      url = url.replace('//', '');
-      url = url.substring(url.indexOf('/'));
     }
   }
   return url;
@@ -38,6 +34,20 @@ export function clearTemplate(href) {
     href = href.substring(0, href.lastIndexOf('{?'));
   }
   return href;
+}
+
+/**
+ * 找到对应选项的链接。
+ * @param options 全部选项列表。
+ * @param id 对应选项的 ID。
+ * @returns {string|null} 对应选项的链接。
+ */
+export function findOptionUrl(options, id) {
+  if (!options || !options.length || !id) {
+    return null;
+  }
+  const find = options.find(it => it.id === id);
+  return find ? clearTemplate(find._links.self.href) : null;
 }
 
 /** 按照 Spring Boot Data REST 框架实现的接口工具。*/

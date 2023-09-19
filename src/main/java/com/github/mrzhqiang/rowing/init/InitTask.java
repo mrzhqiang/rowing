@@ -2,10 +2,10 @@ package com.github.mrzhqiang.rowing.init;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.mrzhqiang.rowing.domain.AuditableEntity;
+import com.github.mrzhqiang.rowing.domain.Domains;
 import com.github.mrzhqiang.rowing.domain.Logic;
 import com.github.mrzhqiang.rowing.domain.TaskStatus;
 import com.github.mrzhqiang.rowing.domain.TaskType;
-import com.github.mrzhqiang.rowing.domain.Domains;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -18,6 +18,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
 
@@ -65,10 +66,11 @@ public class InitTask extends AuditableEntity {
      */
     @NonNull
     @Column(nullable = false)
-    private Integer ordered;
+    private Integer ordered = 0;
     /**
      * 是否废弃。
      */
+    @NotNull
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = Domains.ENUM_NAME_LENGTH)
     private Logic discard;

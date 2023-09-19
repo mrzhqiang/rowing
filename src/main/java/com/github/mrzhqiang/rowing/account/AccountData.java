@@ -8,7 +8,7 @@ import org.springframework.data.rest.core.config.Projection;
  * <p>
  * 账户具有私密性，所以利用投影功能，屏蔽隐私相关字段。
  */
-@Projection(types = {Account.class}, name = "account")
+@Projection(name = "account", types = {Account.class})
 public interface AccountData {
 
     String getUsername();

@@ -158,6 +158,14 @@ public final class Domains {
      * SQL text 字段类型。
      */
     public static final String TEXT_COLUMN_TYPE = "text";
+    /**
+     * SQL 布尔字段默认假。
+     */
+    public static final String BOOL_COLUMN_FALSE = "bit(1) default 0";
+    /**
+     * SQL 布尔字段默认真。
+     */
+    public static final String BOOL_COLUMN_TRUE = "bit(1) default 1";
 
     /**
      * 菜单非重定向属性。

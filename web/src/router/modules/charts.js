@@ -15,7 +15,7 @@ const chartsRouter = {
   children: [
     {
       path: 'keyboard',
-      component: () => import('@/views/charts/keyboard'),
+      component: () => import('@/views/base/charts/keyboard'),
       name: 'KeyboardChart',
       meta: {
         title: 'keyboardChart',
@@ -25,7 +25,7 @@ const chartsRouter = {
     },
     {
       path: 'line',
-      component: () => import('@/views/charts/line'),
+      component: () => import('@/views/base/charts/line'),
       name: 'LineChart',
       meta: {
         title: 'lineChart',
@@ -35,7 +35,7 @@ const chartsRouter = {
     },
     {
       path: 'mix-chart',
-      component: () => import('@/views/charts/mix-chart'),
+      component: () => import('@/views/base/charts/mix-chart'),
       name: 'MixChart',
       meta: {
         title: 'mixChart',

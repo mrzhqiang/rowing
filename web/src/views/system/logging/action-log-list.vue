@@ -5,16 +5,13 @@
         <el-input v-model="logParams.action" clearable/>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini"
-                   @click="onLogSearch">{{ $t('搜索') }}
-        </el-button>
-        <el-button icon="el-icon-refresh" size="mini"
-                   @click="onResetLogSearch">{{ $t('重置') }}
-        </el-button>
+        <el-button type="primary" icon="el-icon-search" @click="onLogSearch">{{ $t('搜索') }}</el-button>
+        <el-button icon="el-icon-refresh" @click="onResetLogSearch">{{ $t('重置') }}</el-button>
       </el-form-item>
     </el-form>
 
-    <el-table v-loading="logLoading" :data="logList" row-key="id" stripe border>
+    <el-table v-loading="logLoading" :data="logList" row-key="id" size="mini"
+              stripe border highlight-current-row>
       <el-table-column prop="id" label="#" min-width="20" :align="'right'"/>
       <el-table-column prop="action" :label="$t('操作')" min-width="40" show-overflow-tooltip/>
       <el-table-column prop="type" :label="$t('类型')" min-width="50" show-overflow-tooltip/>
@@ -49,7 +46,7 @@ export default {
         page: 0,
         size: 20,
       },
-      logLoading: true,
+      logLoading: false,
       logList: [],
       logPage: {totalElements: 0, totalPages: 0},
     };

@@ -8,12 +8,8 @@
         <el-input v-model="accountParams.nickname" clearable/>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="onAccountSearch">
-          {{ $t('搜索') }}
-        </el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="onResetAccountSearch">
-          {{ $t('重置') }}
-        </el-button>
+        <el-button type="primary" icon="el-icon-search" @click="onAccountSearch">{{ $t('搜索') }}</el-button>
+        <el-button icon="el-icon-refresh" @click="onResetAccountSearch">{{ $t('重置') }}</el-button>
       </el-form-item>
     </el-form>
 
@@ -26,7 +22,8 @@
       </el-col>
     </el-row>
 
-    <el-table v-loading="accountLoading" :data="accountList" row-key="id" stripe border highlight-current-row>
+    <el-table v-loading="accountLoading" :data="accountList" row-key="id" size="mini"
+              stripe border highlight-current-row>
       <el-table-column prop="id" label="#" min-width="20" :align="'right'"/>
       <el-table-column prop="username" :label="$t('用户名')" min-width="50" show-overflow-tooltip>
         <template v-slot="scope">
@@ -185,7 +182,7 @@ export default {
         size: 20,
       },
       accountPermission: {...PERMISSION_MARK.account},
-      accountLoading: true,
+      accountLoading: false,
       accountList: [],
       accountPage: {totalElements: 0, totalPages: 0},
       accountTitle: '',
@@ -202,9 +199,9 @@ export default {
         user: {}
       },
       accountRules: {
-        username: [{required: true, message: this.$t('用户名不能为空'), trigger: 'blur'}],
-        type: [{required: true, message: this.$t('账户类型不能为空'), trigger: 'blur'}],
-        'user.nickname': [{required: true, message: this.$t('昵称不能为空'), trigger: 'blur'}]
+        username: [{required: true, message: '用户名不能为空', trigger: 'blur'}],
+        type: [{required: true, message: '账户类型不能为空', trigger: 'blur'}],
+        'user.nickname': [{required: true, message: '昵称不能为空', trigger: 'blur'}]
       },
       accountFormEditable: false,
       accountFormCreate: false,
@@ -275,7 +272,7 @@ export default {
       this.resetAccountForm();
       this.accountFormEditable = true;
       this.accountFormCreate = true;
-      this.accountTitle = this.$t('创建账户');
+      this.accountTitle = '创建账户';
       this.accountVisible = true;
     },
     onAccountEdit({row}, readonly = false) {
@@ -285,13 +282,13 @@ export default {
       findAccount(row.id, 'account-form').then(response => {
         this.fillAccountForm(response);
         this.accountForm.id = row.id;
-        this.accountTitle = readonly ? this.$t('查看账户') : this.$t('编辑账户');
+        this.accountTitle = readonly ? '查看账户' : '编辑账户';
         this.accountVisible = true;
       });
     },
     onAccountDelete({row}) {
       deleteAccount(row.id).then(() => {
-        this.$message.success(this.$t('账户 {title} 删除成功！', {title: row.username}));
+        this.$message.success(`账户 [${row.username}] 删除成功！`);
         this.findAccountList();
       });
     },
@@ -321,7 +318,7 @@ export default {
             };
             editUser(this.accountForm.user.id, userData).then(() => {
               editAccount(this.accountForm.id, data).then(() => {
-                this.$message.success(this.$t('账户 {title} 更新成功！', {title: this.accountForm.username}));
+                this.$message.success(`账户 [${data.username}] 更新成功！`);
                 this.accountVisible = false;
                 this.findAccountList();
               });
@@ -330,7 +327,7 @@ export default {
             // 用户名：可以创建，不能编辑
             data.username = this.accountForm.username;
             createAccount(data).then(() => {
-              this.$message.success(this.$t('账户 {title} 创建成功！', {title: this.accountForm.username}));
+              this.$message.success(`账户 [${data.username}] 创建成功！`);
               this.accountVisible = false;
               this.findAccountList();
             });

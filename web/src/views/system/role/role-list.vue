@@ -8,12 +8,8 @@
         <el-input v-model="roleParams.code" clearable/>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="onRoleSearch">
-          {{ $t('搜索') }}
-        </el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="onResetRoleSearch">
-          {{ $t('重置') }}
-        </el-button>
+        <el-button type="primary" icon="el-icon-search" @click="onRoleSearch">{{ $t('搜索') }}</el-button>
+        <el-button icon="el-icon-refresh" @click="onResetRoleSearch">{{ $t('重置') }}</el-button>
       </el-form-item>
     </el-form>
 
@@ -26,7 +22,8 @@
       </el-col>
     </el-row>
 
-    <el-table v-loading="roleLoading" :data="roleList" row-key="id" stripe border highlight-current-row>
+    <el-table v-loading="roleLoading" :data="roleList" row-key="id" size="mini"
+              stripe border highlight-current-row>
       <el-table-column prop="id" label="#" min-width="20" :align="'right'"/>
       <el-table-column prop="name" :label="$t('名称')" min-width="50" show-overflow-tooltip>
         <template v-slot="scope">
@@ -201,7 +198,7 @@ export default {
         size: 20,
       },
       rolePermission: {...PERMISSION_MARK.role},
-      roleLoading: true,
+      roleLoading: false,
       roleList: [],
       roleAccountList: [],
       roleMenuList: [],
@@ -298,7 +295,7 @@ export default {
     },
     onRoleDelete({row}) {
       deleteRole(row.id).then(() => {
-        this.$message.success(this.$t('角色 {title} 删除成功！', {title: row.title}));
+        this.$message.success(`角色 [${row.title}] 删除成功！`);
         this.findRoleList();
       });
     },
@@ -311,19 +308,19 @@ export default {
     },
     onRoleDeleteAccount({row}) {
       deleteRoleAccount(row.id).then(() => {
-        this.$message.success(this.$t('角色账户 {title} 删除成功！', {title: row.title}));
+        this.$message.success(`角色账户 [${row.title}] 删除成功！`);
         this.reloadRoleForm();
       });
     },
     onRoleDeleteMenu({row}) {
       deleteRoleMenu(row.id).then(() => {
-        this.$message.success(this.$t('角色菜单 {title} 删除成功！', {title: row.title}));
+        this.$message.success(`角色菜单 [${row.title}] 删除成功！`);
         this.reloadRoleForm();
       });
     },
     onRoleDeleteMenuResource({row}) {
       deleteRoleMenuResource(row.id).then(() => {
-        this.$message.success(this.$t('角色菜单资源 {title} 删除成功！', {title: row.title}));
+        this.$message.success(`角色菜单资源 [${row.title}] 删除成功！`);
         this.reloadRoleForm();
       });
     },
@@ -343,13 +340,13 @@ export default {
               delete this.roleForm.code;
             }
             editRole(this.roleForm.id, data).then(() => {
-              this.$message.success(this.$t('角色 {title} 更新成功！', {title: this.roleForm.title}));
+              this.$message.success(`角色 [${data.name}] 更新成功！`);
               this.roleVisible = false;
               this.findRoleList();
             });
           } else {
             createRole(data).then(() => {
-              this.$message.success(this.$t('角色 {title} 创建成功！', {title: this.roleForm.title}));
+              this.$message.success(`角色 [${data.name}] 创建成功！`);
               this.roleVisible = false;
               this.findRoleList();
             });

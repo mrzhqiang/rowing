@@ -79,8 +79,8 @@ public class Role extends AuditableEntity implements GrantedAuthoritiesContainer
     @RestResource(path = "menus")
     @ManyToMany()
     @JoinTable(name = "role_menus",
-            joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "menu_id", referencedColumnName = "id"),
+            joinColumns = @JoinColumn(name = "role_id"),
+            inverseJoinColumns = @JoinColumn(name = "menu_id"),
             uniqueConstraints = @UniqueConstraint(columnNames = {"role_id", "menu_id"}))
     private List<Menu> menus = Lists.newArrayList();
     /**
@@ -91,8 +91,8 @@ public class Role extends AuditableEntity implements GrantedAuthoritiesContainer
     @RestResource(path = "menu-resources")
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "role_menu_resources",
-            joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "menu_resource_id", referencedColumnName = "id"),
+            joinColumns = @JoinColumn(name = "role_id"),
+            inverseJoinColumns = @JoinColumn(name = "menu_resource_id"),
             uniqueConstraints = @UniqueConstraint(columnNames = {"role_id", "menu_resource_id"}))
     private List<MenuResource> menuResources = Lists.newArrayList();
 

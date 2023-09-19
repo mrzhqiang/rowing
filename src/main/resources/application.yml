@@ -6,8 +6,6 @@ spring:
     # 这里声明 MessageSource 加载的国际化消息文件列表，以逗号 (,) 分割
     basename: i18n.messages,org.springframework.security.messages
     fallback-to-system-locale: false
-  jackson:
-    date-format: "yyyy-MM-dd HH:mm:ss"
   cache:
     redis:
       key-prefix: "rowing:"
@@ -16,7 +14,7 @@ spring:
   sql:
     init:
       mode: always
-      continue-on-error: true
+      continue-on-error: false
   datasource:
     hikari:
       minimum-idle: 5
@@ -30,20 +28,11 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-    properties:
-      hibernate:
-        query:
-          jpaql_strict_compliance=false: false
 
   data:
     rest:
       base-path: /api
       enable-enum-translation: true
-  mvc:
-    format:
-      date: "yyyy-MM-dd"
-      time: "HH:mm:ss"
-      date-time: "yyyy-MM-dd HH:mm:ss"
 
 # 项目配置
 rowing:

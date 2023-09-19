@@ -83,8 +83,6 @@
   box-sizing: content-box;
 }
 
-.el-drawer {
-  .el-drawer__body {
-    overflow: auto;
-  }
+.el-drawer__body {
+  overflow-y: auto;
 }

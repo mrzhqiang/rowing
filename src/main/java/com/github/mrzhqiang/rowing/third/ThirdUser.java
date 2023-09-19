@@ -13,6 +13,7 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 /**
@@ -35,6 +36,7 @@ public class ThirdUser extends AuditableEntity {
      * <p>
      * 属于必填项，与统一标识符结合，作为第三方平台用户是否已在本系统进行绑定的依据。
      */
+    @NotNull
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = Domains.ENUM_NAME_LENGTH)
     private ThirdUserType type;

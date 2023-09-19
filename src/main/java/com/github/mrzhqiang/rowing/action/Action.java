@@ -11,6 +11,8 @@ import java.lang.annotation.Target;
 
 /**
  * 操作。
+ * <p>
+ * 特别注意：这个注解只能在 web 请求相关的方法上执行，如果是由内部调用的方法，将因为找不到对应会话而抛出异常。
  */
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
@@ -33,4 +35,5 @@ public @interface Action {
      * @return 获取操作类型，用来记录到 ActionLog 实体的 type 字段。
      */
     ActionType type() default ActionType.NONE;
+
 }
