@@ -1,8 +1,8 @@
 package com.github.mrzhqiang.rowing.exam;
 
 import com.github.mrzhqiang.rowing.domain.AuditableProjection;
-import com.github.mrzhqiang.rowing.domain.ExamModeStrategy;
 import com.github.mrzhqiang.rowing.domain.ExamQuestionType;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.rest.core.config.Projection;
 
 import java.math.BigDecimal;
@@ -22,6 +22,19 @@ public interface ExamModeExcerpt extends AuditableProjection {
 
     Integer getAmount();
 
-    ExamModeStrategy getStrategy();
+    @Value("#{target.question1?.code}")
+    String getQuestion1Code();
+
+    @Value("#{target.question2?.code}")
+    String getQuestion2Code();
+
+    @Value("#{target.question3?.code}")
+    String getQuestion3Code();
+
+    @Value("#{target.question4?.code}")
+    String getQuestion4Code();
+
+    @Value("#{target.question5?.code}")
+    String getQuestion5Code();
 
 }

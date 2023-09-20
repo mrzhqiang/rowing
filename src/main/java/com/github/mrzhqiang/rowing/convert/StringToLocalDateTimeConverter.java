@@ -1,14 +1,10 @@
 package com.github.mrzhqiang.rowing.convert;
 
 import com.github.mrzhqiang.helper.time.DateTimes;
-import org.springframework.core.convert.TypeDescriptor;
-import org.springframework.core.convert.converter.GenericConverter;
-import org.springframework.util.ObjectUtils;
+import org.springframework.core.convert.converter.Converter;
 
 import javax.annotation.Nonnull;
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.Set;
 
 /**
  * 字符串转本地日期时间的转换器。
@@ -18,19 +14,13 @@ import java.util.Set;
  * 可以通过前端适配格式来解决问题，但这将导致复杂化，并失去一定的灵活性，
  * 所以我们在这里自定义转换器，通过使用与 JSON 序列化相同的格式，保证统一的风格。
  */
-public final class StringToLocalDateTimeConverter implements GenericConverter {
+public enum StringToLocalDateTimeConverter implements Converter<String, LocalDateTime> {
+
+    INSTANCE;
 
     @Override
-    public Set<ConvertiblePair> getConvertibleTypes() {
-        return Collections.singleton(new ConvertiblePair(String.class, LocalDateTime.class));
-    }
-
-    @Override
-    public Object convert(Object source, @Nonnull TypeDescriptor sourceType, @Nonnull TypeDescriptor targetType) {
-        if (!ObjectUtils.isEmpty(source)) {
-            return LocalDateTime.parse(source.toString(), DateTimes.BASIC_FORMATTER);
-        }
-        return null;
+    public LocalDateTime convert(@Nonnull String source) {
+        return LocalDateTime.parse(source, DateTimes.BASIC_FORMATTER);
     }
 
 }

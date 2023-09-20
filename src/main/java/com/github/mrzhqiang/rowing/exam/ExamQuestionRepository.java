@@ -18,4 +18,7 @@ public interface ExamQuestionRepository extends BaseRepository<ExamQuestion> {
                                                                          String stem,
                                                                          Pageable pageable);
 
+    @RestResource(path = "list", rel = "list")
+    List<ExamQuestion> findAllByType(ExamQuestionType type);
+
 }

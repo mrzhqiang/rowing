@@ -4,7 +4,7 @@ import com.github.mrzhqiang.rowing.domain.BaseProjection;
 import org.springframework.data.rest.core.config.Projection;
 
 import java.math.BigDecimal;
-import java.time.Duration;
+import java.util.List;
 
 /**
  * 考试规则表单。
@@ -13,12 +13,18 @@ import java.time.Duration;
 @Projection(name = "exam-rule-form", types = {ExamRule.class})
 public interface ExamRuleForm extends BaseProjection {
 
-    Duration getDuration();
+    String getTitle();
+
+    Long getDuration();
 
     Integer getTotalScore();
 
     BigDecimal getPassLine();
 
     Integer getPassScore();
+
+    String getStrategy();
+
+    List<ExamModeExcerpt> getModes();
 
 }

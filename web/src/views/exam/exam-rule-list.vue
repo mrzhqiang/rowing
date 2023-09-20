@@ -12,7 +12,7 @@
       <el-col :span="2">
         <el-button v-permission="examRulePermission.create"
                    type="primary" icon="el-icon-plus" plain
-                   @click="onExamRuleCreate">{{ $t('创建') }}
+                   @click="onExamRuleCreate">{{ $t('创建规则') }}
         </el-button>
       </el-col>
     </el-row>
@@ -27,8 +27,12 @@
           </el-button>
         </template>
       </el-table-column>
-      <el-table-column prop="duration" :label="$t('时长')" min-width="100" :align="'center'"/>
-      <el-table-column prop="totalScore" :label="$t('分数')" min-width="50" :align="'center'"/>
+      <el-table-column prop="duration" :label="$t('时长')" min-width="40" :align="'center'">
+        <template v-slot="scope">
+          {{ displayDuration(scope.row.duration) }}
+        </template>
+      </el-table-column>
+      <el-table-column prop="totalScore" :label="$t('分数')" min-width="40" :align="'center'"/>
       <el-table-column prop="passLine" :label="$t('合格线')" min-width="40" :align="'center'"/>
       <el-table-column prop="passScore" :label="$t('合格分数')" min-width="40" :align="'center'"/>
       <el-table-column prop="strategy" :label="$t('策略')" min-width="40" :align="'center'"/>
@@ -82,9 +86,8 @@
         </el-row>
         <el-row :gutter="10">
           <el-col :span="8">
-            <el-form-item :label="$t('合格线')" prop="passLine">
-              <el-input-number v-model="examRuleForm.passLine" :precision="2"
-                               :min="0" :step="0.01" :max="1" @change="onPassLineChange"/>
+            <el-form-item :label="$t('合格线(%)')" prop="passLine">
+              <el-input-number v-model="examRuleForm.passLine" :min="1" :max="100" @change="onPassLineChange"/>
             </el-form-item>
           </el-col>
           <el-col :span="8">
@@ -95,33 +98,36 @@
           <el-col :span="8">
             <el-form-item :label="$t('策略')" prop="strategy">
               <el-select v-model="examRuleForm.strategy">
-                <el-option v-for="item in examStrategyOptions" :key="item.value"
+                <el-option v-for="item in examModeStrategyOptions" :key="item.value"
                            :label="item.label" :value="item.value"/>
               </el-select>
             </el-form-item>
           </el-col>
         </el-row>
 
-        <el-divider v-if="!examRuleFormCreate" content-position="left">{{ $t('考试模式') }}</el-divider>
-        <el-row v-if="!examRuleFormCreate" :gutter="10" style="margin-bottom: 1rem">
+        <el-divider v-if="!examRuleFormCreate && examRuleFormEditable"
+                    content-position="left">{{ $t('模式列表') }}
+        </el-divider>
+        <el-row v-if="!examRuleFormCreate && examRuleFormEditable" :gutter="10" style="margin-bottom: 1rem">
           <el-col :span="2">
             <el-button v-permission="examModePermission.create" type="primary" icon="el-icon-plus"
-                       plain @click="onExamModeCreate">{{ $t('创建') }}
+                       :disabled="isOverTotalScore"
+                       plain @click="onExamModeCreate">{{ $t('添加模式') }}
             </el-button>
           </el-col>
         </el-row>
 
-        <el-table v-if="!examRuleFormCreate" :data="examModeList" row-key="id" stripe border>
-          <el-table-column prop="id" label="#" min-width="20" :align="'right'"/>
-          <el-table-column prop="ordered" :label="$t('排序')" min-width="100" show-overflow-tooltip/>
-          <el-table-column prop="type" :label="$t('题型')" min-width="50" show-overflow-tooltip/>
-          <el-table-column prop="score" :label="$t('分值')" min-width="40" :align="'center'"/>
-          <el-table-column prop="amount" :label="$t('题量')" min-width="40" :align="'center'"/>
-          <el-table-column prop="question1" :label="$t('试题一')" min-width="40" :align="'center'"/>
-          <el-table-column prop="question2" :label="$t('试题二')" min-width="40" :align="'center'"/>
-          <el-table-column prop="question3" :label="$t('试题三')" min-width="40" :align="'center'"/>
-          <el-table-column prop="question4" :label="$t('试题四')" min-width="40" :align="'center'"/>
-          <el-table-column prop="question5" :label="$t('试题五')" min-width="40" :align="'center'"/>
+        <el-table v-if="!examRuleFormCreate && examRuleFormEditable" :data="examModeList"
+                  row-key="id" size="mini" stripe border>
+          <el-table-column prop="ordered" :label="$t('排序')" min-width="20" :align="'center'"/>
+          <el-table-column prop="type" :label="$t('题型')" min-width="50" :align="'center'"/>
+          <el-table-column prop="score" :label="$t('分值')" min-width="20" :align="'center'"/>
+          <el-table-column prop="amount" :label="$t('题量')" min-width="20" :align="'center'"/>
+          <el-table-column prop="question1Code" :label="$t('试题一')" min-width="50" show-overflow-tooltip/>
+          <el-table-column prop="question2Code" :label="$t('试题二')" min-width="50" show-overflow-tooltip/>
+          <el-table-column prop="question3Code" :label="$t('试题三')" min-width="50" show-overflow-tooltip/>
+          <el-table-column prop="question4Code" :label="$t('试题四')" min-width="50" show-overflow-tooltip/>
+          <el-table-column prop="question5Code" :label="$t('试题五')" min-width="50" show-overflow-tooltip/>
           <el-table-column :label="$t('操作')" min-width="100" :align="'center'">
             <template v-slot="scope">
               <el-button v-permission="examModePermission.edit"
@@ -147,8 +153,7 @@
     </el-dialog>
 
     <el-dialog v-el-drag-dialog :title="examModeTitle" :visible.sync="examModeVisible"
-               :close-on-click-modal="false"
-               append-to-body @click="onExamModeClose">
+               :close-on-click-modal="false" append-to-body @click="onExamModeClose">
       <el-form ref="examModeForm" :model="examModeForm" :rules="examModeRules" label-width="80px">
         <el-row :gutter="10">
           <el-col :span="8">
@@ -159,8 +164,8 @@
           <el-col :span="8">
             <el-form-item :label="$t('题型')" prop="type">
               <el-select v-model="examModeForm.type">
-                <el-option v-for="item in examTypeOptions" :key="item.value"
-                           :label="item.label" :value="clearTemplate(item._links.self.href)"/>
+                <el-option v-for="item in examQuestionTypeOptions" :key="item.value"
+                           :label="item.label" :value="item.value"/>
               </el-select>
             </el-form-item>
           </el-col>
@@ -178,19 +183,17 @@
           </el-col>
           <el-col :span="8">
             <el-form-item :label="$t('问题一')" prop="question1">
-              <el-select v-model="examModeForm.question1"
-                         :disabled="examRuleForm.strategy === 'FIXED'">
-                <el-option v-for="item in examQuestionOptions" :key="item.value"
-                           :label="item.label" :value="item.value"/>
+              <el-select v-model="examModeForm.question1" :disabled="!isFixedStrategy">
+                <el-option v-for="item in examQuestionOptions" :key="item.id"
+                           :label="item.code" :value="item.id"/>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item :label="$t('问题二')" prop="question2">
-              <el-select v-model="examModeForm.question2"
-                         :disabled="examRuleForm.strategy === 'FIXED'">
-                <el-option v-for="item in examQuestionOptions" :key="item.value"
-                           :label="item.label" :value="item.value"/>
+              <el-select v-model="examModeForm.question2" :disabled="!isFixedStrategy">
+                <el-option v-for="item in examQuestionOptions" :key="item.id"
+                           :label="item.code" :value="item.id"/>
               </el-select>
             </el-form-item>
           </el-col>
@@ -198,28 +201,25 @@
         <el-row :gutter="10">
           <el-col :span="8">
             <el-form-item :label="$t('问题三')" prop="question3">
-              <el-select v-model="examModeForm.question3"
-                         :disabled="examRuleForm.strategy === 'FIXED'">
-                <el-option v-for="item in examQuestionOptions" :key="item.value"
-                           :label="item.label" :value="item.value"/>
+              <el-select v-model="examModeForm.question3" :disabled="!isFixedStrategy">
+                <el-option v-for="item in examQuestionOptions" :key="item.id"
+                           :label="item.code" :value="item.id"/>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item :label="$t('问题四')" prop="question4">
-              <el-select v-model="examModeForm.question4"
-                         :disabled="examRuleForm.strategy === 'FIXED'">
-                <el-option v-for="item in examQuestionOptions" :key="item.value"
-                           :label="item.label" :value="item.value"/>
+              <el-select v-model="examModeForm.question4" :disabled="!isFixedStrategy">
+                <el-option v-for="item in examQuestionOptions" :key="item.id"
+                           :label="item.code" :value="item.id"/>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item :label="$t('问题五')" prop="question5">
-              <el-select v-model="examModeForm.question5"
-                         :disabled="examRuleForm.strategy === 'FIXED'">
-                <el-option v-for="item in examQuestionOptions" :key="item.value"
-                           :label="item.label" :value="item.value"/>
+              <el-select v-model="examModeForm.question5" :disabled="!isFixedStrategy">
+                <el-option v-for="item in examQuestionOptions" :key="item.id"
+                           :label="item.code" :value="item.id"/>
               </el-select>
             </el-form-item>
           </el-col>
@@ -236,10 +236,10 @@
 
 <script>
 import {DICT_CODES, searchDict} from '@/api/dict';
-import {deleteExamMode, findExamMode} from '@/api/examMode';
+import {createExamMode, deleteExamMode, editExamMode, findExamMode} from '@/api/examMode';
 import {searchExamQuestion} from '@/api/examQuestion';
 import {createExamRule, deleteExamRule, editExamRule, findExamRule, pageExamRule} from '@/api/examRule';
-import {clearTemplate} from '@/api/rest';
+import {clearTemplate, findOptionUrl} from '@/api/rest';
 import Pagination from '@/components/Pagination';
 import elDragDialog from '@/directive/el-drag-dialog';
 import {PERMISSION_MARK} from '@/utils/permission';
@@ -260,8 +260,8 @@ export default {
         {label: '150 分钟', value: 150 * 60},
         {label: '180 分钟', value: 180 * 60},
       ],
-      examStrategyOptions: [],
-      examTypeOptions: [],
+      examModeStrategyOptions: [],
+      examQuestionTypeOptions: [],
       examQuestionOptions: [],
       examRuleParams: {
         page: 0,
@@ -279,12 +279,14 @@ export default {
       examModeVisible: false,
       examRuleFormEditable: false,
       examRuleFormCreate: true,
+      examModeFormCreate: true,
       examRuleForm: {
         id: null,
+        title: '',
         duration: 60 * 60,
         totalScore: 100,
-        passLine: 0.6,
-        passScore: 100 * 0.6,
+        passLine: 60,
+        passScore: 60,
         strategy: 'RANDOM',
       },
       examModeForm: {
@@ -293,34 +295,55 @@ export default {
         type: '',
         score: 0,
         amount: 0,
-        question1: '',
-        question2: '',
-        question3: '',
-        question4: '',
-        question5: '',
+        question1Id: '',
+        question2Id: '',
+        question3Id: '',
+        question4Id: '',
+        question5Id: '',
       },
       examRuleRules: {
-        title: [{require: true, message: '请输入标题', trigger: 'blur'}],
-        duration: [{require: true, message: '请选择时长', trigger: 'blur'}],
-        totalScore: [{require: true, message: '请输入总分数', trigger: 'blur'}],
-        passLine: [{require: true, message: '请输入合格线', trigger: 'blur'}],
-        passScore: [{require: true, message: '请输入合格分数', trigger: 'blur'}],
-        strategy: [{require: true, message: '请选择策略', trigger: 'blur'}],
+        title: [{required: true, message: '请输入标题', trigger: 'blur'}],
+        duration: [{required: true, message: '请选择时长', trigger: 'blur'}],
+        strategy: [{required: true, message: '请选择策略', trigger: 'blur'}],
       },
       examModeRules: {
-        ordered: [{require: true, message: '请输入排序', trigger: 'blur'}],
-        type: [{require: true, message: '请选择题型', trigger: 'blur'}],
-        score: [{require: true, message: '请输入分值', trigger: 'blur'}],
-        amount: [{require: true, message: '请输入题量', trigger: 'blur'}],
+        ordered: [{required: true, message: '请输入排序', trigger: 'blur'}],
+        type: [{required: true, message: '请选择题型', trigger: 'blur'}],
+        score: [{required: true, message: '请输入分值', trigger: 'blur'}],
+        amount: [{required: true, message: '请输入题量', trigger: 'blur'}],
       },
     };
   },
+  computed: {
+    isFixedStrategy: function () {
+      return ['FIXED'].includes(this.examRuleForm.strategy);
+    },
+    isOverTotalScore: function () {
+      const sumScore = this.examModeList.reduce((sum, node) => {
+        sum = sum + node.score;
+        return sum;
+      }, 0);
+      return sumScore > this.examRuleForm.totalScore;
+    }
+  },
   created() {
+    this.findExamModeStrategyDict();
+    this.findExamQuestionTypeDict();
     this.findExamRuleList();
-    this.findExamStrategyDict();
   },
   methods: {
-    clearTemplate,
+    findExamModeStrategyDict() {
+      const params = {code: DICT_CODES.examModeStrategy, projection: 'dict-item-option'};
+      searchDict('code', params).then(response => {
+        this.examModeStrategyOptions = response._embedded.items;
+      });
+    },
+    findExamQuestionTypeDict() {
+      const params = {code: DICT_CODES.examQuestionType, projection: 'dict-item-option'};
+      searchDict('code', params).then(response => {
+        this.examQuestionTypeOptions = response._embedded.items;
+      });
+    },
     findExamRuleList() {
       this.examRuleLoading = true;
       // 如果需要搜索，才替换为 searchExamRule 并提供搜索路径
@@ -330,20 +353,11 @@ export default {
         this.examRuleLoading = false;
       });
     },
-    findExamStrategyDict() {
-      const params = {code: DICT_CODES.examStrategy, projection: 'dict-item-option'};
-      searchDict('code', params).then(response => {
-        this.examStrategyOptions = response._embedded.items;
-      });
-    },
-    findExamTypeDict() {
-      const params = {code: DICT_CODES.examType, projection: 'dict-item-option'};
-      searchDict('code', params).then(response => {
-        this.examTypeOptions = response._embedded.items;
-      });
-    },
     findExamQuestionOptions() {
-      const params = {type: this.examModeForm.type, projection: 'exam-question-option'};
+      if (this.examQuestionOptions && this.examQuestionOptions.length) {
+        return;
+      }
+      const params = {type: this.examModeForm.type, projection: 'exam-question-form'};
       searchExamQuestion('list', params).then(response => {
         this.examQuestionOptions = response._embedded.examQuestions;
       });
@@ -352,80 +366,22 @@ export default {
       this.examRuleParams.page = 0;
       this.findExamRuleList();
     },
+    displayDuration(duration) {
+      return this.durationOptions.find(it => it.value === duration).label || '';
+    },
     resetExamRuleForm() {
       if (this.$refs.examRuleForm) {
         this.$refs.examRuleForm.resetFields();
       }
       this.examRuleForm = {
         id: null,
+        title: '',
         duration: 60 * 60,
         totalScore: 100,
-        passLine: 0.6,
-        passScore: 100 * 0.6,
+        passLine: 60,
+        passScore: 60,
         strategy: 'RANDOM',
       };
-    },
-    onExamRuleCreate() {
-      this.resetExamRuleForm();
-      this.examRuleFormEditable = true;
-      this.examRuleFormCreate = true;
-      this.examRuleTitle = '创建考试规则';
-      this.examRuleVisible = true;
-    },
-    fillExamRuleForm(form) {
-      this.examRuleForm = form;
-    },
-    onExamRuleEdit({row}, readonly = false) {
-      this.resetExamRuleForm();
-      this.examRuleFormEditable = true;
-      this.examRuleFormCreate = false;
-      findExamRule(row.id, 'exam-rule-form').then(response => {
-        this.fillExamRuleForm(response);
-        this.examRuleTitle = '编辑考试规则';
-        this.examRuleVisible = true;
-      });
-    },
-    onExamRuleDelete({row}) {
-      if (row && row.id) {
-        deleteExamRule(row.id).then(() => {
-          this.$message.success(`考试规则 [${row.id}] 删除成功！`);
-          this.findExamRuleList();
-        });
-      }
-    },
-    onExamRuleClose() {
-      // do something
-    },
-    onPassLineChange(value) {
-      this.examRuleForm.passScore = value * this.examRuleForm.totalScore;
-    },
-    onPassScoreChange(value) {
-      this.examRuleForm.passLine = this.examRuleForm.totalScore / value;
-    },
-    onExamRuleSubmit() {
-      this.$refs.examRuleForm.validate(valid => {
-        if (valid) {
-          const data = {
-            duration: this.examRuleForm.duration,
-            totalScore: this.examRuleForm.totalScore,
-            passLine: this.examRuleForm.passLine,
-            passScore: this.examRuleForm.passScore
-          };
-          if (this.examRuleForm.id) {
-            editExamRule(this.examRuleForm.id, data).then(() => {
-              this.$message.success(`考试规则[${this.examRuleForm.id}]更新成功！`);
-              this.examRuleVisible = false;
-              this.findExamRuleList();
-            });
-          } else {
-            createExamRule(data).then(() => {
-              this.$message.success(`考试规则创建成功！`);
-              this.examRuleVisible = false;
-              this.findExamRuleList();
-            });
-          }
-        }
-      });
     },
     resetExamModeForm() {
       if (this.$refs.examModeForm) {
@@ -437,19 +393,35 @@ export default {
         type: '',
         score: 0,
         amount: 0,
-        question1: '',
-        question2: '',
-        question3: '',
-        question4: '',
-        question5: '',
+        question1Id: '',
+        question2Id: '',
+        question3Id: '',
+        question4Id: '',
+        question5Id: '',
       };
+      if (this.examModeList && this.examModeList.length) {
+        this.examModeForm.ordered = this.examModeList.reduce((max, node) => {
+          return node.ordered > max ? node.ordered : max;
+        }, 0) + 1;
+      }
+    },
+    onExamRuleCreate() {
+      this.resetExamRuleForm();
+      this.examRuleFormCreate = true;
+      this.examRuleFormEditable = true;
+      this.examRuleTitle = '创建规则';
+      this.examRuleVisible = true;
     },
     onExamModeCreate() {
-      this.resetExamModeForm();
-      this.findExamTypeDict();
       this.findExamQuestionOptions();
-      this.examModeTitle = '创建考试模式';
+      this.resetExamModeForm();
+      this.examModeFormCreate = true;
+      this.examModeTitle = '创建模式';
       this.examModeVisible = true;
+    },
+    fillExamRuleForm(form) {
+      this.examRuleForm = form;
+      this.examModeList = form.modes;
     },
     fillExamModeForm(form) {
       this.examModeForm = form;
@@ -457,13 +429,38 @@ export default {
         this.findExamQuestionOptions();
       }
     },
+    onExamRuleEdit({row}, readonly = false) {
+      this.resetExamRuleForm();
+      this.examRuleFormCreate = false;
+      this.examRuleFormEditable = !readonly;
+      findExamRule(row.id, 'exam-rule-form').then(response => {
+        this.fillExamRuleForm(response);
+        this.examRuleTitle = readonly ? '查看规则' : '编辑规则';
+        this.examRuleVisible = true;
+      });
+    },
+    onPassLineChange(value) {
+      this.examRuleForm.passScore = (value / 100).toFixed(2) * this.examRuleForm.totalScore;
+    },
+    onPassScoreChange(value) {
+      this.examRuleForm.passLine = (value / this.examRuleForm.totalScore) * 100;
+    },
     onExamModeEdit({row}) {
       this.resetExamModeForm();
+      this.examModeFormCreate = false;
       findExamMode(row.id, 'exam-mode-form').then(response => {
         this.fillExamModeForm(response);
-        this.examModeTitle = '编辑考试模式';
+        this.examModeTitle = '编辑模式';
         this.examModeVisible = true;
       });
+    },
+    onExamRuleDelete({row}) {
+      if (row && row.id) {
+        deleteExamRule(row.id).then(() => {
+          this.$message.success(`规则 [${row.id}] 删除成功！`);
+          this.findExamRuleList();
+        });
+      }
     },
     reloadExamRuleForm() {
       if (this.examRuleForm.id) {
@@ -475,23 +472,79 @@ export default {
     onExamModeDelete({row}) {
       if (row && row.id) {
         deleteExamMode(row.id).then(() => {
-          this.$message.success(`考试模式 [${row.id}] 删除成功！`);
+          this.$message.success(`模式 [${row.id}] 删除成功！`);
           this.reloadExamRuleForm();
         });
       }
     },
+    onExamRuleClose() {
+      // do something
+    },
     onExamModeClose() {
       // do something
     },
+    onExamRuleSubmit() {
+      this.$refs.examRuleForm.validate(valid => {
+        if (valid) {
+          const data = {
+            title: this.examRuleForm.title,
+            duration: this.examRuleForm.duration,
+            totalScore: this.examRuleForm.totalScore,
+            passLine: this.examRuleForm.passLine,
+            passScore: this.examRuleForm.passScore,
+            strategy: this.examRuleForm.strategy
+          };
+          if (this.examRuleForm.id) {
+            editExamRule(this.examRuleForm.id, data).then(() => {
+              this.$message.success(`规则 [${data.title}] 更新成功！`);
+              this.examRuleVisible = false;
+              this.findExamRuleList();
+            });
+          } else {
+            createExamRule(data).then(() => {
+              this.$message.success(`规则 [${data.title}] 创建成功！`);
+              this.examRuleVisible = false;
+              this.findExamRuleList();
+            });
+          }
+        }
+      });
+    },
     onExamModeSubmit() {
-      // do something
+      this.$refs.examModeForm.validate(valid => {
+        if (valid) {
+          const data = {
+            rule: clearTemplate(this.examRuleForm._links.self.href),
+            ordered: this.examModeForm.ordered,
+            type: this.examModeForm.type,
+            score: this.examModeForm.score,
+            amount: this.examModeForm.amount,
+            question1: findOptionUrl(this.examQuestionOptions, this.examModeForm.question1Id),
+            question2: findOptionUrl(this.examQuestionOptions, this.examModeForm.question2Id),
+            question3: findOptionUrl(this.examQuestionOptions, this.examModeForm.question3Id),
+            question4: findOptionUrl(this.examQuestionOptions, this.examModeForm.question4Id),
+            question5: findOptionUrl(this.examQuestionOptions, this.examModeForm.question5Id),
+          };
+          if (this.examModeForm.id) {
+            editExamMode(this.examModeForm.id, data).then(() => {
+              this.$message.success(`模式 [${this.examModeForm.id}] 更新成功！`);
+              this.examModeVisible = false;
+              this.reloadExamRuleForm();
+            });
+          } else {
+            createExamMode(data).then(() => {
+              this.$message.success(`模式创建成功！`);
+              this.examModeVisible = false;
+              this.reloadExamRuleForm();
+            });
+          }
+        }
+      });
     },
   }
 };
 </script>
 
 <style scoped>
-.el-rate {
-  line-height: 2;
-}
+
 </style>

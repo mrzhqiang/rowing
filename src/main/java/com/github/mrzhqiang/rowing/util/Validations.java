@@ -3,14 +3,18 @@ package com.github.mrzhqiang.rowing.util;
 import com.github.mrzhqiang.helper.Exceptions;
 import com.github.mrzhqiang.rowing.init.InitializationException;
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableList;
 import okhttp3.HttpUrl;
+import org.hibernate.exception.DataException;
+import org.hibernate.exception.GenericJDBCException;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
-import java.util.Optional;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -20,6 +24,14 @@ public final class Validations {
     private Validations() {
         // no instances.
     }
+
+    private static final List<Class<?>> IGNORE_EXCEPTION_LIST = ImmutableList.of(
+            InitializationException.class,
+            DataIntegrityViolationException.class,
+            DataException.class,
+            GenericJDBCException.class,
+            JpaSystemException.class
+    );
 
     /**
      * 有效的 URL 地址。
@@ -40,10 +52,6 @@ public final class Validations {
      * @return 异常消息。
      */
     public static String findMessage(Exception e) {
-        if (e instanceof InitializationException
-                || e instanceof DataIntegrityViolationException) {
-            e = (Exception) Optional.ofNullable(e.getCause()).orElse(e);
-        }
         if (e instanceof ConstraintViolationException) {
             Set<ConstraintViolation<?>> violationSet = ((ConstraintViolationException) e).getConstraintViolations();
             if (!ObjectUtils.isEmpty(violationSet)) {
@@ -53,7 +61,20 @@ public final class Validations {
                         .orElse(Exceptions.ofMessage(e));
             }
         }
+        if (e != null) {
+            e = findRealCause(e);
+        }
         return Exceptions.ofMessage(e);
+    }
+
+    private static Exception findRealCause(Throwable e) {
+        if (e == null) {
+            return null;
+        }
+        if (IGNORE_EXCEPTION_LIST.contains(e.getClass())) {
+            e = findRealCause(e.getCause());
+        }
+        return (Exception) e;
     }
 
     private static String formatMessage(ConstraintViolation<?> violation) {

@@ -13,8 +13,7 @@ export const DICT_CODES = {
   accountType: 'ACCOUNT_TYPE',
   gender: 'GENDER',
   examSubject: 'EXAM_SUBJECT',
-  examType: 'EXAM_TYPE',
-  examStrategy: 'EXAM_STRATEGY',
+  examModeStrategy: 'EXAM_MODE_STRATEGY',
   examQuestionType: 'EXAM_QUESTION_TYPE',
 };
 

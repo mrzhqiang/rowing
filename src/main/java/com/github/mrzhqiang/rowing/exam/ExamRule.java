@@ -7,19 +7,20 @@ import com.google.common.collect.Lists;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.boot.convert.DurationUnit;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.Duration;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 /**
@@ -42,28 +43,35 @@ public class ExamRule extends AuditableEntity {
     @Column(nullable = false, length = 100)
     private String title;
     /**
-     * 持续时间。
+     * 持续时间(秒)。
      */
     @NotNull
-    @DurationUnit(ChronoUnit.SECONDS)
+    @Min(15 * 60)
+    @Max(180 * 60)
     @Column(nullable = false)
-    private Duration duration = Duration.ofSeconds(3600);
+    private Long duration = Duration.ofHours(1).getSeconds();
     /**
      * 总分数。
      */
     @NotNull
+    @Min(1)
+    @Digits(integer = 3, fraction = 0)
     @Column(nullable = false, precision = 3)
     private Integer totalScore = 100;
     /**
      * 合格线。
      */
     @NotNull
+    @Min(1)
+    @Digits(integer = 1, fraction = 2)
     @Column(nullable = false, precision = 3, scale = 2)
     private BigDecimal passLine = BigDecimal.valueOf(0.60);
     /**
      * 合格分数。
      */
     @NotNull
+    @Min(1)
+    @Digits(integer = 3, fraction = 0)
     @Column(nullable = false, precision = 3)
     private Integer passScore = 60;
     /**

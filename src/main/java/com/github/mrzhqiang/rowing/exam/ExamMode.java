@@ -54,7 +54,7 @@ public class ExamMode extends AuditableEntity {
      * 分值。
      */
     @NotNull
-    @Column(precision = 3, scale = 2, nullable = false)
+    @Column(precision = 5, scale = 2, nullable = false)
     private BigDecimal score;
     /**
      * 题量。

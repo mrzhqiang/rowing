@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.github.mrzhqiang.helper.time.DateTimes;
-import com.github.mrzhqiang.rowing.account.AccountRepository;
 import com.github.mrzhqiang.rowing.convert.StringToLocalDateTimeConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,7 +21,7 @@ import java.time.LocalDateTime;
 public class RestConfiguration {
 
     @Bean
-    public RepositoryRestConfigurer customRepositoryRestConfigurer(AccountRepository accountRepository) {
+    public RepositoryRestConfigurer customRepositoryRestConfigurer() {
         return new RepositoryRestConfigurer() {
             @Override
             public void configureJacksonObjectMapper(ObjectMapper objectMapper) {
@@ -36,7 +35,7 @@ public class RestConfiguration {
             public void configureConversionService(ConfigurableConversionService conversionService) {
                 // StringToExampleConverter 行不通，仅注释而不删除，是为了警惕不要再犯类似错误
                 //conversionService.addConverter(new StringToExampleConverter());
-                conversionService.addConverter(new StringToLocalDateTimeConverter());
+                conversionService.addConverter(StringToLocalDateTimeConverter.INSTANCE);
             }
         };
     }
