@@ -30,7 +30,8 @@ public final class Validations {
             DataIntegrityViolationException.class,
             DataException.class,
             GenericJDBCException.class,
-            JpaSystemException.class
+            JpaSystemException.class,
+            ConstraintViolationException.class
     );
 
     /**

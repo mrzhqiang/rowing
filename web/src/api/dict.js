@@ -158,12 +158,10 @@ export function searchDictISO3166(path, params) {
 }
 
 export function findDictItemUri(options, value) {
-  if (options && options.length > 0) {
-    for (const option of options) {
-      if (option.value === value) {
-        return clearTemplate(option._links.self.href);
-      }
-    }
+  if (!options || !options.length || !value) {
+    return null;
   }
-  return '';
+
+  const find = options.find(it => it.value === value);
+  return find ? clearTemplate(find._links.self.href) : null;
 }

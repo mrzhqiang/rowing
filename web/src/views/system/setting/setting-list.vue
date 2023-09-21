@@ -35,7 +35,7 @@
         <template v-slot="scope">
           <el-button v-permission="settingPermission.edit"
                      size="mini" icon="el-icon-edit" type="text"
-                     @click="onSettingEdit(scope, false)">{{ $t('编辑') }}
+                     @click="onSettingEdit(scope)">{{ $t('编辑') }}
           </el-button>
           <el-popconfirm style="margin-left: 10px" :title="$t('确定删除吗？')"
                          @onConfirm="onSettingDelete(scope)">
@@ -172,7 +172,6 @@ export default {
       this.settingFormEditable = !readonly;
       findSetting(row.id, 'setting-form').then(response => {
         this.fillSettingForm(response);
-        this.settingForm.id = row.id;
         this.settingTitle = readonly ? this.$t('查看设置') : this.$t('编辑设置');
         this.settingVisible = true;
       });

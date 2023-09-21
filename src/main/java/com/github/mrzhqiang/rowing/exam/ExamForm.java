@@ -1,11 +1,12 @@
 package com.github.mrzhqiang.rowing.exam;
 
-import com.github.mrzhqiang.rowing.dict.DictItem;
+import com.github.mrzhqiang.rowing.account.AccountTransfer;
 import com.github.mrzhqiang.rowing.domain.BaseProjection;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.rest.core.config.Projection;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 考试表单。
@@ -18,7 +19,8 @@ public interface ExamForm extends BaseProjection {
 
     String getCode();
 
-    DictItem getSubject();
+    @Value("#{target.subject.value}")
+    String getSubjectValue();
 
     Integer getDifficulty();
 
@@ -33,10 +35,8 @@ public interface ExamForm extends BaseProjection {
 
     String getDescription();
 
-    Long getTakerCount();
+    List<AccountTransfer> getTakers();
 
-    Long getMarkerCount();
-
-    ExamReport getReport();
+    List<AccountTransfer> getMarkers();
 
 }

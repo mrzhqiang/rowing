@@ -55,7 +55,7 @@
           </el-button>-->
           <el-button v-permission="dictPermission.edit"
                      size="mini" icon="el-icon-edit" type="text"
-                     @click="onDictEdit(scope, false)">{{ $t('编辑') }}
+                     @click="onDictEdit(scope)">{{ $t('编辑') }}
           </el-button>
           <el-popconfirm style="margin-left: 10px" :title="$t('确定删除吗？')"
                          @onConfirm="onDictDelete(scope)">
@@ -218,7 +218,6 @@ export default {
       this.dictFormEditable = !readonly;
       findDictISO3166(row.id, 'dict-iso-3166-form').then(response => {
         this.fillDictForm(response);
-        this.dictForm.id = row.id;
         this.dictTitle = readonly ? this.$t('查看国家地区代码') : this.$t('编辑国家地区代码');
         this.dictVisible = true;
       });

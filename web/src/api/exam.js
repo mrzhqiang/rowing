@@ -1,4 +1,5 @@
 import rest from '@/api/rest';
+import request from '@/utils/request';
 
 /**
  * 考试接口名称。
@@ -32,4 +33,12 @@ export function deleteExam(id) {
 
 export function searchExam(path, params) {
   return rest.search(EXAM_API_NAME, path, params);
+}
+
+export function updateExamTakers(id, data) {
+  return request.put(`/exam/${id}/takers`, data);
+}
+
+export function updateExamMarkers(id, data) {
+  return request.put(`/exam/${id}/markers`, data);
 }

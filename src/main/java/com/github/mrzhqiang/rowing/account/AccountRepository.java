@@ -11,6 +11,7 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 import org.springframework.security.access.prepost.PreAuthorize;
 
+import java.util.List;
 import java.util.Optional;
 
 @PreAuthorize(HAS_AUTHORITY_ADMIN)
@@ -39,6 +40,9 @@ public interface AccountRepository extends BaseRepository<Account> {
 
     @RestResource(path = "page", rel = "page")
     Page<Account> findAllByUsernameContaining(String username, Pageable pageable);
+
+    @RestResource(path = "list", rel = "list")
+    List<Account> findAllByUsernameNotNull();
 
     @RestResource(path = "count-exam-taker")
     @Query("select count(a) from Account a join a.takeExams e where e = :exam")

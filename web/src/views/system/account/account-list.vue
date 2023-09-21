@@ -47,7 +47,7 @@
         <template v-slot="scope">
           <el-button v-permission="accountPermission.edit"
                      size="mini" icon="el-icon-edit" type="text"
-                     @click="onAccountEdit(scope, false)">{{ $t('编辑') }}
+                     @click="onAccountEdit(scope)">{{ $t('编辑') }}
           </el-button>
           <el-popconfirm style="margin-left: 10px" :title="$t('确定删除吗？')"
                          @onConfirm="onAccountDelete(scope)">
@@ -81,7 +81,7 @@
           <el-col :span="8">
             <el-form-item :label="$t('类型')" prop="type">
               <el-select v-model="accountForm.type">
-                <el-option v-for="item in accountTypeOptions"
+                <el-option v-for="item in accountTypeDictItems"
                            :key="item.value" :label="item.label" :value="item.value"/>
               </el-select>
             </el-form-item>
@@ -126,7 +126,7 @@
           <el-col :span="8">
             <el-form-item :label="$t('性别')" prop="user.gender">
               <el-select v-model="accountForm.user.gender">
-                <el-option v-for="item in genderOptions"
+                <el-option v-for="item in genderDictItems"
                            :key="item.value" :label="item.label" :value="item.value"/>
               </el-select>
             </el-form-item>
@@ -205,8 +205,8 @@ export default {
       },
       accountFormEditable: false,
       accountFormCreate: false,
-      accountTypeOptions: [],
-      genderOptions: [],
+      accountTypeDictItems: [],
+      genderDictItems: [],
     };
   },
   created() {
@@ -217,12 +217,12 @@ export default {
   methods: {
     findAccountType() {
       searchDict('code', {code: DICT_CODES.accountType}).then(response => {
-        this.accountTypeOptions = response._embedded.items;
+        this.accountTypeDictItems = response._embedded.items;
       });
     },
     findGender() {
       searchDict('code', {code: DICT_CODES.gender}).then(response => {
-        this.genderOptions = response._embedded.items;
+        this.genderDictItems = response._embedded.items;
       });
     },
     findAccountList() {
@@ -281,7 +281,6 @@ export default {
       this.accountFormCreate = false;
       findAccount(row.id, 'account-form').then(response => {
         this.fillAccountForm(response);
-        this.accountForm.id = row.id;
         this.accountTitle = readonly ? '查看账户' : '编辑账户';
         this.accountVisible = true;
       });

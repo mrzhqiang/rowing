@@ -46,7 +46,7 @@
         <template v-slot="scope">
           <el-button v-permission="rolePermission.edit"
                      size="mini" icon="el-icon-edit" type="text"
-                     @click="onRoleEdit(scope, false)">{{ $t('编辑') }}
+                     @click="onRoleEdit(scope)">{{ $t('编辑') }}
           </el-button>
           <el-popconfirm style="margin-left: 10px" :title="$t('确定删除吗？')"
                          @onConfirm="onRoleDelete(scope)">
@@ -288,7 +288,6 @@ export default {
       this.roleFormCreate = false;
       findRole(row.id, 'role-form').then(response => {
         this.fillRoleForm(response);
-        this.roleForm.id = row.id;
         this.roleTitle = readonly ? this.$t('查看角色') : this.$t('编辑角色');
         this.roleVisible = true;
       });

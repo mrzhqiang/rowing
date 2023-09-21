@@ -53,7 +53,7 @@
           </el-button>-->
           <el-button v-permission="dictPermission.edit"
                      size="mini" icon="el-icon-edit" type="text"
-                     @click="onDictEdit(scope, false)">{{ $t('编辑') }}
+                     @click="onDictEdit(scope)">{{ $t('编辑') }}
           </el-button>
           <el-popconfirm style="margin-left: 10px" :title="$t('确定删除吗？')"
                          @onConfirm="onDictDelete(scope)">
@@ -206,7 +206,6 @@ export default {
       this.dictFormEditable = !readonly;
       findDictISO639(row.id, 'dict-iso-639-form').then(response => {
         this.fillDictForm(response);
-        this.dictForm.id = row.id;
         this.dictTitle = readonly ? this.$t('查看语言代码') : this.$t('编辑语言代码');
         this.dictVisible = true;
       });

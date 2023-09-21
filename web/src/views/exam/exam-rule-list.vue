@@ -44,7 +44,7 @@
         <template v-slot="scope">
           <el-button v-permission="examRulePermission.edit"
                      size="mini" icon="el-icon-edit" type="text"
-                     @click="onExamRuleEdit(scope, false)">{{ $t('编辑') }}
+                     @click="onExamRuleEdit(scope)">{{ $t('编辑') }}
           </el-button>
           <el-popconfirm style="margin-left: 10px" :title="$t('确定删除吗？')"
                          @onConfirm="onExamRuleDelete(scope)">
@@ -98,7 +98,7 @@
           <el-col :span="8">
             <el-form-item :label="$t('策略')" prop="strategy">
               <el-select v-model="examRuleForm.strategy">
-                <el-option v-for="item in examModeStrategyOptions" :key="item.value"
+                <el-option v-for="item in examModeStrategyDictItems" :key="item.value"
                            :label="item.label" :value="item.value"/>
               </el-select>
             </el-form-item>
@@ -164,7 +164,7 @@
           <el-col :span="8">
             <el-form-item :label="$t('题型')" prop="type">
               <el-select v-model="examModeForm.type">
-                <el-option v-for="item in examQuestionTypeOptions" :key="item.value"
+                <el-option v-for="item in examQuestionTypeDictItems" :key="item.value"
                            :label="item.label" :value="item.value"/>
               </el-select>
             </el-form-item>
@@ -260,8 +260,8 @@ export default {
         {label: '150 分钟', value: 150 * 60},
         {label: '180 分钟', value: 180 * 60},
       ],
-      examModeStrategyOptions: [],
-      examQuestionTypeOptions: [],
+      examModeStrategyDictItems: [],
+      examQuestionTypeDictItems: [],
       examQuestionOptions: [],
       examRuleParams: {
         page: 0,
@@ -335,13 +335,13 @@ export default {
     findExamModeStrategyDict() {
       const params = {code: DICT_CODES.examModeStrategy, projection: 'dict-item-option'};
       searchDict('code', params).then(response => {
-        this.examModeStrategyOptions = response._embedded.items;
+        this.examModeStrategyDictItems = response._embedded.items;
       });
     },
     findExamQuestionTypeDict() {
       const params = {code: DICT_CODES.examQuestionType, projection: 'dict-item-option'};
       searchDict('code', params).then(response => {
-        this.examQuestionTypeOptions = response._embedded.items;
+        this.examQuestionTypeDictItems = response._embedded.items;
       });
     },
     findExamRuleList() {

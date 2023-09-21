@@ -6,7 +6,7 @@
       </el-form-item>
       <el-form-item :label="$t('科目')" prop="subjects">
         <el-select v-model="examQuestionBankParams.subjects" multiple>
-          <el-option v-for="item in subjectOptions" :key="item.value" :label="item.label" :value="item.value"/>
+          <el-option v-for="item in subjectDictItems" :key="item.value" :label="item.label" :value="item.value"/>
         </el-select>
       </el-form-item>
       <el-form-item>
@@ -44,7 +44,7 @@
         <template v-slot="scope">
           <el-button v-permission="examQuestionBankPermission.edit"
                      size="mini" icon="el-icon-edit" type="text"
-                     @click="onExamQuestionBankEdit(scope, false)">{{ $t('编辑') }}
+                     @click="onExamQuestionBankEdit(scope)">{{ $t('编辑') }}
           </el-button>
           <el-popconfirm style="margin-left: 10px" :title="$t('确定删除吗？')"
                          @onConfirm="onExamQuestionBankDelete(scope)">
@@ -72,7 +72,7 @@
           <el-col :span="10">
             <el-form-item :label="$t('科目')" prop="subjectValue">
               <el-select v-model="examQuestionBankForm.subjectValue">
-                <el-option v-for="item in subjectOptions" :key="item.value" :label="item.label" :value="item.value"/>
+                <el-option v-for="item in subjectDictItems" :key="item.value" :label="item.label" :value="item.value"/>
               </el-select>
             </el-form-item>
           </el-col>
@@ -92,7 +92,7 @@
         <el-table-column prop="type" :label="$t('题型')" min-width="40" :align="'center'"/>
         <el-table-column prop="difficulty" :label="$t('难度')" min-width="80" :align="'center'">
           <template v-slot="scope">
-            <el-rate v-model="scope.row.difficulty" :texts="difficultyTexts" class="el-rate-mini" show-text/>
+            <el-rate v-model="scope.row.difficulty" :texts="difficultyTexts" class="el-rate-mini" show-text disabled/>
           </template>
         </el-table-column>
         <el-table-column prop="stem" :label="$t('题干')" min-width="200" show-overflow-tooltip/>
@@ -163,7 +163,7 @@ export default {
         title: [{required: true, message: '标题不能为空', trigger: 'blur'}],
         subjectValue: [{required: true, message: '科目不能为空', trigger: 'blur'}],
       },
-      subjectOptions: [],
+      subjectDictItems: [],
     };
   },
   created() {
@@ -174,7 +174,7 @@ export default {
     findExamQuestionBankSubjectDict() {
       const params = {code: DICT_CODES.examSubject, projection: 'dict-item-option'};
       searchDict('code', params).then(response => {
-        this.subjectOptions = response._embedded.items;
+        this.subjectDictItems = response._embedded.items;
       });
     },
     async findExamQuestionBankList() {
@@ -184,12 +184,12 @@ export default {
       // 科目参数为空，自动补全所有科目作为请求参数
       if (!params.subjects || !params.subjects.length) {
         // 可能是第一次进入页面，科目的选项还没有加载到位，这里自己去加载一次
-        if (!this.subjectOptions || !this.subjectOptions.length) {
+        if (!this.subjectDictItems || !this.subjectDictItems.length) {
           const dictParams = {code: DICT_CODES.examSubject, projection: 'dict-item-option'};
           const response = await searchDict('code', dictParams);
           params.subjects = response._embedded.items.map(it => it.value);
         } else {
-          params.subjects = this.subjectOptions.map(it => it.value);
+          params.subjects = this.subjectDictItems.map(it => it.value);
         }
       }
       searchExamQuestionBank('page', params).then(response => {
@@ -262,7 +262,7 @@ export default {
         if (valid) {
           const data = {
             title: this.examQuestionBankForm.title,
-            subject: findDictItemUri(this.subjectOptions, this.examQuestionBankForm.subjectValue),
+            subject: findDictItemUri(this.subjectDictItems, this.examQuestionBankForm.subjectValue),
             description: this.examQuestionBankForm.description,
           };
           if (this.examQuestionBankForm.id) {

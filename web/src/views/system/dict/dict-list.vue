@@ -42,7 +42,7 @@
         <template v-slot="scope">
           <el-button v-permission="dictPermission.edit"
                      size="mini" icon="el-icon-edit" type="text"
-                     @click="onDictEdit(scope, false)">{{ $t('编辑') }}
+                     @click="onDictEdit(scope)">{{ $t('编辑') }}
           </el-button>
           <el-popconfirm style="margin-left: 10px" :title="$t('确定删除吗？')"
                          @onConfirm="onDictDelete(scope)">
@@ -104,7 +104,7 @@
           <template v-slot="scope">
             <el-button v-permission="dictPermission.edit"
                        size="mini" icon="el-icon-edit" type="text"
-                       @click="onDictItemEdit(scope, false)">{{ $t('编辑') }}
+                       @click="onDictItemEdit(scope)">{{ $t('编辑') }}
             </el-button>
             <el-popconfirm style="margin-left: 10px" :title="$t('确定删除吗？')"
                            @onConfirm="onDictItemDelete(scope)">
@@ -289,7 +289,6 @@ export default {
       this.dictFormCreate = false;
       findDict(row.id, 'dict-form').then(response => {
         this.fillDictForm(response);
-        this.dictForm.id = row.id;
         this.dictTitle = readonly ? this.$t('查看字典组') : this.$t('编辑字典组');
         this.dictVisible = true;
       });
@@ -299,7 +298,6 @@ export default {
       this.dictItemFormEditable = !readonly;
       findDictItem(row.id, 'dict-item-form').then(response => {
         this.fillDictItemForm(response);
-        this.dictItemForm.id = row.id;
         this.dictItemTitle = readonly ? this.$t('查看字典项') : this.$t('编辑字典项');
         this.dictItemVisible = true;
       });

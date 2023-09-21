@@ -6,7 +6,7 @@
       </el-form-item>
       <el-form-item :label="$t('题型')" prop="type">
         <el-select v-model="examQuestionParams.types" multiple collapse-tags>
-          <el-option v-for="item in examQuestionTypeOptions" :key="item.value"
+          <el-option v-for="item in examQuestionTypeDictItems" :key="item.value"
                      :label="item.label" :value="item.value"/>
         </el-select>
       </el-form-item>
@@ -36,7 +36,7 @@
       <el-table-column prop="type" :label="$t('题型')" min-width="40" :align="'center'"/>
       <el-table-column prop="difficulty" :label="$t('难度')" min-width="80" :align="'center'">
         <template v-slot="scope">
-          <el-rate v-model="scope.row.difficulty" :texts="difficultyTexts" class="el-rate-mini" show-text/>
+          <el-rate v-model="scope.row.difficulty" :texts="difficultyTexts" class="el-rate-mini" show-text disabled/>
         </template>
       </el-table-column>
       <el-table-column prop="stem" :label="$t('题干')" min-width="200" show-overflow-tooltip/>
@@ -101,7 +101,7 @@
           <el-col :span="10">
             <el-form-item :label="$t('题型')" prop="type">
               <el-select v-model="examQuestionForm.type">
-                <el-option v-for="item in examQuestionTypeOptions" :key="item.value"
+                <el-option v-for="item in examQuestionTypeDictItems" :key="item.value"
                            :label="item.label" :value="item.value"/>
               </el-select>
             </el-form-item>
@@ -334,7 +334,7 @@ export default {
         label: [{required: true, message: '标签不能为空', trigger: 'blur'}],
         content: [{required: true, message: '内容不能为空', trigger: 'blur'}],
       },
-      examQuestionTypeOptions: [],
+      examQuestionTypeDictItems: [],
       examQuestionBankOptions: [],
       examQuestionOptionOptions: [],
       examQuestionOptionLabelOptions: [
@@ -364,7 +364,7 @@ export default {
     findExamQuestionTypeDict() {
       const params = {code: DICT_CODES.examQuestionType, projection: 'dict-item-option'};
       searchDict('code', params).then(response => {
-        this.examQuestionTypeOptions = response._embedded.items;
+        this.examQuestionTypeDictItems = response._embedded.items;
       });
     },
     findExamQuestionBankOptions() {
@@ -377,12 +377,12 @@ export default {
       this.examQuestionLoading = true;
       const params = deepClone(this.examQuestionParams);
       if (!params.types || !params.types.length) {
-        if (!this.examQuestionTypeOptions || !this.examQuestionTypeOptions.length) {
+        if (!this.examQuestionTypeDictItems || !this.examQuestionTypeDictItems.length) {
           const dictParams = {code: DICT_CODES.examQuestionType, projection: 'dict-item-option'};
           const response = await searchDict('code', dictParams);
           params.types = response._embedded.items.map(it => it.value);
         } else {
-          params.types = this.examQuestionTypeOptions.map(it => it.value);
+          params.types = this.examQuestionTypeDictItems.map(it => it.value);
         }
       }
       searchExamQuestion('page', params).then(response => {

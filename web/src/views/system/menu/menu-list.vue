@@ -55,7 +55,7 @@
           </el-button>
           <el-button v-permission="menuPermission.edit" :disabled="scope.row.internal === 'YES'"
                      size="mini" icon="el-icon-edit" type="text"
-                     @click="onMenuEdit(scope, false)">{{ $t('编辑') }}
+                     @click="onMenuEdit(scope)">{{ $t('编辑') }}
           </el-button>
 
           <el-popconfirm style="margin-left: 10px" :title="$t('确定删除吗？')"
@@ -130,7 +130,7 @@
           <el-col :span="8">
             <el-form-item :label="$t('启用')" prop="enabled">
               <el-radio-group v-model="menuForm.enabled">
-                <el-radio v-for="item in logicDict" :key="item.value" :label="item.value">{{ item.label }}
+                <el-radio v-for="item in logicDictItems" :key="item.value" :label="item.value">{{ item.label }}
                 </el-radio>
               </el-radio-group>
             </el-form-item>
@@ -198,7 +198,7 @@
             <template v-slot="scope">
               <el-button v-permission="menuResourcePermission.edit"
                          size="mini" icon="el-icon-edit" type="text"
-                         @click="onMenuResourceEdit(scope, false)">{{ $t('编辑') }}
+                         @click="onMenuResourceEdit(scope)">{{ $t('编辑') }}
               </el-button>
               <el-popconfirm style="margin-left: 10px" :title="$t('确定删除吗？')"
                              @onConfirm="onMenuResourceDelete(scope)">
@@ -334,7 +334,7 @@ export default {
       menuFormCreate: false,
       menuFormOther: '',
       menuTreeOptions: [],
-      logicDict: [],
+      logicDictItems: [],
     };
   },
   created() {
@@ -366,7 +366,7 @@ export default {
     },
     findLogicDict() {
       searchDict('code', {code: DICT_CODES.logic}).then(response => {
-        this.logicDict = response._embedded.items;
+        this.logicDictItems = response._embedded.items;
       });
     },
     findMenuList() {
@@ -476,7 +476,6 @@ export default {
       this.menuFormCreate = false;
       findMenu(row.id, 'menu-form').then(response => {
         this.fillMenuForm(response);
-        this.menuForm.id = row.id;
         this.menuTitle = readonly ? this.$t('查看菜单') : this.$t('编辑菜单');
         this.menuVisible = true;
       });
@@ -486,7 +485,6 @@ export default {
       this.menuResourceFormEditable = !readonly;
       findMenuResource(row.id, 'menu-resource-form').then(response => {
         this.fillMenuResourceForm(response);
-        this.menuResourceForm.id = row.id;
         this.menuResourceTitle = readonly ? this.$t('查看菜单资源') : this.$t('编辑菜单资源');
         this.menuResourceVisible = true;
       });

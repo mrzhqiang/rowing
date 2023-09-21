@@ -81,7 +81,7 @@
           <el-col :span="8">
             <el-form-item :label="$t('状态')" prop="status">
               <el-select v-model="initTaskForm.status">
-                <el-option v-for="item in statusOptions"
+                <el-option v-for="item in statusDictItems"
                            :key="item.value" :label="item.label" :value="item.value"/>
               </el-select>
             </el-form-item>
@@ -165,7 +165,7 @@ export default {
         discard: 'NO'
       },
       initTaskRules: {},
-      statusOptions: [],
+      statusDictItems: [],
       initTaskLogTitle: this.$t('初始化任务日志'),
       initTaskLogVisible: false,
       initTaskLogList: [],
@@ -181,7 +181,7 @@ export default {
   methods: {
     findStatusDict() {
       searchDict('code', {code: DICT_CODES.taskStatus}).then(response => {
-        this.statusOptions = response._embedded.items;
+        this.statusDictItems = response._embedded.items;
       });
     },
     findInitTaskList() {
@@ -239,7 +239,6 @@ export default {
       this.resetInitTaskForm();
       findInitTask(row.id, 'init-task-form').then(response => {
         this.fillInitTaskForm(response);
-        this.initTaskForm.id = row.id;
         this.initTaskTitle = this.$t('编辑初始化任务');
         this.initTaskVisible = true;
       });
