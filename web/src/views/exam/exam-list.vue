@@ -116,6 +116,7 @@
             <el-form-item :label="$t('标题')" prop="title">
               <el-input v-model="examForm.title">
                 <el-button v-if="examFormEditable" slot="append"
+                           :disabled="!examFormEditable"
                            @click="onExamGenerateTitle">{{ $t('生成标题') }}
                 </el-button>
               </el-input>
@@ -467,7 +468,4 @@ export default {
   line-height: 0;
 }
 
-.box-card {
-  width: 480px;
-}
 </style>

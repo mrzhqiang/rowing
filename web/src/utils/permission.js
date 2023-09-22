@@ -53,7 +53,9 @@ export const PERMISSION_MARK = {
         edit: [ADMIN_ROLE, 'AUTH_EXAM_EDIT'],
         delete: [ADMIN_ROLE, 'AUTH_EXAM_DELETE'],
         taker: [ADMIN_ROLE, 'AUTH_EXAM_TAKER'],
+        takerStart: [ADMIN_ROLE, 'AUTH_EXAM_TAKER_START'],
         marker: [ADMIN_ROLE, 'AUTH_EXAM_MARKER'],
+        markerStart: [ADMIN_ROLE, 'AUTH_EXAM_MARKER_START'],
     },
     examRule: {
         create: [ADMIN_ROLE, 'AUTH_EXAM_RULE_CREATE'],

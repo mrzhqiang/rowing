@@ -26,13 +26,5 @@ public enum ExamStatus {
      * 已完成。
      */
     FINISHED,
-    /**
-     * 考生暂停。
-     */
-    EXAM_PAUSE,
-    /**
-     * 阅卷暂停。
-     */
-    MARK_PAUSE,
 
 }

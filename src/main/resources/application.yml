@@ -15,6 +15,9 @@ spring:
     init:
       mode: always
       continue-on-error: false
+  #      TODO 提供一次性初始化脚本，避免每次删除数据表
+  #      schema-locations:
+  #        - "classpath:org/quartz/impl/jdbcjobstore/tables_mysql_innodb.sql"
   datasource:
     hikari:
       minimum-idle: 5
@@ -28,11 +31,21 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-
+  #  TODO 未来开发灵活的调度任务系统，支持后台管理界面
+  #  quartz:
+  #    job-store-type: jdbc
+  #    startup-delay: 30s
   data:
     rest:
       base-path: /api
       enable-enum-translation: true
+  jackson:
+    date-format: "yyyy-MM-dd HH:mm:ss"
+  mvc:
+    format:
+      date: "yyyy-MM-dd"
+      time: "HH:mm:ss"
+      date-time: "yyyy-MM-dd HH:mm:ss"
 
 # 项目配置
 rowing:

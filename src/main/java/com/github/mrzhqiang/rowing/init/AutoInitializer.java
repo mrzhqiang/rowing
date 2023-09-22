@@ -16,6 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
  * 注意：实现类必须标记为 {@link Component}，否则无法被记录到数据库，并且无法自动执行。
  * <p>
  * 关于 {@link Ordered} 接口：用于对自动初始化器的执行顺序进行排序。
+ *
+ * @see InitializationOrderRegistration
  */
 public abstract class AutoInitializer implements Initializer, Ordered {
 

@@ -1,5 +1,6 @@
 package com.github.mrzhqiang.rowing.exam;
 
+import com.github.mrzhqiang.rowing.account.Account;
 import com.github.mrzhqiang.rowing.domain.BaseRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,5 +18,13 @@ public interface ExamRepository extends BaseRepository<Exam> {
                                                                             LocalDateTime firstStart,
                                                                             LocalDateTime secondStart,
                                                                             Pageable pageable);
+
+    @RestResource(exported = false)
+    Page<ExamInfo> findAllByTakersContainingAndTitleContainingAndCodeContainingAndStartTimeBetween(Account account,
+                                                                                               String title,
+                                                                                               String code,
+                                                                                               LocalDateTime firstStart,
+                                                                                               LocalDateTime secondStart,
+                                                                                               Pageable pageable);
 
 }

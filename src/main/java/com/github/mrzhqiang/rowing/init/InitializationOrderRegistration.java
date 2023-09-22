@@ -2,6 +2,7 @@ package com.github.mrzhqiang.rowing.init;
 
 import com.github.mrzhqiang.rowing.dict.DictAutoInitializer;
 import com.github.mrzhqiang.rowing.account.AccountAutoInitializer;
+import com.github.mrzhqiang.rowing.exam.ExamAutoInitializer;
 import com.github.mrzhqiang.rowing.menu.MenuAutoInitializer;
 import com.github.mrzhqiang.rowing.role.RoleAutoInitializer;
 import com.github.mrzhqiang.rowing.setting.SettingAutoInitializer;
@@ -32,6 +33,7 @@ final class InitializationOrderRegistration {
         put(RoleAutoInitializer.class, order.next());
         put(MenuAutoInitializer.class, order.next());
         put(AccountAutoInitializer.class, order.next());
+        put(ExamAutoInitializer.class, order.next());
     }
 
     /**
