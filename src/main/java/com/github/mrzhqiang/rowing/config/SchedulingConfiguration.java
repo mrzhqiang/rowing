@@ -25,7 +25,7 @@ public class SchedulingConfiguration {
     public JobDetail examJob(ExamService service) {
         return JobBuilder.newJob(ExamJob.class)
                 .withIdentity("exam-job", "exams")
-                .setJobData(new JobDataMap(ImmutableMap.of("examService", service)))
+                .usingJobData(new JobDataMap(ImmutableMap.of("examService", service)))
                 .storeDurably()
                 .build();
     }

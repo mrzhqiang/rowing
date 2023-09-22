@@ -182,7 +182,16 @@
 <script>
 import {searchAccount} from '@/api/account';
 import {DICT_CODES, findDictItemUri, searchDict} from '@/api/dict';
-import {createExam, deleteExam, editExam, findExam, searchExam, updateExamMarkers, updateExamTakers} from '@/api/exam';
+import {
+  createExam,
+  deleteExam,
+  editExam,
+  findExam,
+  prepareExam,
+  searchExam,
+  updateExamMarkers,
+  updateExamTakers
+} from '@/api/exam';
 import {searchExamRule} from '@/api/examRule';
 import {findOptionUrl} from '@/api/rest';
 import Pagination from '@/components/Pagination';
@@ -366,9 +375,8 @@ export default {
       });
     },
     onExamWaiting({row}) {
-      const data = {status: 'WAITING'};
       if (row.id) {
-        editExam(row.id, data).then(() => {
+        prepareExam(row.id).then(() => {
           this.$message.success(`考试 [${row.title}] 准备成功！`);
         });
       }

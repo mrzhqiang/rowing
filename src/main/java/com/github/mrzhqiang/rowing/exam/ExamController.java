@@ -8,6 +8,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,6 +46,12 @@ public class ExamController {
     public ResponseEntity<?> markers(@PathVariable Long id,
                                      @RequestBody List<Long> markers) {
         service.updateMarkers(id, markers);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/{id}/prepare")
+    public ResponseEntity<?> prepare(@PathVariable Long id) {
+        service.prepare(id);
         return ResponseEntity.ok().build();
     }
 

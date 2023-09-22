@@ -48,6 +48,13 @@ public interface ExamService {
                               Pageable pageable);
 
     /**
+     * 准备考试。
+     *
+     * @param id 考试 ID。
+     */
+    void prepare(Long id);
+
+    /**
      * 更新考试状态。
      * <p>
      * 1. 从准备到进行中：当前时间在考试开始时间与结束时间之间时更新。
@@ -57,5 +64,4 @@ public interface ExamService {
      * 3. 从阅卷中到已完成：所有试卷都已批阅完毕时更新。
      */
     void updateStatus();
-
 }

@@ -43,6 +43,10 @@ export function updateExamMarkers(id, data) {
   return request.put(`/${API_NAME}/${id}/markers`, data);
 }
 
+export function prepareExam(id) {
+  return request.post(`/${API_NAME}/${id}/prepare`);
+}
+
 export function myExam(params) {
   // 注意：Pagination 组件默认从 1 开始作为第一页，所以 page 需要减 1 操作
   const config = {params: {...params}};
