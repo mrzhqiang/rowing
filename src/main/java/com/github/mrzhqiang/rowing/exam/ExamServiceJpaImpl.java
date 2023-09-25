@@ -1,9 +1,11 @@
 package com.github.mrzhqiang.rowing.exam;
 
+import com.github.mrzhqiang.helper.math.Numbers;
 import com.github.mrzhqiang.helper.random.RandomNumbers;
 import com.github.mrzhqiang.rowing.account.Account;
 import com.github.mrzhqiang.rowing.account.AccountRepository;
 import com.github.mrzhqiang.rowing.account.RunAsSystem;
+import com.github.mrzhqiang.rowing.dict.DictItemRepository;
 import com.github.mrzhqiang.rowing.domain.ExamModeStrategy;
 import com.github.mrzhqiang.rowing.domain.ExamQuestionType;
 import com.github.mrzhqiang.rowing.domain.ExamStatus;
@@ -18,14 +20,24 @@ import com.github.mrzhqiang.rowing.exam.paper.ExamPaperRepository;
 import com.github.mrzhqiang.rowing.exam.paper.ExamPapers;
 import com.github.mrzhqiang.rowing.exam.question.ExamQuestion;
 import com.github.mrzhqiang.rowing.exam.question.ExamQuestionBank;
+import com.github.mrzhqiang.rowing.exam.question.ExamQuestionBankRepository;
 import com.github.mrzhqiang.rowing.exam.question.ExamQuestionOption;
 import com.github.mrzhqiang.rowing.exam.question.ExamQuestionOptionRepository;
 import com.github.mrzhqiang.rowing.exam.question.ExamQuestionRepository;
 import com.github.mrzhqiang.rowing.exam.rule.ExamRule;
 import com.github.mrzhqiang.rowing.exception.ResourceNotFoundException;
+import com.github.mrzhqiang.rowing.i18n.I18nHolder;
+import com.github.mrzhqiang.rowing.util.Cells;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -34,17 +46,22 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.ResourceUtils;
 import org.springframework.util.StringUtils;
 
+import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class ExamServiceJpaImpl implements ExamService {
 
@@ -53,6 +70,8 @@ public class ExamServiceJpaImpl implements ExamService {
     private final ExamPaperRepository paperRepository;
     private final ExamPaperAnswerCardRepository cardRepository;
     private final ExamQuestionRepository questionRepository;
+    private final ExamQuestionBankRepository bankRepository;
+    private final DictItemRepository itemRepository;
     private final ExamPaperAnswerRepository answerRepository;
     private final ExamQuestionOptionRepository optionRepository;
     private final EnumTranslator enumTranslator;
@@ -62,6 +81,8 @@ public class ExamServiceJpaImpl implements ExamService {
                               ExamPaperRepository paperRepository,
                               ExamPaperAnswerCardRepository cardRepository,
                               ExamQuestionRepository questionRepository,
+                              ExamQuestionBankRepository bankRepository,
+                              DictItemRepository itemRepository,
                               ExamPaperAnswerRepository answerRepository,
                               ExamQuestionOptionRepository optionRepository,
                               EnumTranslator enumTranslator) {
@@ -70,9 +91,267 @@ public class ExamServiceJpaImpl implements ExamService {
         this.paperRepository = paperRepository;
         this.cardRepository = cardRepository;
         this.questionRepository = questionRepository;
+        this.bankRepository = bankRepository;
+        this.itemRepository = itemRepository;
         this.answerRepository = answerRepository;
         this.optionRepository = optionRepository;
         this.enumTranslator = enumTranslator;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void sync() {
+        syncData(QUESTION_DATA);
+    }
+
+    @SuppressWarnings("SameParameterValue")
+    @SneakyThrows
+    private void syncData(String excelFile) {
+        Preconditions.checkNotNull(excelFile, "question excel file == null");
+        File file = ResourceUtils.getFile(excelFile);
+
+        Preconditions.checkArgument(file.exists(), "question excel file must be exists");
+        Preconditions.checkArgument(!file.isDirectory(), "question excel file must be not directory");
+
+        // WorkbookFactory 支持创建 HSSFWorkbook 和 XSSFWorkbook 实例
+        try (Workbook workbook = WorkbookFactory.create(file)) {
+            Sheet bank = workbook.getSheet("bank");
+            if (bank == null) {
+                log.warn(I18nHolder.getAccessor().getMessage(
+                        "ExamService.importExcel.notFound", new Object[]{"bank"},
+                        Strings.lenientFormat("未找到名为 %s 的 Sheet 页", "bank")));
+                return;
+            }
+
+            Map<String, ExamQuestionBank> bankMap = attemptHandleBank(bank);
+            if (bankMap.isEmpty()) {
+                log.warn(I18nHolder.getAccessor().getMessage(
+                        "ExamService.syncExcel.invalid", new Object[]{file.getName()},
+                        Strings.lenientFormat("Excel 文件 %s 不存在有效题库数据", file.getName())));
+                return;
+            }
+
+            Sheet question = workbook.getSheet("question");
+            if (question == null) {
+                log.warn(I18nHolder.getAccessor().getMessage(
+                        "ExamService.syncExcel.notFound", new Object[]{"question"},
+                        Strings.lenientFormat("未找到名为 %s 的 Sheet 页", "question")));
+                return;
+            }
+
+            Map<String, ExamQuestion> questionMap = attemptHandleQuestion(bankMap, question);
+
+            Sheet option = workbook.getSheet("option");
+            if (option == null) {
+                log.warn(I18nHolder.getAccessor().getMessage(
+                        "ExamService.syncExcel.notFound", new Object[]{"option"},
+                        Strings.lenientFormat("未找到名为 %s 的 Sheet 页", "option")));
+                return;
+            }
+
+            attemptHandleQuestionOption(questionMap, option);
+        } catch (IOException cause) {
+            String message = I18nHolder.getAccessor().getMessage(
+                    "ExamService.syncExcel.exception", new Object[]{file.getName()},
+                    Strings.lenientFormat("读取 Excel 文件 %s 出错", file.getName()));
+            throw new RuntimeException(message, cause);
+        }
+
+    }
+
+    @SuppressWarnings("DuplicatedCode")
+    private Map<String, ExamQuestionBank> attemptHandleBank(Sheet bank) {
+        Map<String, ExamQuestionBank> bankMap = Maps.newHashMapWithExpectedSize(bank.getPhysicalNumberOfRows());
+
+        boolean skipHeader = true;
+        for (Row cells : bank) {
+            if (skipHeader) {
+                skipHeader = false;
+                continue;
+            }
+
+            String title = Cells.ofString(cells.getCell(0));
+            // 如果发现 null 值或空串，视为结束行
+            if (Strings.isNullOrEmpty(title)) {
+                log.info(I18nHolder.getAccessor().getMessage(
+                        "ExamService.syncExcel.empty.name", new Object[]{cells.getRowNum()},
+                        Strings.lenientFormat("发现第 %s 行 title 列存在空字符串，判断为结束行，终止解析", cells.getRowNum())));
+                break;
+            }
+
+            String code = Cells.ofString(cells.getCell(1));
+            if (Strings.isNullOrEmpty(code)) {
+                log.info(I18nHolder.getAccessor().getMessage(
+                        "ExamService.syncExcel.empty.code", new Object[]{cells.getRowNum()},
+                        Strings.lenientFormat("发现第 %s 行 code 列存在空字符串，判断为结束行，终止解析", cells.getRowNum())));
+                break;
+            }
+
+            // EXAM_SUBJECT
+            String subject = Cells.ofString(cells.getCell(2));
+            if (Strings.isNullOrEmpty(subject)) {
+                log.info(I18nHolder.getAccessor().getMessage(
+                        "ExamService.syncExcel.empty.subject", new Object[]{cells.getRowNum()},
+                        Strings.lenientFormat("发现第 %s 行 subject 列存在空字符串，判断为结束行，终止解析", cells.getRowNum())));
+                break;
+            }
+
+            String description = Cells.ofString(cells.getCell(3));
+
+            ExamQuestionBank entity = new ExamQuestionBank();
+            entity.setTitle(title);
+            entity = bankRepository.findOne(Example.of(entity)).orElse(entity);
+            itemRepository.findByGroup_CodeAndValue("EXAM_SUBJECT", subject)
+                    .ifPresent(entity::setSubject);
+            entity.setDescription(description);
+            bankMap.put(code, bankRepository.save(entity));
+
+            log.info(I18nHolder.getAccessor().getMessage(
+                    "ExamService.syncExcel.bank", new Object[]{title, code},
+                    Strings.lenientFormat("Excel 题库 %s-%s 已同步", title, code)));
+        }
+        return bankMap;
+    }
+
+    @SuppressWarnings("DuplicatedCode")
+    private Map<String, ExamQuestion> attemptHandleQuestion(Map<String, ExamQuestionBank> bankMap, Sheet question) {
+        Map<String, ExamQuestion> questionMap = Maps.newHashMapWithExpectedSize(question.getPhysicalNumberOfRows());
+
+        boolean skipHeader = true;
+        for (Row cells : question) {
+            if (skipHeader) {
+                skipHeader = false;
+                continue;
+            }
+
+            String bankCode = Cells.ofString(cells.getCell(0));
+            if (Strings.isNullOrEmpty(bankCode)) {
+                log.info(I18nHolder.getAccessor().getMessage(
+                        "ExamService.syncExcel.empty.bank_code", new Object[]{cells.getRowNum()},
+                        Strings.lenientFormat("发现第 %s 行 bank code 列存在空字符串，判断为结束行，终止解析", cells.getRowNum())));
+                break;
+            }
+
+            ExamQuestionBank bank = bankMap.get(bankCode);
+            if (bank == null) {
+                log.warn(I18nHolder.getAccessor().getMessage(
+                        "ExamService.syncExcel.bank.notFound", new Object[]{bankCode},
+                        Strings.lenientFormat("错误的题库，指定的 bank code %s 在 bank Sheet 页中不存在", bankCode)));
+                continue;
+            }
+
+            String code = Cells.ofString(cells.getCell(1));
+            if (Strings.isNullOrEmpty(code)) {
+                log.info(I18nHolder.getAccessor().getMessage(
+                        "ExamService.syncExcel.empty.code", new Object[]{cells.getRowNum()},
+                        Strings.lenientFormat("发现第 %s 行 code 列存在空字符串，判断为结束行，终止解析", cells.getRowNum())));
+                break;
+            }
+
+            String type = Cells.ofString(cells.getCell(2));
+            if (Strings.isNullOrEmpty(type)) {
+                log.info(I18nHolder.getAccessor().getMessage(
+                        "ExamService.syncExcel.empty.type", new Object[]{cells.getRowNum()},
+                        Strings.lenientFormat("发现第 %s 行 type 列存在空字符串，判断为结束行，终止解析", cells.getRowNum())));
+                break;
+            }
+
+            Integer difficulty = Numbers.ofInt(Cells.ofString(cells.getCell(3)), 3);
+
+            String stem = Cells.ofString(cells.getCell(4));
+            if (Strings.isNullOrEmpty(stem)) {
+                log.info(I18nHolder.getAccessor().getMessage(
+                        "ExamService.syncExcel.empty.stem", new Object[]{cells.getRowNum()},
+                        Strings.lenientFormat("发现第 %s 行 stem 列存在空字符串，判断为结束行，终止解析", cells.getRowNum())));
+                break;
+            }
+
+            Boolean sloppyMode = Boolean.parseBoolean(Cells.ofString(cells.getCell(5)));
+            String solution = Cells.ofString(cells.getCell(6));
+            String solutionUrl = Cells.ofString(cells.getCell(7));
+            String explained = Cells.ofString(cells.getCell(8));
+            String explainedUrl = Cells.ofString(cells.getCell(9));
+            String remark = Cells.ofString(cells.getCell(10));
+
+            ExamQuestion entity = new ExamQuestion();
+            entity.setBank(bank);
+            entity.setCode(code);
+            entity = questionRepository.findOne(Example.of(entity)).orElse(entity);
+            entity.setType(ExamQuestionType.valueOf(type));
+            entity.setDifficulty(difficulty);
+            entity.setStem(stem);
+            entity.setSloppyMode(sloppyMode);
+            entity.setSolution(solution);
+            entity.setSolutionUrl(solutionUrl);
+            entity.setExplained(explained);
+            entity.setExplainedUrl(explainedUrl);
+            entity.setRemark(remark);
+            questionMap.put(code, questionRepository.save(entity));
+
+            log.info(I18nHolder.getAccessor().getMessage(
+                    "ExamService.syncExcel.question", new Object[]{code, bankCode},
+                    Strings.lenientFormat("Excel 试题 %s 已同步到 %s 题库", code, bankCode)));
+        }
+        return questionMap;
+    }
+
+    @SuppressWarnings("DuplicatedCode")
+    private void attemptHandleQuestionOption(Map<String, ExamQuestion> questionMap, Sheet option) {
+        boolean skipHeader = true;
+        for (Row cells : option) {
+            if (skipHeader) {
+                skipHeader = false;
+                continue;
+            }
+
+            String questionCode = Cells.ofString(cells.getCell(0));
+            if (Strings.isNullOrEmpty(questionCode)) {
+                log.info(I18nHolder.getAccessor().getMessage(
+                        "ExamService.syncExcel.empty.question_code", new Object[]{cells.getRowNum()},
+                        Strings.lenientFormat("发现第 %s 行 question code 列存在空字符串，判断为结束行，终止解析", cells.getRowNum())));
+                break;
+            }
+
+            ExamQuestion question = questionMap.get(questionCode);
+            if (question == null) {
+                log.warn(I18nHolder.getAccessor().getMessage(
+                        "ExamService.syncExcel.question.notFound", new Object[]{questionCode},
+                        Strings.lenientFormat("错误的题库，指定的 question code %s 在 question Sheet 页中不存在", questionCode)));
+                continue;
+            }
+
+            String label = Cells.ofString(cells.getCell(1));
+            if (Strings.isNullOrEmpty(label)) {
+                log.info(I18nHolder.getAccessor().getMessage(
+                        "ExamService.syncExcel.empty.label", new Object[]{cells.getRowNum()},
+                        Strings.lenientFormat("发现第 %s 行 label 列存在空字符串，判断为结束行，终止解析", cells.getRowNum())));
+                break;
+            }
+
+            String content = Cells.ofString(cells.getCell(2));
+            if (Strings.isNullOrEmpty(content)) {
+                log.info(I18nHolder.getAccessor().getMessage(
+                        "ExamService.syncExcel.empty.content", new Object[]{cells.getRowNum()},
+                        Strings.lenientFormat("发现第 %s 行 content 列存在空字符串，判断为结束行，终止解析", cells.getRowNum())));
+                break;
+            }
+
+            Boolean righted = Boolean.parseBoolean(Cells.ofString(cells.getCell(3)));
+            BigDecimal scoreRatio = Numbers.ofBigDecimal(Cells.ofString(cells.getCell(4)), BigDecimal.ZERO);
+
+            ExamQuestionOption entity = new ExamQuestionOption();
+            entity.setQuestion(question);
+            entity.setLabel(label);
+            entity = optionRepository.findOne(Example.of(entity)).orElse(entity);
+            entity.setContent(content);
+            entity.setRighted(righted);
+            entity.setScoreRatio(scoreRatio);
+            optionRepository.save(entity);
+
+            log.info(I18nHolder.getAccessor().getMessage(
+                    "ExamService.syncExcel.option", new Object[]{label, content, questionCode},
+                    Strings.lenientFormat("Excel 试题 %s-%s 已同步到 %s 题库", label, content, questionCode)));
+        }
     }
 
     @Transactional(rollbackFor = Exception.class)

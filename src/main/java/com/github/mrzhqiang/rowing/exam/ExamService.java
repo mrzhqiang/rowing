@@ -4,6 +4,7 @@ import com.github.mrzhqiang.rowing.exam.paper.ExamPaperInfo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.util.ResourceUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -13,6 +14,20 @@ import java.util.List;
  * <p>
  */
 public interface ExamService {
+
+    /**
+     * 试题数据。
+     */
+    String QUESTION_DATA = ResourceUtils.CLASSPATH_URL_PREFIX + "data/question-data.xlsx";
+    /**
+     * 试题模板。
+     */
+    String QUESTION_TEMPLATE = ResourceUtils.CLASSPATH_URL_PREFIX + "data/question-template.xlsx";
+
+    /**
+     * 同步数据。
+     */
+    void sync();
 
     /**
      * 更新考生名单。

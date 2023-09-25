@@ -1,5 +1,6 @@
 package com.github.mrzhqiang.rowing.exam;
 
+import com.github.mrzhqiang.rowing.account.RunAsSystem;
 import com.github.mrzhqiang.rowing.init.AutoInitializer;
 import org.springframework.stereotype.Component;
 
@@ -10,9 +11,16 @@ import org.springframework.stereotype.Component;
 @Component
 public class ExamAutoInitializer extends AutoInitializer {
 
-    @Override
-    protected void onExecute() throws Exception {
+    private final ExamService service;
 
+    public ExamAutoInitializer(ExamService service) {
+        this.service = service;
+    }
+
+    @RunAsSystem
+    @Override
+    protected void onExecute() {
+        service.sync();
     }
 
 }
