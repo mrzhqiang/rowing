@@ -52,4 +52,8 @@ public interface AccountRepository extends BaseRepository<Account> {
     @Query("select count(a) from Account a join a.takeExams e where e = :exam")
     Long countByMarkExams(@Param("exam") Exam exam);
 
+    Boolean existsAccountByUsernameAndTakeExamsContaining(String username, Exam exam);
+
+    Boolean existsAccountByUsernameAndMarkExamsContaining(String username, Exam exam);
+
 }

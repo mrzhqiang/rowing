@@ -2,6 +2,7 @@ package com.github.mrzhqiang.rowing.exam;
 
 import com.github.mrzhqiang.rowing.domain.BaseProjection;
 import com.github.mrzhqiang.rowing.domain.ExamStatus;
+import com.github.mrzhqiang.rowing.exam.rule.ExamRuleInfo;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.rest.core.config.Projection;
 

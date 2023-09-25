@@ -33,7 +33,11 @@
         </template>
       </el-table-column>
       <el-table-column prop="totalScore" :label="$t('分数')" min-width="40" :align="'center'"/>
-      <el-table-column prop="passLine" :label="$t('合格线')" min-width="40" :align="'center'"/>
+      <el-table-column prop="passLine" :label="$t('合格线(%)')" min-width="40" :align="'center'">
+        <template v-slot="scope">
+          {{ (scope.row.passLine * 100).toFixed(0) + '%' }}
+        </template>
+      </el-table-column>
       <el-table-column prop="passScore" :label="$t('合格分数')" min-width="40" :align="'center'"/>
       <el-table-column prop="strategy" :label="$t('策略')" min-width="40" :align="'center'"/>
       <el-table-column prop="createdBy" :label="$t('创建人')" min-width="40" :align="'center'"/>
@@ -43,13 +47,13 @@
       <el-table-column :label="$t('操作')" min-width="100" :align="'center'">
         <template v-slot="scope">
           <el-button v-permission="examRulePermission.edit"
-                     size="mini" icon="el-icon-edit" type="text"
+                     size="mini" icon="el-icon-edit" type="success" plain
                      @click="onExamRuleEdit(scope)">{{ $t('编辑') }}
           </el-button>
           <el-popconfirm style="margin-left: 10px" :title="$t('确定删除吗？')"
-                         @onConfirm="onExamRuleDelete(scope)">
+                         @confirm="onExamRuleDelete(scope)">
             <el-button slot="reference" v-permission="examRulePermission.delete"
-                       size="mini" icon="el-icon-delete" type="text">{{ $t('删除') }}
+                       size="mini" icon="el-icon-delete" type="danger" plain>{{ $t('删除') }}
             </el-button>
           </el-popconfirm>
         </template>
@@ -80,14 +84,14 @@
           </el-col>
           <el-col :span="8">
             <el-form-item :label="$t('总分数')" prop="totalScore">
-              <el-input-number v-model="examRuleForm.totalScore" :min="1"/>
+              <el-input-number v-model="examRuleForm.totalScore" :min="1" @change="onTotalScoreChange"/>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="10">
           <el-col :span="8">
-            <el-form-item :label="$t('合格线(%)')" prop="passLine">
-              <el-input-number v-model="examRuleForm.passLine" :min="1" :max="100" @change="onPassLineChange"/>
+            <el-form-item :label="$t('合格线(%)')" prop="passLinePercent">
+              <el-input-number v-model="examRuleForm.passLinePercent" :min="1" :max="100" @change="onPassLineChange"/>
             </el-form-item>
           </el-col>
           <el-col :span="8">
@@ -131,13 +135,13 @@
           <el-table-column :label="$t('操作')" min-width="100" :align="'center'">
             <template v-slot="scope">
               <el-button v-permission="examModePermission.edit"
-                         size="mini" icon="el-icon-edit" type="text"
+                         size="mini" icon="el-icon-edit" type="success" plain
                          @click="onExamModeEdit(scope)">{{ $t('编辑') }}
               </el-button>
               <el-popconfirm style="margin-left: 10px" :title="$t('确定删除吗？')"
-                             @onConfirm="onExamModeDelete(scope)">
+                             @confirm="onExamModeDelete(scope)">
                 <el-button slot="reference" v-permission="examModePermission.delete"
-                           size="mini" icon="el-icon-circle-close" type="text">{{ $t('删除') }}
+                           size="mini" icon="el-icon-close" type="danger" plain>{{ $t('删除') }}
                 </el-button>
               </el-popconfirm>
             </template>
@@ -285,7 +289,7 @@ export default {
         title: '',
         duration: 60 * 60,
         totalScore: 100,
-        passLine: 60,
+        passLinePercent: 60,
         passScore: 60,
         strategy: 'RANDOM',
       },
@@ -378,7 +382,7 @@ export default {
         title: '',
         duration: 60 * 60,
         totalScore: 100,
-        passLine: 60,
+        passLinePercent: 60,
         passScore: 60,
         strategy: 'RANDOM',
       };
@@ -439,11 +443,14 @@ export default {
         this.examRuleVisible = true;
       });
     },
+    onTotalScoreChange(value) {
+      this.examRuleForm.passScore = ((this.examRuleForm.passLinePercent / 100) * value).toFixed(2);
+    },
     onPassLineChange(value) {
-      this.examRuleForm.passScore = (value / 100).toFixed(2) * this.examRuleForm.totalScore;
+      this.examRuleForm.passScore = ((value / 100) * this.examRuleForm.totalScore).toFixed(2);
     },
     onPassScoreChange(value) {
-      this.examRuleForm.passLine = (value / this.examRuleForm.totalScore) * 100;
+      this.examRuleForm.passLinePercent = ((value / this.examRuleForm.totalScore) * 100).toFixed(0);
     },
     onExamModeEdit({row}) {
       this.resetExamModeForm();
@@ -490,7 +497,7 @@ export default {
             title: this.examRuleForm.title,
             duration: this.examRuleForm.duration,
             totalScore: this.examRuleForm.totalScore,
-            passLine: this.examRuleForm.passLine,
+            passLine: (this.examRuleForm.passLinePercent / 100).toFixed(2),
             passScore: this.examRuleForm.passScore,
             strategy: this.examRuleForm.strategy
           };

@@ -41,13 +41,13 @@
       <el-table-column :label="$t('操作')" min-width="100" :align="'center'">
         <template v-slot="scope">
           <el-button v-permission="dictPermission.edit"
-                     size="mini" icon="el-icon-edit" type="text"
+                     size="mini" icon="el-icon-edit" type="success" plain
                      @click="onDictEdit(scope)">{{ $t('编辑') }}
           </el-button>
           <el-popconfirm style="margin-left: 10px" :title="$t('确定删除吗？')"
-                         @onConfirm="onDictDelete(scope)">
+                         @confirm="onDictDelete(scope)">
             <el-button slot="reference" v-permission="dictPermission.delete"
-                       size="mini" icon="el-icon-delete" type="text">{{ $t('删除') }}
+                       size="mini" icon="el-icon-delete" type="danger" plain>{{ $t('删除') }}
             </el-button>
           </el-popconfirm>
         </template>
@@ -103,13 +103,13 @@
         <el-table-column :label="$t('操作')" min-width="100" :align="'center'">
           <template v-slot="scope">
             <el-button v-permission="dictPermission.edit"
-                       size="mini" icon="el-icon-edit" type="text"
+                       size="mini" icon="el-icon-edit" type="success" plain
                        @click="onDictItemEdit(scope)">{{ $t('编辑') }}
             </el-button>
             <el-popconfirm style="margin-left: 10px" :title="$t('确定删除吗？')"
-                           @onConfirm="onDictItemDelete(scope)">
+                           @confirm="onDictItemDelete(scope)">
               <el-button slot="reference" v-permission="dictPermission.delete"
-                         size="mini" icon="el-icon-delete" type="text">{{ $t('删除') }}
+                         size="mini" icon="el-icon-delete" type="danger" plain>{{ $t('删除') }}
               </el-button>
             </el-popconfirm>
           </template>

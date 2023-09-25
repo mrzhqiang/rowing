@@ -47,11 +47,48 @@ export function prepareExam(id) {
   return request.post(`/${API_NAME}/${id}/prepare`);
 }
 
-export function myExam(params) {
+export function takerExam(params) {
   // 注意：Pagination 组件默认从 1 开始作为第一页，所以 page 需要减 1 操作
   const config = {params: {...params}};
   if (params.page && params.page > 0) {
     config.params.page = params.page - 1;
   }
-  return request.get(`/${API_NAME}/my-exam`, config);
+  return request.get(`/${API_NAME}/for-taker`, config);
+}
+
+export function markerExam(params) {
+  // 注意：Pagination 组件默认从 1 开始作为第一页，所以 page 需要减 1 操作
+  const config = {params: {...params}};
+  if (params.page && params.page > 0) {
+    config.params.page = params.page - 1;
+  }
+  return request.get(`/${API_NAME}/for-marker`, config);
+}
+
+export function checkTakerPaperStatus(id) {
+  return request.get(`/${API_NAME}/${id}/taker-paper-status`);
+}
+
+export function findTakerPaper(id) {
+  return request.get(`/${API_NAME}/${id}/taker-paper`);
+}
+
+export function findMarkerPaper(id) {
+  return request.get(`/${API_NAME}/${id}/marker-paper`);
+}
+
+export function saveExamPaperAnswer(id, data) {
+  return request.patch(`/${API_NAME}/${id}/paper-answer`, data);
+}
+
+export function saveExamPaperMarker(id, data) {
+  return request.patch(`/${API_NAME}/${id}/paper-marker`, data);
+}
+
+export function commitExamPaper(id, data) {
+  return request.post(`/${API_NAME}/${id}/commit-paper`, data);
+}
+
+export function finishExamPaper(id, data) {
+  return request.post(`/${API_NAME}/${id}/finish-paper`, data);
 }

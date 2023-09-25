@@ -40,7 +40,11 @@
         </template>
       </el-table-column>
       <el-table-column prop="stem" :label="$t('题干')" min-width="200" show-overflow-tooltip/>
-      <el-table-column prop="remark" :label="$t('备注')" min-width="100" show-overflow-tooltip/>
+      <el-table-column prop="sloppyMode" :label="$t('宽松计分')" min-width="40" :align="'center'">
+        <template v-slot="scope">
+          <el-switch v-model="scope.row.sloppyMode" disabled/>
+        </template>
+      </el-table-column>
       <el-table-column prop="createdBy" :label="$t('创建人')" min-width="40" :align="'center'"/>
       <el-table-column prop="created" :label="$t('创建时间')" min-width="80" :align="'center'"/>
       <el-table-column prop="updatedBy" :label="$t('更新人')" min-width="40" :align="'center'"/>
@@ -48,13 +52,13 @@
       <el-table-column :label="$t('操作')" min-width="100" :align="'center'">
         <template v-slot="scope">
           <el-button v-permission="examQuestionPermission.edit"
-                     size="mini" icon="el-icon-edit" type="text"
+                     size="mini" icon="el-icon-edit" type="success" plain
                      @click="onExamQuestionEdit(scope)">{{ $t('编辑') }}
           </el-button>
           <el-popconfirm style="margin-left: 10px" :title="$t('确定删除吗？')"
-                         @onConfirm="onExamQuestionDelete(scope)">
+                         @confirm="onExamQuestionDelete(scope)">
             <el-button slot="reference" v-permission="examQuestionPermission.delete"
-                       size="mini" icon="el-icon-circle-close" type="text">{{ $t('删除') }}
+                       size="mini" icon="el-icon-circle-close" type="danger" plain>{{ $t('删除') }}
             </el-button>
           </el-popconfirm>
         </template>
@@ -69,7 +73,7 @@
       <el-form ref="examQuestionForm" :model="examQuestionForm" :rules="examQuestionRules"
                label-width="80px">
         <el-row :gutter="10">
-          <el-col :span="10">
+          <el-col :span="8">
             <el-form-item :label="$t('题库')" prop="bankId">
               <el-select v-model="examQuestionForm.bankId">
                 <el-option v-for="item in examQuestionBankOptions" :key="item.id"
@@ -77,9 +81,14 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="10">
+          <el-col :span="8">
             <el-form-item :label="$t('难度')" prop="difficulty">
               <el-rate v-model="examQuestionForm.difficulty" :texts="difficultyTexts" show-text/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item :label="$t('宽松计分')" prop="sloppyMode">
+              <el-switch v-model="examQuestionForm.sloppyMode"/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -168,11 +177,6 @@
               <el-switch v-model="scope.row.righted" disabled/>
             </template>
           </el-table-column>
-          <el-table-column prop="sloppyMode" :label="$t('是否宽松')" min-width="40" :align="'center'">
-            <template v-slot="scope">
-              <el-switch v-model="scope.row.sloppyMode" disabled/>
-            </template>
-          </el-table-column>
           <el-table-column prop="scoreRatio" :label="$t('分值占比')" min-width="40" :align="'center'"/>
           <el-table-column prop="createdBy" :label="$t('创建人')" min-width="40" :align="'center'"/>
           <el-table-column prop="created" :label="$t('创建时间')" min-width="80" :align="'center'"/>
@@ -181,13 +185,13 @@
           <el-table-column :label="$t('操作')" min-width="100" :align="'center'">
             <template v-slot="scope">
               <el-button v-permission="examQuestionOptionPermission.edit"
-                         size="mini" icon="el-icon-edit" type="text"
+                         size="mini" icon="el-icon-edit" type="success" plain
                          @click="onExamQuestionOptionEdit(scope)">{{ $t('编辑') }}
               </el-button>
               <el-popconfirm style="margin-left: 10px" :title="$t('确定删除吗？')"
-                             @onConfirm="onExamQuestionOptionDelete(scope)">
+                             @confirm="onExamQuestionOptionDelete(scope)">
                 <el-button slot="reference" v-permission="examQuestionOptionPermission.delete"
-                           size="mini" icon="el-icon-circle-close" type="text">{{ $t('删除') }}
+                           size="mini" icon="el-icon-circle-close" type="danger" plain>{{ $t('删除') }}
                 </el-button>
               </el-popconfirm>
             </template>
@@ -206,7 +210,7 @@
       <el-form ref="examQuestionOptionForm" :model="examQuestionOptionForm" :rules="examQuestionOptionRules"
                label-width="80px">
         <el-row :gutter="10">
-          <el-col :span="6">
+          <el-col :span="8">
             <el-form-item :label="$t('标签')" prop="label">
               <el-select v-model="examQuestionOptionForm.label">
                 <el-option v-for="item in examQuestionOptionLabelOptions" :key="item.value"
@@ -214,17 +218,12 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="6">
+          <el-col :span="8">
             <el-form-item :label="$t('是否正确')" prop="righted">
               <el-switch v-model="examQuestionOptionForm.righted"/>
             </el-form-item>
           </el-col>
-          <el-col :span="6">
-            <el-form-item :label="$t('是否宽松')" prop="sloppyMode">
-              <el-switch v-model="examQuestionOptionForm.sloppyMode"/>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
+          <el-col :span="8">
             <el-form-item :label="$t('分值占比')" prop="scoreRatio">
               <el-input-number v-model="examQuestionOptionForm.scoreRatio"
                                :precision="2" :min="0" :step="0.01" :max="1"
@@ -308,6 +307,7 @@ export default {
         code: '',
         type: '',
         difficulty: 3,
+        sloppyMode: false,
         stem: '',
         rightOptionId: null,
         solution: '',
@@ -322,7 +322,6 @@ export default {
         label: 'A',
         content: '',
         righted: false,
-        sloppyMode: false,
         scoreRatio: 0,
       },
       examQuestionRules: {
@@ -418,6 +417,7 @@ export default {
         code: '',
         type: '',
         difficulty: 3,
+        sloppyMode: false,
         stem: '',
         rightOptionId: null,
         solution: '',
@@ -437,7 +437,6 @@ export default {
         label: 'A',
         content: '',
         righted: false,
-        sloppyMode: false,
         scoreRatio: 0,
       };
       if (this.examQuestionOptionList && this.examQuestionOptionList.length) {
@@ -520,6 +519,7 @@ export default {
             bank: findOptionUrl(this.examQuestionBankOptions, this.examQuestionForm.bankId),
             type: this.examQuestionForm.type,
             difficulty: this.examQuestionForm.difficulty,
+            sloppyMode: this.examQuestionForm.sloppyMode,
             stem: this.examQuestionForm.stem,
             rightOption: findOptionUrl(this.examQuestionOptionOptions, this.examQuestionForm.rightOptionId),
             solution: this.examQuestionForm.solution,
@@ -536,7 +536,7 @@ export default {
             });
           } else {
             createExamQuestion(data).then(() => {
-              this.$message.success(`试题 [${this.examQuestionForm.code}] 创建成功！`);
+              this.$message.success(`试题创建成功！`);
               this.examQuestionVisible = false;
               this.findExamQuestionList();
             });
@@ -552,7 +552,6 @@ export default {
             label: this.examQuestionOptionForm.label,
             content: this.examQuestionOptionForm.content,
             righted: this.examQuestionOptionForm.righted,
-            sloppyMode: this.examQuestionOptionForm.sloppyMode,
             scoreRatio: this.examQuestionOptionForm.scoreRatio,
           };
           if (this.examQuestionOptionForm.id) {

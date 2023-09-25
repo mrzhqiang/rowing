@@ -39,8 +39,6 @@ spring:
     rest:
       base-path: /api
       enable-enum-translation: true
-  jackson:
-    date-format: "yyyy-MM-dd HH:mm:ss"
   mvc:
     format:
       date: "yyyy-MM-dd"

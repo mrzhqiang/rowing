@@ -50,19 +50,19 @@
       <el-table-column :label="$t('操作')" min-width="100" :align="'center'">
         <template v-slot="scope">
           <el-button v-permission="menuPermission.create"
-                     size="mini" icon="el-icon-plus" type="text"
+                     size="mini" icon="el-icon-plus" type="primary" plain
                      @click="onMenuAdd(scope)">{{ $t('添加') }}
           </el-button>
-          <el-button v-permission="menuPermission.edit" :disabled="scope.row.internal === 'YES'"
-                     size="mini" icon="el-icon-edit" type="text"
+          <el-button v-permission="menuPermission.edit" :disabled="scope.row.internalCode === 'YES'"
+                     size="mini" icon="el-icon-edit" type="success" plain
                      @click="onMenuEdit(scope)">{{ $t('编辑') }}
           </el-button>
 
           <el-popconfirm style="margin-left: 10px" :title="$t('确定删除吗？')"
-                         @onConfirm="onMenuDelete(scope)">
+                         @confirm="onMenuDelete(scope)">
             <el-button slot="reference" v-permission="menuPermission.delete"
-                       :disabled="scope.row.internal === 'YES'"
-                       size="mini" icon="el-icon-delete" type="text">{{ $t('删除') }}
+                       :disabled="scope.row.internalCode === 'YES'"
+                       size="mini" icon="el-icon-delete" type="danger" plain>{{ $t('删除') }}
             </el-button>
           </el-popconfirm>
         </template>
@@ -146,7 +146,9 @@
               </el-col>
               <el-col :span="8">
                 <el-form-item :label="$t('活动菜单')" prop="activeMenu">
-                  <el-input v-model="menuForm.activeMenu" :disabled="!menuForm.hidden"/>
+                  <tree-select v-model="menuForm.activeMenu" :options="menuTreeOptions" :normalizer="fullPathNormalizer"
+                               :disabled="!menuForm.hidden" :show-count="true" :max-height="100"
+                               :placeholder="$t('选择活动菜单')"/>
                 </el-form-item>
               </el-col>
               <el-col :span="8">
@@ -197,13 +199,13 @@
           <el-table-column :label="$t('操作')" min-width="100" :align="'center'">
             <template v-slot="scope">
               <el-button v-permission="menuResourcePermission.edit"
-                         size="mini" icon="el-icon-edit" type="text"
+                         size="mini" icon="el-icon-edit" type="success" plain
                          @click="onMenuResourceEdit(scope)">{{ $t('编辑') }}
               </el-button>
               <el-popconfirm style="margin-left: 10px" :title="$t('确定删除吗？')"
-                             @onConfirm="onMenuResourceDelete(scope)">
+                             @confirm="onMenuResourceDelete(scope)">
                 <el-button slot="reference" v-permission="menuResourcePermission.delete"
-                           size="mini" icon="el-icon-delete" type="text">{{ $t('删除') }}
+                           size="mini" icon="el-icon-delete" type="danger" plain>{{ $t('删除') }}
                 </el-button>
               </el-popconfirm>
             </template>
@@ -358,9 +360,23 @@ export default {
         isDisabled: node.isDisabled
       };
     },
+    fullPathNormalizer(node) {
+      if (node.children && !node.children.length) {
+        delete node.children;
+      }
+      if (node.name === '') {
+        return node;
+      }
+      return {
+        id: node.fullPath,
+        label: this.generateTitle(node.label),
+        children: node.children,
+        isDisabled: node.isDisabled
+      };
+    },
     findMenuTree() {
       searchMenu('tree', {projection: 'menu-option'}).then(response => {
-        const menu = {id: '', label: this.generateTitle('(无)'), isDisabled: false};
+        const menu = {id: '', label: this.generateTitle('(无)'), name: '', isDisabled: false};
         this.menuTreeOptions = [menu, ...response._embedded.menus];
       });
     },
@@ -490,10 +506,12 @@ export default {
       });
     },
     onMenuDelete({row}) {
-      deleteMenu(row.id).then(() => {
-        this.$message.success(`菜单 [${row.title}] 删除成功！`);
-        this.findMenuList();
-      });
+      if (row && row.id) {
+        deleteMenu(row.id).then(() => {
+          this.$message.success(`菜单 [${row.title}] 删除成功！`);
+          this.findMenuList();
+        });
+      }
     },
     reloadMenuForm() {
       if (this.menuForm.id) {
@@ -529,11 +547,11 @@ export default {
           if (!utils.isAbsoluteUrl(path)) {
             // 如果设置上级菜单，则 path 不能以 / 开头
             if (parent && path.startsWith('/')) {
-              this.$message.error('子级菜单的路径不能以 \\/ 开头！');
+              this.$message.error('子级菜单的路径不能以 / 开头！');
               return;
             }
             if (!parent && !path.startsWith('/')) {
-              this.$message.error('顶级菜单的路径必须以 \\/ 开头！');
+              this.$message.error('顶级菜单的路径必须以 / 开头！');
               return;
             }
           }

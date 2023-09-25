@@ -45,14 +45,14 @@
       <el-table-column :label="$t('操作')" min-width="100" :align="'center'">
         <template v-slot="scope">
           <el-button v-permission="rolePermission.edit"
-                     size="mini" icon="el-icon-edit" type="text"
+                     size="mini" icon="el-icon-edit" type="success" plain
                      @click="onRoleEdit(scope)">{{ $t('编辑') }}
           </el-button>
           <el-popconfirm style="margin-left: 10px" :title="$t('确定删除吗？')"
-                         @onConfirm="onRoleDelete(scope)">
+                         @confirm="onRoleDelete(scope)">
             <el-button slot="reference" v-permission="rolePermission.delete"
                        :disabled="scope.row.immutable"
-                       size="mini" icon="el-icon-delete" type="text">{{ $t('删除') }}
+                       size="mini" icon="el-icon-delete" type="danger" plain>{{ $t('删除') }}
             </el-button>
           </el-popconfirm>
         </template>
@@ -99,10 +99,10 @@
             <el-table-column :label="$t('操作')" min-width="100" :align="'center'">
               <template v-slot="scope">
                 <el-popconfirm style="margin-left: 10px" :title="$t('确定删除吗？')"
-                               @onConfirm="onRoleDeleteAccount(scope)">
+                               @confirm="onRoleDeleteAccount(scope)">
                   <el-button slot="reference" v-permission="rolePermission.account"
                              :disabled="!roleFormEditable"
-                             size="mini" icon="el-icon-delete" type="text">{{ $t('删除') }}
+                             size="mini" icon="el-icon-delete" type="danger" plain>{{ $t('删除') }}
                   </el-button>
                 </el-popconfirm>
               </template>
@@ -125,10 +125,10 @@
             <el-table-column :label="$t('操作')" min-width="100" :align="'center'">
               <template v-slot="scope">
                 <el-popconfirm style="margin-left: 10px" :title="$t('确定删除吗？')"
-                               @onConfirm="onRoleDeleteMenu(scope)">
+                               @confirm="onRoleDeleteMenu(scope)">
                   <el-button slot="reference" v-permission="rolePermission.menu"
                              :disabled="!roleFormEditable"
-                             size="mini" icon="el-icon-delete" type="text">{{ $t('删除') }}
+                             size="mini" icon="el-icon-delete" type="danger" plain>{{ $t('删除') }}
                   </el-button>
                 </el-popconfirm>
               </template>
@@ -151,10 +151,10 @@
             <el-table-column :label="$t('操作')" min-width="100" :align="'center'">
               <template v-slot="scope">
                 <el-popconfirm style="margin-left: 10px" :title="$t('确定删除吗？')"
-                               @onConfirm="onRoleDeleteMenuResource(scope)">
+                               @confirm="onRoleDeleteMenuResource(scope)">
                   <el-button slot="reference" v-permission="rolePermission.menuResource"
                              :disabled="!roleFormEditable"
-                             size="mini" icon="el-icon-delete" type="text">{{ $t('删除') }}
+                             size="mini" icon="el-icon-delete" type="danger" plain>{{ $t('删除') }}
                   </el-button>
                 </el-popconfirm>
               </template>

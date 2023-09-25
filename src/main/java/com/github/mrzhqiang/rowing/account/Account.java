@@ -5,7 +5,7 @@ import com.github.mrzhqiang.rowing.domain.AccountType;
 import com.github.mrzhqiang.rowing.domain.AuditableEntity;
 import com.github.mrzhqiang.rowing.domain.Domains;
 import com.github.mrzhqiang.rowing.exam.Exam;
-import com.github.mrzhqiang.rowing.exam.ExamPaper;
+import com.github.mrzhqiang.rowing.exam.paper.ExamPaper;
 import com.github.mrzhqiang.rowing.role.Role;
 import com.github.mrzhqiang.rowing.third.ThirdUser;
 import com.github.mrzhqiang.rowing.user.User;

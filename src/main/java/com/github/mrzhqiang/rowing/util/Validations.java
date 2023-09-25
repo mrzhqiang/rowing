@@ -9,6 +9,7 @@ import org.hibernate.exception.DataException;
 import org.hibernate.exception.GenericJDBCException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.orm.jpa.JpaSystemException;
+import org.springframework.transaction.TransactionSystemException;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
@@ -31,7 +32,7 @@ public final class Validations {
             DataException.class,
             GenericJDBCException.class,
             JpaSystemException.class,
-            ConstraintViolationException.class
+            TransactionSystemException.class
     );
 
     /**
@@ -52,30 +53,28 @@ public final class Validations {
      * @param e 异常。
      * @return 异常消息。
      */
-    public static String findMessage(Exception e) {
-        if (e instanceof ConstraintViolationException) {
+    public static String findMessage(Throwable e) {
+        Exception exception = (Exception) findRealCause(e);
+        if (exception instanceof ConstraintViolationException) {
             Set<ConstraintViolation<?>> violationSet = ((ConstraintViolationException) e).getConstraintViolations();
             if (!ObjectUtils.isEmpty(violationSet)) {
                 return violationSet.stream()
                         .map(Validations::formatMessage)
                         .findFirst()
-                        .orElse(Exceptions.ofMessage(e));
+                        .orElse(Exceptions.ofMessage(exception));
             }
         }
-        if (e != null) {
-            e = findRealCause(e);
-        }
-        return Exceptions.ofMessage(e);
+        return Exceptions.ofMessage(exception);
     }
 
-    private static Exception findRealCause(Throwable e) {
+    private static Throwable findRealCause(Throwable e) {
         if (e == null) {
             return null;
         }
         if (IGNORE_EXCEPTION_LIST.contains(e.getClass())) {
             e = findRealCause(e.getCause());
         }
-        return (Exception) e;
+        return e;
     }
 
     private static String formatMessage(ConstraintViolation<?> violation) {

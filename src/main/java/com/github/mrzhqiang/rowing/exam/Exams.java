@@ -30,18 +30,19 @@ public final class Exams {
     /**
      * 通过考试实体生成编码。
      * <p>
-     * 预期的编码长度为 32 位字符串，包含字母和数字。
+     * 预期的编码长度为 28--30 位字符串，包含字母和数字。
      *
      * @param exam 考试实体。
      * @return 编码。可能是完全随机的编码。
      */
     public static String generateCode(Exam exam) {
-        // fixation 12 length
+        // 前缀加连字符 5 位长度
+        // 固定 12 位长度
         String first = Sequences.ofBasicDateTime();
-        // fixation 8 length
+        // 固定 5 位长度
         String second = RandomStrings.ofNumber(exam.getDifficulty());
-        second = Strings.padStart(second, 8, '0');
-        // fixation 7 length
+        second = Strings.padStart(second, 5, '0');
+        // 区间 6--8 位长度
         String third = Sequences.ofUid(exam.getTitle());
         return Strings.lenientFormat(CODE_TEMPLATE, first, second, third);
     }
@@ -55,8 +56,6 @@ public final class Exams {
         Preconditions.checkNotNull(exam, "exam == null");
         Preconditions.checkState(ExamStatus.DEFAULT.equals(exam.getStatus()),
                 "当前考试不可修改，请确认考试状态是否为默认");
-        Preconditions.checkState(LocalDateTime.now().isBefore(exam.getStartTime()),
-                "当前考试不可修改，请确认考试时间是否未开始");
     }
 
     /**
@@ -74,6 +73,15 @@ public final class Exams {
                 "准备考试之前，必须选择考试规则");
         Preconditions.checkState(!CollectionUtils.isEmpty(exam.getRule().getModes()),
                 "准备考试之前必须选择存在有效模式列表的考试规则");
+    }
+
+    public static boolean validateTake(Exam exam) {
+        return ExamStatus.RUNNING.equals(exam.getStatus())
+                && LocalDateTime.now().isBefore(exam.getEndTime());
+    }
+
+    public static boolean validateMark(Exam exam) {
+        return ExamStatus.MARKING.equals(exam.getStatus());
     }
 
 }

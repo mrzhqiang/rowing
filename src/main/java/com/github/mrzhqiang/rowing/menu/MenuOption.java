@@ -17,6 +17,8 @@ public interface MenuOption extends BaseProjection {
     @Value("#{target.title}")
     String getLabel();
 
+    String getFullPath();
+
     @Value("#{target.path?.startsWith('http')}")
     Boolean getIsDisabled();
 

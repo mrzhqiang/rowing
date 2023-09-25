@@ -1,6 +1,8 @@
 package com.github.mrzhqiang.rowing.dict;
 
 import com.github.mrzhqiang.rowing.account.RunAsSystem;
+import com.github.mrzhqiang.rowing.dict.gbt.DictGBTService;
+import com.github.mrzhqiang.rowing.dict.iso.DictISOService;
 import com.github.mrzhqiang.rowing.domain.TaskMode;
 import com.github.mrzhqiang.rowing.init.AutoInitializer;
 import lombok.extern.slf4j.Slf4j;

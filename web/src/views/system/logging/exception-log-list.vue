@@ -28,7 +28,7 @@
       <el-table-column prop="timestamp" :label="$t('操作时间')" min-width="80" :align="'center'"/>
       <el-table-column :label="$t('操作')" min-width="50" :align="'center'">
         <template v-slot="scope">
-          <el-button size="mini" icon="el-icon-notebook-2" type="text"
+          <el-button size="mini" icon="el-icon-notebook-2" type="primary" plain
                      :disabled="scope.trace"
                      @click="onLogTrace(scope)">{{ $t('堆栈') }}
           </el-button>

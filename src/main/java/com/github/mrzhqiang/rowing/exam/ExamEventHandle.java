@@ -1,5 +1,6 @@
 package com.github.mrzhqiang.rowing.exam;
 
+import com.github.mrzhqiang.rowing.exam.rule.ExamRule;
 import org.springframework.data.rest.core.annotation.HandleBeforeCreate;
 import org.springframework.data.rest.core.annotation.HandleBeforeSave;
 import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
@@ -30,6 +31,8 @@ public class ExamEventHandle {
 
     @HandleBeforeSave
     public void onBeforeSave(Exam entity) {
+        Exams.validateUpdate(entity);
+
         ExamRule rule = entity.getRule();
         LocalDateTime startTime = entity.getStartTime();
         entity.setEndTime(startTime.plus(rule.getDuration(), ChronoUnit.SECONDS));

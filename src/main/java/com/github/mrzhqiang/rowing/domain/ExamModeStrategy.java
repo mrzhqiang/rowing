@@ -2,8 +2,6 @@ package com.github.mrzhqiang.rowing.domain;
 
 /**
  * 考试模式策略。
- * <p>
- * 实际上应该叫考试选题策略。
  */
 public enum ExamModeStrategy {
 

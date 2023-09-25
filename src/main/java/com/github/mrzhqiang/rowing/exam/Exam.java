@@ -6,6 +6,9 @@ import com.github.mrzhqiang.rowing.dict.DictItem;
 import com.github.mrzhqiang.rowing.domain.AuditableEntity;
 import com.github.mrzhqiang.rowing.domain.Domains;
 import com.github.mrzhqiang.rowing.domain.ExamStatus;
+import com.github.mrzhqiang.rowing.exam.paper.ExamPaper;
+import com.github.mrzhqiang.rowing.exam.report.ExamReport;
+import com.github.mrzhqiang.rowing.exam.rule.ExamRule;
 import com.google.common.collect.Lists;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,6 +18,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -61,7 +65,8 @@ public class Exam extends AuditableEntity {
      * TODO 而当选择一个或多个时，对于 in 语句可以过滤无关数据。
      */
     @NotNull
-    @ManyToOne(optional = false)
+    @ToString.Exclude
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(nullable = false, updatable = false)
     private DictItem subject;
     /**
@@ -72,7 +77,8 @@ public class Exam extends AuditableEntity {
      * 规则。
      */
     @NotNull
-    @ManyToOne(optional = false)
+    @ToString.Exclude
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private ExamRule rule;
     /**
      * 状态。

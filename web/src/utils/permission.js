@@ -86,11 +86,13 @@ export const PERMISSION_MARK = {
         create: [ADMIN_ROLE, 'AUTH_EXAM_PAPER_CREATE'],
         edit: [ADMIN_ROLE, 'AUTH_EXAM_PAPER_EDIT'],
         delete: [ADMIN_ROLE, 'AUTH_EXAM_PAPER_DELETE'],
+        taker: [ADMIN_ROLE, 'AUTH_EXAM_PAPER_TAKER'],
+        marker: [ADMIN_ROLE, 'AUTH_EXAM_PAPER_MARKER'],
     },
-    examPaperAnswerGroup: {
-        create: [ADMIN_ROLE, 'AUTH_EXAM_PAPER_ANSWER_GROUP_CREATE'],
-        edit: [ADMIN_ROLE, 'AUTH_EXAM_PAPER_ANSWER_GROUP_EDIT'],
-        delete: [ADMIN_ROLE, 'AUTH_EXAM_PAPER_ANSWER_GROUP_DELETE'],
+    examPaperAnswerCard: {
+        create: [ADMIN_ROLE, 'AUTH_EXAM_PAPER_ANSWER_CARD_CREATE'],
+        edit: [ADMIN_ROLE, 'AUTH_EXAM_PAPER_ANSWER_CARD_EDIT'],
+        delete: [ADMIN_ROLE, 'AUTH_EXAM_PAPER_ANSWER_CARD_DELETE'],
     },
     examPaperAnswer: {
         create: [ADMIN_ROLE, 'AUTH_EXAM_PAPER_ANSWER_CREATE'],

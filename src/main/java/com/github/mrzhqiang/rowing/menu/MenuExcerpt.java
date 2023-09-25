@@ -2,6 +2,7 @@ package com.github.mrzhqiang.rowing.menu;
 
 import com.github.mrzhqiang.rowing.domain.AuditableProjection;
 import com.github.mrzhqiang.rowing.domain.Logic;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.rest.core.config.Projection;
 
 
@@ -25,5 +26,8 @@ public interface MenuExcerpt extends AuditableProjection {
     Logic getEnabled();
 
     Logic getInternal();
+
+    @Value("#{target.internal.name()}")
+    String getInternalCode();
 
 }

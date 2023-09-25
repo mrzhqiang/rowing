@@ -1,5 +1,6 @@
 package com.github.mrzhqiang.rowing.exam;
 
+import com.github.mrzhqiang.rowing.exam.paper.ExamPaperInfo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -30,7 +31,7 @@ public interface ExamService {
     void updateMarkers(Long examId, List<Long> markers);
 
     /**
-     * 查询我的考试信息分页数据。
+     * 查询考生的考试信息分页数据。
      *
      * @param userDetails 当前登录用户。
      * @param title       模糊查询的标题。
@@ -40,12 +41,30 @@ public interface ExamService {
      * @param pageable    分页参数。
      * @return 考试信息分页数据。
      */
-    Page<ExamInfo> myExamInfo(UserDetails userDetails,
-                              String title,
-                              String code,
-                              LocalDateTime firstStart,
-                              LocalDateTime secondStart,
-                              Pageable pageable);
+    Page<ExamInfo> takerExamInfo(UserDetails userDetails,
+                                 String title,
+                                 String code,
+                                 LocalDateTime firstStart,
+                                 LocalDateTime secondStart,
+                                 Pageable pageable);
+
+    /**
+     * 查询阅卷人的考试信息分页数据。
+     *
+     * @param userDetails 当前登录用户。
+     * @param title       模糊查询的标题。
+     * @param code        模糊查询的编码。
+     * @param firstStart  查询考试时间的起始区间。
+     * @param secondStart 查询考试时间的结束区间。
+     * @param pageable    分页参数。
+     * @return 考试信息分页数据。
+     */
+    Page<ExamInfo> markerExamInfo(UserDetails userDetails,
+                                  String title,
+                                  String code,
+                                  LocalDateTime firstStart,
+                                  LocalDateTime secondStart,
+                                  Pageable pageable);
 
     /**
      * 准备考试。
@@ -64,4 +83,67 @@ public interface ExamService {
      * 3. 从阅卷中到已完成：所有试卷都已批阅完毕时更新。
      */
     void updateStatus();
+
+    /**
+     * 找到指定考生的试卷信息。
+     *
+     * @param username 考生用户名。
+     * @param examId   考试 ID。
+     * @return 考试试卷信息。
+     */
+    ExamPaperInfo findTakerPaper(String username, Long examId);
+
+    /**
+     * 开始考试。
+     *
+     * @param paperId 试卷 ID。
+     */
+    void takerPaper(Long paperId);
+
+    /**
+     * 找到指定阅卷人的试卷信息。
+     *
+     * @param username 阅卷人用户名。
+     * @param examId   考试 ID。
+     * @return 考试试卷信息。
+     */
+    ExamPaperInfo findMarkerPaper(String username, Long examId);
+
+    /**
+     * 开始批阅。
+     *
+     * @param paperId 试卷 ID。
+     */
+    void markerPaper(Long paperId);
+
+    /**
+     * 保存试卷答题数据。
+     *
+     * @param data 试卷答题数据。
+     */
+    void savePaperAnswer(PaperAnswerData data);
+
+    /**
+     * 保存试卷批阅数据。
+     *
+     * @param data 试卷批阅数据。
+     */
+    void savePaperMarker(PaperAnswerData data);
+
+    /**
+     * 提交试卷。
+     *
+     * @param paperId 试卷 ID。
+     * @param data    最后的试卷答题数据。
+     */
+    void commitPaper(Long paperId, PaperAnswerData data);
+
+    /**
+     * 完成批阅。
+     *
+     * @param parseLong 试卷 ID。
+     * @param data      最后的试题批阅数据。
+     */
+    void finishPaper(Long parseLong, PaperAnswerData data);
+
 }

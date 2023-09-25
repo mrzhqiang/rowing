@@ -33,14 +33,14 @@
     <el-table v-loading="examLoading" :data="examList" row-key="id" size="mini"
               stripe border highlight-current-row>
       <el-table-column prop="id" label="#" min-width="20" :align="'right'"/>
-      <el-table-column prop="title" :label="$t('标题')" min-width="100" show-overflow-tooltip>
+      <el-table-column prop="title" :label="$t('标题')" min-width="80" show-overflow-tooltip>
         <template v-slot="scope">
           <el-button size="mini" type="text" @click="onExamEdit(scope, true)">
             {{ scope.row.title }}
           </el-button>
         </template>
       </el-table-column>
-      <el-table-column prop="code" :label="$t('编码')" min-width="100" show-overflow-tooltip/>
+      <el-table-column prop="code" :label="$t('编码')" min-width="120" show-overflow-tooltip/>
       <el-table-column prop="subjectLabel" :label="$t('科目')" min-width="40" :align="'center'"/>
       <el-table-column prop="difficulty" :label="$t('难度')" min-width="80" :align="'center'">
         <template v-slot="scope">
@@ -54,30 +54,30 @@
       <el-table-column prop="created" :label="$t('创建时间')" min-width="80" :align="'center'"/>
       <el-table-column prop="updatedBy" :label="$t('更新人')" min-width="40" :align="'center'"/>
       <el-table-column prop="updated" :label="$t('更新时间')" min-width="80" :align="'center'"/>
-      <el-table-column :label="$t('操作')" min-width="120" :align="'center'">
+      <el-table-column :label="$t('操作')" min-width="200" :align="'center'">
         <template v-slot="scope">
           <el-button v-permission="examPermission.taker"
-                     size="mini" icon="el-icon-user" type="text"
+                     size="mini" icon="el-icon-user" type="primary" plain
                      @click="onExamTaker(scope)">{{ $t('考生') }}
           </el-button>
           <el-button v-permission="examPermission.marker"
-                     size="mini" icon="el-icon-s-custom" type="text"
+                     size="mini" icon="el-icon-s-custom" type="primary" plain
                      @click="onExamMarker(scope)">{{ $t('阅卷人') }}
           </el-button>
           <el-popconfirm style="margin: 0 10px" :title="$t('一旦准备将不能再修改任何内容，请确认！')"
-                         @onConfirm="onExamWaiting(scope)">
+                         @confirm="onExamWaiting(scope)">
             <el-button slot="reference" v-permission="examPermission.edit"
-                       size="mini" icon="el-icon-ice-cream" type="text">{{ $t('准备') }}
+                       size="mini" icon="el-icon-ice-cream" type="warning" plain>{{ $t('准备') }}
             </el-button>
           </el-popconfirm>
           <el-button v-permission="examPermission.edit"
-                     size="mini" icon="el-icon-edit" type="text"
+                     size="mini" icon="el-icon-edit" type="success" plain
                      @click="onExamEdit(scope)">{{ $t('编辑') }}
           </el-button>
           <el-popconfirm style="margin-left: 10px" :title="$t('确定删除吗？')"
-                         @onConfirm="onExamDelete(scope)">
+                         @confirm="onExamDelete(scope)">
             <el-button slot="reference" v-permission="examPermission.delete"
-                       size="mini" icon="el-icon-circle-close" type="text">{{ $t('删除') }}
+                       size="mini" icon="el-icon-circle-close" type="danger" plain>{{ $t('删除') }}
             </el-button>
           </el-popconfirm>
         </template>
@@ -378,6 +378,7 @@ export default {
       if (row.id) {
         prepareExam(row.id).then(() => {
           this.$message.success(`考试 [${row.title}] 准备成功！`);
+          this.findExamList();
         });
       }
     },

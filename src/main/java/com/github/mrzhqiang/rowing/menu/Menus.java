@@ -7,7 +7,6 @@ import static com.google.common.base.CaseFormat.LOWER_HYPHEN;
 import static com.google.common.base.CaseFormat.UPPER_CAMEL;
 import com.google.common.base.Preconditions;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Optional;
@@ -75,9 +74,11 @@ public final class Menus {
      * @param menu 菜单实体。
      */
     public static void handleName(Menu menu) {
-        if (!StringUtils.hasText(menu.getName())) {
-            menu.setName(LOWER_HYPHEN.to(UPPER_CAMEL, menu.getPath()));
+        String path = menu.getPath();
+        if (path.contains("/")) {
+            path = path.substring(0, path.lastIndexOf("/"));
         }
+        menu.setName(LOWER_HYPHEN.to(UPPER_CAMEL, path));
     }
 
     /**
@@ -86,15 +87,13 @@ public final class Menus {
      * @param menu 菜单实体。
      */
     public static void handleFullPath(Menu menu) {
-        if (!StringUtils.hasText(menu.getFullPath())) {
-            String fullPath = Optional.ofNullable(menu.getParent())
-                    .map(Menu::getFullPath)
-                    // 子级菜单，使用上级菜单路径拼接当前菜单路径，作为完整路径
-                    .map(it -> Menus.concatFullPath(it, menu.getPath()))
-                    // 顶级菜单，完整路径就是路径
-                    .orElse(menu.getPath());
-            menu.setFullPath(fullPath);
-        }
+        String fullPath = Optional.ofNullable(menu.getParent())
+                .map(Menu::getFullPath)
+                // 子级菜单，使用上级菜单路径拼接当前菜单路径，作为完整路径
+                .map(it -> Menus.concatFullPath(it, menu.getPath()))
+                // 顶级菜单，完整路径就是路径
+                .orElse(menu.getPath());
+        menu.setFullPath(fullPath);
     }
 
     /**

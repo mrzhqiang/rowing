@@ -43,13 +43,13 @@
       <el-table-column :label="$t('操作')" min-width="100" :align="'center'">
         <template v-slot="scope">
           <el-button v-permission="examQuestionBankPermission.edit"
-                     size="mini" icon="el-icon-edit" type="text"
+                     size="mini" icon="el-icon-edit" type="success" plain
                      @click="onExamQuestionBankEdit(scope)">{{ $t('编辑') }}
           </el-button>
           <el-popconfirm style="margin-left: 10px" :title="$t('确定删除吗？')"
-                         @onConfirm="onExamQuestionBankDelete(scope)">
+                         @confirm="onExamQuestionBankDelete(scope)">
             <el-button slot="reference" v-permission="examQuestionBankPermission.delete"
-                       size="mini" icon="el-icon-circle-close" type="text">{{ $t('删除') }}
+                       size="mini" icon="el-icon-circle-close" type="danger" plain>{{ $t('删除') }}
             </el-button>
           </el-popconfirm>
         </template>

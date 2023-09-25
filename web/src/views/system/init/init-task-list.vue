@@ -33,33 +33,33 @@
       <el-table-column prop="created" :label="$t('创建时间')" min-width="80" :align="'center'"/>
       <el-table-column prop="updatedBy" :label="$t('更新人')" min-width="40" :align="'center'"/>
       <el-table-column prop="updated" :label="$t('更新时间')" min-width="80" :align="'center'"/>
-      <el-table-column :label="$t('操作')" min-width="100" :align="'center'">
+      <el-table-column :label="$t('操作')" min-width="150" :align="'center'">
         <template v-slot="scope">
-          <el-button size="mini" icon="el-icon-notebook-2" type="text"
+          <el-button size="mini" icon="el-icon-notebook-2" type="primary" plain
                      @click="onInitTaskLog(scope)">{{ $t('日志') }}
           </el-button>
           <el-popconfirm style="margin: 0 10px" :title="$t('确定执行吗？')"
-                         @onConfirm="onInitTaskExecute(scope)">
+                         @confirm="onInitTaskExecute(scope)">
             <el-button slot="reference" v-permission="initTaskPermission.execute"
-                       size="mini" icon="el-icon-caret-right" type="text">{{ $t('执行') }}
+                       size="mini" icon="el-icon-caret-right" type="warning" plain>{{ $t('执行') }}
             </el-button>
           </el-popconfirm>
           <el-button v-permission="initTaskPermission.edit"
-                     size="mini" icon="el-icon-edit" type="text"
+                     size="mini" icon="el-icon-edit" type="success" plain
                      @click="onInitTaskEdit(scope)">{{ $t('编辑') }}
           </el-button>
           <el-popconfirm v-if="scope.row.discardCode === 'NO'"
                          style="margin-left: 10px" :title="$t('确定废弃吗？')"
-                         @onConfirm="onInitTaskDiscard(scope)">
+                         @confirm="onInitTaskDiscard(scope)">
             <el-button slot="reference" v-permission="initTaskPermission.edit"
-                       size="mini" icon="el-icon-circle-close" type="text">{{ $t('废弃') }}
+                       size="mini" icon="el-icon-circle-close" type="danger" plain>{{ $t('废弃') }}
             </el-button>
           </el-popconfirm>
           <el-popconfirm v-if="scope.row.discardCode === 'YES'"
                          style="margin-left: 10px" :title="$t('确定启用吗？')"
-                         @onConfirm="onInitTaskDiscard(scope)">
+                         @confirm="onInitTaskDiscard(scope)">
             <el-button slot="reference" v-permission="initTaskPermission.edit"
-                       size="mini" icon="el-icon-circle-check" type="text">{{ $t('启用') }}
+                       size="mini" icon="el-icon-circle-check" type="success" plain>{{ $t('启用') }}
             </el-button>
           </el-popconfirm>
         </template>
@@ -110,7 +110,7 @@
               <el-tag :type="log.trace ? 'danger' : 'success'">{{ log.createdBy }}</el-tag>
             </div>
             <span :style="log.trace ? 'color: red' : ''">{{ log.message }}</span>
-            <el-button v-if="log.trace" type="text" style="float: right; padding: 3px 0"
+            <el-button v-if="log.trace" type="success" plain style="float: right; padding: 3px 0"
                        @click="onInitTaskLogTraceOpen(log.trace)">{{ $t('查看详情') }}
             </el-button>
           </el-card>

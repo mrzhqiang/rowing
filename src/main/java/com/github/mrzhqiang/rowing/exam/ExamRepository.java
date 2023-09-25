@@ -13,18 +13,21 @@ import java.time.LocalDateTime;
 public interface ExamRepository extends BaseRepository<Exam> {
 
     @RestResource(path = "page", rel = "page")
-    Page<Exam> findAllByTitleContainingAndCodeContainingAndStartTimeBetween(String title,
-                                                                            String code,
-                                                                            LocalDateTime firstStart,
-                                                                            LocalDateTime secondStart,
-                                                                            Pageable pageable);
+    Page<Exam> findAllByTitleContainingAndCodeContainingAndStartTimeBetween(
+            String title, String code,
+            LocalDateTime firstStart, LocalDateTime secondStart,
+            Pageable pageable);
 
     @RestResource(exported = false)
-    Page<ExamInfo> findAllByTakersContainingAndTitleContainingAndCodeContainingAndStartTimeBetween(Account account,
-                                                                                               String title,
-                                                                                               String code,
-                                                                                               LocalDateTime firstStart,
-                                                                                               LocalDateTime secondStart,
-                                                                                               Pageable pageable);
+    Page<ExamInfo> findAllByTakersContainingAndTitleContainingAndCodeContainingAndStartTimeBetween(
+            Account account, String title, String code,
+            LocalDateTime firstStart, LocalDateTime secondStart,
+            Pageable pageable);
+
+    @RestResource(exported = false)
+    Page<ExamInfo> findAllByMarkersContainingAndTitleContainingAndCodeContainingAndStartTimeBetween(
+            Account account, String title, String code,
+            LocalDateTime firstStart, LocalDateTime secondStart,
+            Pageable pageable);
 
 }
