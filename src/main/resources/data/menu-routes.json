@@ -158,5 +158,130 @@
         }
       }
     ]
+  },
+  {
+    "path": "/exam",
+    "component": "Layout",
+    "redirect": "/exam/exam",
+    "name": "ExamRoot",
+    "alwaysShow": true,
+    "meta": {
+      "title": "考试测验",
+      "icon": "el-icon-odometer",
+      "breadcrumb": true,
+      "roles": [
+        "ADMIN","USER"
+      ]
+    },
+    "children": [
+      {
+        "path": "exam",
+        "component": "exam/exam-list",
+        "name": "Exam",
+        "meta": {
+          "title": "考试管理",
+          "icon": "el-icon-document-copy",
+          "breadcrumb": true,
+          "roles": [
+            "ADMIN"
+          ]
+        }
+      },
+      {
+        "path": "exam-question-bank",
+        "component": "exam/exam-question-bank-list",
+        "name": "ExamQuestionBank",
+        "meta": {
+          "title": "题库管理",
+          "icon": "el-icon-question",
+          "breadcrumb": true,
+          "roles": [
+            "ADMIN"
+          ]
+        }
+      },
+      {
+        "path": "exam-question",
+        "component": "exam/exam-question-list",
+        "name": "ExamQuestionList",
+        "meta": {
+          "title": "试题管理",
+          "icon": "el-icon-document",
+          "breadcrumb": true,
+          "roles": [
+            "ADMIN"
+          ]
+        }
+      },
+      {
+        "path": "exam-rule",
+        "component": "exam/exam-rule-list",
+        "name": "ExamRule",
+        "meta": {
+          "title": "规则管理",
+          "icon": "el-icon-set-up",
+          "breadcrumb": true,
+          "roles": [
+            "ADMIN"
+          ]
+        }
+      },
+      {
+        "path": "exam-taker",
+        "component": "exam/exam-taker-list",
+        "name": "ExamTaker",
+        "meta": {
+          "title": "我的考试",
+          "icon": "el-icon-copy-document",
+          "breadcrumb": true,
+          "roles": [
+            "ADMIN","USER"
+          ]
+        }
+      },
+      {
+        "path": "exam-marker",
+        "component": "exam/exam-marker-list",
+        "name": "ExamMarker",
+        "meta": {
+          "title": "我的阅卷",
+          "icon": "el-icon-document-checked",
+          "breadcrumb": true,
+          "roles": [
+            "ADMIN"
+          ]
+        }
+      },
+      {
+        "path": "exam-taker-paper/:id",
+        "component": "exam/exam-taker-paper",
+        "name": "ExamTakerPaper",
+        "meta": {
+          "title": "开始考试",
+          "breadcrumb": false,
+          "activeMenu": "/exam/exam-taker",
+          "hidden": true,
+          "noCache": true,
+          "roles": [
+            "ADMIN","USER"
+          ]
+        }
+      },
+      {
+        "path": "exam-marker-paper/:id",
+        "component": "exam/exam-marker-paper",
+        "name": "ExamMarkerPaper",
+        "meta": {
+          "title": "开始阅卷",
+          "breadcrumb": false,
+          "activeMenu": "/exam/exam-marker",
+          "hidden": true,
+          "noCache": true,
+          "roles": [
+            "ADMIN"
+          ]
+        }
+      }
+    ]
   }
 ]
