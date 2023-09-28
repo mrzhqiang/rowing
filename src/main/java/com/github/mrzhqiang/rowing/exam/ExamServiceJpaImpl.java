@@ -442,7 +442,9 @@ public class ExamServiceJpaImpl implements ExamService {
         Exam exam = repository.findById(examId)
                 //.filter(Exams::validateTake)
                 .orElseThrow(() -> ResourceNotFoundException.of("操作失败，考试未找到！"));
-        Preconditions.checkState(accountRepository.existsAccountByUsernameAndTakeExamsContaining(username, exam),
+        Optional<Account> accountOptional = accountRepository.findByUsername(username);
+        Preconditions.checkState(accountOptional.isPresent(), "无效的用户");
+        Preconditions.checkState(repository.existsByTakersContainingAndId(accountOptional.get(), examId),
                 "操作失败，用户无权参与考试！");
         return paperRepository.findByTaker_UsernameAndExam(username, exam)
                 .orElseThrow(() -> ResourceNotFoundException.of("操作失败，试卷未找到！"));
@@ -465,7 +467,9 @@ public class ExamServiceJpaImpl implements ExamService {
         Exam exam = repository.findById(examId)
                 //.filter(Exams::validateMark)
                 .orElseThrow(() -> ResourceNotFoundException.of("操作失败，考试未找到！"));
-        Preconditions.checkState(accountRepository.existsAccountByUsernameAndMarkExamsContaining(username, exam),
+        Optional<Account> accountOptional = accountRepository.findByUsername(username);
+        Preconditions.checkState(accountOptional.isPresent(), "无效的用户");
+        Preconditions.checkState(repository.existsByMarkersContainingAndId(accountOptional.get(), examId),
                 "操作失败，用户无权批阅试卷！");
         return paperRepository.findByMarker_UsernameAndExam(username, exam)
                 //.filter(ExamPapers::checkMark)

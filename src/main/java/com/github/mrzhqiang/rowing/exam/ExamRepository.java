@@ -30,4 +30,10 @@ public interface ExamRepository extends BaseRepository<Exam> {
             LocalDateTime firstStart, LocalDateTime secondStart,
             Pageable pageable);
 
+    @RestResource(exported = false)
+    boolean existsByTakersContainingAndId(Account taker, Long examId);
+
+    @RestResource(exported = false)
+    boolean existsByMarkersContainingAndId(Account marker, Long examId);
+
 }

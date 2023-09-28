@@ -87,6 +87,8 @@ public class ExamPaperAnswer extends AuditableEntity {
     /**
      * 试题分数。
      */
+    @NotNull
+    @Column(nullable = false)
     private BigDecimal questionScore = BigDecimal.ZERO;
     /**
      * 试题得分。

@@ -1,12 +1,9 @@
 package com.github.mrzhqiang.rowing.account;
 
 import com.github.mrzhqiang.rowing.domain.BaseRepository;
-import com.github.mrzhqiang.rowing.exam.Exam;
 import static com.github.mrzhqiang.rowing.util.Authorizes.HAS_AUTHORITY_ADMIN;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -43,17 +40,5 @@ public interface AccountRepository extends BaseRepository<Account> {
 
     @RestResource(path = "list", rel = "list")
     List<Account> findAllByUsernameNotNull();
-
-    @RestResource(path = "count-exam-taker")
-    @Query("select count(a) from Account a join a.takeExams e where e = :exam")
-    Long countByTakeExams(@Param("exam") Exam exam);
-
-    @RestResource(path = "count-exam-marker")
-    @Query("select count(a) from Account a join a.takeExams e where e = :exam")
-    Long countByMarkExams(@Param("exam") Exam exam);
-
-    Boolean existsAccountByUsernameAndTakeExamsContaining(String username, Exam exam);
-
-    Boolean existsAccountByUsernameAndMarkExamsContaining(String username, Exam exam);
 
 }

@@ -4,8 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.mrzhqiang.rowing.domain.AccountType;
 import com.github.mrzhqiang.rowing.domain.AuditableEntity;
 import com.github.mrzhqiang.rowing.domain.Domains;
-import com.github.mrzhqiang.rowing.exam.Exam;
-import com.github.mrzhqiang.rowing.exam.paper.ExamPaper;
 import com.github.mrzhqiang.rowing.role.Role;
 import com.github.mrzhqiang.rowing.third.ThirdUser;
 import com.github.mrzhqiang.rowing.user.User;
@@ -191,37 +189,6 @@ public class Account extends AuditableEntity implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "role_id"),
             uniqueConstraints = @UniqueConstraint(columnNames = {"account_id", "role_id"}))
     private List<Role> roles = Lists.newArrayList();
-
-    /**
-     * 账户下的考试列表。
-     */
-    @JsonIgnore
-    @Builder.Default
-    @ToString.Exclude
-    @ManyToMany(mappedBy = "takers")
-    private List<Exam> takeExams = Lists.newArrayList();
-    /**
-     * 账户下的阅卷列表。
-     */
-    @JsonIgnore
-    @Builder.Default
-    @ToString.Exclude
-    @ManyToMany(mappedBy = "markers")
-    private List<Exam> markExams = Lists.newArrayList();
-    /**
-     * 试卷列表。
-     */
-    @JsonIgnore
-    @ToString.Exclude
-    @OneToMany(mappedBy = "taker", orphanRemoval = true)
-    private List<ExamPaper> takePapers = Lists.newArrayList();
-    /**
-     * 阅卷试卷列表。
-     */
-    @JsonIgnore
-    @ToString.Exclude
-    @OneToMany(mappedBy = "marker", orphanRemoval = true)
-    private List<ExamPaper> markPapers = Lists.newArrayList();
 
     /**
      * 获取授权列表。
