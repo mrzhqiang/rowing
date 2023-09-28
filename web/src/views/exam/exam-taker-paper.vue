@@ -22,7 +22,7 @@
     </el-result>
 
     <transition name="fade-transform" mode="out-in">
-      <div v-if="examStatus === 'TAKER_PAPER' || examStatus === 'PAPER_RESULT'" style="width: 100%">
+      <div v-if="['MARKER_PAPER','PAPER_RESULT'].includes(examStatus)" style="width: 100%">
         <sticky>
           <el-card>
             <el-row type="flex" :align="'middle'">
@@ -136,7 +136,7 @@
                    style="margin: 8px 0">
                 <p>阅卷分数：</p>
                 <el-input-number v-model="paperAnswer.score" controls-position="right"
-                                 min="0" :precision="2" :max="paperAnswer.questionScore"
+                                 :precision="2" :max="paperAnswer.questionScore"
                                  :disabled="examStatus === 'PAPER_RESULT'"/>
                 <p>阅卷批语：</p>
                 <el-input v-model="paperAnswer.comment" type="textarea" rows="3"

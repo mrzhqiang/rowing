@@ -98,7 +98,8 @@ public class Role extends AuditableEntity implements GrantedAuthoritiesContainer
 
     @Override
     public Collection<GrantedAuthority> getGrantedAuthorities() {
-        return Stream.concat(Stream.of(code), menuResources.stream().map(MenuResource::getAuthority))
+        return Stream.concat(Stream.of(code), this.getMenuResources().stream()
+                        .map(MenuResource::getAuthority))
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
     }

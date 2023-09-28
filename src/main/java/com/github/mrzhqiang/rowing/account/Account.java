@@ -196,8 +196,8 @@ public class Account extends AuditableEntity implements UserDetails {
     @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Stream.concat(Stream.of(type.toAuthority()),
-                        roles.stream().flatMap(it -> it.getGrantedAuthorities().stream()))
+        return Stream.concat(Stream.of(type.toAuthority()), this.getRoles().stream()
+                        .flatMap(it -> it.getGrantedAuthorities().stream()))
                 .distinct()
                 .collect(Collectors.toList());
     }

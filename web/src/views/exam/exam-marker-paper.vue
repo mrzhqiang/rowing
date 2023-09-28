@@ -18,7 +18,7 @@
     </el-result>
 
     <transition name="fade-transform" mode="out-in">
-      <div v-if="examStatus === 'MARKER_PAPER' || examStatus === 'PAPER_RESULT'" style="width: 100%">
+      <div v-if="['MARKER_PAPER','PAPER_RESULT'].includes(examStatus)" style="width: 100%">
         <sticky>
           <el-card>
             <el-row type="flex" :align="'middle'">

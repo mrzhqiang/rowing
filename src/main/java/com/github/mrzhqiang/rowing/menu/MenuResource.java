@@ -1,9 +1,6 @@
 package com.github.mrzhqiang.rowing.menu;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.mrzhqiang.rowing.domain.AuditableEntity;
-import com.github.mrzhqiang.rowing.role.Role;
-import com.google.common.collect.Lists;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -11,12 +8,10 @@ import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.List;
 
 /**
  * 菜单资源。
@@ -70,12 +65,5 @@ public class MenuResource extends AuditableEntity implements GrantedAuthority {
      */
     @ManyToOne(optional = false)
     private Menu menu;
-    /**
-     * 资源所属角色列表。
-     */
-    @JsonIgnore
-    @ToString.Exclude
-    @ManyToMany(mappedBy = "menuResources")
-    private List<Role> roles = Lists.newArrayList();
 
 }
