@@ -31,7 +31,7 @@
           <svg-icon v-else-if="scope.row.icon" :icon-class="scope.row.icon"/>
         </template>
       </el-table-column>
-      <el-table-column prop="title" :label="$t('标题')" min-width="50" show-overflow-tooltip>
+      <el-table-column prop="title" :label="$t('标题')" min-width="80" show-overflow-tooltip>
         <template v-slot="scope">
           <el-button size="mini" type="text" @click="onMenuEdit(scope, true)">
             {{ generateTitle(scope.row.title) }}
@@ -47,7 +47,7 @@
       <el-table-column prop="created" :label="$t('创建时间')" min-width="80" :align="'center'"/>
       <el-table-column prop="updatedBy" :label="$t('更新人')" min-width="40" :align="'center'"/>
       <el-table-column prop="updated" :label="$t('更新时间')" min-width="80" :align="'center'"/>
-      <el-table-column :label="$t('操作')" min-width="100" :align="'center'">
+      <el-table-column :label="$t('操作')" min-width="180" :align="'center'">
         <template v-slot="scope">
           <el-button v-permission="menuPermission.create"
                      size="mini" icon="el-icon-plus" type="primary" plain
@@ -196,7 +196,7 @@
           <el-table-column prop="created" :label="$t('创建时间')" min-width="80" :align="'center'"/>
           <el-table-column prop="updatedBy" :label="$t('更新人')" min-width="40" :align="'center'"/>
           <el-table-column prop="updated" :label="$t('更新时间')" min-width="80" :align="'center'"/>
-          <el-table-column :label="$t('操作')" min-width="100" :align="'center'">
+          <el-table-column :label="$t('操作')" min-width="120" :align="'center'">
             <template v-slot="scope">
               <el-button v-permission="menuResourcePermission.edit"
                          size="mini" icon="el-icon-edit" type="success" plain

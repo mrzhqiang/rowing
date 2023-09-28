@@ -33,7 +33,7 @@
       <el-table-column prop="created" :label="$t('创建时间')" min-width="80" :align="'center'"/>
       <el-table-column prop="updatedBy" :label="$t('更新人')" min-width="40" :align="'center'"/>
       <el-table-column prop="updated" :label="$t('更新时间')" min-width="80" :align="'center'"/>
-      <el-table-column :label="$t('操作')" min-width="150" :align="'center'">
+      <el-table-column :label="$t('操作')" min-width="180" :align="'center'">
         <template v-slot="scope">
           <el-button size="mini" icon="el-icon-notebook-2" type="primary" plain
                      @click="onInitTaskLog(scope)">{{ $t('日志') }}

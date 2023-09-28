@@ -24,14 +24,14 @@
     <el-table v-loading="dictLoading" :data="dictList" row-key="id" size="mini"
               stripe border highlight-current-row>
       <el-table-column prop="id" label="#" min-width="20" :align="'right'"/>
-      <el-table-column prop="name" :label="$t('名称')" min-width="100" :align="'center'">
+      <el-table-column prop="name" :label="$t('名称')" min-width="50" show-overflow-tooltip>
         <template v-slot="scope">
           <el-button size="mini" type="text" @click="onDictEdit(scope, true)">
             {{ scope.row.name }}
           </el-button>
         </template>
       </el-table-column>
-      <el-table-column prop="code" :label="$t('代码')" min-width="50" :align="'center'"/>
+      <el-table-column prop="code" :label="$t('代码')" min-width="100" show-overflow-tooltip/>
       <el-table-column prop="type" :label="$t('类型')" min-width="40" :align="'center'"/>
       <el-table-column prop="freeze" :label="$t('是否冻结')" min-width="20" :align="'center'"/>
       <el-table-column prop="createdBy" :label="$t('创建人')" min-width="40" :align="'center'"/>
@@ -100,7 +100,7 @@
         <el-table-column prop="created" :label="$t('创建时间')" min-width="80" :align="'center'"/>
         <el-table-column prop="updatedBy" :label="$t('更新人')" min-width="40" :align="'center'"/>
         <el-table-column prop="updated" :label="$t('更新时间')" min-width="80" :align="'center'"/>
-        <el-table-column :label="$t('操作')" min-width="100" :align="'center'">
+        <el-table-column :label="$t('操作')" min-width="120" :align="'center'">
           <template v-slot="scope">
             <el-button v-permission="dictPermission.edit"
                        size="mini" icon="el-icon-edit" type="success" plain

@@ -34,7 +34,7 @@
       <el-table-column prop="bankTitle" :label="$t('题库')" min-width="50" show-overflow-tooltip/>
       <el-table-column prop="code" :label="$t('编码')" min-width="100" show-overflow-tooltip/>
       <el-table-column prop="type" :label="$t('题型')" min-width="40" :align="'center'"/>
-      <el-table-column prop="difficulty" :label="$t('难度')" min-width="80" :align="'center'">
+      <el-table-column prop="difficulty" :label="$t('难度')" min-width="100" :align="'center'">
         <template v-slot="scope">
           <el-rate v-model="scope.row.difficulty" :texts="difficultyTexts" class="el-rate-mini" show-text disabled/>
         </template>
