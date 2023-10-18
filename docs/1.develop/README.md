@@ -14,7 +14,9 @@
 - [x] [1.5.设置](1.5.setting.md)
 - [x] [1.6.角色](1.6.role.md)
 - [x] [1.7.菜单](1.7.menu.md)
-- [x] [1..账户](1.8.account.md)
+- [x] [1.8.账户](1.8.account.md)
+- [x] [1.9.规范](1.9.specification.md)
+- [x] [1.10.考试](1.10.exam.md)
 
 ## 开发环境
 
