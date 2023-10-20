@@ -1,6 +1,5 @@
 package com.github.mrzhqiang.rowing.dict;
 
-import com.github.mrzhqiang.rowing.account.RunAsSystem;
 import com.github.mrzhqiang.rowing.dict.gbt.DictGBTService;
 import com.github.mrzhqiang.rowing.dict.iso.DictISOService;
 import com.github.mrzhqiang.rowing.domain.TaskMode;

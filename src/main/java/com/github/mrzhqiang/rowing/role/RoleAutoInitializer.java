@@ -1,6 +1,5 @@
 package com.github.mrzhqiang.rowing.role;
 
-import com.github.mrzhqiang.rowing.account.RunAsSystem;
 import com.github.mrzhqiang.rowing.init.AutoInitializer;
 import org.springframework.stereotype.Component;
 

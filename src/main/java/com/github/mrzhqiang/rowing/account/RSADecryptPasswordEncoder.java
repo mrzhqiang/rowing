@@ -5,7 +5,6 @@ import com.github.mrzhqiang.rowing.setting.SettingService;
 import com.github.mrzhqiang.rowing.util.RSADecrypts;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
 
 /**
  * 支持 RSA 解密的密码编码器。
