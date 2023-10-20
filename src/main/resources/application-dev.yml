@@ -10,7 +10,7 @@ logging:
     rowing: DEBUG
     org.hibernate.type: TRACE
     org.hibernate.SQL: DEBUG
-    org.springframework.security: TRACE
+    org.springframework.security: DEBUG
   logback:
     rollingpolicy:
       # 开发环境下，每次启动清理历史日志

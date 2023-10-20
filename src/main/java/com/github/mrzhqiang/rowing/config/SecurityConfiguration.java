@@ -4,6 +4,8 @@ import com.github.mrzhqiang.kaptcha.autoconfigure.KaptchaAuthenticationConverter
 import com.github.mrzhqiang.kaptcha.autoconfigure.KaptchaProperties;
 import com.github.mrzhqiang.rowing.account.LoginFailureHandler;
 import com.github.mrzhqiang.rowing.account.LoginSuccessHandler;
+import com.github.mrzhqiang.rowing.account.RSADecryptPasswordEncoder;
+import com.github.mrzhqiang.rowing.setting.SettingService;
 import com.github.mrzhqiang.rowing.util.Authorizes;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -21,6 +23,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandlerImpl;
 import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
@@ -45,6 +48,16 @@ public class SecurityConfiguration {
                                  SessionProperties sessionProperties) {
         this.securityProperties = securityProperties;
         this.sessionProperties = sessionProperties;
+    }
+
+    /**
+     * 自定义密码编码器。
+     * <p>
+     * 用于对密码进行解密处理。
+     */
+    @Bean
+    public PasswordEncoder passwordEncoder(SettingService settingService) {
+        return new RSADecryptPasswordEncoder(settingService);
     }
 
     /**

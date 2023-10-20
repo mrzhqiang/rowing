@@ -17,7 +17,6 @@ public class ExamAutoInitializer extends AutoInitializer {
         this.service = service;
     }
 
-    @RunAsSystem
     @Override
     protected void onExecute() {
         service.sync();

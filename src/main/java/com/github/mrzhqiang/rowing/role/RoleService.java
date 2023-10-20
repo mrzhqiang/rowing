@@ -18,6 +18,6 @@ public interface RoleService {
      *
      * @param admin 管理员账户。
      */
-    void bindingAccount(Account admin);
+    void binding(Account admin);
 
 }

@@ -17,7 +17,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -26,7 +25,6 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Stream;
 
 @Slf4j
 @Service
@@ -72,11 +70,7 @@ public class AccountServiceJpaImpl implements AccountService {
     @Override
     public Optional<Account> findByUsername(String username) {
         if (Authentications.SYSTEM_USERNAME.equals(username)) {
-            return Optional.of(Account.builder()
-                    .username(username)
-                    .password(passwordEncoder.encode(UUID.randomUUID().toString()))
-                    .type(AccountType.ADMIN)
-                    .build());
+            return Optional.empty();
         }
         return repository.findByUsername(username);
     }
@@ -84,62 +78,51 @@ public class AccountServiceJpaImpl implements AccountService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void init() {
-        Account admin = repository.findByUsername(Authentications.ADMIN_USERNAME).orElseGet(this::createAdminAccount);
-        userService.bindingAdmin(admin);
-        roleService.bindingAccount(admin);
+        initAdmin();
+    }
+
+    private void initAdmin() {
+        Account admin = repository.findByUsername(Authentications.ADMIN_USERNAME).orElseGet(this::createAdmin);
+        userService.binding(admin);
+        roleService.binding(admin);
+        // FIXME 主要是为了保存 role 服务的改动，后面重构之后，不再需要这样做
         repository.save(admin);
     }
 
-    private Account createAdminAccount() {
-        Account admin = new Account();
-        admin.setUsername(Authentications.ADMIN_USERNAME);
+    private Account createAdmin() {
         String password = UUID.randomUUID().toString();
         log.info(I18nHolder.getAccessor().getMessage(
                 "AccountService.createAdmin.password", new Object[]{password},
                 Strings.lenientFormat("创建 admin 账户并随机生成密码: %s", password)));
-        Path passwordFile = Environments.getUserDir().toPath().resolve(ADMIN_PASSWORD_FILENAME);
+        Path passwordFile = Environments.getUserDir().toPath().resolve(Accounts.ADMIN_PASSWORD_FILENAME);
         try {
             Files.write(passwordFile, password.getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE);
         } catch (IOException e) {
-            throw new RuntimeException(I18nHolder.getAccessor().getMessage("AccountService.createAdmin.writeFileFailure"), e);
+            String message = I18nHolder.getAccessor().getMessage("AccountService.createAdmin.writeFileFailure");
+            throw new RuntimeException(message, e);
         }
-        admin.setPassword(passwordEncoder.encode(password));
-        admin.setType(AccountType.ADMIN);
+        Account admin = Account.builder()
+                .username(Authentications.ADMIN_USERNAME)
+                .password(passwordEncoder.encode(password))
+                .type(AccountType.ADMIN)
+                .build();
         return repository.save(admin);
     }
 
     @RunAsSystem
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public Optional<Account> register(RegisterForm registerForm) {
-        Preconditions.checkNotNull(registerForm, "register registerForm == null");
-        String username = registerForm.getUsername();
-        Preconditions.checkArgument(validUsername(username),
-                I18nHolder.getAccessor().getMessage("AccountService.register.invalidUsername"));
+    public void register(RegisterForm form) {
+        Preconditions.checkNotNull(form, "register form == null");
+        String username = form.getUsername();
+        Accounts.validUsername(username);
+        Preconditions.checkArgument(!repository.existsByUsername(username), "invalid username");
 
-        if (repository.existsByUsername(username)) {
-            if (log.isDebugEnabled()) {
-                log.debug("Username {} already exists when register", username);
-            }
-            return Optional.empty();
-        }
-
-        Account entity = mapper.toEntity(registerForm);
-        String encodePassword = passwordEncoder.encode(entity.getPassword());
-        entity.setPassword(encodePassword);
-        repository.save(entity);
+        Account account = mapper.toEntity(form, passwordEncoder);
+        repository.save(account);
         if (log.isDebugEnabled()) {
-            log.debug("Created account: {} for register", entity);
+            log.debug("Created account: {} for register", account);
         }
-        return Optional.of(entity);
-    }
-
-    private boolean validUsername(String username) {
-        if (!StringUtils.hasText(username)) {
-            return false;
-        }
-        return Stream.of(Authentications.SYSTEM_USERNAME, Authentications.ADMIN_USERNAME)
-                .noneMatch(username::equals);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -201,4 +184,5 @@ public class AccountServiceJpaImpl implements AccountService {
     public void update(Account account) {
         repository.save(account);
     }
+
 }

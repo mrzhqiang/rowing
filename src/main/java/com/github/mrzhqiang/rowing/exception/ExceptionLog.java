@@ -157,7 +157,7 @@ public class ExceptionLog extends BaseEntity {
      * @see UserDetails#getUsername()
      */
     @CreatedBy
-    @Column(length = Domains.USERNAME_LENGTH)
+    @Column(length = Domains.USERNAME_MAX_LENGTH)
     private String operator;
 
 }

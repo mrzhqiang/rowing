@@ -14,19 +14,6 @@ import java.util.Optional;
 public interface AccountService extends UserDetailsService {
 
     /**
-     * 保存管理员初始化密码的文件。
-     */
-    String ADMIN_PASSWORD_FILENAME = "admin.txt";
-    /**
-     * 用户名参数名称。
-     */
-    String USERNAME_KEY = UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_USERNAME_KEY;
-    /**
-     * 密码参数名称。
-     */
-    String PASSWORD_KEY = UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_PASSWORD_KEY;
-
-    /**
      * 通过用户名加载用户信息。
      * <p>
      * 这个方法在认证时调用，也就是说，登录时会调用这个方法。
@@ -59,9 +46,8 @@ public interface AccountService extends UserDetailsService {
      * 注册系统账户。
      *
      * @param form 注册表单。
-     * @return 可选的系统账户。如果存在表示注册成功；否则表示注册失败。
      */
-    Optional<Account> register(RegisterForm form);
+    void register(RegisterForm form);
 
     /**
      * 注册学生账户。
@@ -84,4 +70,5 @@ public interface AccountService extends UserDetailsService {
     Optional<Account> registerForTeacher(TeacherInfoForm form);
 
     void update(Account account);
+
 }

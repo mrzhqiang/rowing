@@ -8,12 +8,18 @@ import com.github.mrzhqiang.rowing.account.Account;
 public interface UserService {
 
     /**
-     * 通过所属账户，找到用户信息。
+     * 通过用户名，找到用户信息。
      *
      * @param username 用户名。
      * @return 用户信息数据。
      */
     UserInfoData findByUsername(String username);
 
-    void bindingAdmin(Account admin);
+    /**
+     * 绑定账户。
+     *
+     * @param account 账户实体。
+     */
+    void binding(Account account);
+
 }

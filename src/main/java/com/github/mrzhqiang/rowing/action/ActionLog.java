@@ -80,7 +80,7 @@ public class ActionLog extends BaseEntity {
      * 操作人的用户名称.
      */
     @CreatedBy
-    @Column(length = Domains.USERNAME_LENGTH)
+    @Column(length = Domains.USERNAME_MAX_LENGTH)
     private String operator;
     /**
      * IP 地址。

@@ -12,8 +12,7 @@ import org.springframework.stereotype.Component;
  * <p>
  * 前端登录之后，浏览器会保留表单参数，如果密码是明文的话，很容易泄露出去，因此需要前端对密码进行加密，由后端来解密密码。
  */
-@Component
-public class RSADecryptPasswordEncoder implements PasswordEncoder {
+public final class RSADecryptPasswordEncoder implements PasswordEncoder {
 
     private final PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
     private final SettingService settingService;
@@ -22,7 +21,6 @@ public class RSADecryptPasswordEncoder implements PasswordEncoder {
         this.settingService = settingService;
     }
 
-    @RunAsSystem
     @Override
     public String encode(CharSequence rawPassword) {
         return passwordEncoder.encode(rawPassword);
@@ -32,6 +30,7 @@ public class RSADecryptPasswordEncoder implements PasswordEncoder {
     @Override
     public boolean matches(CharSequence rawPassword, String encodedPassword) {
         String passwordString = rawPassword.toString();
+        // TODO 缓存设置，提升性能
         String password = settingService.findByCode(SettingService.PASSWORD_RSA_PRIVATE_KEY)
                 .map(Setting::getContent)
                 .map(RSADecrypts::parsePrivateKey)

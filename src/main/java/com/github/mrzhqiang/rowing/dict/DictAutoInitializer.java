@@ -27,7 +27,6 @@ public class DictAutoInitializer extends AutoInitializer {
         this.gbtService = gbtService;
     }
 
-    @RunAsSystem
     @Override
     protected void onExecute() {
         service.sync();

@@ -90,8 +90,8 @@ public class Account extends AuditableEntity implements UserDetails {
      * 3. 其他规则：类似学生学号，结合前缀+中缀+随机字符串后缀，组成用户名。
      */
     @NotBlank
-    @Size(max = Domains.USERNAME_LENGTH)
-    @Column(updatable = false, unique = true, nullable = false, length = Domains.USERNAME_LENGTH)
+    @Size(max = Domains.USERNAME_MAX_LENGTH)
+    @Column(updatable = false, unique = true, nullable = false, length = Domains.USERNAME_MAX_LENGTH)
     private String username;
     /**
      * 密码。

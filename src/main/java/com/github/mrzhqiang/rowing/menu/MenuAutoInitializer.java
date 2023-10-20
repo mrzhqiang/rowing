@@ -16,7 +16,6 @@ public class MenuAutoInitializer extends AutoInitializer {
         this.service = service;
     }
 
-    @RunAsSystem
     @Override
     protected void onExecute() {
         service.init();

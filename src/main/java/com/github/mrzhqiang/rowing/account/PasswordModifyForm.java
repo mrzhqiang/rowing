@@ -1,6 +1,5 @@
 package com.github.mrzhqiang.rowing.account;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -8,13 +7,16 @@ import lombok.ToString;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+import static com.github.mrzhqiang.rowing.domain.Domains.USERNAME_MAX_LENGTH;
+import static com.github.mrzhqiang.rowing.domain.Domains.USERNAME_MIN_LENGTH;
+
 /**
  * 密码修改表单。
  * <p>
  * 此表单用于修改密码，需要提供旧密码验证是否具备修改权限。
  */
-@Data
 @EqualsAndHashCode(callSuper = true)
+@Data
 public class PasswordModifyForm extends PasswordConfirmForm {
 
     /**
@@ -22,9 +24,9 @@ public class PasswordModifyForm extends PasswordConfirmForm {
      * <p>
      * 用于验证是否具备修改权限，与 password 字段的校验规则及要求完全相同。
      */
-    @JsonIgnore
     @ToString.Exclude
     @NotBlank
-    @Size(min = 6, max = 15)
+    @Size(min = USERNAME_MIN_LENGTH, max = USERNAME_MAX_LENGTH)
     private String oldPassword;
+
 }
