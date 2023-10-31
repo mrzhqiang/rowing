@@ -11,7 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  * <p>
  * 前端登录之后，浏览器会保留表单参数，如果密码是明文的话，很容易泄露出去，因此需要前端对密码进行加密，由后端来解密密码。
  */
-public final class RSADecryptPasswordEncoder implements PasswordEncoder {
+public class RSADecryptPasswordEncoder implements PasswordEncoder {
 
     private final PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
     private final SettingService settingService;

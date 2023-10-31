@@ -32,7 +32,7 @@ public final class Accounts {
      */
     public static final String ADMIN_PASSWORD_FILENAME = "admin.txt";
 
-    private static final List<String> INTERNAL_ACCOUNTS = ImmutableList.of(
+    private static final List<String> INTERNAL_USERNAMES = ImmutableList.of(
             Authentications.SYSTEM_USERNAME,
             Authentications.ADMIN_USERNAME
     );
@@ -45,7 +45,7 @@ public final class Accounts {
 
     public static void validUsername(String username) {
         Preconditions.checkArgument(StringUtils.hasText(username), "username must be not empty!");
-        Preconditions.checkArgument(!INTERNAL_ACCOUNTS.contains(username),
+        Preconditions.checkArgument(!INTERNAL_USERNAMES.contains(username.toLowerCase()),
                 I18nHolder.getAccessor().getMessage("AccountService.register.invalidUsername",
                         "无效的用户名"));
     }
