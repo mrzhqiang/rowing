@@ -6,8 +6,6 @@ spring:
     # 这里声明 MessageSource 加载的国际化消息文件列表，以逗号 (,) 分割
     basename: i18n.messages,org.springframework.security.messages
     fallback-to-system-locale: false
-  jackson:
-    date-format: "yyyy-MM-dd HH:mm:ss"
   cache:
     redis:
       key-prefix: "rowing:"
@@ -16,7 +14,10 @@ spring:
   sql:
     init:
       mode: always
-      continue-on-error: true
+      continue-on-error: false
+  #      TODO 提供一次性初始化脚本，避免每次删除数据表
+  #      schema-locations:
+  #        - "classpath:org/quartz/impl/jdbcjobstore/tables_mysql_innodb.sql"
   datasource:
     hikari:
       minimum-idle: 5
@@ -30,11 +31,10 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-    properties:
-      hibernate:
-        query:
-          jpaql_strict_compliance=false: false
-
+  #  TODO 未来开发灵活的调度任务系统，支持后台管理界面
+  #  quartz:
+  #    job-store-type: jdbc
+  #    startup-delay: 30s
   data:
     rest:
       base-path: /api

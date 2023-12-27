@@ -38,7 +38,7 @@ public class RoleServiceJpaImpl implements RoleService {
     }
 
     @Override
-    public void bindingAccount(Account account) {
+    public void binding(Account account) {
         if (account == null) {
             return;
         }

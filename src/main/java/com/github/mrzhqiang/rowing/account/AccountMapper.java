@@ -1,8 +1,11 @@
 package com.github.mrzhqiang.rowing.account;
 
 import com.github.mrzhqiang.rowing.domain.AccountType;
+import com.github.mrzhqiang.rowing.user.User;
+import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
  * 账户映射器。
@@ -30,26 +33,12 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring", imports = {AccountType.class})
 public interface AccountMapper {
 
-    @Mapping(target = "roles", ignore = true)
-    @Mapping(target = "user", ignore = true)
-    @Mapping(target = "type", ignore = true)
-    @Mapping(target = "thirdUsers", ignore = true)
-    @Mapping(target = "passwordExpired", ignore = true)
-    @Mapping(target = "locked", ignore = true)
-    @Mapping(target = "failedCount", ignore = true)
-    @Mapping(target = "expired", ignore = true)
-    @Mapping(target = "disabled", ignore = true)
-    Account toEntity(LoginForm form);
+    @BeanMapping(ignoreByDefault = true)
+    @Mapping(target = "username", source = "form.username")
+    @Mapping(target = "password", expression = "java( encoder.encode(form.getPassword()) )")
+    Account toEntity(RegisterForm form, PasswordEncoder encoder);
 
-    @Mapping(target = "roles", ignore = true)
-    @Mapping(target = "user", ignore = true)
-    @Mapping(target = "type", ignore = true)
-    @Mapping(target = "thirdUsers", ignore = true)
-    @Mapping(target = "passwordExpired", ignore = true)
-    @Mapping(target = "locked", ignore = true)
-    @Mapping(target = "failedCount", ignore = true)
-    @Mapping(target = "expired", ignore = true)
-    @Mapping(target = "disabled", ignore = true)
-    Account toEntity(RegisterForm form);
+    @Mapping(target = "owner", source = "account")
+    User toUser(RegisterForm form, Account account);
 
 }

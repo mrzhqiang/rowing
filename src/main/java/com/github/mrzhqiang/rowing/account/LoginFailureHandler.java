@@ -42,7 +42,7 @@ public class LoginFailureHandler implements AuthenticationFailureHandler {
     public void onAuthenticationFailure(HttpServletRequest request,
                                         HttpServletResponse response,
                                         AuthenticationException exception) throws IOException {
-        String username = request.getParameter(AccountService.USERNAME_KEY);
+        String username = request.getParameter(Accounts.USERNAME_KEY);
         AuthenticationException authenticationException = Optional.ofNullable(username)
                 .flatMap(accountService::findByUsername)
                 .map(it -> handleException(it, exception))

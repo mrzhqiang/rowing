@@ -40,9 +40,9 @@ import java.util.Optional;
  *
  * @param <E> 实体类型。
  */
-@NoRepositoryBean
 @PreAuthorize(HAS_AUTHORITY_USER)
 @Validated
+@NoRepositoryBean
 public interface BaseRepository<E extends BaseEntity> extends JpaRepository<E, Long> {
 
     @Nonnull

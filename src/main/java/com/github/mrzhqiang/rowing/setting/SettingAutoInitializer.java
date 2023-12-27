@@ -1,6 +1,5 @@
 package com.github.mrzhqiang.rowing.setting;
 
-import com.github.mrzhqiang.rowing.account.RunAsSystem;
 import com.github.mrzhqiang.rowing.init.AutoInitializer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -18,7 +17,6 @@ public class SettingAutoInitializer extends AutoInitializer {
         this.service = service;
     }
 
-    @RunAsSystem
     @Override
     protected void onExecute() {
         service.init();

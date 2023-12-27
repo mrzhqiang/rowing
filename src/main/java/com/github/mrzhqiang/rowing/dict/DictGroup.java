@@ -1,5 +1,6 @@
 package com.github.mrzhqiang.rowing.dict;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.mrzhqiang.rowing.domain.AuditableEntity;
 import com.github.mrzhqiang.rowing.domain.DictType;
 import com.github.mrzhqiang.rowing.domain.Domains;
@@ -69,8 +70,9 @@ public class DictGroup extends AuditableEntity {
      * <p>
      * 字典项一般用来提供选择，比如下拉框、多选框等等。
      */
+    @JsonIgnore
     @ToString.Exclude
-    @OneToMany(mappedBy = "group", orphanRemoval = true)
+    @OneToMany(mappedBy = "group")
     private List<DictItem> items = Lists.newArrayList();
 
 }

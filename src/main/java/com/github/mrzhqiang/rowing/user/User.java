@@ -23,6 +23,9 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
+import static com.github.mrzhqiang.rowing.domain.Domains.EMAIL_REGEXP;
+import static com.github.mrzhqiang.rowing.domain.Domains.PHONE_NUMBER_REGEXP;
+
 /**
  * 用户。
  * <p>
@@ -32,7 +35,7 @@ import java.time.LocalDate;
  */
 @Getter
 @Setter
-@ToString(callSuper = true)
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -83,14 +86,14 @@ public class User extends AuditableEntity {
     /**
      * 电子邮箱。
      */
-    @Email(regexp = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$")
+    @Email(regexp = EMAIL_REGEXP)
     @Size(max = Domains.EMAIL_LENGTH)
     @Column(length = Domains.EMAIL_LENGTH)
     private String email;
     /**
      * 电话号码。
      */
-    @Pattern(regexp = "^\\+[0-9]{2}[0-9]{11}")
+    @Pattern(regexp = PHONE_NUMBER_REGEXP)
     @Size(max = Domains.PHONE_NUMBER_LENGTH)
     @Column(length = Domains.PHONE_NUMBER_LENGTH)
     private String phoneNumber;

@@ -156,7 +156,7 @@ public class GlobalExceptionHandler {
         if (!Environments.debug()) {
             data.setMessage(log.getCode());
             data.setTrace(I18nHolder.getAccessor().getMessage(
-                    "GlobalExceptionHandler.DEF_TRACE_ON_PRODUCTION", DEF_TRACE_ON_PRODUCTION));
+                    "GlobalExceptionHandler.traceOnProduction", DEF_TRACE_ON_PRODUCTION));
         }
 
         if (isHtmlRequest(request)) {

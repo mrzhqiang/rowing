@@ -1,6 +1,5 @@
 package com.github.mrzhqiang.rowing.menu;
 
-import com.github.mrzhqiang.rowing.account.RunAsSystem;
 import com.github.mrzhqiang.rowing.init.AutoInitializer;
 import org.springframework.stereotype.Component;
 
@@ -16,7 +15,6 @@ public class MenuAutoInitializer extends AutoInitializer {
         this.service = service;
     }
 
-    @RunAsSystem
     @Override
     protected void onExecute() {
         service.init();

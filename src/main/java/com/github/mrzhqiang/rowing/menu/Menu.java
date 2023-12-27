@@ -2,9 +2,9 @@ package com.github.mrzhqiang.rowing.menu;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.mrzhqiang.rowing.domain.AuditableEntity;
+import com.github.mrzhqiang.rowing.domain.Domains;
 import com.github.mrzhqiang.rowing.domain.Logic;
 import com.github.mrzhqiang.rowing.role.Role;
-import com.github.mrzhqiang.rowing.domain.Domains;
 import com.google.common.collect.Lists;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,6 +20,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
 
@@ -173,12 +174,15 @@ public class Menu extends AuditableEntity {
      * <p>
      * 自定义排序的菜单，将具备最高优先级，其次按创建时间排序。
      */
-    private Integer ordered;
+    @NotNull
+    @Column(nullable = false)
+    private Integer ordered = 0;
     /**
      * 是否启用。
      * <p>
      * 未启用的菜单，将不返回数据给前端，默认为启用。
      */
+    @NotNull
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = Domains.ENUM_NAME_LENGTH)
     private Logic enabled = Logic.YES;
@@ -187,6 +191,7 @@ public class Menu extends AuditableEntity {
      * <p>
      * 内置的菜单不允许更新和删除，避免系统出现故障。
      */
+    @NotNull
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, updatable = false, length = Domains.ENUM_NAME_LENGTH)
     private Logic internal = Logic.NO;

@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.rest.core.event.AfterCreateEvent;
 import org.springframework.data.rest.core.event.BeforeCreateEvent;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -75,6 +76,7 @@ public class MenuServiceJpaImpl implements MenuService, ApplicationEventPublishe
         rootMenu.setInternal(Logic.YES);
         eventPublisher.publishEvent(new BeforeCreateEvent(rootMenu));
         repository.save(rootMenu);
+        eventPublisher.publishEvent(new AfterCreateEvent(rootMenu));
         log.info("create the root menu {} is successful", rootMenu);
 
         bindingRole(route, rootMenu);
@@ -115,6 +117,7 @@ public class MenuServiceJpaImpl implements MenuService, ApplicationEventPublishe
         menu.setParent(parent);
         eventPublisher.publishEvent(new BeforeCreateEvent(menu));
         repository.save(menu);
+        eventPublisher.publishEvent(new AfterCreateEvent(menu));
         log.info("create the menu {} is successful", menu);
 
         bindingRole(data, menu);

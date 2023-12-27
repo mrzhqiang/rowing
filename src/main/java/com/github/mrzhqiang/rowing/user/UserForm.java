@@ -1,6 +1,6 @@
 package com.github.mrzhqiang.rowing.user;
 
-import com.github.mrzhqiang.rowing.domain.AuditableProjection;
+import com.github.mrzhqiang.rowing.domain.BaseProjection;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.rest.core.config.Projection;
 
@@ -10,7 +10,7 @@ import java.time.LocalDate;
  * 用户表单。
  */
 @Projection(name = "user-form", types = {User.class})
-public interface UserForm extends AuditableProjection {
+public interface UserForm extends BaseProjection {
 
     String getNickname();
 

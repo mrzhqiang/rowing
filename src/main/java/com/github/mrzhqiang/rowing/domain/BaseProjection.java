@@ -5,9 +5,9 @@ import org.springframework.data.rest.core.config.Projection;
 /**
  * 基础投影。
  * <p>
- * 转换实体时，提供统一的风格。
- * <p>
- * 摘要：作为数据列表的预览，类似缩略图一样，仅返回关键信息，可以节省资源。
+ * 通常作为表单投影的基础接口。
+ *
+ * @see Projection 可以将实体投影为另外一种数据形式，保护隐私，方便转换。
  */
 @Projection(name = "base-projection", types = {BaseEntity.class})
 public interface BaseProjection {

@@ -8,7 +8,7 @@ import org.springframework.data.rest.core.annotation.RestResource;
 
 import java.util.Optional;
 
-@RepositoryRestResource(path = "dict", collectionResourceRel = "dicts", excerptProjection = DictExcerpt.class)
+@RepositoryRestResource(path = "dict", collectionResourceRel = "dicts", excerptProjection = DictGroupExcerpt.class)
 public interface DictGroupRepository extends BaseRepository<DictGroup> {
 
     @RestResource(path = "code", rel = "code")

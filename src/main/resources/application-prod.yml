@@ -29,7 +29,7 @@ spring:
   # 账户中心是需要会话的，但不需要 Cookie 自动登录
   session:
     # 1 hours
-    timeout: 3600s
+    timeout: 3600
 
 # 验证码配置
 kaptcha:

@@ -40,7 +40,7 @@ public abstract class AuditableEntity extends BaseEntity {
      * 要解决这个问题，必须将此字段排除在 ToString 之外。
      */
     @CreatedBy
-    @Column(length = Domains.USERNAME_LENGTH)
+    @Column(length = Domains.USERNAME_MAX_LENGTH)
     private String createdBy;
     /**
      * 创建时间。
@@ -57,7 +57,7 @@ public abstract class AuditableEntity extends BaseEntity {
      * 要解决这个问题，必须将此字段排除在 ToString 之外。
      */
     @LastModifiedBy
-    @Column(length = Domains.USERNAME_LENGTH)
+    @Column(length = Domains.USERNAME_MAX_LENGTH)
     private String lastModifiedBy;
     /**
      * 最近修改时间。

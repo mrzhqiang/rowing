@@ -46,6 +46,11 @@ public enum AccountType {
                 .orElse(ANONYMOUS);
     }
 
+    /**
+     * 获取代码。
+     *
+     * @return 代码字符串。
+     */
     public String getCode() {
         return name();
     }
@@ -56,7 +61,7 @@ public enum AccountType {
      * @return 授权。
      */
     public GrantedAuthority toAuthority() {
-        return new SimpleGrantedAuthority(name());
+        return new SimpleGrantedAuthority(getCode());
     }
 
 }

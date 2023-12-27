@@ -1,5 +1,11 @@
 package com.github.mrzhqiang.rowing.dict;
 
+import com.github.mrzhqiang.rowing.dict.gbt.DictGBT2260;
+import com.github.mrzhqiang.rowing.dict.gbt.DictGBT2260Repository;
+import com.github.mrzhqiang.rowing.dict.iso.DictISO3166;
+import com.github.mrzhqiang.rowing.dict.iso.DictISO3166Repository;
+import com.github.mrzhqiang.rowing.dict.iso.DictISO639;
+import com.github.mrzhqiang.rowing.dict.iso.DictISO639Repository;
 import org.springframework.data.rest.core.annotation.HandleBeforeCreate;
 import org.springframework.data.rest.core.annotation.HandleBeforeDelete;
 import org.springframework.data.rest.core.annotation.HandleBeforeSave;

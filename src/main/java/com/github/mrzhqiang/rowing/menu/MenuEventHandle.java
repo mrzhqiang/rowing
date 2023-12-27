@@ -1,12 +1,11 @@
 package com.github.mrzhqiang.rowing.menu;
 
-import com.github.mrzhqiang.rowing.action.Action;
-import com.github.mrzhqiang.rowing.domain.ActionType;
 import org.springframework.data.rest.core.annotation.HandleBeforeCreate;
 import org.springframework.data.rest.core.annotation.HandleBeforeDelete;
 import org.springframework.data.rest.core.annotation.HandleBeforeSave;
 import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
@@ -26,7 +25,6 @@ public class MenuEventHandle {
         this.repository = repository;
     }
 
-    @Action(value = "创建菜单", type = ActionType.CREATE_MENU)
     @HandleBeforeCreate
     public void onBeforeCreate(Menu menu) {
         Menus.validateCreate(menu);
@@ -34,11 +32,11 @@ public class MenuEventHandle {
         Menus.handleFullPath(menu);
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @HandleBeforeSave
     public void onBeforeSave(Menu menu) {
         Menus.validateSave(menu);
-        // 最初的菜单不需要更新，但子级菜单由于没有开启级联操作，所以必须手动更新
-        menu.setFullPath("");
+        Menus.handleName(menu);
         Menus.handleFullPath(menu);
 
         List<Menu> children = menu.getChildren();
@@ -50,7 +48,6 @@ public class MenuEventHandle {
     }
 
     private void updateFullPath(Menu menu) {
-        menu.setFullPath("");
         Menus.handleFullPath(menu);
         repository.save(menu);
 

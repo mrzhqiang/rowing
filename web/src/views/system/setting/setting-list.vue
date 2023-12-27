@@ -8,17 +8,13 @@
         <el-input v-model="settingParams.path" clearable/>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="onSettingSearch">
-          {{ $t('搜索') }}
-        </el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="onResetSettingSearch">
-          {{ $t('重置') }}
-        </el-button>
+        <el-button type="primary" icon="el-icon-search" @click="onSettingSearch">{{ $t('搜索') }}</el-button>
+        <el-button icon="el-icon-refresh" @click="onResetSettingSearch">{{ $t('重置') }}</el-button>
       </el-form-item>
     </el-form>
 
-    <el-table v-loading="settingLoading" :data="settingList" size="mini"
-              row-key="id" stripe border highlight-current-row>
+    <el-table v-loading="settingLoading" :data="settingList" row-key="id" size="mini"
+              stripe border highlight-current-row>
       <el-table-column prop="id" label="#" min-width="20" :align="'right'"/>
       <el-table-column prop="type" :label="$t('类型')" min-width="50"/>
       <el-table-column prop="name" :label="$t('名称')" min-width="50" show-overflow-tooltip>
@@ -38,13 +34,13 @@
       <el-table-column :label="$t('操作')" min-width="100" :align="'center'">
         <template v-slot="scope">
           <el-button v-permission="settingPermission.edit"
-                     size="mini" icon="el-icon-edit" type="text"
-                     @click="onSettingEdit(scope, false)">{{ $t('编辑') }}
+                     size="mini" icon="el-icon-edit" type="success" plain
+                     @click="onSettingEdit(scope)">{{ $t('编辑') }}
           </el-button>
           <el-popconfirm style="margin-left: 10px" :title="$t('确定删除吗？')"
-                         @onConfirm="onSettingDelete(scope)">
+                         @confirm="onSettingDelete(scope)">
             <el-button slot="reference" v-permission="settingPermission.delete"
-                       size="mini" icon="el-icon-delete" type="text">{{ $t('删除') }}
+                       size="mini" icon="el-icon-delete" type="danger" plain>{{ $t('删除') }}
             </el-button>
           </el-popconfirm>
         </template>
@@ -110,7 +106,7 @@ export default {
         size: 20,
       },
       settingPermission: {...PERMISSION_MARK.setting},
-      settingLoading: true,
+      settingLoading: false,
       settingList: [],
       settingPage: {totalElements: 0, totalPages: 0},
       settingTitle: '',
@@ -176,14 +172,13 @@ export default {
       this.settingFormEditable = !readonly;
       findSetting(row.id, 'setting-form').then(response => {
         this.fillSettingForm(response);
-        this.settingForm.id = row.id;
         this.settingTitle = readonly ? this.$t('查看设置') : this.$t('编辑设置');
         this.settingVisible = true;
       });
     },
     onSettingDelete({row}) {
       deleteSetting(row.id).then(() => {
-        this.$message.success(this.$t('设置 {name} 删除成功！', {name: row.name}));
+        this.$message.success(`系统设置 [${row.name}] 删除成功！`);
         this.findSettingList();
       });
     },
@@ -200,7 +195,7 @@ export default {
           };
           if (this.settingForm.id) {
             editSetting(this.settingForm.id, data).then(() => {
-              this.$message.success(this.$t('设置 {title} 更新成功！', {title: this.settingForm.name}));
+              this.$message.success(`系统设置 [${data.name}] 更新成功！`);
               this.settingVisible = false;
               this.findSettingList();
             });

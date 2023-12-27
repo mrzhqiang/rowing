@@ -3,10 +3,10 @@ package com.github.mrzhqiang.rowing.account;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.mrzhqiang.rowing.domain.AccountType;
 import com.github.mrzhqiang.rowing.domain.AuditableEntity;
+import com.github.mrzhqiang.rowing.domain.Domains;
 import com.github.mrzhqiang.rowing.role.Role;
 import com.github.mrzhqiang.rowing.third.ThirdUser;
 import com.github.mrzhqiang.rowing.user.User;
-import com.github.mrzhqiang.rowing.domain.Domains;
 import com.google.common.collect.Lists;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -90,8 +90,8 @@ public class Account extends AuditableEntity implements UserDetails {
      * 3. 其他规则：类似学生学号，结合前缀+中缀+随机字符串后缀，组成用户名。
      */
     @NotBlank
-    @Size(max = Domains.USERNAME_LENGTH)
-    @Column(updatable = false, unique = true, nullable = false, length = Domains.USERNAME_LENGTH)
+    @Size(max = Domains.USERNAME_MAX_LENGTH)
+    @Column(updatable = false, unique = true, nullable = false, length = Domains.USERNAME_MAX_LENGTH)
     private String username;
     /**
      * 密码。
@@ -185,8 +185,8 @@ public class Account extends AuditableEntity implements UserDetails {
     @ToString.Exclude
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "account_roles",
-            joinColumns = @JoinColumn(name = "account_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"),
+            joinColumns = @JoinColumn(name = "account_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"),
             uniqueConstraints = @UniqueConstraint(columnNames = {"account_id", "role_id"}))
     private List<Role> roles = Lists.newArrayList();
 
@@ -196,8 +196,8 @@ public class Account extends AuditableEntity implements UserDetails {
     @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Stream.concat(Stream.of(type.toAuthority()),
-                        roles.stream().flatMap(it -> it.getGrantedAuthorities().stream()))
+        return Stream.concat(Stream.of(type.toAuthority()), this.getRoles().stream()
+                        .flatMap(it -> it.getGrantedAuthorities().stream()))
                 .distinct()
                 .collect(Collectors.toList());
     }

@@ -14,7 +14,6 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Example;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
@@ -110,7 +109,7 @@ public class SettingServiceJpaImpl implements SettingService {
         }
     }
 
-    @Cacheable("setting")
+    //@Cacheable("setting")
     @RunAsSystem
     @Override
     public Optional<Setting> findByCode(String code) {

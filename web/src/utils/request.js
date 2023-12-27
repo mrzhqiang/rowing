@@ -1,13 +1,28 @@
-import axios from 'axios';
-import {Message, MessageBox} from 'element-ui';
 import store from '@/store';
 import {getToken} from '@/utils/auth';
+import axios from 'axios';
+import {Message, MessageBox} from 'element-ui';
+
+// 自定义参数序列化函数
+const paramsSerializer = (params) => {
+  // 将数组参数转换为逗号分隔的字符串
+  return Object.entries(params)
+    .map(([key, value]) => {
+      if (Array.isArray(value)) {
+        const encodedValues = value.map(v => encodeURIComponent(v));
+        return `${encodeURIComponent(key)}=${encodedValues.join(',')}`;
+      }
+      return `${encodeURIComponent(key)}=${encodeURIComponent(value)}`;
+    })
+    .join('&');
+};
 
 // create an axios instance
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
   // withCredentials: true, // send cookies when cross-domain requests
-  timeout: 10000 // request timeout
+  timeout: 10000, // request timeout
+  paramsSerializer
 });
 
 // request interceptor

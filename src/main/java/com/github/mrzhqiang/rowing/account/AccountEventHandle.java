@@ -1,19 +1,10 @@
 package com.github.mrzhqiang.rowing.account;
 
-import com.github.mrzhqiang.helper.random.RandomNumbers;
-import com.github.mrzhqiang.rowing.action.Action;
-import com.github.mrzhqiang.rowing.domain.ActionType;
-import com.github.mrzhqiang.rowing.domain.Domains;
 import com.github.mrzhqiang.rowing.setting.Setting;
 import com.github.mrzhqiang.rowing.setting.SettingService;
-import com.github.mrzhqiang.rowing.user.User;
-import com.github.mrzhqiang.rowing.user.UserRepository;
+import com.github.mrzhqiang.rowing.user.UserService;
 import com.google.common.base.Strings;
-import org.springframework.data.rest.core.annotation.HandleAfterCreate;
-import org.springframework.data.rest.core.annotation.HandleBeforeCreate;
-import org.springframework.data.rest.core.annotation.HandleBeforeDelete;
-import org.springframework.data.rest.core.annotation.HandleBeforeSave;
-import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
+import org.springframework.data.rest.core.annotation.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -26,21 +17,20 @@ import org.springframework.util.StringUtils;
 public class AccountEventHandle {
 
     private final AccountRepository repository;
-    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final UserService userService;
     private final SettingService settingService;
 
     public AccountEventHandle(AccountRepository repository,
-                              UserRepository userRepository,
+                              UserService userService,
                               PasswordEncoder passwordEncoder,
                               SettingService settingService) {
         this.repository = repository;
-        this.userRepository = userRepository;
+        this.userService = userService;
         this.passwordEncoder = passwordEncoder;
         this.settingService = settingService;
     }
 
-    @Action(value = "创建账户", type = ActionType.CREATE_ACCOUNT)
     @HandleBeforeCreate
     public void onBeforeCreate(Account account) {
         if (repository.findByUsername(account.getUsername()).isPresent()) {
@@ -58,14 +48,7 @@ public class AccountEventHandle {
 
     @HandleAfterCreate
     public void onAfterCreate(Account account) {
-        String nickname = settingService.findByCode("userNicknamePrefix")
-                .map(Setting::getContent)
-                .orElse("用户" + RandomNumbers.rangeInt(6, Domains.USER_NICKNAME_LENGTH - 2));
-        User user = User.builder()
-                .nickname(nickname)
-                .owner(account)
-                .build();
-        userRepository.save(user);
+        userService.binding(account);
     }
 
     @HandleBeforeSave

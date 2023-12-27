@@ -14,12 +14,8 @@
         <el-input v-model="dictParams.numericCode" clearable/>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="onDictSearch">
-          {{ $t('搜索') }}
-        </el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="onResetDictSearch">
-          {{ $t('重置') }}
-        </el-button>
+        <el-button type="primary" icon="el-icon-search" @click="onDictSearch">{{ $t('搜索') }}</el-button>
+        <el-button icon="el-icon-refresh" @click="onResetDictSearch">{{ $t('重置') }}</el-button>
       </el-form-item>
     </el-form>
 
@@ -33,7 +29,8 @@
       </el-col>
     </el-row>-->
 
-    <el-table v-loading="dictLoading" :data="dictList" row-key="id" size="mini" stripe border highlight-current-row>
+    <el-table v-loading="dictLoading" :data="dictList" row-key="id" size="mini"
+              stripe border highlight-current-row>
       <el-table-column prop="id" label="#" min-width="20" :align="'right'"/>
       <el-table-column prop="name" :label="$t('名称')" min-width="80">
         <template v-slot="scope">
@@ -57,13 +54,13 @@
                      @click="onDictAdd(scope)">{{ $t('添加') }}
           </el-button>-->
           <el-button v-permission="dictPermission.edit"
-                     size="mini" icon="el-icon-edit" type="text"
-                     @click="onDictEdit(scope, false)">{{ $t('编辑') }}
+                     size="mini" icon="el-icon-edit" type="success" plain
+                     @click="onDictEdit(scope)">{{ $t('编辑') }}
           </el-button>
           <el-popconfirm style="margin-left: 10px" :title="$t('确定删除吗？')"
-                         @onConfirm="onDictDelete(scope)">
+                         @confirm="onDictDelete(scope)">
             <el-button slot="reference" v-permission="dictPermission.delete"
-                       size="mini" icon="el-icon-delete" type="text">{{ $t('删除') }}
+                       size="mini" icon="el-icon-delete" type="danger" plain>{{ $t('删除') }}
             </el-button>
           </el-popconfirm>
         </template>
@@ -136,7 +133,7 @@ export default {
         size: 20,
       },
       dictPermission: {...PERMISSION_MARK.dict},
-      dictLoading: true,
+      dictLoading: false,
       dictList: [],
       dictPage: {totalElements: 0, totalPages: 0},
       dictTitle: '',
@@ -221,14 +218,13 @@ export default {
       this.dictFormEditable = !readonly;
       findDictISO3166(row.id, 'dict-iso-3166-form').then(response => {
         this.fillDictForm(response);
-        this.dictForm.id = row.id;
         this.dictTitle = readonly ? this.$t('查看国家地区代码') : this.$t('编辑国家地区代码');
         this.dictVisible = true;
       });
     },
     onDictDelete({row}) {
       deleteDictISO3166(row.id).then(() => {
-        this.$message.success(this.$t('国家地区代码 {code} 删除成功！', {code: row.code}));
+        this.$message.success(`国家地区代码 [${row.alpha2Code}] 删除成功！`);
         this.findDictList();
       });
     },
@@ -248,13 +244,13 @@ export default {
           };
           if (this.dictForm.id) {
             editDictISO3166(this.dictForm.id, data).then(() => {
-              this.$message.success(this.$t('国家地区代码 {code} 更新成功！', {code: this.dictForm.code}));
+              this.$message.success(`国家地区代码 [${data.alpha2Code}] 更新成功！`);
               this.dictVisible = false;
               this.findDictList();
             });
           } else {
             createDictISO3166(data).then(() => {
-              this.$message.success(this.$t('国家地区代码 {code} 创建成功！', {code: this.dictForm.code}));
+              this.$message.success(`国家地区代码 [${data.alpha2Code}] 删除成功！`);
               this.dictVisible = false;
               this.findDictList();
             });

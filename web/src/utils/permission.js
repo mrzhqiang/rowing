@@ -47,7 +47,63 @@ export const PERMISSION_MARK = {
         account: [ADMIN_ROLE, 'AUTH_ROLE_ACCOUNT'],
         menu: [ADMIN_ROLE, 'AUTH_ROLE_MENU'],
         menuResource: [ADMIN_ROLE, 'AUTH_ROLE_MENU_RESOURCE'],
-    }
+    },
+    exam: {
+        create: [ADMIN_ROLE, 'AUTH_EXAM_CREATE'],
+        edit: [ADMIN_ROLE, 'AUTH_EXAM_EDIT'],
+        delete: [ADMIN_ROLE, 'AUTH_EXAM_DELETE'],
+        taker: [ADMIN_ROLE, 'AUTH_EXAM_TAKER'],
+        takerStart: [ADMIN_ROLE, 'AUTH_EXAM_TAKER_START'],
+        marker: [ADMIN_ROLE, 'AUTH_EXAM_MARKER'],
+        markerStart: [ADMIN_ROLE, 'AUTH_EXAM_MARKER_START'],
+    },
+    examRule: {
+        create: [ADMIN_ROLE, 'AUTH_EXAM_RULE_CREATE'],
+        edit: [ADMIN_ROLE, 'AUTH_EXAM_RULE_EDIT'],
+        delete: [ADMIN_ROLE, 'AUTH_EXAM_RULE_DELETE'],
+    },
+    examMode: {
+        create: [ADMIN_ROLE, 'AUTH_EXAM_MODE_CREATE'],
+        edit: [ADMIN_ROLE, 'AUTH_EXAM_MODE_EDIT'],
+        delete: [ADMIN_ROLE, 'AUTH_EXAM_MODE_DELETE'],
+    },
+    examQuestionBank: {
+        create: [ADMIN_ROLE, 'AUTH_EXAM_QUESTION_BANK_CREATE'],
+        edit: [ADMIN_ROLE, 'AUTH_EXAM_QUESTION_BANK_EDIT'],
+        delete: [ADMIN_ROLE, 'AUTH_EXAM_QUESTION_BANK_DELETE'],
+    },
+    examQuestion: {
+        create: [ADMIN_ROLE, 'AUTH_EXAM_QUESTION_CREATE'],
+        edit: [ADMIN_ROLE, 'AUTH_EXAM_QUESTION_EDIT'],
+        delete: [ADMIN_ROLE, 'AUTH_EXAM_QUESTION_DELETE'],
+    },
+    examQuestionOption: {
+        create: [ADMIN_ROLE, 'AUTH_EXAM_QUESTION_OPTION_CREATE'],
+        edit: [ADMIN_ROLE, 'AUTH_EXAM_QUESTION_OPTION_EDIT'],
+        delete: [ADMIN_ROLE, 'AUTH_EXAM_QUESTION_OPTION_DELETE'],
+    },
+    examPaper: {
+        create: [ADMIN_ROLE, 'AUTH_EXAM_PAPER_CREATE'],
+        edit: [ADMIN_ROLE, 'AUTH_EXAM_PAPER_EDIT'],
+        delete: [ADMIN_ROLE, 'AUTH_EXAM_PAPER_DELETE'],
+        taker: [ADMIN_ROLE, 'AUTH_EXAM_PAPER_TAKER'],
+        marker: [ADMIN_ROLE, 'AUTH_EXAM_PAPER_MARKER'],
+    },
+    examPaperAnswerCard: {
+        create: [ADMIN_ROLE, 'AUTH_EXAM_PAPER_ANSWER_CARD_CREATE'],
+        edit: [ADMIN_ROLE, 'AUTH_EXAM_PAPER_ANSWER_CARD_EDIT'],
+        delete: [ADMIN_ROLE, 'AUTH_EXAM_PAPER_ANSWER_CARD_DELETE'],
+    },
+    examPaperAnswer: {
+        create: [ADMIN_ROLE, 'AUTH_EXAM_PAPER_ANSWER_CREATE'],
+        edit: [ADMIN_ROLE, 'AUTH_EXAM_PAPER_ANSWER_EDIT'],
+        delete: [ADMIN_ROLE, 'AUTH_EXAM_PAPER_ANSWER_DELETE'],
+    },
+    examQuestionReport: {
+        create: [ADMIN_ROLE, 'AUTH_EXAM_QUESTION_REPORT_CREATE'],
+        edit: [ADMIN_ROLE, 'AUTH_EXAM_QUESTION_REPORT_EDIT'],
+        delete: [ADMIN_ROLE, 'AUTH_EXAM_QUESTION_REPORT_DELETE'],
+    },
 };
 
 /**

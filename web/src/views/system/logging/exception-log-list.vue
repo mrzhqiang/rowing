@@ -8,16 +8,13 @@
         <el-input v-model="logParams.code" clearable/>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini"
-                   @click="onLogSearch">{{ $t('搜索') }}
-        </el-button>
-        <el-button icon="el-icon-refresh" size="mini"
-                   @click="onResetLogSearch">{{ $t('重置') }}
-        </el-button>
+        <el-button type="primary" icon="el-icon-search" @click="onLogSearch">{{ $t('搜索') }}</el-button>
+        <el-button icon="el-icon-refresh" @click="onResetLogSearch">{{ $t('重置') }}</el-button>
       </el-form-item>
     </el-form>
 
-    <el-table v-loading="logLoading" :data="logList" row-key="id" stripe border>
+    <el-table v-loading="logLoading" :data="logList" row-key="id" size="mini"
+              stripe border highlight-current-row>
       <el-table-column prop="id" label="#" min-width="20" :align="'right'"/>
       <el-table-column prop="status" :label="$t('状态码')" min-width="20"/>
       <el-table-column prop="method" :label="$t('请求方法')" min-width="30" :align="'center'"/>
@@ -31,7 +28,7 @@
       <el-table-column prop="timestamp" :label="$t('操作时间')" min-width="80" :align="'center'"/>
       <el-table-column :label="$t('操作')" min-width="50" :align="'center'">
         <template v-slot="scope">
-          <el-button size="mini" icon="el-icon-notebook-2" type="text"
+          <el-button size="mini" icon="el-icon-notebook-2" type="primary" plain
                      :disabled="scope.trace"
                      @click="onLogTrace(scope)">{{ $t('堆栈') }}
           </el-button>
@@ -71,10 +68,10 @@ export default {
         page: 0,
         size: 20,
       },
-      logLoading: true,
+      logLoading: false,
       logList: [],
       logPage: {totalElements: 0, totalPages: 0},
-      logTraceTitle: this.$t('异常日志堆栈'),
+      logTraceTitle: '异常日志堆栈',
       logTraceVisible: false,
       logTrace: ''
     };

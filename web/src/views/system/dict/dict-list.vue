@@ -8,12 +8,8 @@
         <el-input v-model="dictParams.code" clearable/>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="onDictSearch">
-          {{ $t('搜索') }}
-        </el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="onResetDictSearch">
-          {{ $t('重置') }}
-        </el-button>
+        <el-button type="primary" icon="el-icon-search" @click="onDictSearch">{{ $t('搜索') }}</el-button>
+        <el-button icon="el-icon-refresh" @click="onResetDictSearch">{{ $t('重置') }}</el-button>
       </el-form-item>
     </el-form>
 
@@ -25,17 +21,17 @@
       </el-col>
     </el-row>
 
-    <el-table v-loading="dictLoading" :data="dictList" row-key="id"
-              size="mini" stripe border highlight-current-row>
+    <el-table v-loading="dictLoading" :data="dictList" row-key="id" size="mini"
+              stripe border highlight-current-row>
       <el-table-column prop="id" label="#" min-width="20" :align="'right'"/>
-      <el-table-column prop="name" :label="$t('名称')" min-width="50" :align="'center'">
+      <el-table-column prop="name" :label="$t('名称')" min-width="50" show-overflow-tooltip>
         <template v-slot="scope">
           <el-button size="mini" type="text" @click="onDictEdit(scope, true)">
             {{ scope.row.name }}
           </el-button>
         </template>
       </el-table-column>
-      <el-table-column prop="code" :label="$t('代码')" min-width="50" :align="'center'"/>
+      <el-table-column prop="code" :label="$t('代码')" min-width="100" show-overflow-tooltip/>
       <el-table-column prop="type" :label="$t('类型')" min-width="40" :align="'center'"/>
       <el-table-column prop="freeze" :label="$t('是否冻结')" min-width="20" :align="'center'"/>
       <el-table-column prop="createdBy" :label="$t('创建人')" min-width="40" :align="'center'"/>
@@ -45,13 +41,13 @@
       <el-table-column :label="$t('操作')" min-width="100" :align="'center'">
         <template v-slot="scope">
           <el-button v-permission="dictPermission.edit"
-                     size="mini" icon="el-icon-edit" type="text"
-                     @click="onDictEdit(scope, false)">{{ $t('编辑') }}
+                     size="mini" icon="el-icon-edit" type="success" plain
+                     @click="onDictEdit(scope)">{{ $t('编辑') }}
           </el-button>
           <el-popconfirm style="margin-left: 10px" :title="$t('确定删除吗？')"
-                         @onConfirm="onDictDelete(scope)">
+                         @confirm="onDictDelete(scope)">
             <el-button slot="reference" v-permission="dictPermission.delete"
-                       size="mini" icon="el-icon-delete" type="text">{{ $t('删除') }}
+                       size="mini" icon="el-icon-delete" type="danger" plain>{{ $t('删除') }}
             </el-button>
           </el-popconfirm>
         </template>
@@ -80,6 +76,7 @@
         </el-row>
       </el-form>
 
+      <el-divider v-if="!dictFormCreate" content-position="left">{{ $t('字典项') }}</el-divider>
       <el-row v-if="!dictFormCreate" :gutter="10" style="margin-bottom: 1rem">
         <el-col :span="2">
           <el-button v-permission="dictPermission.create" type="primary"
@@ -88,10 +85,10 @@
         </el-col>
       </el-row>
 
-      <el-table v-if="!dictFormCreate" :data="dictItemList"
-                row-key="id" size="mini" stripe border highlight-current-row>
+      <el-table v-if="!dictFormCreate" :data="dictItemList" row-key="id" size="mini"
+                max-height="480" stripe border highlight-current-row>
         <el-table-column prop="id" label="#" min-width="20" :align="'right'"/>
-        <el-table-column prop="label" :label="$t('标签')" min-width="50" :align="'center'">
+        <el-table-column prop="label" :label="$t('标签')" min-width="100" :align="'center'">
           <template v-slot="scope">
             <el-button size="mini" type="text" @click="onDictItemEdit(scope, true)">
               {{ scope.row.label }}
@@ -103,16 +100,16 @@
         <el-table-column prop="created" :label="$t('创建时间')" min-width="80" :align="'center'"/>
         <el-table-column prop="updatedBy" :label="$t('更新人')" min-width="40" :align="'center'"/>
         <el-table-column prop="updated" :label="$t('更新时间')" min-width="80" :align="'center'"/>
-        <el-table-column :label="$t('操作')" min-width="100" :align="'center'">
+        <el-table-column :label="$t('操作')" min-width="120" :align="'center'">
           <template v-slot="scope">
             <el-button v-permission="dictPermission.edit"
-                       size="mini" icon="el-icon-edit" type="text"
-                       @click="onDictItemEdit(scope, false)">{{ $t('编辑') }}
+                       size="mini" icon="el-icon-edit" type="success" plain
+                       @click="onDictItemEdit(scope)">{{ $t('编辑') }}
             </el-button>
             <el-popconfirm style="margin-left: 10px" :title="$t('确定删除吗？')"
-                           @onConfirm="onDictItemDelete(scope)">
+                           @confirm="onDictItemDelete(scope)">
               <el-button slot="reference" v-permission="dictPermission.delete"
-                         size="mini" icon="el-icon-delete" type="text">{{ $t('删除') }}
+                         size="mini" icon="el-icon-delete" type="danger" plain>{{ $t('删除') }}
               </el-button>
             </el-popconfirm>
           </template>
@@ -182,7 +179,7 @@ export default {
         size: 20,
       },
       dictPermission: {...PERMISSION_MARK.dict},
-      dictLoading: true,
+      dictLoading: false,
       dictList: [],
       dictItemList: [],
       dictPage: {totalElements: 0, totalPages: 0},
@@ -292,7 +289,6 @@ export default {
       this.dictFormCreate = false;
       findDict(row.id, 'dict-form').then(response => {
         this.fillDictForm(response);
-        this.dictForm.id = row.id;
         this.dictTitle = readonly ? this.$t('查看字典组') : this.$t('编辑字典组');
         this.dictVisible = true;
       });
@@ -302,14 +298,13 @@ export default {
       this.dictItemFormEditable = !readonly;
       findDictItem(row.id, 'dict-item-form').then(response => {
         this.fillDictItemForm(response);
-        this.dictItemForm.id = row.id;
         this.dictItemTitle = readonly ? this.$t('查看字典项') : this.$t('编辑字典项');
         this.dictItemVisible = true;
       });
     },
     onDictDelete({row}) {
       deleteDict(row.id).then(() => {
-        this.$message.success(this.$t('字典组 {code} 删除成功！', {code: row.code}));
+        this.$message.success(`字典组 [${row.code}] 删除成功！`);
         this.findDictList();
       });
     },
@@ -322,7 +317,7 @@ export default {
     },
     onDictItemDelete({row}) {
       deleteDictItem(row.id).then(() => {
-        this.$message.success(this.$t('字典项 {code} 删除成功！', {code: row.code}));
+        this.$message.success(`字典项 [${row.value}] 删除成功！`);
         this.reloadDictForm();
       });
     },
@@ -343,13 +338,13 @@ export default {
           };
           if (this.dictForm.id) {
             editDict(this.dictForm.id, data).then(() => {
-              this.$message.success(this.$t('字典组 {name} 更新成功！', {name: this.dictForm.name}));
+              this.$message.success(`字典组 [${data.name}] 更新成功！`);
               this.dictVisible = false;
               this.findDictList();
             });
           } else {
             createDict(data).then(() => {
-              this.$message.success(this.$t('字典组 {name} 创建成功！', {name: this.dictForm.name}));
+              this.$message.success(`字典组 [${data.name}] 创建成功！`);
               this.dictVisible = false;
               this.findDictList();
             });
@@ -368,13 +363,13 @@ export default {
           };
           if (this.dictItemForm.id) {
             editDictItem(this.dictItemForm.id, data).then(() => {
-              this.$message.success(this.$t('字典项 {label} 更新成功！', {label: this.dictItemForm.label}));
+              this.$message.success(`字典项 [${data.label}] 更新成功！`);
               this.dictItemVisible = false;
               this.reloadDictForm();
             });
           } else {
             createDictItem(data).then(() => {
-              this.$message.success(this.$t('字典组 {label} 创建成功！', {label: this.dictItemForm.label}));
+              this.$message.success(`字典项 [${data.label}] 创建成功！`);
               this.dictItemVisible = false;
               this.reloadDictForm();
             });
