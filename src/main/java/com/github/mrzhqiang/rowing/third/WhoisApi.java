@@ -11,4 +11,5 @@ public interface WhoisApi {
 
     @GET("/ipJson.jsp")
     Observable<WhoIsIpData> ipJson(@Query("ip") String ip, @Query("json") boolean json);
+
 }

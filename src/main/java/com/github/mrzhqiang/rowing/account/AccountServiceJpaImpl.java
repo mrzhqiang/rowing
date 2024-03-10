@@ -5,12 +5,15 @@ import com.github.mrzhqiang.helper.random.RandomStrings;
 import com.github.mrzhqiang.rowing.domain.AccountType;
 import com.github.mrzhqiang.rowing.domain.ThirdUserType;
 import com.github.mrzhqiang.rowing.i18n.I18nHolder;
-import com.github.mrzhqiang.rowing.role.RoleService;
-import com.github.mrzhqiang.rowing.user.UserService;
-import com.github.mrzhqiang.rowing.util.Authentications;
+import com.github.mrzhqiang.rowing.role.RoleRepository;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.rest.core.event.AfterCreateEvent;
+import org.springframework.data.rest.core.event.AfterSaveEvent;
+import org.springframework.data.rest.core.event.BeforeCreateEvent;
+import org.springframework.data.rest.core.event.BeforeSaveEvent;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -32,30 +35,30 @@ public class AccountServiceJpaImpl implements AccountService {
 
     private final AccountMapper mapper;
     private final AccountRepository repository;
+    private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
-    private final UserService userService;
-    private final RoleService roleService;
+    private final ApplicationEventPublisher eventPublisher;
 
     public AccountServiceJpaImpl(AccountMapper mapper,
                                  AccountRepository repository,
+                                 RoleRepository roleRepository,
                                  PasswordEncoder passwordEncoder,
-                                 UserService userService,
-                                 RoleService roleService) {
+                                 ApplicationEventPublisher eventPublisher) {
         this.mapper = mapper;
         this.repository = repository;
+        this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
-        this.userService = userService;
-        this.roleService = roleService;
+        this.eventPublisher = eventPublisher;
     }
 
     @RunAsSystem
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        if (Authentications.SYSTEM_USERNAME.equals(username)) {
+        if (Accounts.SYSTEM_USERNAME.equals(username)) {
             return User.withUsername(username)
                     // 每次随机密码，避免登录系统虚拟用户
                     .password(passwordEncoder.encode(UUID.randomUUID().toString()))
-                    .authorities(AccountType.ADMIN.toAuthority())
+                    .authorities(AccountType.ADMIN.getAuthority())
                     .build();
         }
 
@@ -69,7 +72,7 @@ public class AccountServiceJpaImpl implements AccountService {
     @RunAsSystem
     @Override
     public Optional<Account> findByUsername(String username) {
-        if (Authentications.SYSTEM_USERNAME.equals(username)) {
+        if (Accounts.SYSTEM_USERNAME.equals(username)) {
             return Optional.empty();
         }
         return repository.findByUsername(username);
@@ -77,36 +80,36 @@ public class AccountServiceJpaImpl implements AccountService {
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void init() {
-        initAdmin();
-    }
-
-    private void initAdmin() {
-        Account admin = repository.findByUsername(Authentications.ADMIN_USERNAME).orElseGet(this::createAdmin);
-        userService.binding(admin);
-        roleService.binding(admin);
-        // FIXME 主要是为了保存 role 服务的改动，后面重构之后，不再需要这样做
-        repository.save(admin);
+    public void initAdmin() {
+        repository.findByUsername(Accounts.ADMIN_USERNAME).orElseGet(this::createAdmin);
     }
 
     private Account createAdmin() {
         String password = UUID.randomUUID().toString();
         log.info(I18nHolder.getAccessor().getMessage(
-                "AccountService.createAdmin.password", new Object[]{password},
-                Strings.lenientFormat("创建 admin 账户并随机生成密码: %s", password)));
+                "AccountService.initAdmin.password", new Object[]{password},
+                Strings.lenientFormat("创建超级管理员账户并随机生成密码: %s", password)));
+        writePasswordFile(password);
+        Account admin = Account.builder()
+                .username(Accounts.ADMIN_USERNAME)
+                .password(passwordEncoder.encode(password))
+                .type(AccountType.ADMIN)
+                .authority(AccountType.ADMIN.getAuthority())
+                .build();
+        repository.save(admin);
+        eventPublisher.publishEvent(new AfterCreateEvent(admin));
+        return admin;
+    }
+
+    private void writePasswordFile(String password) {
         Path passwordFile = Environments.getUserDir().toPath().resolve(Accounts.ADMIN_PASSWORD_FILENAME);
         try {
             Files.write(passwordFile, password.getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE);
         } catch (IOException e) {
-            String message = I18nHolder.getAccessor().getMessage("AccountService.createAdmin.writeFileFailure");
+            String message = I18nHolder.getAccessor().getMessage(
+                    "AccountService.initAdmin.writeFileFailure", "生成管理员密码文件失败");
             throw new RuntimeException(message, e);
         }
-        Account admin = Account.builder()
-                .username(Authentications.ADMIN_USERNAME)
-                .password(passwordEncoder.encode(password))
-                .type(AccountType.ADMIN)
-                .build();
-        return repository.save(admin);
     }
 
     @RunAsSystem
@@ -114,12 +117,11 @@ public class AccountServiceJpaImpl implements AccountService {
     @Override
     public void register(RegisterForm form) {
         Preconditions.checkNotNull(form, "register form == null");
-        String username = form.getUsername();
-        Accounts.validUsername(username);
-        Preconditions.checkArgument(!repository.existsByUsername(username), "invalid username");
 
         Account account = mapper.toEntity(form, passwordEncoder);
+        eventPublisher.publishEvent(new BeforeCreateEvent(account));
         repository.save(account);
+        eventPublisher.publishEvent(new AfterCreateEvent(account));
         if (log.isDebugEnabled()) {
             log.debug("Created account: {} for register", account);
         }
@@ -145,12 +147,15 @@ public class AccountServiceJpaImpl implements AccountService {
         String idCard = form.getIdCard();
         String password = idCard.substring(idCard.length() - 6);
         account.setPassword(passwordEncoder.encode(password));
-        return Optional.of(repository.save(account));
+        eventPublisher.publishEvent(new BeforeCreateEvent(account));
+        Optional<Account> optionalAccount = Optional.of(repository.save(account));
+        eventPublisher.publishEvent(new AfterCreateEvent(account));
+        return optionalAccount;
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public Optional<Account> registerForTeacher(TeacherInfoForm form) {
+    public Optional<Account> register(TeacherInfoForm form) {
         Preconditions.checkNotNull(form, "teacher info form == null");
 
         String number = form.getNumber();
@@ -168,7 +173,10 @@ public class AccountServiceJpaImpl implements AccountService {
         String idCard = form.getIdCard();
         String password = idCard.substring(idCard.length() - 6);
         account.setPassword(passwordEncoder.encode(password));
-        return Optional.of(repository.save(account));
+        eventPublisher.publishEvent(new BeforeCreateEvent(account));
+        Optional<Account> optionalAccount = Optional.of(repository.save(account));
+        eventPublisher.publishEvent(new AfterCreateEvent(account));
+        return optionalAccount;
     }
 
     private String generateUsername(String number, String prefix) {
@@ -182,7 +190,9 @@ public class AccountServiceJpaImpl implements AccountService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void update(Account account) {
+        eventPublisher.publishEvent(new BeforeSaveEvent(account));
         repository.save(account);
+        eventPublisher.publishEvent(new AfterSaveEvent(account));
     }
 
 }

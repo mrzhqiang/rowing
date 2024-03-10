@@ -31,4 +31,5 @@ public interface SessionDetailsMapper {
         }
         return location;
     }
+
 }

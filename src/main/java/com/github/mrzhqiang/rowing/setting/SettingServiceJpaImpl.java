@@ -40,7 +40,7 @@ public class SettingServiceJpaImpl implements SettingService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void init() {
-        importExcel(ResourceUtils.getFile(EXCEL_FILE_LOCATION));
+        importExcel(ResourceUtils.getFile(Settings.EXCEL_FILE_LOCATION));
     }
 
     private void importExcel(File excelFile) {
@@ -50,11 +50,11 @@ public class SettingServiceJpaImpl implements SettingService {
 
         // WorkbookFactory 支持创建 HSSFWorkbook 和 XSSFWorkbook 实例
         try (Workbook workbook = WorkbookFactory.create(excelFile)) {
-            Sheet sheet = workbook.getSheet(SHEET_NAME);
+            Sheet sheet = workbook.getSheet(Settings.EXCEL_FILE_SHEET_NAME);
             if (sheet == null) {
                 log.warn(I18nHolder.getAccessor().getMessage(
-                        "SettingService.importExcel.notFound", new Object[]{SHEET_NAME},
-                        Strings.lenientFormat("未找到名为 %s 的 Sheet 页", SHEET_NAME)));
+                        "SettingService.importExcel.notFound", new Object[]{Settings.EXCEL_FILE_SHEET_NAME},
+                        Strings.lenientFormat("未找到名为 %s 的 Sheet 页", Settings.EXCEL_FILE_SHEET_NAME)));
                 return;
             }
 
@@ -119,10 +119,11 @@ public class SettingServiceJpaImpl implements SettingService {
                 .flatMap(repository::findOne);
     }
 
-    @PreAuthorize(Authorizes.HAS_AUTHORITY_ADMIN)
+    @PreAuthorize("hasRole('ADMIN')")
     @Override
     public RSAKeyData createRsaKey() {
         KeyPair keyPair = RSADecrypts.generateKeyPair();
         return new RSAKeyData(RSADecrypts.privateKey(keyPair), RSADecrypts.publicKey(keyPair));
     }
+
 }

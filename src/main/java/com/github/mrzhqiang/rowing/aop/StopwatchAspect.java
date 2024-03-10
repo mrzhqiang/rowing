@@ -1,6 +1,8 @@
 package com.github.mrzhqiang.rowing.aop;
 
+import com.github.mrzhqiang.rowing.i18n.I18nHolder;
 import com.google.common.base.Stopwatch;
+import com.google.common.base.Strings;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -20,9 +22,6 @@ import org.springframework.stereotype.Component;
 @Order(2)
 public class StopwatchAspect {
 
-    private static final String BEFORE_TEMPLATE = "{}-{} 开始计时";
-    private static final String AFTER_TEMPLATE = "{}-{} 结束计时！耗时：{}";
-
     @Pointcut("@within(org.springframework.stereotype.Service) && execution(public * *(..))")
     public void businessService() {
         // 切中所有使用 @Service 标记的类中的所有 public 方法
@@ -32,10 +31,16 @@ public class StopwatchAspect {
     public Object handleLog(ProceedingJoinPoint point) throws Throwable {
         String className = point.getTarget().getClass().getSimpleName();
         String methodName = point.getSignature().getName();
-        log.info(BEFORE_TEMPLATE, className, methodName);
+        log.info(I18nHolder.getAccessor().getMessage(
+                "StopwatchAspect.handleLog.before", new Object[]{className, methodName},
+                Strings.lenientFormat("%s-%s 开始计时", className, methodName)));
         Stopwatch started = Stopwatch.createStarted();
         Object proceed = point.proceed();
-        log.info(AFTER_TEMPLATE, className, methodName, started.stop());
+        Stopwatch stop = started.stop();
+        log.info(I18nHolder.getAccessor().getMessage(
+                "StopwatchAspect.handleLog.after", new Object[]{className, methodName, stop},
+                Strings.lenientFormat("%s-%s 结束计时，耗时：%s", className, methodName, stop)));
         return proceed;
     }
+
 }

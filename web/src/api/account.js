@@ -4,8 +4,8 @@ import rest from '@/api/rest';
 /**
  * 注册账户。
  */
-export function registerAccount(account, user) {
-  return request.post('/account/register', {account, user});
+export function register(form) {
+  return request.post('/account/register', form);
 }
 
 /**

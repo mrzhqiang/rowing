@@ -256,11 +256,11 @@
         "path": "exam-taker-paper/:id",
         "component": "exam/exam-taker-paper",
         "name": "ExamTakerPaper",
+        "hidden": true,
         "meta": {
           "title": "开始考试",
           "breadcrumb": false,
           "activeMenu": "/exam/exam-taker",
-          "hidden": true,
           "noCache": true,
           "roles": [
             "ADMIN","USER"
@@ -271,11 +271,11 @@
         "path": "exam-marker-paper/:id",
         "component": "exam/exam-marker-paper",
         "name": "ExamMarkerPaper",
+        "hidden": true,
         "meta": {
           "title": "开始阅卷",
           "breadcrumb": false,
           "activeMenu": "/exam/exam-marker",
-          "hidden": true,
           "noCache": true,
           "roles": [
             "ADMIN"

@@ -5,6 +5,7 @@ import com.github.mrzhqiang.kaptcha.autoconfigure.KaptchaProperties;
 import com.github.mrzhqiang.rowing.account.LoginFailureHandler;
 import com.github.mrzhqiang.rowing.account.LoginSuccessHandler;
 import com.github.mrzhqiang.rowing.account.RSADecryptPasswordEncoder;
+import com.github.mrzhqiang.rowing.i18n.I18nHolder;
 import com.github.mrzhqiang.rowing.setting.SettingService;
 import com.github.mrzhqiang.rowing.util.Authorizes;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -61,7 +62,7 @@ public class SecurityConfiguration {
     }
 
     /**
-     * 角色层次结构。
+     * 系统角色层次结构。
      */
     @Bean
     public RoleHierarchy roleHierarchy() {
@@ -141,12 +142,16 @@ public class SecurityConfiguration {
                         .accessDeniedHandler(new AccessDeniedHandlerImpl())
                         .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
                 .sessionManagement(managementConfigurer -> managementConfigurer
-                        .invalidSessionStrategy((request, response) ->
-                                response.sendError(HttpStatus.FORBIDDEN.value(), "invalidSessionStrategy"))
+                        .invalidSessionStrategy((request, response) -> response
+                                .sendError(HttpStatus.FORBIDDEN.value(), I18nHolder.getAccessor().getMessage(
+                                        "SecurityConfiguration.webFilterChain.invalidSessionStrategy",
+                                        "会话已失效，请重新登录")))
                         .sessionConcurrency(controlConfigurer -> controlConfigurer
                                 .maximumSessions(sessionProperties.getMaxSession())
-                                .expiredSessionStrategy(event ->
-                                        event.getResponse().sendError(HttpStatus.FORBIDDEN.value(), "expiredSessionStrategy"))))
+                                .expiredSessionStrategy(event -> event.getResponse()
+                                        .sendError(HttpStatus.FORBIDDEN.value(), I18nHolder.getAccessor().getMessage(
+                                                "SecurityConfiguration.webFilterChain.expiredSessionStrategy",
+                                                "会话已过期，请重新登录")))))
                 .logout(logoutConfigurer -> logoutConfigurer
                         .logoutUrl(securityProperties.getLogoutPath())
                         .logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler())

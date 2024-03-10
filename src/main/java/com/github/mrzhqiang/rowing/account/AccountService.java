@@ -37,9 +37,9 @@ public interface AccountService extends UserDetailsService {
     Optional<Account> findByUsername(String username);
 
     /**
-     * 初始化账户。
+     * 初始化超级管理员账户。
      */
-    void init();
+    void initAdmin();
 
     /**
      * 注册系统账户。
@@ -66,7 +66,7 @@ public interface AccountService extends UserDetailsService {
      * @param form 教师信息表单。
      * @return 可选的系统账户。如果存在表示注册成功；否则表示注册失败。
      */
-    Optional<Account> registerForTeacher(TeacherInfoForm form);
+    Optional<Account> register(TeacherInfoForm form);
 
     void update(Account account);
 

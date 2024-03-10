@@ -11,7 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 
-@PreAuthorize(Authorizes.HAS_AUTHORITY_ADMIN)
+@PreAuthorize("hasRole('ADMIN')")
 @RepositoryRestResource(path = "init-task", excerptProjection = InitTaskExcerpt.class)
 public interface InitTaskRepository extends BaseRepository<InitTask> {
 

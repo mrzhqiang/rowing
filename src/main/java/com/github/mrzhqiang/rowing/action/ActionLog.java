@@ -38,13 +38,13 @@ public class ActionLog extends BaseEntity {
      * @see Action#value()
      * @see ActionType
      */
-    @Column(length = Domains.ENUM_NAME_LENGTH)
+    @Column(length = Domains.ENUM_LENGTH)
     private String action;
     /**
      * 操作类型。
      */
     @Enumerated(EnumType.STRING)
-    @Column(length = Domains.ENUM_NAME_LENGTH)
+    @Column(length = Domains.ENUM_LENGTH)
     private ActionType type = ActionType.NONE;
     /**
      * 操作所在类。
@@ -65,7 +65,7 @@ public class ActionLog extends BaseEntity {
      * 操作状态。
      */
     @Enumerated(EnumType.STRING)
-    @Column(length = Domains.ENUM_NAME_LENGTH)
+    @Column(length = Domains.ENUM_LENGTH)
     private ActionState state;
     /**
      * 操作返回结果.

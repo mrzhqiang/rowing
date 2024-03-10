@@ -1,5 +1,7 @@
 package com.github.mrzhqiang.rowing.domain;
 
+import com.github.mrzhqiang.rowing.util.Enums;
+
 /**
  * 任务类型。
  * <p>
@@ -19,5 +21,10 @@ public enum TaskType {
      * 表示需要通过手动执行，
      */
     OPTIONAL,
+    ;
+
+    public static TaskType of(String type) {
+        return Enums.findByNameIgnoreCase(TaskType.class, type, SYSTEM);
+    }
 
 }

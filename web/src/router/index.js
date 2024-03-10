@@ -55,6 +55,11 @@ export const constantRoutes = [
     hidden: true
   },
   {
+    path: '/register',
+    component: () => import('@/views/register.vue'),
+    hidden: true
+  },
+  {
     path: '/auth-redirect',
     component: () => import('@/views/login/auth-redirect'),
     hidden: true
@@ -109,6 +114,20 @@ export const constantRoutes = [
       }
     ]
   },
+  {
+    path: '/api-explorer',
+    component: Layout,
+    children: [
+      {
+        path: 'http://localhost:8888/api/explorer',
+        meta: {
+          title: '接口工具',
+          icon: 'link',
+          roles: ['MANAGER']
+        }
+      }
+    ]
+  }
 ];
 
 /**

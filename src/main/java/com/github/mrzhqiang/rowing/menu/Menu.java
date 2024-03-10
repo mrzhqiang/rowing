@@ -184,7 +184,7 @@ public class Menu extends AuditableEntity {
      */
     @NotNull
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = Domains.ENUM_NAME_LENGTH)
+    @Column(nullable = false, length = Domains.ENUM_LENGTH)
     private Logic enabled = Logic.YES;
     /**
      * 是否内置。
@@ -193,7 +193,7 @@ public class Menu extends AuditableEntity {
      */
     @NotNull
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, updatable = false, length = Domains.ENUM_NAME_LENGTH)
+    @Column(nullable = false, updatable = false, length = Domains.ENUM_LENGTH)
     private Logic internal = Logic.NO;
 
     /**

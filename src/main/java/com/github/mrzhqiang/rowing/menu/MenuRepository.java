@@ -12,7 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 
-@PreAuthorize(Authorizes.HAS_AUTHORITY_ADMIN)
+@PreAuthorize("hasRole('ADMIN')")
 @RepositoryRestResource(path = "menu", excerptProjection = MenuExcerpt.class)
 public interface MenuRepository extends BaseRepository<Menu> {
 

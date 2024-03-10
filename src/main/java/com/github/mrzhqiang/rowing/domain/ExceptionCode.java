@@ -12,6 +12,7 @@ import java.util.Optional;
  * 异常代码。
  */
 public enum ExceptionCode {
+
     /**
      * 默认类型。
      * <p>

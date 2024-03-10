@@ -2,6 +2,8 @@ package com.github.mrzhqiang.rowing.role;
 
 import com.github.mrzhqiang.rowing.account.Account;
 
+import java.util.List;
+
 /**
  * 角色服务。
  * <p>
@@ -19,5 +21,7 @@ public interface RoleService {
      * @param admin 管理员账户。
      */
     void binding(Account admin);
+
+    List<Role> findAllBy(Account account);
 
 }

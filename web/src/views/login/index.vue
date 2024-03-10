@@ -32,12 +32,11 @@
         {{ $t('login.logIn') }}
       </el-button>
       <div style="position:relative">
-        <div class="tips"/>
-        <div class="tips">
-          <span style="margin-right:18px;"/>
-        </div>
         <el-button class="third-button" type="primary" @click="showDialog=true">
           {{ $t('login.thirdparty') }}
+        </el-button>
+        <el-button style="margin-left: 0" type="primary" @click="openRegister">
+          {{ '注册' }}
         </el-button>
       </div>
     </el-form>
@@ -77,7 +76,7 @@ export default {
     return {
       loginForm: {
         username: 'admin',
-        password: 'ecca2c68-fce7-4bb3-8062-e47987ff8cc0'
+        password: '5edd133d-9286-4908-87bf-030ec2090ddb'
       },
       loginRules: {
         username: [{required: true, trigger: 'blur', validator: validateUsername}],
@@ -156,7 +155,10 @@ export default {
         }
         return acc;
       }, {});
-    }
+    },
+    openRegister() {
+      this.$router.push('/register');
+    },
     // afterQRScan() {
     //   if (e.key === 'x-admin-oauth-code') {
     //     const code = getQueryObject(e.newValue)
@@ -299,7 +301,6 @@ $light_gray: #eee;
   .third-button {
     position: absolute;
     right: 0;
-    bottom: 8px;
   }
 
   @media only screen and (max-width: 480px) {

@@ -123,10 +123,10 @@ public class DictServiceJpaImpl implements DictService {
             // 比如 com.xxx.EnumClassName.ENUM_VALUE
             String label = enumTranslator.asText(enumConstant);
             String itemValue = enumConstant.name();
-            if (itemValue.length() > Domains.ENUM_NAME_LENGTH) {
+            if (itemValue.length() > Domains.ENUM_LENGTH) {
                 String message = I18nHolder.getAccessor().getMessage(
-                        "DictService.syncInternal.item.failure", new Object[]{code, enumConstant.name(), Domains.ENUM_NAME_LENGTH},
-                        Strings.lenientFormat("同步失败！内置字典项 %s-%s 名称长度大于指定长度 %s", code, enumConstant.name(), Domains.ENUM_NAME_LENGTH));
+                        "DictService.syncInternal.item.failure", new Object[]{code, enumConstant.name(), Domains.ENUM_LENGTH},
+                        Strings.lenientFormat("同步失败！内置字典项 %s-%s 名称长度大于指定长度 %s", code, enumConstant.name(), Domains.ENUM_LENGTH));
                 throw new RuntimeException(message);
             }
 

@@ -2,6 +2,7 @@ package com.github.mrzhqiang.rowing.account;
 
 import com.github.mrzhqiang.rowing.setting.Setting;
 import com.github.mrzhqiang.rowing.setting.SettingService;
+import com.github.mrzhqiang.rowing.setting.Settings;
 import com.github.mrzhqiang.rowing.util.RSADecrypts;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -13,8 +14,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  */
 public class RSADecryptPasswordEncoder implements PasswordEncoder {
 
-    private final PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
     private final SettingService settingService;
+    private final PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
     public RSADecryptPasswordEncoder(SettingService settingService) {
         this.settingService = settingService;
@@ -30,7 +31,7 @@ public class RSADecryptPasswordEncoder implements PasswordEncoder {
     public boolean matches(CharSequence rawPassword, String encodedPassword) {
         String passwordString = rawPassword.toString();
         // TODO 缓存设置，提升性能
-        String password = settingService.findByCode(SettingService.PASSWORD_RSA_PRIVATE_KEY)
+        String password = settingService.findByCode(Settings.PASSWORD_RSA_PRIVATE_KEY)
                 .map(Setting::getContent)
                 .map(RSADecrypts::parsePrivateKey)
                 .map(it -> RSADecrypts.decrypt(passwordString, it))

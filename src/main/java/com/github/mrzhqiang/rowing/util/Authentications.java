@@ -1,36 +1,21 @@
 package com.github.mrzhqiang.rowing.util;
 
-import com.github.mrzhqiang.rowing.domain.AccountType;
+import lombok.experimental.UtilityClass;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
 import org.springframework.security.authentication.AuthenticationTrustResolverImpl;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
 import java.util.Optional;
-import java.util.UUID;
 
 /**
  * 认证工具。
  */
-public final class Authentications {
-    private Authentications() {
-        // no instances
-    }
+@UtilityClass
+public class Authentications {
 
-    /**
-     * 系统虚拟用户名。
-     * <p>
-     * 数据库审计需要一个系统虚拟用户。
-     */
-    public static final String SYSTEM_USERNAME = "system";
-    /**
-     * 超级管理员用户名。
-     */
-    public static final String ADMIN_USERNAME = "admin";
     /**
      * 未知主机。
      * <p>
@@ -60,23 +45,9 @@ public final class Authentications {
     }
 
     /**
-     * 系统认证。
-     * <p>
-     * 注意：系统认证仅用于内部调用需要认证的方法时使用，不能作为正常用户进行认证。
-     *
-     * @return 系统认证。
-     */
-    public static Authentication ofSystem() {
-        return UsernamePasswordAuthenticationToken.authenticated(
-                SYSTEM_USERNAME,
-                UUID.randomUUID().toString(),
-                AuthorityUtils.createAuthorityList(AccountType.ADMIN.name()));
-    }
-
-    /**
      * 获取认证用户名。
      *
-     * @param authentication 认证信息。可能是用户，也可能是游客。
+     * @param authentication 认证信息。
      * @return 可选的用户名。
      */
     public static Optional<String> findUsername(Authentication authentication) {
@@ -87,24 +58,12 @@ public final class Authentications {
 
     private static String attemptFindUsername(Object it) {
         if (it == null) {
-            // 为审计而返回 system 用户
-            return SYSTEM_USERNAME;
+            return "";
         }
         if (it instanceof UserDetails) {
             return ((UserDetails) it).getUsername();
         }
         return String.valueOf(it);
-    }
-
-    /**
-     * 获取当前请求的用户名。
-     * <p>
-     * 注意：这个方法默认使用 system 用户名，如果存在认证信息，则使用认证用户名。
-     */
-    public static String currentUsername() {
-        return Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication())
-                .flatMap(Authentications::findUsername)
-                .orElse(SYSTEM_USERNAME);
     }
 
     /**
@@ -128,4 +87,5 @@ public final class Authentications {
         }
         return UNKNOWN_HOST;
     }
+
 }

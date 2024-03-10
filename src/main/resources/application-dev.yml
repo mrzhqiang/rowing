@@ -58,7 +58,7 @@ spring:
 # 验证码配置
 kaptcha:
   # 开发环境下屏蔽，线上建议打开
-  enabled: false
+  enabled: true
 
 # 项目配置
 rowing:

@@ -50,4 +50,5 @@ public class SessionDetailsService {
                 .map(reader::city)
                 .map(mapper::toDetails);
     }
+
 }

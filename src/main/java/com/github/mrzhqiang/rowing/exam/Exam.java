@@ -85,7 +85,7 @@ public class Exam extends AuditableEntity {
      */
     @NotNull
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = Domains.ENUM_NAME_LENGTH)
+    @Column(nullable = false, length = Domains.ENUM_LENGTH)
     private ExamStatus status = ExamStatus.DEFAULT;
     /**
      * 开始时间。

@@ -30,4 +30,5 @@ public class SessionDetails implements Serializable {
      * 一般是【操作系统名称 -- 浏览器名称】格式。
      */
     private String accessType;
+
 }

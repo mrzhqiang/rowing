@@ -1,6 +1,7 @@
 package com.github.mrzhqiang.rowing.util;
 
 import lombok.SneakyThrows;
+import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.crypto.Cipher;
@@ -18,10 +19,8 @@ import java.util.Base64;
  * RSA 解密工具。
  */
 @Slf4j
-public final class RSADecrypts {
-    private RSADecrypts() {
-        // no instances.
-    }
+@UtilityClass
+public class RSADecrypts {
 
     public static final int KEY_SIZE = 2048;
 

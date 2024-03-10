@@ -1,5 +1,6 @@
 package com.github.mrzhqiang.rowing.util;
 
+import lombok.experimental.UtilityClass;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DataFormatter;
 
@@ -8,10 +9,8 @@ import java.util.Optional;
 /**
  * Apache Poi 的 Cell 工具。
  */
-public final class Cells {
-    private Cells() {
-        // no instances
-    }
+@UtilityClass
+public class Cells {
 
     private static final DataFormatter DATA_FORMATTER = new DataFormatter();
 
@@ -28,4 +27,5 @@ public final class Cells {
                 .map(DATA_FORMATTER::formatCellValue)
                 .orElse("");
     }
+
 }

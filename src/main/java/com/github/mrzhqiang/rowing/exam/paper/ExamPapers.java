@@ -2,6 +2,7 @@ package com.github.mrzhqiang.rowing.exam.paper;
 
 import com.github.mrzhqiang.rowing.exam.rule.ExamRule;
 import com.google.common.base.Strings;
+import lombok.experimental.UtilityClass;
 
 import java.math.BigDecimal;
 import java.time.temporal.ChronoUnit;
@@ -11,10 +12,8 @@ import java.util.List;
  * 考试试卷工具。
  * <p>
  */
-public final class ExamPapers {
-    private ExamPapers() {
-        // no instances.
-    }
+@UtilityClass
+public class ExamPapers {
 
     /**
      * 检测是否可以考试。

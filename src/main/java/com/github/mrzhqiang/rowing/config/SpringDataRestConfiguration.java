@@ -22,12 +22,12 @@ import java.time.LocalDateTime;
  * <p>
  */
 @Configuration
-public class RestConfiguration {
+public class SpringDataRestConfiguration {
 
     private final RepositoryRestProperties properties;
     private final EnumTranslator enumTranslator;
 
-    public RestConfiguration(RepositoryRestProperties properties, EnumTranslator enumTranslator) {
+    public SpringDataRestConfiguration(RepositoryRestProperties properties, EnumTranslator enumTranslator) {
         this.properties = properties;
         this.enumTranslator = enumTranslator;
     }

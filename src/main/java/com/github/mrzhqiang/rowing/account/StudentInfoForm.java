@@ -33,4 +33,5 @@ public class StudentInfoForm {
      */
     @NotBlank
     private String idCard;
+
 }

@@ -16,6 +16,8 @@ public interface AccountForm extends BaseProjection {
 
     String getType();
 
+    String getAuthority();
+
     String getExpired();
 
     Integer getFailedCount();

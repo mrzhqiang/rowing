@@ -1,6 +1,5 @@
 package com.github.mrzhqiang.rowing.domain;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.rest.core.config.Projection;
 
 import java.time.LocalDateTime;
@@ -13,14 +12,12 @@ import java.time.LocalDateTime;
 @Projection(name = "auditable-projection", types = {AuditableEntity.class})
 public interface AuditableProjection extends BaseProjection {
 
-    LocalDateTime getCreated();
-
     String getCreatedBy();
 
-    @Value("#{target.lastModified}")
-    LocalDateTime getUpdated();
+    LocalDateTime getCreated();
 
-    @Value("#{target.lastModifiedBy}")
     String getUpdatedBy();
+
+    LocalDateTime getUpdated();
 
 }

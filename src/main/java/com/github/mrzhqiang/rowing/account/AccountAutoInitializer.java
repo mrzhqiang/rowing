@@ -19,7 +19,7 @@ public class AccountAutoInitializer extends AutoInitializer {
 
     @Override
     protected void onExecute() {
-        service.init();
+        service.initAdmin();
     }
 
 }

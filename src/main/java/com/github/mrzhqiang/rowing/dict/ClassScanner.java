@@ -96,4 +96,5 @@ public final class ClassScanner {
                 Strings.lenientFormat("扫描完成，一共找到 %s 个枚举类，用时：%s", total, stop)));
         return enums;
     }
+
 }

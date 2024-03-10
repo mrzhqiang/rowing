@@ -5,6 +5,7 @@ import com.github.mrzhqiang.helper.time.DateTimes;
 import com.github.mrzhqiang.rowing.i18n.I18nHolder;
 import com.github.mrzhqiang.rowing.setting.Setting;
 import com.github.mrzhqiang.rowing.setting.SettingService;
+import com.github.mrzhqiang.rowing.setting.Settings;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.LockedException;
@@ -66,10 +67,10 @@ public class LoginFailureHandler implements AuthenticationFailureHandler {
 
     private BadCredentialsException parseBadCredentials(Account account, BadCredentialsException exception) {
         int currentFailedCount = account.getFailedCount();
-        Integer maxLoginFailed = settingService.findByCode(SettingService.MAX_LOGIN_FAILED)
+        Integer maxLoginFailed = settingService.findByCode(Settings.MAX_LOGIN_FAILED)
                 .map(Setting::getContent)
                 .map(Integer::parseInt)
-                .orElse(SettingService.DEF_MAX_LOGIN_FAILED);
+                .orElse(Settings.DEF_MAX_LOGIN_FAILED);
         String rawMessage = exception.getMessage();
         String message = I18nHolder.getAccessor().getMessage(
                 "LoginFailureHandler.BadCredentialsException", new Object[]{currentFailedCount, maxLoginFailed});

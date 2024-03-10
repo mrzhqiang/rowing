@@ -4,6 +4,7 @@ import com.github.mrzhqiang.rowing.action.Action;
 import com.github.mrzhqiang.rowing.domain.ActionType;
 import com.github.mrzhqiang.rowing.setting.Setting;
 import com.github.mrzhqiang.rowing.setting.SettingService;
+import com.github.mrzhqiang.rowing.setting.Settings;
 import com.github.mrzhqiang.rowing.util.Authentications;
 import org.springframework.boot.convert.DurationStyle;
 import org.springframework.context.ApplicationListener;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Nonnull;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Optional;
 
 /**
  * 登录失败监听器。
@@ -57,20 +59,19 @@ public class LoginFailureListener implements ApplicationListener<AbstractAuthent
 
     private Account computeFailedCount(Account account) {
         int hasFailedCount = account.getFailedCount();
-        // 账户未锁定，统计失败次数，并判断是否超过最大失败次数，如果超过则锁定账户
         if (account.isAccountNonLocked()) {
-            int maxLoginFailed = settingService.findByCode(SettingService.MAX_LOGIN_FAILED)
+            int maxLoginFailed = settingService.findByCode(Settings.MAX_LOGIN_FAILED)
                     .map(Setting::getContent)
                     .map(Integer::parseInt)
-                    .orElse(SettingService.DEF_MAX_LOGIN_FAILED);
+                    .orElse(Settings.DEF_MAX_LOGIN_FAILED);
             if (hasFailedCount < maxLoginFailed) {
                 account.setFailedCount(hasFailedCount + 1);
             }
             if (account.getFailedCount() >= maxLoginFailed) {
-                Duration duration = settingService.findByCode(SettingService.ACCOUNT_LOCKED_DURATION)
+                Duration duration = settingService.findByCode(Settings.ACCOUNT_LOCKED_DURATION)
                         .map(Setting::getContent)
                         .map(DurationStyle::detectAndParse)
-                        .orElse(SettingService.DEF_ACCOUNT_LOCKED_DURATION);
+                        .orElse(Settings.DEF_ACCOUNT_LOCKED_DURATION);
                 account.setLocked(Instant.now().plus(duration));
             }
             return account;

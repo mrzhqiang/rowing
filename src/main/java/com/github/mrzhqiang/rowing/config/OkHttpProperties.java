@@ -65,4 +65,5 @@ public class OkHttpProperties {
      * 常用的就是这三个，具体细节请参考其 API 描述。
      */
     private HttpLoggingInterceptor.Level loggingLevel = HttpLoggingInterceptor.Level.NONE;
+
 }

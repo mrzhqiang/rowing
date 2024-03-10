@@ -1,10 +1,10 @@
 package com.github.mrzhqiang.rowing.menu;
 
 import com.github.mrzhqiang.rowing.domain.AuditableEntity;
+import com.github.mrzhqiang.rowing.domain.Domains;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,18 +20,9 @@ import javax.validation.constraints.Size;
 @Setter
 @ToString(callSuper = true)
 @Entity
-public class MenuResource extends AuditableEntity implements GrantedAuthority {
+public class MenuResource extends AuditableEntity {
 
     private static final long serialVersionUID = -8856149065035259776L;
-
-    /**
-     * 资源名称最大长度。
-     */
-    public static final int MAX_NAME_LENGTH = 24;
-    /**
-     * 资源权限最大长度。
-     */
-    public static final int MAX_AUTHORITY_LENGTH = 100;
 
     /**
      * 资源名称。
@@ -39,8 +30,8 @@ public class MenuResource extends AuditableEntity implements GrantedAuthority {
      * 不能为空，最大长度 24 个字符。
      */
     @NotBlank
-    @Size(max = MAX_NAME_LENGTH)
-    @Column(nullable = false, length = MAX_NAME_LENGTH)
+    @Size(max = Domains.MAX_NAME_LENGTH)
+    @Column(nullable = false, length = Domains.MAX_NAME_LENGTH)
     private String name;
     /**
      * 资源权限。
@@ -48,8 +39,8 @@ public class MenuResource extends AuditableEntity implements GrantedAuthority {
      * 不能为空，必须保证唯一，最大长度 100 个字符。
      */
     @NotBlank
-    @Size(max = MAX_AUTHORITY_LENGTH)
-    @Column(unique = true, nullable = false, length = MAX_AUTHORITY_LENGTH)
+    @Size(max = Domains.MAX_AUTHORITY_LENGTH)
+    @Column(unique = true, nullable = false, length = Domains.MAX_AUTHORITY_LENGTH)
     private String authority;
     /**
      * 资源排序。

@@ -21,4 +21,5 @@ public class UserController {
         UserInfoData data = service.findByUsername(details.getUsername());
         return ResponseEntity.ok(data);
     }
+
 }

@@ -4,6 +4,7 @@ import com.github.mrzhqiang.helper.Exceptions;
 import com.github.mrzhqiang.rowing.init.InitializationException;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
+import lombok.experimental.UtilityClass;
 import okhttp3.HttpUrl;
 import org.hibernate.exception.DataException;
 import org.hibernate.exception.GenericJDBCException;
@@ -21,10 +22,8 @@ import java.util.Set;
 /**
  * 验证工具。
  */
-public final class Validations {
-    private Validations() {
-        // no instances.
-    }
+@UtilityClass
+public class Validations {
 
     private static final List<Class<?>> IGNORE_EXCEPTION_LIST = ImmutableList.of(
             InitializationException.class,
@@ -80,4 +79,5 @@ public final class Validations {
     private static String formatMessage(ConstraintViolation<?> violation) {
         return Strings.lenientFormat("[%s] - %s", violation.getPropertyPath(), violation.getMessage());
     }
+
 }

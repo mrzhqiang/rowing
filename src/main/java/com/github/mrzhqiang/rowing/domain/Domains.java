@@ -1,23 +1,22 @@
 package com.github.mrzhqiang.rowing.domain;
 
 import com.github.mrzhqiang.helper.Exceptions;
+import lombok.experimental.UtilityClass;
 
 /**
  * 领域工具。
  * <p>
- * 主要定义一些常量以及方法。
+ * 主要定义一些领域相关的常量和静态方法。
  */
-public final class Domains {
-    private Domains() {
-        // no instances.
-    }
+@UtilityClass
+public class Domains {
 
     /**
-     * 枚举名称长度。
+     * 枚举长度。
      * <p>
-     * 这里的枚举名称实际上是字典代码。
+     * 对于领域字段来说，实际上是定义枚举的字典代码长度。
      */
-    public static final int ENUM_NAME_LENGTH = 50;
+    public static final int ENUM_LENGTH = 50;
     /**
      * 用户名最小长度。
      */
@@ -29,21 +28,35 @@ public final class Domains {
     /**
      * 用户名正则表达式。
      * <p>
-     * 规则：以小写字母开头，后面包含小写字母或数字。
+     * 规则：以字母开头，字母或数字结尾，允许 _ 符号以便追加第三方平台相关的前缀。
      * <p>
-     * 注意：字符长度不在正则表达式的考虑范围内，应由相关表单或实体进行控制。
+     * 注意：长度不在正则表达式的考虑范围内，应由表单验证进行控制。
      */
-    public static final String USERNAME_REGEXP = "^[a-z][a-z\\d]+";
+    public static final String USERNAME_REGEXP = "^[a-zA-Z][_a-zA-Z0-9]+";
+    /**
+     * 用户名注册时的正则表达式。
+     * <p>
+     * 规则：以小写字母开头，后面包含小写字母或数字，不允许任何特殊字符。
+     * <p>
+     * 注意：长度不在正则表达式的考虑范围内，应由表单验证进行控制。
+     */
+    public static final String USERNAME_REGISTER_REGEXP = "^[a-z][a-z0-9]+";
     /**
      * 密码最小长度。
      */
     public static final int PASSWORD_MIN_LENGTH = 6;
     /**
-     * 密码最大长度。
+     * 默认的密码最大长度。
      * <p>
-     * 仅限于注册时的密码长度限制，其他来源的密码最大长度没有明确限制，需要符合实体中的字段长度。
+     * 仅限于注册时的密码长度限制，其他来源的密码长度没有明确限制，需要符合实体中的字段长度。
+     * <p>
+     * TODO 实际的密码长度限制应该从系统设置中读取。
      */
-    public static final int PASSWORD_MAX_LENGTH = 32;
+    public static final int DEF_PASSWORD_MAX_LENGTH = 32;
+    /**
+     * 权限信息长度。
+     */
+    public static final int AUTHORITIES_LENGTH = 2000;
     /**
      * 类名称长度。
      */
@@ -68,23 +81,22 @@ public final class Domains {
      * 设备信息长度。
      */
     public static final int DEVICE_INFO_LENGTH = 200;
-
     /**
-     * 字典名称长度。
+     * 字典组名称长度。
      */
-    public static final int DICT_NAME_LENGTH = 100;
+    public static final int DICT_GROUP_NAME_LENGTH = 100;
     /**
-     * 字典代码长度。
+     * 字典组代码长度。
      */
-    public static final int DICT_CODE_LENGTH = 50;
+    public static final int DICT_GROUP_CODE_LENGTH = 100;
     /**
-     * 字典标签长度。
+     * 字典项标签长度。
      */
-    public static final int DICT_LABEL_LENGTH = 100;
+    public static final int DICT_ITEM_LABEL_LENGTH = 100;
     /**
-     * 字典值长度。
+     * 字典项值长度。
      */
-    public static final int DICT_VALUE_LENGTH = 50;
+    public static final int DICT_ITEM_VALUE_LENGTH = ENUM_LENGTH;
     /**
      * HTTP 状态原因短语长度。
      */
@@ -116,7 +128,7 @@ public final class Domains {
     /**
      * 异常堆栈长度。
      */
-    public static final int EXCEPTION_TRACE_LENGTH = Exceptions.MAX_TRACE_LENGTH;
+    public static final int EXCEPTION_TRACE_LENGTH = 2000;
     /**
      * 初始化任务名称长度。
      */
@@ -144,7 +156,7 @@ public final class Domains {
     /**
      * 角色代码最大长度。
      */
-    public static final int ROLE_CODE_LENGTH = 48;
+    public static final int ROLE_CODE_LENGTH = 100;
     /**
      * 设置名称长度。
      */
@@ -162,9 +174,13 @@ public final class Domains {
      */
     public static final int SETTING_STYLE_LENGTH = 200;
     /**
-     * 用户昵称长度。
+     * 最小用户昵称生成长度。
      */
-    public static final int USER_NICKNAME_LENGTH = 16;
+    public static final int MIN_NICKNAME_GENERATE_LENGTH = 6;
+    /**
+     * 用户昵称最大长度。
+     */
+    public static final int MAX_USER_NICKNAME_LENGTH = 16;
     /**
      * URL 地址的正则表达式。
      */
@@ -214,12 +230,13 @@ public final class Domains {
      * SQL 布尔字段默认真。
      */
     public static final String BOOL_COLUMN_TRUE = "bit(1) default 1";
-
     /**
-     * 菜单非重定向属性。
-     * <p>
-     * 非重定向值，表示在前端中，点击当前菜单的面包屑时，不具备跳转功能。
+     * 资源名称最大长度。
      */
-    public static final String MENU_NO_REDIRECT = "noRedirect";
+    public static final int MAX_NAME_LENGTH = 24;
+    /**
+     * 资源权限最大长度。
+     */
+    public static final int MAX_AUTHORITY_LENGTH = 100;
 
 }
