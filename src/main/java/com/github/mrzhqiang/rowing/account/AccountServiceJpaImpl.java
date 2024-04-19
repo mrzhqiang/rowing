@@ -19,6 +19,7 @@ import io.micrometer.core.annotation.Counted;
 import io.micrometer.core.annotation.Timed;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.boot.convert.DurationStyle;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.rest.core.event.AfterCreateEvent;
@@ -33,6 +34,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -56,6 +58,7 @@ public class AccountServiceJpaImpl implements AccountService, UserDetailsService
     private final AccountRepository repository;
     private final PasswordEncoder passwordEncoder;
     private final ApplicationEventPublisher eventPublisher;
+    private final SecurityProperties securityProperties;
     private final SettingService settingService;
 
     /**
@@ -86,6 +89,14 @@ public class AccountServiceJpaImpl implements AccountService, UserDetailsService
                     // 每次随机密码，避免登录系统虚拟用户
                     .password(passwordEncoder.encode(UUID.randomUUID().toString()))
                     .authorities(AccountType.ADMIN.getAuthority())
+                    .build();
+        }
+
+        SecurityProperties.User user = securityProperties.getUser();
+        if (user != null && user.getName().equals(username)) {
+            return User.withUsername(username)
+                    .password(passwordEncoder.encode(user.getPassword()))
+                    .roles(StringUtils.toStringArray(user.getRoles()))
                     .build();
         }
 

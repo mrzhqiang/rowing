@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/account")
+@RequestMapping("/register")
 @RequiredArgsConstructor
-public class AccountController {
+public class RegisterController {
 
     private final AccountService service;
 
-    @PostMapping("/register")
+    @PostMapping()
     public ResponseEntity<?> register(@Valid @RequestBody PasswordConfirmForm form) {
         service.register(form);
         return ResponseEntity.ok().build();

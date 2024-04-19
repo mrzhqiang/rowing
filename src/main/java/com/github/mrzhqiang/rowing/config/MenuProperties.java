@@ -11,7 +11,6 @@ import java.util.List;
 
 /**
  * 菜单属性。
- * <p>
  */
 @Getter
 @Setter

@@ -5,16 +5,21 @@ import com.github.mrzhqiang.kaptcha.autoconfigure.KaptchaProperties;
 import com.github.mrzhqiang.rowing.account.LoginFailureHandler;
 import com.github.mrzhqiang.rowing.account.LoginSuccessHandler;
 import com.github.mrzhqiang.rowing.account.RSADecryptPasswordEncoder;
+import static com.github.mrzhqiang.rowing.config.RowingSecurityProperties.ADMIN_PATH;
+import static com.github.mrzhqiang.rowing.config.RowingSecurityProperties.EXPLORER_PATH;
+import static com.github.mrzhqiang.rowing.config.RowingSecurityProperties.SUB_PATH;
 import com.github.mrzhqiang.rowing.domain.AccountType;
 import com.github.mrzhqiang.rowing.i18n.I18nHolder;
 import com.github.mrzhqiang.rowing.setting.SettingService;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.data.rest.RepositoryRestProperties;
+import static org.springframework.boot.autoconfigure.security.SecurityProperties.BASIC_AUTH_ORDER;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
@@ -46,12 +51,12 @@ import java.util.stream.Collectors;
  */
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-@EnableConfigurationProperties({SecurityProperties.class})
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfiguration {
 
-    private final SecurityProperties securityProperties;
+    private final RowingSecurityProperties properties;
+    private final RepositoryRestProperties restProperties;
     private final SessionProperties sessionProperties;
 
     /**
@@ -100,7 +105,7 @@ public class SecurityConfiguration {
                                                       KaptchaAuthenticationConverter kaptchaConverter) throws Exception {
         AuthenticationManager manager = configuration.getAuthenticationManager();
         AuthenticationFilter filter = new AuthenticationFilter(manager, kaptchaConverter);
-        filter.setRequestMatcher(new AntPathRequestMatcher(securityProperties.getRegisterPath(), HttpMethod.POST.name()));
+        filter.setRequestMatcher(new AntPathRequestMatcher(properties.getRegisterPath(), HttpMethod.POST.name()));
         return filter;
     }
 
@@ -112,7 +117,7 @@ public class SecurityConfiguration {
                                                    KaptchaAuthenticationConverter kaptchaConverter) throws Exception {
         AuthenticationManager manager = configuration.getAuthenticationManager();
         AuthenticationFilter filter = new AuthenticationFilter(manager, kaptchaConverter);
-        filter.setRequestMatcher(new AntPathRequestMatcher(securityProperties.getLoginPath(), HttpMethod.POST.name()));
+        filter.setRequestMatcher(new AntPathRequestMatcher(properties.getLoginPath(), HttpMethod.POST.name()));
         return filter;
     }
 
@@ -123,30 +128,30 @@ public class SecurityConfiguration {
     public WebSecurityCustomizer ignoring() {
         return web -> web.ignoring()
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
-                .antMatchers(securityProperties.getIgnorePath());
+                .antMatchers(properties.getIgnorePath());
     }
 
     /**
      * 安全过滤器链。
      */
     @Bean
+    @Order(BASIC_AUTH_ORDER - 10)
     public SecurityFilterChain webFilterChain(HttpSecurity http,
+                                              KaptchaProperties kaptchaProperties,
                                               AuthenticationFilter registerKaptchaFilter,
                                               AuthenticationFilter loginKaptchaFilter,
-                                              KaptchaProperties kaptchaProperties,
                                               LoginFailureHandler loginFailureHandler,
                                               LoginSuccessHandler loginSuccessHandler) throws Exception {
-        return http.addFilterAfter(registerKaptchaFilter, AnonymousAuthenticationFilter.class)
+        return http.requestMatchers(configurer -> configurer
+                        .antMatchers(kaptchaProperties.getPath())
+                        .antMatchers(properties.getPublicPath()))
+                .addFilterAfter(registerKaptchaFilter, AnonymousAuthenticationFilter.class)
                 .addFilterAfter(loginKaptchaFilter, AnonymousAuthenticationFilter.class)
                 .authorizeRequests(urlRegistry -> urlRegistry
-                        .antMatchers(HttpMethod.GET, securityProperties.getPublicPath()).permitAll()
-                        .antMatchers(HttpMethod.GET, kaptchaProperties.getPath()).permitAll()
-                        .antMatchers(HttpMethod.POST, securityProperties.getRegisterPath()).permitAll()
-                        .antMatchers(HttpMethod.POST, securityProperties.getLoginPath()).permitAll()
-                        .antMatchers(HttpMethod.POST, securityProperties.getLogoutPath()).permitAll()
+                        .antMatchers(generateAdminPaths()).hasRole(AccountType.ADMIN.name())
                         .anyRequest().authenticated())
                 .formLogin(loginConfigurer -> loginConfigurer
-                        .loginPage(securityProperties.getLoginPath())
+                        .loginPage(properties.getLoginPath())
                         .failureHandler(loginFailureHandler)
                         .successHandler(loginSuccessHandler))
                 .exceptionHandling(handlingConfigurer -> handlingConfigurer
@@ -164,10 +169,33 @@ public class SecurityConfiguration {
                                                 "SecurityConfiguration.webFilterChain.expiredSessionStrategy",
                                                 "会话已过期，请重新登录")))))
                 .logout(logoutConfigurer -> logoutConfigurer
-                        .logoutUrl(securityProperties.getLogoutPath())
+                        .logoutUrl(properties.getLogoutPath())
                         .logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler())
-                        .deleteCookies("JSESSIONID"))
+                        .deleteCookies("JSESSIONID", "Rowing-Token"))
                 .csrf().disable()
+                .build();
+    }
+
+    private String[] generateAdminPaths() {
+        // /admin/**
+        String adminSubPath = ADMIN_PATH + SUB_PATH;
+        // /api/explorer
+        String restExplorerPath = restProperties.getBasePath() + EXPLORER_PATH;
+        // /api/explorer/**
+        String restExplorerSubPath = restProperties.getBasePath() + EXPLORER_PATH + SUB_PATH;
+        return new String[]{adminSubPath, restExplorerPath, restExplorerSubPath};
+    }
+
+    /**
+     * 基础认证过滤器链。
+     */
+    @Bean
+    @Order(BASIC_AUTH_ORDER)
+    public SecurityFilterChain basicFilterChain(HttpSecurity http) throws Exception {
+        return http.authorizeRequests()
+                .mvcMatchers(restProperties.getBasePath()).hasRole(RowingSecurityProperties.ROLE_BASIC)
+                .antMatchers(properties.getBasicPath()).hasRole(RowingSecurityProperties.ROLE_BASIC).and()
+                .httpBasic().and()
                 .build();
     }
 

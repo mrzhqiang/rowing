@@ -17,7 +17,6 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.data.domain.Example;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ResourceUtils;
@@ -124,7 +123,6 @@ public class SettingServiceJpaImpl implements SettingService {
 
     @Timed
     @Counted
-    @PreAuthorize("hasRole('ADMIN')")
     @Override
     public RSAKeyData createRsaKey() {
         KeyPair keyPair = RSADecrypts.generateKeyPair();

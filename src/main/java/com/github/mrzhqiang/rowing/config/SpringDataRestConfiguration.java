@@ -20,7 +20,6 @@ import java.time.LocalDateTime;
 
 /**
  * Spring Data REST 配置。
- * <p>
  */
 @Configuration
 @RequiredArgsConstructor

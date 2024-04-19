@@ -7,7 +7,6 @@ import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -19,7 +18,6 @@ import java.nio.file.Paths;
  * OkHttp 配置。
  */
 @Slf4j(topic = "okhttp3")
-@EnableConfigurationProperties(OkHttpProperties.class)
 @Configuration
 @RequiredArgsConstructor
 public class OkHttpConfiguration {
