@@ -1,6 +1,7 @@
 package com.github.mrzhqiang.rowing.exam;
 
 import com.github.mrzhqiang.rowing.init.AutoInitializer;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 /**
@@ -8,13 +9,10 @@ import org.springframework.stereotype.Component;
  * <p>
  */
 @Component
+@RequiredArgsConstructor
 public class ExamAutoInitializer extends AutoInitializer {
 
     private final ExamService service;
-
-    public ExamAutoInitializer(ExamService service) {
-        this.service = service;
-    }
 
     @Override
     protected void onExecute() {

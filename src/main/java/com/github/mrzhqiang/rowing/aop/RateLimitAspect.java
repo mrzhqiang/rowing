@@ -2,6 +2,7 @@ package com.github.mrzhqiang.rowing.aop;
 
 import com.github.mrzhqiang.rowing.config.SessionProperties;
 import com.google.common.util.concurrent.RateLimiter;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -12,11 +13,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestAttributes;
-import static org.springframework.web.context.request.RequestAttributes.REFERENCE_SESSION;
-import static org.springframework.web.context.request.RequestAttributes.SCOPE_SESSION;
 import org.springframework.web.context.request.RequestContextHolder;
 
 import javax.servlet.http.HttpSession;
+
+import static org.springframework.web.context.request.RequestAttributes.REFERENCE_SESSION;
+import static org.springframework.web.context.request.RequestAttributes.SCOPE_SESSION;
 
 /**
  * 限流监视器。
@@ -30,13 +32,10 @@ import javax.servlet.http.HttpSession;
 @Aspect
 @Component
 @Order(1)
+@RequiredArgsConstructor
 public class RateLimitAspect {
 
     private final SessionProperties properties;
-
-    public RateLimitAspect(SessionProperties properties) {
-        this.properties = properties;
-    }
 
     @Pointcut("@annotation(org.springframework.web.bind.annotation.GetMapping)")
     public void getPoint() {

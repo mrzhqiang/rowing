@@ -1,17 +1,15 @@
 package com.github.mrzhqiang.rowing.account;
 
 import com.github.mrzhqiang.rowing.domain.Domains;
+import static com.github.mrzhqiang.rowing.domain.Domains.EMAIL_REGEXP;
+import static com.github.mrzhqiang.rowing.domain.Domains.URL_LENGTH;
 import com.github.mrzhqiang.rowing.domain.Gender;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
-
-import static com.github.mrzhqiang.rowing.domain.Domains.EMAIL_REGEXP;
-import static com.github.mrzhqiang.rowing.domain.Domains.URL_LENGTH;
 
 /**
  * 注册表单。
@@ -25,7 +23,6 @@ public class RegisterForm extends PasswordConfirmForm {
     /**
      * 昵称。
      */
-    @NotBlank
     @Size(max = Domains.MAX_USER_NICKNAME_LENGTH)
     private String nickname;
     /**
@@ -45,7 +42,7 @@ public class RegisterForm extends PasswordConfirmForm {
      * 电子邮箱。
      */
     @Size(max = Domains.EMAIL_LENGTH)
-    @Email(regexp = EMAIL_REGEXP, message = "无效的邮箱")
+    @Email(regexp = EMAIL_REGEXP)
     private String email;
     /**
      * 电话号码。

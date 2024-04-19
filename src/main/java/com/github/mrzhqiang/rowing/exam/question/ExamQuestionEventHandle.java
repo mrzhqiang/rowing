@@ -1,6 +1,7 @@
 package com.github.mrzhqiang.rowing.exam.question;
 
 import com.github.mrzhqiang.rowing.domain.ExamQuestionType;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.rest.core.annotation.HandleAfterSave;
 import org.springframework.data.rest.core.annotation.HandleBeforeCreate;
 import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
@@ -16,13 +17,10 @@ import java.util.List;
  */
 @RepositoryEventHandler
 @Component
+@RequiredArgsConstructor
 public class ExamQuestionEventHandle {
 
     private final ExamQuestionOptionRepository optionRepository;
-
-    public ExamQuestionEventHandle(ExamQuestionOptionRepository optionRepository) {
-        this.optionRepository = optionRepository;
-    }
 
     @HandleBeforeCreate
     public void onBeforeCreate(ExamQuestion entity) {

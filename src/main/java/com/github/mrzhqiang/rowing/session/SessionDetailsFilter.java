@@ -5,7 +5,7 @@ import com.github.mrzhqiang.rowing.util.Authentications;
 import com.google.common.base.Strings;
 import com.google.common.net.HttpHeaders;
 import eu.bitwalker.useragentutils.UserAgent;
-import io.reactivex.observers.DefaultObserver;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -28,6 +28,7 @@ import java.io.IOException;
 @Slf4j
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE + 101)
+@RequiredArgsConstructor
 public class SessionDetailsFilter extends OncePerRequestFilter {
 
     /**
@@ -43,11 +44,7 @@ public class SessionDetailsFilter extends OncePerRequestFilter {
      */
     private static final String COMMA = ",";
 
-    private final SessionDetailsService service;
-
-    public SessionDetailsFilter(SessionDetailsService service) {
-        this.service = service;
-    }
+    private final SessionDetailsHandler sessionDetailsHandler;
 
     @Override
     public void doFilterInternal(@Nonnull HttpServletRequest request,
@@ -75,32 +72,16 @@ public class SessionDetailsFilter extends OncePerRequestFilter {
         String accessType = Strings.lenientFormat(ACCESS_TYPE_TEMPLATE, osName, browserName);
 
         String remoteAddress = this.findRemoteAddress(request);
-        service.observeApi(remoteAddress)
-                // 网络不可用，那么使用本地数据库
-                .onErrorResumeNext(service.observeDb(remoteAddress))
-                .subscribe(new DefaultObserver<SessionDetails>() {
-                    @Override
-                    public void onNext(@Nonnull SessionDetails details) {
-                        details.setAccessType(accessType);
-                        session.setAttribute(Sessions.SESSION_DETAILS_KEY, details);
-                    }
-
-                    @Override
-                    public void onError(@Nonnull Throwable e) {
-                        // 记录错误日志是为了判断哪个更好用
-                        log.error("无法为 {} 找到对应地址，可能是：{} 问题", remoteAddress, e.getLocalizedMessage());
-                        SessionDetails details = new SessionDetails();
-                        details.setIp(remoteAddress);
-                        details.setLocation(UNKNOWN);
-                        details.setAccessType(accessType);
-                        session.setAttribute(Sessions.SESSION_DETAILS_KEY, details);
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        // do nothing
-                    }
-                });
+        SessionDetails details = new SessionDetails();
+        details.setAccessType(accessType);
+        try {
+            details = sessionDetailsHandler.findBy(remoteAddress);
+            session.setAttribute(Sessions.SESSION_DETAILS_KEY, details);
+        } catch (Exception e) {
+            details.setIp(remoteAddress);
+            details.setLocation(UNKNOWN);
+        }
+        session.setAttribute(Sessions.SESSION_DETAILS_KEY, details);
     }
 
     private String findRemoteAddress(HttpServletRequest request) {

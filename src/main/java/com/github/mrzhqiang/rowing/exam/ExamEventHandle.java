@@ -1,6 +1,7 @@
 package com.github.mrzhqiang.rowing.exam;
 
 import com.github.mrzhqiang.rowing.exam.rule.ExamRule;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.rest.core.annotation.HandleBeforeCreate;
 import org.springframework.data.rest.core.annotation.HandleBeforeSave;
 import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
@@ -16,6 +17,7 @@ import java.time.temporal.ChronoUnit;
  */
 @RepositoryEventHandler
 @Component
+@RequiredArgsConstructor
 public class ExamEventHandle {
 
     @HandleBeforeCreate

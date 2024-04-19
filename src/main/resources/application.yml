@@ -45,6 +45,12 @@ spring:
       time: "HH:mm:ss"
       date-time: "yyyy-MM-dd HH:mm:ss"
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: [ "health","info","metrics","prometheus" ]
+
 # 项目配置
 rowing:
   security:

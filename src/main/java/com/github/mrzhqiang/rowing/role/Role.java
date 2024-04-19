@@ -6,22 +6,22 @@ import com.github.mrzhqiang.rowing.domain.AuditableEntity;
 import com.github.mrzhqiang.rowing.domain.Domains;
 import com.github.mrzhqiang.rowing.menu.Menu;
 import com.github.mrzhqiang.rowing.menu.MenuResource;
-import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.data.rest.core.annotation.RestResource;
-import org.springframework.security.access.expression.SecurityExpressionRoot;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.util.List;
+import java.util.Set;
 
 /**
  * 角色。
@@ -48,7 +48,7 @@ public class Role extends AuditableEntity {
     /**
      * 角色代码。
      * <p>
-     * 通常格式为：ROLE_XXX 或者 XXX，{@link SecurityExpressionRoot#hasRole(String)} 方法会自动补充 ROLE_ 角色前缀。
+     * 通常格式为 ROLE_XXX 字符串。
      */
     @NotBlank
     @Size(max = Domains.ROLE_CODE_LENGTH)
@@ -60,42 +60,42 @@ public class Role extends AuditableEntity {
      * 不可变的角色属于内置角色，即 {@link com.github.mrzhqiang.rowing.domain.AccountType 账户类型}。
      */
     private Boolean immutable = false;
-
     /**
-     * 账户列表。
+     * 账户集合。
      */
     @JsonIgnore
     @ToString.Exclude
     @RestResource(path = "accounts")
-    @ManyToMany()
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "role_accounts",
             joinColumns = @JoinColumn(name = "role_id"),
             inverseJoinColumns = @JoinColumn(name = "account_id"),
             uniqueConstraints = @UniqueConstraint(columnNames = {"role_id", "account_id"}))
-    private List<Account> accounts = Lists.newArrayList();
+    private Set<Account> accounts = Sets.newHashSet();
     /**
-     * 菜单列表。
+     * 菜单集合。
      */
     @JsonIgnore
     @ToString.Exclude
     @RestResource(path = "menus")
-    @ManyToMany()
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "role_menus",
             joinColumns = @JoinColumn(name = "role_id"),
             inverseJoinColumns = @JoinColumn(name = "menu_id"),
             uniqueConstraints = @UniqueConstraint(columnNames = {"role_id", "menu_id"}))
-    private List<Menu> menus = Lists.newArrayList();
+    private Set<Menu> menus = Sets.newHashSet();
     /**
-     * 菜单资源列表。
+     * 菜单资源集合。
      */
+    @Size(max = Domains.MAX_ROLE_AUTHORITY_SIZE)
     @JsonIgnore
     @ToString.Exclude
     @RestResource(path = "menu-resources")
-    @ManyToMany()
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "role_menu_resources",
             joinColumns = @JoinColumn(name = "role_id"),
             inverseJoinColumns = @JoinColumn(name = "menu_resource_id"),
             uniqueConstraints = @UniqueConstraint(columnNames = {"role_id", "menu_resource_id"}))
-    private List<MenuResource> menuResources = Lists.newArrayList();
+    private Set<MenuResource> menuResources = Sets.newHashSet();
 
 }

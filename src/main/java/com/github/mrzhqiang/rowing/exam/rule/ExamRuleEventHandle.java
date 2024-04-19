@@ -2,6 +2,7 @@ package com.github.mrzhqiang.rowing.exam.rule;
 
 import com.github.mrzhqiang.rowing.exam.mode.ExamMode;
 import com.google.common.base.Preconditions;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.rest.core.annotation.HandleBeforeCreate;
 import org.springframework.data.rest.core.annotation.HandleBeforeSave;
 import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
@@ -17,11 +18,12 @@ import java.util.List;
  */
 @RepositoryEventHandler
 @Component
+@RequiredArgsConstructor
 public class ExamRuleEventHandle {
 
     @HandleBeforeCreate
     @HandleBeforeSave
-    public void onBeforeCreate(ExamRule entity) {
+    public void onBeforeCreateAndSave(ExamRule entity) {
         List<ExamMode> modes = entity.getModes();
         if (!CollectionUtils.isEmpty(modes)) {
             BigDecimal sumScore = modes.stream()

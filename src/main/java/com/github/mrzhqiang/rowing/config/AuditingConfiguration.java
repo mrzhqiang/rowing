@@ -1,6 +1,5 @@
 package com.github.mrzhqiang.rowing.config;
 
-import com.github.mrzhqiang.rowing.account.Accounts;
 import com.github.mrzhqiang.rowing.util.Authentications;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,7 +28,7 @@ public class AuditingConfiguration {
         // 默认情况下返回 system 用户名称，如果存在已认证用户，则返回已认证用户名称
         return () -> Optional.of(Authentications.ofLogin()
                 .flatMap(Authentications::findUsername)
-                .orElse(Accounts.SYSTEM_USERNAME));
+                .orElse(Authentications.SYSTEM_USERNAME));
     }
 
 }

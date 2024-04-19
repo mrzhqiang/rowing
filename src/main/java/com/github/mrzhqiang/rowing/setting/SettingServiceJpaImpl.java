@@ -3,11 +3,13 @@ package com.github.mrzhqiang.rowing.setting;
 import com.github.mrzhqiang.rowing.account.RunAsSystem;
 import com.github.mrzhqiang.rowing.domain.SettingType;
 import com.github.mrzhqiang.rowing.i18n.I18nHolder;
-import com.github.mrzhqiang.rowing.util.Authorizes;
 import com.github.mrzhqiang.rowing.util.Cells;
 import com.github.mrzhqiang.rowing.util.RSADecrypts;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import io.micrometer.core.annotation.Counted;
+import io.micrometer.core.annotation.Timed;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Row;
@@ -28,14 +30,13 @@ import java.util.Optional;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class SettingServiceJpaImpl implements SettingService {
 
     private final SettingRepository repository;
 
-    public SettingServiceJpaImpl(SettingRepository repository) {
-        this.repository = repository;
-    }
-
+    @Timed(longTask = true)
+    @Counted
     @SneakyThrows
     @Transactional(rollbackFor = Exception.class)
     @Override
@@ -109,6 +110,8 @@ public class SettingServiceJpaImpl implements SettingService {
         }
     }
 
+    @Timed
+    @Counted
     //@Cacheable("setting")
     @RunAsSystem
     @Override
@@ -119,6 +122,8 @@ public class SettingServiceJpaImpl implements SettingService {
                 .flatMap(repository::findOne);
     }
 
+    @Timed
+    @Counted
     @PreAuthorize("hasRole('ADMIN')")
     @Override
     public RSAKeyData createRsaKey() {

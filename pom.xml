@@ -47,12 +47,10 @@
 
     <dependencies>
         <!-- Spring 框架依赖 -->
-        <!--suppress VulnerableLibrariesLocal -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
-        <!--suppress VulnerableLibrariesLocal -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
@@ -73,7 +71,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
-        <!--suppress VulnerableLibrariesLocal -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-rest</artifactId>
@@ -132,8 +129,12 @@
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
-            <!-- 支持 Java8 Date/Time (JSR 310) API -->
             <artifactId>hibernate-java8</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-registry-prometheus</artifactId>
             <scope>runtime</scope>
         </dependency>
 
@@ -145,18 +146,15 @@
         </dependency>
         <dependency>
             <groupId>com.maxmind.geoip2</groupId>
-            <!-- 利用本地数据库转换 IP 为地理位置 -->
             <artifactId>geoip2</artifactId>
             <version>${geoip2.version}</version>
         </dependency>
         <dependency>
             <groupId>io.reactivex.rxjava2</groupId>
-            <!-- 可观察序列的异步框架 -->
             <artifactId>rxjava</artifactId>
         </dependency>
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
-            <!-- 最好用的 HTTP 框架-->
             <artifactId>okhttp</artifactId>
         </dependency>
         <dependency>
@@ -165,7 +163,6 @@
         </dependency>
         <dependency>
             <groupId>com.squareup.retrofit2</groupId>
-            <!-- 声明式 REST 客户端 -->
             <artifactId>retrofit</artifactId>
             <version>${retrofit.version}</version>
         </dependency>
@@ -186,7 +183,6 @@
         </dependency>
         <dependency>
             <groupId>org.mapstruct</groupId>
-            <!-- 编译时对象映射器 -->
             <artifactId>mapstruct</artifactId>
             <version>${org.mapstruct.version}</version>
             <scope>compile</scope>
@@ -194,19 +190,16 @@
         </dependency>
         <dependency>
             <groupId>com.github.mrzhqiang.helper</groupId>
-            <!-- 辅助方法 -->
             <artifactId>helper</artifactId>
             <version>${helper.version}</version>
         </dependency>
         <dependency>
             <groupId>com.github.mrzhqiang</groupId>
-            <!-- 验证码 -->
             <artifactId>kaptcha-spring-boot-starter</artifactId>
             <version>${kaptcha-spring-boot-starter.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.poi</groupId>
-            <!-- POI 工具，处理微软 Office 文件 -->
             <artifactId>poi-ooxml</artifactId>
             <version>${poi.version}</version>
         </dependency>
@@ -247,7 +240,6 @@
             <artifactId>spring-restdocs-mockmvc</artifactId>
             <scope>test</scope>
         </dependency>
-        <!--suppress VulnerableLibrariesLocal -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>

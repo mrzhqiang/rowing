@@ -30,9 +30,9 @@ public class RowingApplication {
     public void onEvent(ApplicationReadyEvent event) {
         Duration duration = event.getTimeTaken();
         String time = DurationStyle.SIMPLE.print(duration, SECONDS);
+        String defMessage = Strings.lenientFormat("系统启动完毕，用时：%s，现在可以正常使用！", time);
         String message = I18nHolder.getAccessor().getMessage(
-                "RowingApplication.onEvent.message", new Object[]{time},
-                Strings.lenientFormat("系统启动完毕，用时：%s，现在可以正常使用！", time));
+                "RowingApplication.onEvent.message", new Object[]{time}, defMessage);
         log.info("===========================================");
         log.info(message);
         log.info("===========================================");

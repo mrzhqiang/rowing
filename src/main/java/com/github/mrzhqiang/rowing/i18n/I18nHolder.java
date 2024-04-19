@@ -1,5 +1,6 @@
 package com.github.mrzhqiang.rowing.i18n;
 
+import lombok.Getter;
 import org.springframework.context.MessageSource;
 import org.springframework.context.MessageSourceAware;
 import org.springframework.context.support.MessageSourceAccessor;
@@ -17,11 +18,8 @@ import javax.annotation.Nonnull;
 @Order(Integer.MIN_VALUE)
 public final class I18nHolder implements MessageSourceAware {
 
+    @Getter
     private static MessageSourceAccessor accessor;
-
-    public static MessageSourceAccessor getAccessor() {
-        return accessor;
-    }
 
     @Override
     public void setMessageSource(@Nonnull MessageSource messageSource) {

@@ -33,9 +33,7 @@ public class PasswordConfirmForm {
     /**
      * 密码。
      * <p>
-     * 这里通常是明文密码，前端不做编码处理。
-     * <p>
-     * 另外，在 {@link #toString()} 时，需要忽略密码字段，避免日志泄漏明文密码。
+     * 注意，在 {@link #toString()} 时，需要忽略密码字段，避免日志泄漏明文密码。
      */
     @NotBlank
     @ToString.Exclude

@@ -47,7 +47,7 @@ public class Enums {
     public static <E extends Enum<E>> E findByNameIgnoreCase(Class<E> enumClass, String name, E defEnum) {
         if (StringUtils.hasText(name)) {
             for (E e : enumClass.getEnumConstants()) {
-                // 忽略大小写
+                // 忽略大小写匹配
                 if (e.name().equalsIgnoreCase(name)) {
                     return e;
                 }

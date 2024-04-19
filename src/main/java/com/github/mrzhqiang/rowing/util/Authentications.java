@@ -22,6 +22,20 @@ public class Authentications {
      * 注意：未知主机通常与系统用户同时出现，也可能在其他情况下出现，主要是避免空的主机数据被记录。
      */
     public static final String UNKNOWN_HOST = "(unknown)";
+    /**
+     * 系统虚拟用户名。
+     * <p>
+     * 系统内部操作不存在用户会话，此时需要系统虚拟用户来避免编写复杂的授权逻辑。
+     * <p>
+     * 并且，数据库审计也需要使用系统虚拟用户名来占位。
+     */
+    public static final String SYSTEM_USERNAME = "system";
+    /**
+     * 系统管理员用户名。
+     * <p>
+     * 内置的系统管理员用户名，不允许注册。
+     */
+    public static final String ADMIN_USERNAME = "admin";
 
     /**
      * 用来判断当前 Authentication 属于游客还是用户。
@@ -58,7 +72,7 @@ public class Authentications {
 
     private static String attemptFindUsername(Object it) {
         if (it == null) {
-            return "";
+            return null;
         }
         if (it instanceof UserDetails) {
             return ((UserDetails) it).getUsername();

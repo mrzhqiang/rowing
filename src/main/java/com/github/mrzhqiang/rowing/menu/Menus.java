@@ -11,6 +11,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -122,7 +123,8 @@ public class Menus {
      * @param roleList 角色列表。
      * @return 角色标识符列表。
      */
-    public static List<String> convertRoles(List<Role> roleList) {
+    public static List<String> convertRoles(Set<Role> roleList) {
         return roleList.stream().map(Role::getCode).collect(Collectors.toList());
     }
+
 }

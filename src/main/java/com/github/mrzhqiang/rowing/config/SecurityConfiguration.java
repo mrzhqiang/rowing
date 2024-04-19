@@ -5,9 +5,12 @@ import com.github.mrzhqiang.kaptcha.autoconfigure.KaptchaProperties;
 import com.github.mrzhqiang.rowing.account.LoginFailureHandler;
 import com.github.mrzhqiang.rowing.account.LoginSuccessHandler;
 import com.github.mrzhqiang.rowing.account.RSADecryptPasswordEncoder;
+import com.github.mrzhqiang.rowing.domain.AccountType;
 import com.github.mrzhqiang.rowing.i18n.I18nHolder;
 import com.github.mrzhqiang.rowing.setting.SettingService;
-import com.github.mrzhqiang.rowing.util.Authorizes;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -33,6 +36,11 @@ import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 /**
  * 安全配置。
  */
@@ -40,16 +48,11 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @EnableConfigurationProperties({SecurityProperties.class})
 @Configuration
+@RequiredArgsConstructor
 public class SecurityConfiguration {
 
     private final SecurityProperties securityProperties;
     private final SessionProperties sessionProperties;
-
-    public SecurityConfiguration(SecurityProperties securityProperties,
-                                 SessionProperties sessionProperties) {
-        this.securityProperties = securityProperties;
-        this.sessionProperties = sessionProperties;
-    }
 
     /**
      * 自定义密码编码器。
@@ -66,8 +69,16 @@ public class SecurityConfiguration {
      */
     @Bean
     public RoleHierarchy roleHierarchy() {
+        Map<String, List<String>> map = Maps.newHashMap();
+        // ROLE_USER 包含 ROLE_ANONYMOUS 可以访问的内容权限
+        map.put(AccountType.USER.getAuthority(), Lists.newArrayList(AccountType.ANONYMOUS.getAuthority()));
+        // ROLE_ADMIN 则拥有所有权限
+        map.put(AccountType.ADMIN.getAuthority(), Arrays.stream(AccountType.values())
+                .filter(it -> !AccountType.ADMIN.equals(it))
+                .map(AccountType::getAuthority)
+                .collect(Collectors.toList()));
         RoleHierarchyImpl hierarchy = new RoleHierarchyImpl();
-        hierarchy.setHierarchy(RoleHierarchyUtils.roleHierarchyFromMap(Authorizes.hierarchy()));
+        hierarchy.setHierarchy(RoleHierarchyUtils.roleHierarchyFromMap(map));
         return hierarchy;
     }
 
@@ -128,11 +139,11 @@ public class SecurityConfiguration {
         return http.addFilterAfter(registerKaptchaFilter, AnonymousAuthenticationFilter.class)
                 .addFilterAfter(loginKaptchaFilter, AnonymousAuthenticationFilter.class)
                 .authorizeRequests(urlRegistry -> urlRegistry
+                        .antMatchers(HttpMethod.GET, securityProperties.getPublicPath()).permitAll()
                         .antMatchers(HttpMethod.GET, kaptchaProperties.getPath()).permitAll()
                         .antMatchers(HttpMethod.POST, securityProperties.getRegisterPath()).permitAll()
                         .antMatchers(HttpMethod.POST, securityProperties.getLoginPath()).permitAll()
                         .antMatchers(HttpMethod.POST, securityProperties.getLogoutPath()).permitAll()
-                        .antMatchers(securityProperties.getPublicPath()).permitAll()
                         .anyRequest().authenticated())
                 .formLogin(loginConfigurer -> loginConfigurer
                         .loginPage(securityProperties.getLoginPath())

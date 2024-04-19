@@ -1,32 +1,18 @@
 package com.github.mrzhqiang.rowing.account;
 
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.core.Authentication;
 
 import java.util.Optional;
 
 /**
  * 账户服务。
  */
-public interface AccountService extends UserDetailsService {
+public interface AccountService {
 
     /**
-     * 通过用户名加载用户信息。
-     * <p>
-     * 这个方法在认证时调用，也就是说，登录时会调用这个方法。
-     * <p>
-     * 注意：为了保证在 {@link org.springframework.security.core.Authentication} 中的纯粹性，我们返回 {@link User} 实例。
-     * <p>
-     * 如果需要通过用户名找到账户，请使用 {@link #findByUsername(String)} 方法。
-     *
-     * @param username 用户名。
-     * @return 用户信息。
-     * @throws UsernameNotFoundException 当无法通过用户名找到用户时，抛出此异常，表示登录失败。
+     * 初始化账户。
      */
-    @Override
-    UserDetails loadUserByUsername(String username) throws UsernameNotFoundException;
+    void init();
 
     /**
      * 通过用户名找到账户。
@@ -37,16 +23,25 @@ public interface AccountService extends UserDetailsService {
     Optional<Account> findByUsername(String username);
 
     /**
-     * 初始化超级管理员账户。
+     * 处理登录成功。
+     *
+     * @param authentication 认证信息。
      */
-    void initAdmin();
+    void handleLoginSuccess(Authentication authentication);
 
     /**
-     * 注册系统账户。
+     * 处理登录失败。
      *
-     * @param form 注册表单。
+     * @param authentication 认证信息。
      */
-    void register(RegisterForm form);
+    void handleLoginFailed(Authentication authentication);
+
+    /**
+     * 注册账户。
+     *
+     * @param form 密码确认表单。
+     */
+    void register(PasswordConfirmForm form);
 
     /**
      * 注册学生账户。
@@ -68,6 +63,10 @@ public interface AccountService extends UserDetailsService {
      */
     Optional<Account> register(TeacherInfoForm form);
 
+    /**
+     * 更新账户。
+     *
+     * @param account 账户实体。
+     */
     void update(Account account);
-
 }

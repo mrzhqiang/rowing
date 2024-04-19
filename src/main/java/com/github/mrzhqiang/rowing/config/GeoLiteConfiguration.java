@@ -10,10 +10,10 @@ import org.springframework.core.io.Resource;
 import org.springframework.util.ResourceUtils;
 
 /**
- * 数据库地理位置配置。
+ * Geo 地理位置配置。
  */
 @Configuration
-public class DbLocationConfiguration {
+public class GeoLiteConfiguration {
 
     /**
      * 本地数据库文件。

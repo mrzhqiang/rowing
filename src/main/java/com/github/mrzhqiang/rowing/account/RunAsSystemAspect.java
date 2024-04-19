@@ -39,7 +39,7 @@ public class RunAsSystemAspect {
      * 注意：系统认证仅用于内部调用需要认证的方法时使用，不能作为正常用户进行认证。
      */
     private final Authentication system = UsernamePasswordAuthenticationToken.authenticated(
-            Accounts.SYSTEM_USERNAME,
+            Authentications.SYSTEM_USERNAME,
             UUID.randomUUID().toString(),
             AuthorityUtils.createAuthorityList(AccountType.ADMIN.getAuthority()));
 
@@ -54,7 +54,7 @@ public class RunAsSystemAspect {
         if (Optional.ofNullable(oldContext)
                 .map(SecurityContext::getAuthentication)
                 .flatMap(Authentications::findUsername)
-                .filter(Accounts.SYSTEM_USERNAME::equals)
+                .filter(Authentications.SYSTEM_USERNAME::equals)
                 .isPresent()) {
             if (log.isDebugEnabled()) {
                 log.debug(I18nHolder.getAccessor().getMessage("RunAsSystemAspect.hasRunAsSystem",
@@ -77,10 +77,9 @@ public class RunAsSystemAspect {
                     Strings.lenientFormat("已将当前认证信息 %s 替换为系统用户", oldContext)));
         }
 
-        Object result;
         try {
             // 执行目标方法
-            result = point.proceed();
+            return point.proceed();
         } finally {
             SecurityContextHolder.setContext(oldContext);
             if (log.isDebugEnabled()) {
@@ -89,7 +88,6 @@ public class RunAsSystemAspect {
                         Strings.lenientFormat("已还原为之前的认证信息 %s", oldContext)));
             }
         }
-        return result;
     }
 
 }

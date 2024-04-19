@@ -22,6 +22,8 @@ public interface SessionDetailsMapper {
     @Mapping(target = "location", source = "response")
     SessionDetails toDetails(CityResponse response);
 
+    SessionDetails toDetails(String ip, String location, String accessType);
+
     default String mapLocation(CityResponse response) {
         String cityName = response.getCity().getNames().get(LOCAL_LANGUAGE);
         String countryName = response.getCountry().getNames().get(LOCAL_LANGUAGE);

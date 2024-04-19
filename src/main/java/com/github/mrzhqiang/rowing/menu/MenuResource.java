@@ -26,22 +26,18 @@ public class MenuResource extends AuditableEntity {
 
     /**
      * 资源名称。
-     * <p>
-     * 不能为空，最大长度 24 个字符。
      */
     @NotBlank
     @Size(max = Domains.MAX_NAME_LENGTH)
     @Column(nullable = false, length = Domains.MAX_NAME_LENGTH)
     private String name;
     /**
-     * 资源权限。
-     * <p>
-     * 不能为空，必须保证唯一，最大长度 100 个字符。
+     * 资源代码。
      */
     @NotBlank
     @Size(max = Domains.MAX_AUTHORITY_LENGTH)
     @Column(unique = true, nullable = false, length = Domains.MAX_AUTHORITY_LENGTH)
-    private String authority;
+    private String code;
     /**
      * 资源排序。
      * <p>
@@ -50,7 +46,6 @@ public class MenuResource extends AuditableEntity {
     @NotNull
     @Column(nullable = false)
     private Integer ordered = 0;
-
     /**
      * 资源所属菜单。
      */

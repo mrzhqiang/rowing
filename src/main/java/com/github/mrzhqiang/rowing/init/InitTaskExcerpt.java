@@ -9,7 +9,6 @@ import org.springframework.data.rest.core.config.Projection;
 
 /**
  * 初始化任务摘要。
- * <p>
  */
 @Projection(name = "init-task-excerpt", types = {InitTask.class})
 public interface InitTaskExcerpt extends AuditableProjection {

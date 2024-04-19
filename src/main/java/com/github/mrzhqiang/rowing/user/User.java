@@ -31,7 +31,7 @@ import static com.github.mrzhqiang.rowing.domain.Domains.PHONE_NUMBER_REGEXP;
  * <p>
  * 表示账户对应的用户信息，通常与账户为一对一关系。
  * <p>
- * 一般包含昵称、头像、性别、生日、电子邮箱、电话号码、简介等字段，属于非安全相关的用户信息。
+ * 一般包含昵称、头像、性别、生日、电子邮箱、电话号码、简介等字段。
  */
 @Getter
 @Setter
@@ -98,8 +98,6 @@ public class User extends AuditableEntity {
     private String phoneNumber;
     /**
      * 简介。
-     * <p>
-     * 简介的最大长度为 200 个字符。
      */
     @Size(max = Domains.USER_INTRODUCTION_LENGTH)
     @Column(length = Domains.USER_INTRODUCTION_LENGTH)

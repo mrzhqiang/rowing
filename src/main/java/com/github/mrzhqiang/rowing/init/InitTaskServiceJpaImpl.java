@@ -2,14 +2,16 @@ package com.github.mrzhqiang.rowing.init;
 
 import com.github.mrzhqiang.helper.Exceptions;
 import com.github.mrzhqiang.rowing.domain.Logic;
-import com.github.mrzhqiang.rowing.domain.TaskMode;
 import com.github.mrzhqiang.rowing.domain.TaskStatus;
 import com.github.mrzhqiang.rowing.domain.TaskType;
+import com.github.mrzhqiang.rowing.exception.ExceptionCauses;
 import com.github.mrzhqiang.rowing.i18n.I18nHolder;
 import com.github.mrzhqiang.rowing.util.Finders;
-import com.github.mrzhqiang.rowing.util.Validations;
 import com.google.common.base.Stopwatch;
 import com.google.common.base.Strings;
+import io.micrometer.core.annotation.Counted;
+import io.micrometer.core.annotation.Timed;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.stereotype.Service;
@@ -22,23 +24,17 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class InitTaskServiceJpaImpl implements InitTaskService {
 
     private final InitTaskMapper mapper;
     private final InitTaskRepository repository;
+    private final InitTaskLogMapper logMapper;
     private final InitTaskLogRepository logRepository;
     private final List<Initializer> initializers;
 
-    public InitTaskServiceJpaImpl(InitTaskMapper mapper,
-                                  InitTaskRepository repository,
-                                  InitTaskLogRepository logRepository,
-                                  List<Initializer> initializers) {
-        this.mapper = mapper;
-        this.repository = repository;
-        this.logRepository = logRepository;
-        this.initializers = initializers;
-    }
-
+    @Timed(longTask = true)
+    @Counted
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void sync(ApplicationArguments args) {
@@ -100,6 +96,8 @@ public class InitTaskServiceJpaImpl implements InitTaskService {
         return entity;
     }
 
+    @Timed
+    @Counted
     @Override
     public void execute(ApplicationArguments args) {
         // 从运行参数或环境变量中判断是否包含指定参数
@@ -143,14 +141,11 @@ public class InitTaskServiceJpaImpl implements InitTaskService {
                 Strings.lenientFormat("准备执行初始化任务：{}--[{}]", name, path)));
 
         task.setStatus(TaskStatus.STARTED);
-        InitTaskLog taskLog = InitTaskLog.of(task);
+        InitTaskLog taskLog = logMapper.toEntity(task);
         try {
             Stopwatch stopwatch = Stopwatch.createStarted();
             initializer.run();
-            // 如果是每次运行模式，那么设置初始化任务为默认状态，否则设置为已完成状态（表示只执行一次）
-            TaskStatus status = TaskMode.EACH.equals(initializer.getMode())
-                    ? TaskStatus.DEFAULT : TaskStatus.COMPLETED;
-            task.setStatus(status);
+            task.setStatus(InitTasks.findCompletedStatus(initializer));
 
             Stopwatch stop = stopwatch.stop();
             String successMessage = I18nHolder.getAccessor().getMessage(
@@ -159,10 +154,9 @@ public class InitTaskServiceJpaImpl implements InitTaskService {
             taskLog.setMessage(successMessage);
             log.info(successMessage);
         } catch (InitializationException e) {
-            TaskStatus status = TaskMode.EACH.equals(initializer.getMode())
-                    ? TaskStatus.DEFAULT : TaskStatus.FAILED;
-            task.setStatus(status);
-            String cause = Validations.findMessage(e);
+            task.setStatus(InitTasks.findFailedStatus(initializer));
+
+            String cause = ExceptionCauses.findMessage(e);
             String trace = Exceptions.ofTrace(e);
             String failedMessage = I18nHolder.getAccessor().getMessage(
                     "InitTaskService.execute.failure", new Object[]{name, cause},
@@ -177,12 +171,12 @@ public class InitTaskServiceJpaImpl implements InitTaskService {
         }
     }
 
+    @Timed
+    @Counted
     @Override
     public void executeByPath(String path) {
         InitTask task = repository.findByPath(path);
-        // 对于所有任务：如果它不存在，或已废弃，或已经开始执行，则无需执行
-        if (task == null || Logic.YES.equals(task.getDiscard())
-                || TaskStatus.STARTED.equals(task.getStatus())) {
+        if (InitTasks.checkSkip(task)) {
             log.warn(I18nHolder.getAccessor().getMessage(
                     "InitTaskService.execute.skipped", new Object[]{task},
                     String.format("初始化任务 %s 无需执行", task)));

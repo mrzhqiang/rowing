@@ -135,11 +135,11 @@ public class Settings {
     /**
      * 超级管理员电子邮箱。
      */
-    public static final String ADMIN_EMAIL = "adminEmail";
+    public static final String SYSTEM_ADMIN_EMAIL = "adminEmail";
     /**
      * 超级管理员电话号码。
      */
-    public static final String ADMIN_PHONE_NUMBER = "adminPhoneNumber";
+    public static final String SYSTEM_ADMIN_PHONE_NUMBER = "adminPhoneNumber";
     /**
      * 管理员主页。
      */

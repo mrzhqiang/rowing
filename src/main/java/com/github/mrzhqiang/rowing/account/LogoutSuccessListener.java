@@ -2,17 +2,19 @@ package com.github.mrzhqiang.rowing.account;
 
 import com.github.mrzhqiang.rowing.action.Action;
 import com.github.mrzhqiang.rowing.domain.ActionType;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.authentication.event.LogoutSuccessEvent;
 import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.Nonnull;
 
-@Service
+@Component
+@RequiredArgsConstructor
 public class LogoutSuccessListener implements ApplicationListener<LogoutSuccessEvent> {
 
-    @Action(value = "注销成功处理", type = ActionType.LOGOUT)
+    @Action(ActionType.LOGOUT)
     @Override
     public void onApplicationEvent(@Nonnull LogoutSuccessEvent event) {
         Authentication authentication = event.getAuthentication();

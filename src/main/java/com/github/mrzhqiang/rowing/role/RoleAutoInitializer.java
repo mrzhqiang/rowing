@@ -1,6 +1,7 @@
 package com.github.mrzhqiang.rowing.role;
 
 import com.github.mrzhqiang.rowing.init.AutoInitializer;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 /**
@@ -9,13 +10,10 @@ import org.springframework.stereotype.Component;
  * 用于自动初始化角色数据。
  */
 @Component
+@RequiredArgsConstructor
 public class RoleAutoInitializer extends AutoInitializer {
 
     private final RoleService service;
-
-    public RoleAutoInitializer(RoleService service) {
-        this.service = service;
-    }
 
     @Override
     protected void onExecute() {

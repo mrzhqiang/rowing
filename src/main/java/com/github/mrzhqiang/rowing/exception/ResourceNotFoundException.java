@@ -5,7 +5,7 @@ package com.github.mrzhqiang.rowing.exception;
  * <p>
  * 主要用于抛出异常给 {@link GlobalExceptionHandler} 进行 404 处理。
  */
-public class ResourceNotFoundException extends RuntimeException {
+public final class ResourceNotFoundException extends RuntimeException {
 
     private static final long serialVersionUID = -3530787478941887904L;
 

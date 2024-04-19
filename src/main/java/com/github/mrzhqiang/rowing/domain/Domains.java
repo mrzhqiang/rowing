@@ -1,6 +1,5 @@
 package com.github.mrzhqiang.rowing.domain;
 
-import com.github.mrzhqiang.helper.Exceptions;
 import lombok.experimental.UtilityClass;
 
 /**
@@ -26,21 +25,21 @@ public class Domains {
      */
     public static final int USERNAME_MAX_LENGTH = 24;
     /**
-     * 用户名正则表达式。
+     * 默认的用户名正则表达式。
      * <p>
      * 规则：以字母开头，字母或数字结尾，允许 _ 符号以便追加第三方平台相关的前缀。
      * <p>
      * 注意：长度不在正则表达式的考虑范围内，应由表单验证进行控制。
      */
-    public static final String USERNAME_REGEXP = "^[a-zA-Z][_a-zA-Z0-9]+";
+    public static final String DEF_USERNAME_REGEXP = "^[a-zA-Z][_a-zA-Z0-9]+";
     /**
-     * 用户名注册时的正则表达式。
+     * 默认的用户名注册时的正则表达式。
      * <p>
      * 规则：以小写字母开头，后面包含小写字母或数字，不允许任何特殊字符。
      * <p>
      * 注意：长度不在正则表达式的考虑范围内，应由表单验证进行控制。
      */
-    public static final String USERNAME_REGISTER_REGEXP = "^[a-z][a-z0-9]+";
+    public static final String DEF_USERNAME_REGISTER_REGEXP = "^[a-z][a-z0-9]+";
     /**
      * 密码最小长度。
      */
@@ -52,11 +51,11 @@ public class Domains {
      * <p>
      * TODO 实际的密码长度限制应该从系统设置中读取。
      */
-    public static final int DEF_PASSWORD_MAX_LENGTH = 32;
+    public static final int DEF_PASSWORD_MAX_LENGTH = 64;
     /**
-     * 权限信息长度。
+     * 角色可添加的权限数量。
      */
-    public static final int AUTHORITIES_LENGTH = 2000;
+    public static final int MAX_ROLE_AUTHORITY_SIZE = 20;
     /**
      * 类名称长度。
      */
@@ -88,7 +87,7 @@ public class Domains {
     /**
      * 字典组代码长度。
      */
-    public static final int DICT_GROUP_CODE_LENGTH = 100;
+    public static final int DICT_GROUP_CODE_LENGTH = ENUM_LENGTH;
     /**
      * 字典项标签长度。
      */
@@ -156,7 +155,7 @@ public class Domains {
     /**
      * 角色代码最大长度。
      */
-    public static final int ROLE_CODE_LENGTH = 100;
+    public static final int ROLE_CODE_LENGTH = ENUM_LENGTH;
     /**
      * 设置名称长度。
      */
@@ -164,7 +163,7 @@ public class Domains {
     /**
      * 设置代码长度。
      */
-    public static final int SETTING_CODE_LENGTH = 50;
+    public static final int SETTING_CODE_LENGTH = ENUM_LENGTH;
     /**
      * 设置内容长度。
      */
@@ -237,6 +236,6 @@ public class Domains {
     /**
      * 资源权限最大长度。
      */
-    public static final int MAX_AUTHORITY_LENGTH = 100;
+    public static final int MAX_AUTHORITY_LENGTH = ENUM_LENGTH;
 
 }

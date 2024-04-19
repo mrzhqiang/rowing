@@ -1,7 +1,7 @@
 package com.github.mrzhqiang.rowing.config;
 
-import io.reactivex.schedulers.Schedulers;
 import okhttp3.OkHttpClient;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import retrofit2.Retrofit;
@@ -28,14 +28,21 @@ public class RetrofitConfiguration {
      * Retrofit Restful 客户端。
      */
     @Bean
-    public Retrofit retrofit(OkHttpClient client) {
+    public Retrofit retrofit(OkHttpClient okHttpClient) {
         return new Retrofit.Builder()
-                .client(client)
+                .client(okHttpClient)
                 .baseUrl(BASE_URL_HOLDER)
                 .addConverterFactory(ScalarsConverterFactory.create())
                 .addConverterFactory(JacksonConverterFactory.create())
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
+                // 默认在当前线程上执行，可以自己切换调度为 IO 线程或者其他线程
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
+    }
+
+    @Bean
+    @ConditionalOnBean(name = "proxyOkHttpClient")
+    public Retrofit proxyRetrofit(Retrofit retrofit, OkHttpClient proxyOkHttpClient) {
+        return retrofit.newBuilder().client(proxyOkHttpClient).build();
     }
 
 }

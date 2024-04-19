@@ -8,8 +8,12 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.util.unit.DataSize;
 
+import javax.annotation.Nullable;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
 import java.nio.file.Paths;
 import java.time.Duration;
+import java.util.Optional;
 
 /**
  * Okhttp 属性。
@@ -65,5 +69,50 @@ public class OkHttpProperties {
      * 常用的就是这三个，具体细节请参考其 API 描述。
      */
     private HttpLoggingInterceptor.Level loggingLevel = HttpLoggingInterceptor.Level.NONE;
+    /**
+     * 代理。
+     */
+    private OkhttpProxy proxy = new OkhttpProxy();
+
+    /**
+     * 创建代理实例。
+     *
+     * @return 代理实例。
+     */
+    @Nullable
+    public Proxy createProxy() {
+        return Optional.ofNullable(proxy)
+                .filter(OkhttpProxy::getEnabled)
+                .map(it -> new Proxy(it.getType(), InetSocketAddress.createUnresolved(it.getHost(), it.getPort())))
+                .orElse(null);
+    }
+
+    /**
+     * OkHttp 代理。
+     */
+    @Setter
+    @Getter
+    public static class OkhttpProxy {
+
+        /**
+         * 是否开启代理。
+         * <p>
+         * 主要是提供给配置类去生成相关实例。
+         */
+        private Boolean enabled = false;
+        /**
+         * 代理类型。
+         */
+        private Proxy.Type type;
+        /**
+         * 代理主机地址。
+         */
+        private String host;
+        /**
+         * 代理端口。
+         */
+        private Integer port;
+
+    }
 
 }

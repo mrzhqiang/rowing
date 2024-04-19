@@ -11,8 +11,6 @@ public interface MenuResourceExcerpt extends AuditableProjection {
 
     String getName();
 
-    String getAuthority();
-
     Integer getOrdered();
 
 }

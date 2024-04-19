@@ -6,6 +6,7 @@ import com.github.mrzhqiang.rowing.i18n.I18nHolder;
 import com.github.mrzhqiang.rowing.setting.Setting;
 import com.github.mrzhqiang.rowing.setting.SettingService;
 import com.github.mrzhqiang.rowing.setting.Settings;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.LockedException;
@@ -25,20 +26,16 @@ import java.util.Optional;
  * 主要对登录失败的各种异常进行处理，比如密码错误的异常，会记录一次失败，如果失败次数超过阈值，则锁定一段时间账户，避免暴力破解密码。
  */
 @Component
+@RequiredArgsConstructor
 public class LoginFailureHandler implements AuthenticationFailureHandler {
 
     private final AccountService accountService;
     private final SettingService settingService;
 
-    public LoginFailureHandler(AccountService accountService,
-                               SettingService settingService) {
-        this.accountService = accountService;
-        this.settingService = settingService;
-    }
-
     /**
-     * 注意：通常是先发出登录失败的事件，再执行登录失败的回调。
+     * 注意：通常是先发出登录失败的事件，再执行这里的登录失败回调。
      */
+    @RunAsSystem
     @Override
     public void onAuthenticationFailure(HttpServletRequest request,
                                         HttpServletResponse response,

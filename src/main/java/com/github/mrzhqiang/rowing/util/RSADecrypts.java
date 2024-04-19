@@ -74,9 +74,9 @@ public class RSADecrypts {
             decryptCipher.init(Cipher.DECRYPT_MODE, privateKey);
             return new String(decryptCipher.doFinal(bytes), StandardCharsets.UTF_8);
         } catch (Exception e) {
-            log.error("RSA 解密失败！将直接返回文本：" + cipherText, e);
-            return cipherText;
+            log.error("RSA decrypt failure! cipher text：{}", cipherText, e);
         }
+        return cipherText;
     }
 
 }

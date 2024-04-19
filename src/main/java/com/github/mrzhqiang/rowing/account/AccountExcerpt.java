@@ -17,8 +17,6 @@ public interface AccountExcerpt extends AuditableProjection {
 
     AccountType getType();
 
-    String getAuthority();
-
     UserExcerpt getUser();
 
 }

@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -50,10 +51,10 @@ import java.util.Optional;
  * @see <a href="https://docs.spring.io/spring-data/jpa/docs/2.7.14/reference/html/#core.web.basic.paging-and-sorting">Spring Data JPA Paging And Sorting</a>
  * @see <a href="https://docs.spring.io/spring-data/rest/docs/3.7.14/reference/html/#repository-resources">Spring Data REST Repository-Resources</a>
  */
-@PreAuthorize("hasRole('USER')")
+@PreAuthorize("hasRole('ROLE_USER')")
 @Validated
 @NoRepositoryBean
-public interface BaseRepository<E extends BaseEntity> extends JpaRepository<E, Long> {
+public interface BaseRepository<E extends BaseEntity> extends JpaRepository<E, Long>, JpaSpecificationExecutor<E> {
 
     @Nonnull
     @Override

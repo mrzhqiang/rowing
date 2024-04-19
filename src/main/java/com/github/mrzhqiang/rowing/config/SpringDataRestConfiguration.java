@@ -6,6 +6,7 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.github.mrzhqiang.helper.time.DateTimes;
 import com.github.mrzhqiang.rowing.convert.StringToLocalDateTimeConverter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.data.rest.RepositoryRestProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,15 +23,11 @@ import java.time.LocalDateTime;
  * <p>
  */
 @Configuration
+@RequiredArgsConstructor
 public class SpringDataRestConfiguration {
 
     private final RepositoryRestProperties properties;
     private final EnumTranslator enumTranslator;
-
-    public SpringDataRestConfiguration(RepositoryRestProperties properties, EnumTranslator enumTranslator) {
-        this.properties = properties;
-        this.enumTranslator = enumTranslator;
-    }
 
     @Bean
     public RepositoryRestConfigurer customRepositoryRestConfigurer() {

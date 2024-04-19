@@ -6,6 +6,7 @@ import com.github.mrzhqiang.rowing.dict.iso.DictISO3166;
 import com.github.mrzhqiang.rowing.dict.iso.DictISO3166Repository;
 import com.github.mrzhqiang.rowing.dict.iso.DictISO639;
 import com.github.mrzhqiang.rowing.dict.iso.DictISO639Repository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.rest.core.annotation.HandleBeforeCreate;
 import org.springframework.data.rest.core.annotation.HandleBeforeDelete;
 import org.springframework.data.rest.core.annotation.HandleBeforeSave;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Component;
  */
 @RepositoryEventHandler
 @Component
+@RequiredArgsConstructor
 public class DictEventHandle {
 
     private final DictGroupRepository groupRepository;
@@ -24,18 +26,6 @@ public class DictEventHandle {
     private final DictGBT2260Repository gbt2260Repository;
     private final DictISO639Repository iso639Repository;
     private final DictISO3166Repository iso3166Repository;
-
-    public DictEventHandle(DictGroupRepository groupRepository,
-                           DictItemRepository itemRepository,
-                           DictGBT2260Repository gbt2260Repository,
-                           DictISO639Repository iso639Repository,
-                           DictISO3166Repository iso3166Repository) {
-        this.groupRepository = groupRepository;
-        this.itemRepository = itemRepository;
-        this.gbt2260Repository = gbt2260Repository;
-        this.iso639Repository = iso639Repository;
-        this.iso3166Repository = iso3166Repository;
-    }
 
     @HandleBeforeCreate
     public void onBeforeCreate(DictGroup dictGroup) {
