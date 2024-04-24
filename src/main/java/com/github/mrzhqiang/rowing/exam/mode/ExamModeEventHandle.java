@@ -2,6 +2,7 @@ package com.github.mrzhqiang.rowing.exam.mode;
 
 import com.github.mrzhqiang.rowing.exam.rule.ExamRule;
 import com.google.common.base.Preconditions;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.rest.core.annotation.HandleBeforeCreate;
 import org.springframework.data.rest.core.annotation.HandleBeforeSave;
 import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
@@ -16,6 +17,7 @@ import java.util.List;
  */
 @RepositoryEventHandler
 @Component
+@RequiredArgsConstructor
 public class ExamModeEventHandle {
 
     @HandleBeforeCreate

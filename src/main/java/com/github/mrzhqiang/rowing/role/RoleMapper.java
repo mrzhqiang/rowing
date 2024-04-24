@@ -15,7 +15,7 @@ public interface RoleMapper {
 
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "name", source = "name")
-    @Mapping(target = "code", source = "type.code")
+    @Mapping(target = "code", source = "type.authority")
     Role toEntity(AccountType type, String name);
 
 }

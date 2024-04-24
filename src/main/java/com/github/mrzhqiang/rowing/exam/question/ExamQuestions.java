@@ -3,15 +3,14 @@ package com.github.mrzhqiang.rowing.exam.question;
 import com.github.mrzhqiang.helper.Sequences;
 import com.github.mrzhqiang.helper.random.RandomStrings;
 import com.google.common.base.Strings;
+import lombok.experimental.UtilityClass;
 
 /**
  * 试题工具。
  * <p>
  */
-public final class ExamQuestions {
-    private ExamQuestions() {
-        // no instances.
-    }
+@UtilityClass
+public class ExamQuestions {
 
     /**
      * 试题编码前缀。

@@ -1,5 +1,6 @@
 package com.github.mrzhqiang.rowing.session;
 
+import lombok.experimental.UtilityClass;
 import org.springframework.web.context.request.RequestAttributes;
 import static org.springframework.web.context.request.RequestAttributes.REFERENCE_SESSION;
 import static org.springframework.web.context.request.RequestAttributes.SCOPE_SESSION;
@@ -12,10 +13,8 @@ import java.util.Optional;
 /**
  * 会话工具。
  */
-public final class Sessions {
-    private Sessions() {
-        // no instances
-    }
+@UtilityClass
+public class Sessions {
 
     /**
      * 会话详情的键名称，存储在会话属性中。
@@ -55,4 +54,5 @@ public final class Sessions {
                 .map(it -> it.getAttribute(SESSION_DETAILS_KEY))
                 .map(it -> (SessionDetails) it);
     }
+
 }

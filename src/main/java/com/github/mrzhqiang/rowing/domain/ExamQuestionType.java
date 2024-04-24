@@ -1,5 +1,6 @@
 package com.github.mrzhqiang.rowing.domain;
 
+import com.github.mrzhqiang.rowing.util.Enums;
 import com.google.common.collect.ImmutableList;
 
 import java.util.List;
@@ -7,6 +8,7 @@ import java.util.List;
 /**
  * 考试题型。
  * <p>
+ * 需要搭配前端界面进行设计。
  */
 public enum ExamQuestionType {
 
@@ -49,6 +51,10 @@ public enum ExamQuestionType {
     ;
 
     private static final List<ExamQuestionType> OBJECTIVE_LIST = ImmutableList.of(LOGIC, SINGLE, MULTIPLE);
+
+    public static ExamQuestionType of(String type) {
+        return Enums.findByNameIgnoreCase(ExamQuestionType.class, type, LOGIC);
+    }
 
     /**
      * 是否客观题。

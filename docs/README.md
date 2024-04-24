@@ -7,7 +7,7 @@
 
 ## 目录
 
-- [ ] [开发设计](1.develop/README.md)
+- [x] [开发设计](1.develop/README.md)
 - [ ] [系统部署](2.deployment/README.md)
 - [ ] [使用指南](3.guide/README.md)
 

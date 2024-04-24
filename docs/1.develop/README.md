@@ -7,28 +7,28 @@
 
 ## 主要功能
 
-- [x] [1.1.安全](1.1.security.md)
-- [x] [1.2.国际化](1.2.i18n.md)
-- [x] [1.3.初始化](1.3.init.md)
-- [x] [1.4.字典](1.4.dict.md)
-- [x] [1.5.设置](1.5.setting.md)
-- [x] [1.6.角色](1.6.role.md)
-- [x] [1.7.菜单](1.7.menu.md)
-- [x] [1.8.账户](1.8.account.md)
-- [x] [1.9.规范](1.9.specification.md)
-- [x] [1.10.考试](1.10.exam.md)
+- [x] [01.安全](01.security)
+- [x] [02.国际化](02.i18n)
+- [x] [03.初始化](03.init)
+- [x] [04.字典](04.dict)
+- [x] [05.设置](05.setting)
+- [x] [06.角色](06.role)
+- [x] [07.菜单](07.menu)
+- [x] [08.账户](08.account)
+- [x] [09.规范](09.specification)
+- [x] [10.考试](10.exam)
 
 ## 开发环境
 
 - `git version 2.27.0.windows.1`
 - `java version "1.8.0_301"`
-- `IntelliJ IDEA 2022.2.3 (Ultimate Edition)`
-- `redis_version:6.0.16`
-- `DBMS: MySQL (ver. 5.7.37-log)`
+- `IntelliJ IDEA 2024.1 (Ultimate Edition)`
+- `Redis server v=6.2.6`
+- `DBMS: MySQL (ver. 8.0.34)`
 - `node.js v16.13.2`
 - `npm 8.16.0`
 - `@vue/cli 5.0.8`
-- `WebStorm 2022.2.3`
+- `WebStorm 2024.1`
 
 ## 框架依赖
 
@@ -38,7 +38,7 @@
 
 | 框架                                                                    | 备注                 |
 |-----------------------------------------------------------------------|--------------------|
-| [Spring Boot](https://spring.io/projects/spring-boot)                 | 基础框架               |
+| [Spring Boot](https://spring.io/projects/spring-boot)                 | 核心框架               |
 | [Spring Security](https://spring.io/projects/spring-security)         | 安全框架               |
 | [Spring Data Redis](https://spring.io/projects/spring-data-redis)     | Redis 数据框架         |
 | [Spring Data JPA](https://spring.io/projects/spring-data-jpa)         | JPA 框架             |
@@ -49,12 +49,12 @@
 | [UserAgentUtils](https://www.bitwalker.eu/software/user-agent-utils)  | 用户代理解析             |
 | [Kaptcha](https://github.com/mrzhqiang/kaptcha-spring-boot-starter)   | 验证码                |
 | [Helper](https://github.com/mrzhqiang/helper)                         | Java 常用的辅助工具       |
-| [Geoip2](https://dev.maxmind.com/geoip?lang=en)                       | IP 转地理位置           |
+| [Geoip2](https://dev.maxmind.com/geoip?lang=en)                       | IP 地理位置            |
 | [RxJava](https://github.com/ReactiveX/RxJava)                         | 可观察序列的异步调用框架       |
 | [OkHttp](https://github.com/square/okhttp)                            | 最好用的 HTTP Java 客户端 |
 | [Retrofit](https://github.com/square/retrofit)                        | 声明式 RESTFUL 框架     |
 
-以上仅列出最核心的后端依赖，如需了解全部内容，请访问项目中的`pom.xml`文件。
+以上仅列出最核心的后端依赖，如需了解全部内容，请访问项目中的 [pom.xml](../../pom.xml) 文件。
 
 前端依赖：
 

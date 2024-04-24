@@ -10,6 +10,8 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring", imports = {Menus.class})
 public interface MenuMapper {
 
+    @Mapping(target = "updatedBy", ignore = true)
+    @Mapping(target = "updated", ignore = true)
     @Mapping(target = "internal", ignore = true)
     @Mapping(target = "title", source = "route.meta.title")
     @Mapping(target = "noCache", source = "route.meta.noCache")
@@ -22,8 +24,6 @@ public interface MenuMapper {
     @Mapping(target = "resources", ignore = true)
     @Mapping(target = "parent", ignore = true)
     @Mapping(target = "ordered", ignore = true)
-    @Mapping(target = "lastModifiedBy", ignore = true)
-    @Mapping(target = "lastModified", ignore = true)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "fullPath", ignore = true)
     @Mapping(target = "enabled", ignore = true)

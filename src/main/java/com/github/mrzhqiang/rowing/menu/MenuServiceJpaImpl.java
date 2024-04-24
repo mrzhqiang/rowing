@@ -5,6 +5,9 @@ import com.github.mrzhqiang.rowing.domain.Logic;
 import com.github.mrzhqiang.rowing.role.RoleRepository;
 import com.github.mrzhqiang.rowing.util.Jsons;
 import com.google.common.base.Preconditions;
+import io.micrometer.core.annotation.Counted;
+import io.micrometer.core.annotation.Timed;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -24,6 +27,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class MenuServiceJpaImpl implements MenuService, ApplicationEventPublisherAware {
 
     private final MenuProperties properties;
@@ -32,16 +36,8 @@ public class MenuServiceJpaImpl implements MenuService, ApplicationEventPublishe
     private final RoleRepository roleRepository;
     private ApplicationEventPublisher eventPublisher;
 
-    public MenuServiceJpaImpl(MenuProperties properties,
-                              MenuMapper mapper,
-                              MenuRepository repository,
-                              RoleRepository roleRepository) {
-        this.properties = properties;
-        this.mapper = mapper;
-        this.repository = repository;
-        this.roleRepository = roleRepository;
-    }
-
+    @Timed(longTask = true)
+    @Counted
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void init() {
@@ -105,7 +101,7 @@ public class MenuServiceJpaImpl implements MenuService, ApplicationEventPublishe
             }
 
             roleRepository.findAllByCodeIn(roles).stream()
-                    .peek(it -> it.getMenus().add(newMenu))
+                    .filter(it -> it.getMenus().add(newMenu))
                     .forEach(roleRepository::save);
         }
     }
@@ -133,6 +129,8 @@ public class MenuServiceJpaImpl implements MenuService, ApplicationEventPublishe
         }
     }
 
+    @Timed
+    @Counted
     @Override
     public List<MenuRoute> findRoutes() {
         Sort sort = Sort.sort(Menu.class).by(Menu::getOrdered).ascending()

@@ -41,10 +41,4 @@ public class InitTaskLog extends AuditableEntity {
     @Column(length = Domains.EXCEPTION_TRACE_LENGTH)
     private String trace;
 
-    public static InitTaskLog of(InitTask task) {
-        InitTaskLog log = new InitTaskLog();
-        log.setTask(task);
-        return log;
-    }
-
 }

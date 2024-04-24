@@ -48,4 +48,5 @@ public class WhoIsIpData {
      * 出错信息。
      */
     private String err;
+
 }

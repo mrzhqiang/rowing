@@ -8,12 +8,12 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import static com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter.serializeAllExcept;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import com.fasterxml.jackson.databind.type.MapType;
 import com.google.common.base.Preconditions;
 import lombok.SneakyThrows;
+import lombok.experimental.UtilityClass;
 import org.springframework.util.StringUtils;
 
 import java.io.File;
@@ -23,15 +23,15 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import static com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter.serializeAllExcept;
+
 /**
  * JSON 工具。
  * <p>
  * 以 Spring Boot 默认采用的 Jackson 框架为主。
  */
-public final class Jsons {
-    private Jsons() {
-        // no instances
-    }
+@UtilityClass
+public class Jsons {
 
     /**
      * 敏感字段，序列化和反序列化需要排除。
@@ -213,4 +213,5 @@ public final class Jsons {
         String content = Jsons.toString(data);
         return Jsons.mapFrom(content, String.class, Object.class);
     }
+
 }

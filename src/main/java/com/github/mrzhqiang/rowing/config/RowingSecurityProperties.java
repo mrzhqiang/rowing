@@ -5,11 +5,31 @@ import lombok.Setter;
 import lombok.ToString;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+/**
+ * 系统安全属性。
+ */
 @Getter
 @Setter
 @ToString
 @ConfigurationProperties("rowing.security")
-public class SecurityProperties {
+public class RowingSecurityProperties {
+
+    /**
+     * 管理路径。
+     */
+    public static final String ADMIN_PATH = "/admin";
+    /**
+     * 子路径。
+     */
+    public static final String SUB_PATH = "/**";
+    /**
+     * 资源路径。
+     */
+    public static final String EXPLORER_PATH = "/explorer";
+    /**
+     * 基础认证角色。
+     */
+    public static final String ROLE_BASIC = "BASIC";
 
     /**
      * 默认的登录路径。
@@ -30,7 +50,15 @@ public class SecurityProperties {
     /**
      * 默认的详细错误路径。
      */
-    private static final String DEF_ERROR_DETAIL_PATH = "/error/**";
+    private static final String DEF_ERROR_DETAIL_PATH = DEF_ERROR_PATH + SUB_PATH;
+    /**
+     * 执行器路径。
+     */
+    private static final String ACTUATOR_PATH = "/actuator";
+    /**
+     * 执行器子路径。
+     */
+    private static final String ACTUATOR_SUB_PATH = ACTUATOR_PATH + SUB_PATH;
 
     /**
      * 登录路径。
@@ -55,6 +83,10 @@ public class SecurityProperties {
      * <p>
      * 公开的地址表示任何人都可以访问，没有权限相关的限制，通常来说是登录、注册以及报错页面。
      */
-    private String[] publicPath = new String[]{DEF_ERROR_PATH, DEF_ERROR_DETAIL_PATH};
+    private String[] publicPath = new String[]{DEF_REGISTER_PATH, DEF_ERROR_PATH, DEF_ERROR_DETAIL_PATH};
+    /**
+     * 需要基础认证的地址列表。
+     */
+    private String[] basicPath = new String[]{ACTUATOR_PATH, ACTUATOR_SUB_PATH};
 
 }

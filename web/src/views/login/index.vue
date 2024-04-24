@@ -32,17 +32,16 @@
         {{ $t('login.logIn') }}
       </el-button>
       <div style="position:relative">
-        <div class="tips"/>
-        <div class="tips">
-          <span style="margin-right:18px;"/>
-        </div>
         <el-button class="third-button" type="primary" @click="showDialog=true">
-          {{ $t('login.thirdparty') }}
+          {{ $t('login.thirdParty') }}
+        </el-button>
+        <el-button style="margin-left: 0" type="primary" @click="openRegister">
+          {{ $t('register.title') }}
         </el-button>
       </div>
     </el-form>
-    <el-dialog :title="$t('login.thirdparty')" :visible.sync="showDialog">
-      {{ $t('login.thirdpartyTips') }}
+    <el-dialog :title="$t('login.thirdParty')" :visible.sync="showDialog">
+      {{ $t('login.thirdPartyTips') }}
       <br>
       <br>
       <br>
@@ -77,7 +76,7 @@ export default {
     return {
       loginForm: {
         username: 'admin',
-        password: 'ecca2c68-fce7-4bb3-8062-e47987ff8cc0'
+        password: '8e5c6029-6e8f-4e73-a3b2-bf973276546b'
       },
       loginRules: {
         username: [{required: true, trigger: 'blur', validator: validateUsername}],
@@ -156,7 +155,10 @@ export default {
         }
         return acc;
       }, {});
-    }
+    },
+    openRegister() {
+      this.$router.push('/register');
+    },
     // afterQRScan() {
     //   if (e.key === 'x-admin-oauth-code') {
     //     const code = getQueryObject(e.newValue)
@@ -299,7 +301,6 @@ $light_gray: #eee;
   .third-button {
     position: absolute;
     right: 0;
-    bottom: 8px;
   }
 
   @media only screen and (max-width: 480px) {

@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface ThirdUserRepository extends BaseRepository<ThirdUser> {
 
     Optional<ThirdUser> findByAccount_Username(String username);
+
 }

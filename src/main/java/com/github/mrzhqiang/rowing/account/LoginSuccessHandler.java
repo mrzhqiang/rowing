@@ -2,6 +2,7 @@ package com.github.mrzhqiang.rowing.account;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.mrzhqiang.rowing.util.Jsons;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -19,6 +20,7 @@ import java.io.IOException;
  * 后续如果要切换为 jwt 模式，只需要在这里返回相关 token 即可。
  */
 @Component
+@RequiredArgsConstructor
 public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 
     @Override

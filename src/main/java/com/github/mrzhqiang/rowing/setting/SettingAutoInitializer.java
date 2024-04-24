@@ -1,6 +1,7 @@
 package com.github.mrzhqiang.rowing.setting;
 
 import com.github.mrzhqiang.rowing.init.AutoInitializer;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -9,13 +10,10 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class SettingAutoInitializer extends AutoInitializer {
 
     private final SettingService service;
-
-    public SettingAutoInitializer(SettingService service) {
-        this.service = service;
-    }
 
     @Override
     protected void onExecute() {

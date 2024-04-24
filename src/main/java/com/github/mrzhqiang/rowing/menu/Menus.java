@@ -6,10 +6,12 @@ import com.github.mrzhqiang.rowing.util.Validations;
 import static com.google.common.base.CaseFormat.LOWER_HYPHEN;
 import static com.google.common.base.CaseFormat.UPPER_CAMEL;
 import com.google.common.base.Preconditions;
+import lombok.experimental.UtilityClass;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -17,10 +19,8 @@ import java.util.stream.Collectors;
  * <p>
  * 提供菜单相关的常量及方法。
  */
-public final class Menus {
-    private Menus() {
-        // no instances.
-    }
+@UtilityClass
+public class Menus {
 
     /**
      * 菜单路径分隔符。
@@ -123,7 +123,8 @@ public final class Menus {
      * @param roleList 角色列表。
      * @return 角色标识符列表。
      */
-    public static List<String> convertRoles(List<Role> roleList) {
+    public static List<String> convertRoles(Set<Role> roleList) {
         return roleList.stream().map(Role::getCode).collect(Collectors.toList());
     }
+
 }

@@ -1,5 +1,7 @@
 package com.github.mrzhqiang.rowing.domain;
 
+import com.github.mrzhqiang.rowing.util.Enums;
+
 /**
  * 任务状态。
  * <p>
@@ -31,5 +33,10 @@ public enum TaskStatus {
      * 表示任务执行成功。
      */
     COMPLETED,
+    ;
+
+    public static TaskStatus of(String status) {
+        return Enums.findByNameIgnoreCase(TaskStatus.class, status, DEFAULT);
+    }
 
 }

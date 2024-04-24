@@ -4,6 +4,7 @@ import com.github.mrzhqiang.rowing.dict.gbt.DictGBTService;
 import com.github.mrzhqiang.rowing.dict.iso.DictISOService;
 import com.github.mrzhqiang.rowing.domain.TaskMode;
 import com.github.mrzhqiang.rowing.init.AutoInitializer;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -12,19 +13,12 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class DictAutoInitializer extends AutoInitializer {
 
     private final DictService service;
     private final DictISOService isoService;
     private final DictGBTService gbtService;
-
-    public DictAutoInitializer(DictService service,
-                               DictISOService isoService,
-                               DictGBTService gbtService) {
-        this.service = service;
-        this.isoService = isoService;
-        this.gbtService = gbtService;
-    }
 
     @Override
     protected void onExecute() {

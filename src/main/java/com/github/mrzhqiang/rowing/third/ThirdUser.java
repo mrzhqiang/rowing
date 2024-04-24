@@ -2,8 +2,8 @@ package com.github.mrzhqiang.rowing.third;
 
 import com.github.mrzhqiang.rowing.account.Account;
 import com.github.mrzhqiang.rowing.domain.AuditableEntity;
-import com.github.mrzhqiang.rowing.domain.ThirdUserType;
 import com.github.mrzhqiang.rowing.domain.Domains;
+import com.github.mrzhqiang.rowing.domain.ThirdUserType;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -12,7 +12,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -39,7 +38,7 @@ public class ThirdUser extends AuditableEntity {
      */
     @NotNull
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = Domains.ENUM_NAME_LENGTH)
+    @Column(nullable = false, length = Domains.ENUM_LENGTH)
     private ThirdUserType type;
     /**
      * 统一标识符。
@@ -53,7 +52,7 @@ public class ThirdUser extends AuditableEntity {
      * 绑定账户。
      */
     @ToString.Exclude
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(optional = false)
     private Account account;
 
 }

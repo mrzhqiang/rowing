@@ -35,8 +35,8 @@ public interface AccountMapper {
 
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "username", source = "form.username")
-    @Mapping(target = "password", expression = "java( encoder.encode(form.getPassword()) )")
-    Account toEntity(RegisterForm form, PasswordEncoder encoder);
+    @Mapping(target = "password", source = "form.password")
+    Account toEntity(PasswordConfirmForm form);
 
     @Mapping(target = "owner", source = "account")
     User toUser(RegisterForm form, Account account);

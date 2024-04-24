@@ -10,6 +10,9 @@ import com.google.common.base.CaseFormat;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
+import io.micrometer.core.annotation.Counted;
+import io.micrometer.core.annotation.Timed;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Row;
@@ -33,6 +36,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class DictServiceJpaImpl implements DictService {
 
     private final DictProperties properties;
@@ -41,18 +45,8 @@ public class DictServiceJpaImpl implements DictService {
     private final ClassScanner scanner;
     private final EnumTranslator enumTranslator;
 
-    public DictServiceJpaImpl(DictProperties properties,
-                              DictGroupRepository groupRepository,
-                              DictItemRepository itemRepository,
-                              ClassScanner scanner,
-                              EnumTranslator enumTranslator) {
-        this.properties = properties;
-        this.groupRepository = groupRepository;
-        this.itemRepository = itemRepository;
-        this.scanner = scanner;
-        this.enumTranslator = enumTranslator;
-    }
-
+    @Timed(longTask = true)
+    @Counted
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void sync() {
@@ -123,10 +117,10 @@ public class DictServiceJpaImpl implements DictService {
             // 比如 com.xxx.EnumClassName.ENUM_VALUE
             String label = enumTranslator.asText(enumConstant);
             String itemValue = enumConstant.name();
-            if (itemValue.length() > Domains.ENUM_NAME_LENGTH) {
+            if (itemValue.length() > Domains.ENUM_LENGTH) {
                 String message = I18nHolder.getAccessor().getMessage(
-                        "DictService.syncInternal.item.failure", new Object[]{code, enumConstant.name(), Domains.ENUM_NAME_LENGTH},
-                        Strings.lenientFormat("同步失败！内置字典项 %s-%s 名称长度大于指定长度 %s", code, enumConstant.name(), Domains.ENUM_NAME_LENGTH));
+                        "DictService.syncInternal.item.failure", new Object[]{code, enumConstant.name(), Domains.ENUM_LENGTH},
+                        Strings.lenientFormat("同步失败！内置字典项 %s-%s 名称长度大于指定长度 %s", code, enumConstant.name(), Domains.ENUM_LENGTH));
                 throw new RuntimeException(message);
             }
 

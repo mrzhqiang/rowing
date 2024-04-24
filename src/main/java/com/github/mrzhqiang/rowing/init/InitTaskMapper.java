@@ -18,8 +18,8 @@ import org.springframework.util.ClassUtils;
         InitializationOrderRegistration.class})
 public interface InitTaskMapper {
 
-    @Mapping(target = "lastModifiedBy", ignore = true)
-    @Mapping(target = "lastModified", ignore = true)
+    @Mapping(target = "updatedBy", ignore = true)
+    @Mapping(target = "updated", ignore = true)
     @Mapping(target = "createdBy", ignore = true)
     @Mapping(target = "created", ignore = true)
     @Mapping(target = "version", ignore = true)

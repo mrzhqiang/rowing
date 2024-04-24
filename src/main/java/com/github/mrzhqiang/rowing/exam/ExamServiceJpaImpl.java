@@ -32,6 +32,9 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import io.micrometer.core.annotation.Counted;
+import io.micrometer.core.annotation.Timed;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Row;
@@ -63,6 +66,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class ExamServiceJpaImpl implements ExamService {
 
     private final ExamRepository repository;
@@ -76,28 +80,8 @@ public class ExamServiceJpaImpl implements ExamService {
     private final ExamQuestionOptionRepository optionRepository;
     private final EnumTranslator enumTranslator;
 
-    public ExamServiceJpaImpl(ExamRepository repository,
-                              AccountRepository accountRepository,
-                              ExamPaperRepository paperRepository,
-                              ExamPaperAnswerCardRepository cardRepository,
-                              ExamQuestionRepository questionRepository,
-                              ExamQuestionBankRepository bankRepository,
-                              DictItemRepository itemRepository,
-                              ExamPaperAnswerRepository answerRepository,
-                              ExamQuestionOptionRepository optionRepository,
-                              EnumTranslator enumTranslator) {
-        this.repository = repository;
-        this.accountRepository = accountRepository;
-        this.paperRepository = paperRepository;
-        this.cardRepository = cardRepository;
-        this.questionRepository = questionRepository;
-        this.bankRepository = bankRepository;
-        this.itemRepository = itemRepository;
-        this.answerRepository = answerRepository;
-        this.optionRepository = optionRepository;
-        this.enumTranslator = enumTranslator;
-    }
-
+    @Timed(longTask = true)
+    @Counted
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void sync() {
@@ -354,6 +338,8 @@ public class ExamServiceJpaImpl implements ExamService {
         }
     }
 
+    @Timed
+    @Counted
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void updateTakers(Long examId, List<Long> takers) {
@@ -373,6 +359,8 @@ public class ExamServiceJpaImpl implements ExamService {
                 });
     }
 
+    @Timed
+    @Counted
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void updateMarkers(Long examId, List<Long> markers) {
@@ -390,6 +378,8 @@ public class ExamServiceJpaImpl implements ExamService {
                 });
     }
 
+    @Timed
+    @Counted
     @Override
     public Page<ExamInfo> takerExamInfo(UserDetails userDetails,
                                         String title,
@@ -403,6 +393,8 @@ public class ExamServiceJpaImpl implements ExamService {
                 .orElse(Page.empty());
     }
 
+    @Timed
+    @Counted
     @Override
     public Page<ExamInfo> markerExamInfo(UserDetails userDetails,
                                          String title,
@@ -416,6 +408,8 @@ public class ExamServiceJpaImpl implements ExamService {
                 .orElse(Page.empty());
     }
 
+    @Timed
+    @Counted
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void prepare(Long id) {
@@ -428,6 +422,8 @@ public class ExamServiceJpaImpl implements ExamService {
                 });
     }
 
+    @Timed
+    @Counted
     @Transactional(rollbackFor = Exception.class)
     @RunAsSystem
     @Override
@@ -437,6 +433,8 @@ public class ExamServiceJpaImpl implements ExamService {
         updateFinishedFromMarking();
     }
 
+    @Timed
+    @Counted
     @Override
     public ExamPaperInfo findTakerPaper(String username, Long examId) {
         Exam exam = repository.findById(examId)
@@ -450,6 +448,8 @@ public class ExamServiceJpaImpl implements ExamService {
                 .orElseThrow(() -> ResourceNotFoundException.of("操作失败，试卷未找到！"));
     }
 
+    @Timed
+    @Counted
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void takerPaper(Long paperId) {
@@ -462,6 +462,8 @@ public class ExamServiceJpaImpl implements ExamService {
                 });
     }
 
+    @Timed
+    @Counted
     @Override
     public ExamPaperInfo findMarkerPaper(String username, Long examId) {
         Exam exam = repository.findById(examId)
@@ -476,6 +478,8 @@ public class ExamServiceJpaImpl implements ExamService {
                 .orElseThrow(() -> ResourceNotFoundException.of("操作失败，试卷未找到！"));
     }
 
+    @Timed
+    @Counted
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void markerPaper(Long paperId) {
@@ -488,6 +492,8 @@ public class ExamServiceJpaImpl implements ExamService {
                 });
     }
 
+    @Timed
+    @Counted
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void savePaperAnswer(PaperAnswerData data) {
@@ -495,12 +501,16 @@ public class ExamServiceJpaImpl implements ExamService {
         answerRepository.findById(data.getId()).ifPresent(it -> patchPaperAnswer(data, it));
     }
 
+    @Timed
+    @Counted
     @Override
     public void savePaperMarker(PaperAnswerData data) {
         // TODO 检测用户是否支持修改数据
         answerRepository.findById(data.getId()).ifPresent(it -> patchPaperMarker(data, it));
     }
 
+    @Timed
+    @Counted
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void commitPaper(Long paperId, PaperAnswerData data) {
@@ -508,6 +518,8 @@ public class ExamServiceJpaImpl implements ExamService {
         paperRepository.findById(paperId).ifPresent(this::autoMarkPaper);
     }
 
+    @Timed
+    @Counted
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void finishPaper(Long paperId, PaperAnswerData data) {

@@ -92,8 +92,8 @@ public class DictGBT2260 extends AuditableEntity {
      * 单位名称。
      */
     @NotBlank
-    @Size(max = 100)
-    @Column(nullable = false, length = 100)
+    @Size(max = Domains.DICT_ITEM_LABEL_LENGTH)
+    @Column(nullable = false, length = Domains.DICT_ITEM_LABEL_LENGTH)
     private String name;
     /**
      * 行政区划代码。

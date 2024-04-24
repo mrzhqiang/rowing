@@ -15,9 +15,29 @@ export function isExternal(path) {
  * @returns {Boolean}
  */
 export function validUsername(str) {
-  // const valid_map = ['admin', 'editor'];
-  // return valid_map.indexOf(str.trim()) >= 0;
-  return str.length >= 5;
+  const trimUsername = str.trim();
+  return trimUsername.length >= 4 && trimUsername.length <= 24;
+}
+
+/**
+ * @param {string} str
+ * @returns {Boolean}
+ */
+export function validRegisterUsername(str) {
+  const trimUsername = str.trim();
+  const internalUsername = ['admin', 'system'];
+  const usernameRegExp = /^[a-z][a-z0-9]+/;
+  return trimUsername.length >= 4 && trimUsername.length <= 24 &&
+    internalUsername.indexOf(trimUsername.toLowerCase()) < 0 &&
+    usernameRegExp.test(trimUsername);
+}
+
+/**
+ * @param {string} str
+ * @returns {boolean}
+ */
+export function validPassword(str) {
+  return str.length >= 6;
 }
 
 /**

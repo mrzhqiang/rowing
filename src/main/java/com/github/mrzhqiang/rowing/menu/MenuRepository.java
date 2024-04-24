@@ -2,7 +2,6 @@ package com.github.mrzhqiang.rowing.menu;
 
 import com.github.mrzhqiang.rowing.domain.BaseRepository;
 import com.github.mrzhqiang.rowing.domain.Logic;
-import com.github.mrzhqiang.rowing.util.Authorizes;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -12,7 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 
-@PreAuthorize(Authorizes.HAS_AUTHORITY_ADMIN)
+@PreAuthorize("hasRole('ADMIN')")
 @RepositoryRestResource(path = "menu", excerptProjection = MenuExcerpt.class)
 public interface MenuRepository extends BaseRepository<Menu> {
 

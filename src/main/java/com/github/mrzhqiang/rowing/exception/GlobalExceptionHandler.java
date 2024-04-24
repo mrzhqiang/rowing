@@ -4,6 +4,7 @@ import com.github.mrzhqiang.helper.Environments;
 import com.github.mrzhqiang.rowing.account.RunAsSystem;
 import com.github.mrzhqiang.rowing.i18n.I18nHolder;
 import com.google.common.base.VerifyException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -28,18 +29,13 @@ import java.util.Optional;
  */
 @Slf4j
 @RestControllerAdvice
+@RequiredArgsConstructor
 public class GlobalExceptionHandler {
 
     private static final String DEF_TRACE_ON_PRODUCTION = "请联系您的系统管理员";
 
     private final ExceptionLogMapper logMapper;
     private final ExceptionLogRepository logRepository;
-
-    public GlobalExceptionHandler(ExceptionLogMapper logMapper,
-                                  ExceptionLogRepository logRepository) {
-        this.logMapper = logMapper;
-        this.logRepository = logRepository;
-    }
 
     /**
      * 处理客户端错误请求的异常。
@@ -58,7 +54,7 @@ public class GlobalExceptionHandler {
             IllegalStateException.class,
             VerifyException.class})
     public Object handleBadRequest(Exception ex, HttpServletRequest request) {
-        log.error("Handle BAD_REQUEST by request: " + request, ex);
+        log.error("Handle BAD_REQUEST by request: {}", request, ex);
         return resolveException(ex, request, HttpStatus.BAD_REQUEST);
     }
 
@@ -77,7 +73,7 @@ public class GlobalExceptionHandler {
             ResourceNotFoundException.class,
             EntityNotFoundException.class})
     public Object handleNotFound(Exception ex, HttpServletRequest request) {
-        log.error("Handle NOT_FOUND by request: " + request, ex);
+        log.error("Handle NOT_FOUND by request: {}", request, ex);
         return resolveException(ex, request, HttpStatus.NOT_FOUND);
     }
 
@@ -97,7 +93,7 @@ public class GlobalExceptionHandler {
             IndexOutOfBoundsException.class,
             IllegalAccessException.class})
     public Object handleInternalServerError(Exception ex, HttpServletRequest request) {
-        log.error("Handle INTERNAL_SERVER_ERROR by request: " + request, ex);
+        log.error("Handle INTERNAL_SERVER_ERROR by request: {}", request, ex);
         return resolveException(ex, request, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
@@ -115,7 +111,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({
             IOException.class})
     public Object handleServiceUnavailable(Exception ex, HttpServletRequest request) {
-        log.error("Handle SERVICE_UNAVAILABLE by request: " + request, ex);
+        log.error("Handle SERVICE_UNAVAILABLE by request: {}", request, ex);
         return resolveException(ex, request, HttpStatus.SERVICE_UNAVAILABLE);
     }
 
@@ -141,7 +137,7 @@ public class GlobalExceptionHandler {
     @SuppressWarnings("JavadocReference")
     @ExceptionHandler({Exception.class})
     public Object handleOther(Exception ex, HttpServletRequest request) {
-        log.error("Handle other Exception by request: " + request, ex);
+        log.error("Handle other Exception by request: {}", request, ex);
         return resolveException(ex, request, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
@@ -172,4 +168,5 @@ public class GlobalExceptionHandler {
                 .filter(it -> it.contains(MediaType.TEXT_HTML_VALUE))
                 .isPresent();
     }
+
 }

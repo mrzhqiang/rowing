@@ -1,25 +1,18 @@
 package com.github.mrzhqiang.rowing.exception;
 
 import com.github.mrzhqiang.helper.Exceptions;
-import com.github.mrzhqiang.helper.time.DateTimes;
 import com.github.mrzhqiang.rowing.domain.ExceptionCode;
-import com.github.mrzhqiang.rowing.util.Validations;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.http.HttpStatus;
-import org.springframework.util.ObjectUtils;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
-import java.util.Set;
 
 @Mapper(componentModel = "spring",
-        imports = {DateTimes.class, Exceptions.class, ExceptionCode.class, Validations.class})
+        imports = {Exceptions.class, ExceptionCode.class, ExceptionCauses.class})
 public interface ExceptionLogMapper {
 
-    @Mapping(target = "timestamp", expression = "java( DateTimes.localFormat(entity.getTimestamp()) )")
     ExceptionLogData toData(ExceptionLog entity);
 
     @BeanMapping(ignoreByDefault = true)
@@ -30,7 +23,7 @@ public interface ExceptionLogMapper {
     @Mapping(target = "query", source = "request.queryString")
     @Mapping(target = "address", source = "request.remoteAddr")
     @Mapping(target = "sessionId", source = "request.requestedSessionId")
-    @Mapping(target = "message", expression = "java( Validations.findMessage(exception) )")
+    @Mapping(target = "message", expression = "java( ExceptionCauses.findMessage(exception) )")
     @Mapping(target = "code", expression = "java( ExceptionCode.of(exception).format(status.value(), exception.getMessage()) )")
     @Mapping(target = "trace", expression = "java( Exceptions.ofTrace(exception) )")
     ExceptionLog toEntity(HttpStatus status, HttpServletRequest request, Exception exception);

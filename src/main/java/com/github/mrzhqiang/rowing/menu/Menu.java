@@ -6,6 +6,7 @@ import com.github.mrzhqiang.rowing.domain.Domains;
 import com.github.mrzhqiang.rowing.domain.Logic;
 import com.github.mrzhqiang.rowing.role.Role;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -23,6 +24,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 菜单。
@@ -184,7 +186,7 @@ public class Menu extends AuditableEntity {
      */
     @NotNull
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = Domains.ENUM_NAME_LENGTH)
+    @Column(nullable = false, length = Domains.ENUM_LENGTH)
     private Logic enabled = Logic.YES;
     /**
      * 是否内置。
@@ -193,11 +195,10 @@ public class Menu extends AuditableEntity {
      */
     @NotNull
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, updatable = false, length = Domains.ENUM_NAME_LENGTH)
+    @Column(nullable = false, updatable = false, length = Domains.ENUM_LENGTH)
     private Logic internal = Logic.NO;
-
     /**
-     * 菜单角色列表。
+     * 菜单角色集合。
      * <p>
      * 主要可以返回给前端，当前菜单支持哪些角色。
      */
@@ -205,14 +206,14 @@ public class Menu extends AuditableEntity {
     @ToString.Exclude
     @RestResource(path = "roles", rel = "roles")
     @ManyToMany(mappedBy = "menus")
-    private List<Role> roles = Lists.newArrayList();
+    private Set<Role> roles = Sets.newHashSet();
     /**
-     * 菜单资源列表。
+     * 菜单资源集合。
      */
     @JsonIgnore
     @ToString.Exclude
     @RestResource(path = "resources", rel = "resources")
     @OneToMany(mappedBy = "menu", orphanRemoval = true)
-    private List<MenuResource> resources = Lists.newArrayList();
+    private Set<MenuResource> resources = Sets.newHashSet();
 
 }

@@ -20,8 +20,6 @@ import java.time.Instant;
 
 /**
  * 操作日志。
- * <p>
- * 记录标记 {@link Action} 注解的方法操作日志。
  */
 @Getter
 @Setter
@@ -33,18 +31,10 @@ public class ActionLog extends BaseEntity {
     private static final long serialVersionUID = 7299201576558653855L;
 
     /**
-     * 操作名称。
-     *
-     * @see Action#value()
-     * @see ActionType
-     */
-    @Column(length = Domains.ENUM_NAME_LENGTH)
-    private String action;
-    /**
      * 操作类型。
      */
     @Enumerated(EnumType.STRING)
-    @Column(length = Domains.ENUM_NAME_LENGTH)
+    @Column(length = Domains.ENUM_LENGTH)
     private ActionType type = ActionType.NONE;
     /**
      * 操作所在类。
@@ -65,7 +55,7 @@ public class ActionLog extends BaseEntity {
      * 操作状态。
      */
     @Enumerated(EnumType.STRING)
-    @Column(length = Domains.ENUM_NAME_LENGTH)
+    @Column(length = Domains.ENUM_LENGTH)
     private ActionState state;
     /**
      * 操作返回结果.

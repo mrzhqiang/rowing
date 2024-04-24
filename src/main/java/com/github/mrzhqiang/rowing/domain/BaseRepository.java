@@ -1,13 +1,10 @@
 package com.github.mrzhqiang.rowing.domain;
 
-import com.github.mrzhqiang.rowing.util.Authorizes;
-import static com.github.mrzhqiang.rowing.util.Authorizes.HAS_AUTHORITY_ADMIN;
-import static com.github.mrzhqiang.rowing.util.Authorizes.HAS_AUTHORITY_USER;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -22,28 +19,42 @@ import java.util.Optional;
 /**
  * 基础仓库。
  * <p>
- * 设定如果继承此基础仓库，则必须使用 {@link BaseEntity} 的扩展实体，以规范主键和版本字段。
+ * 如果继承此基础仓库，必须使用 {@link BaseEntity 基础实体}，以规范主键和版本号字段。
  * <p>
- * 这样做可以方便未来对继承的接口进行改进，比如增加 {@link QuerydslPredicateExecutor} 接口。
+ * 注意：这里声明所有的删除方法都需要 ROLE_MANAGER 权限，以避免非法的删除操作。
  * <p>
- * 参考：<a href="https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories">spring data jpa repositories</a>
+ * 权限判断方式，在 PreAuthorize 注解中添加以下字符串：
  * <p>
- * 参考：<a href="https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#core.web.basic.paging-and-sorting">spring data jpa paging and sorting</a>
+ * "hasAuthority('xxx')"
  * <p>
- * 参考：<a href="https://docs.spring.io/spring-data/rest/docs/current/reference/html/#repository-resources">spring data rest repository-resources</a>
+ * "hasRole('ROLE_xxx')" or "hasRole('xxx')"
  * <p>
- * 注意：这里声明所有删除方法需要 {@link Authorizes#HAS_AUTHORITY_ADMIN} 权限。
- *
- * @see org.springframework.data.jpa.repository.JpaRepository 基于 JPA 规范的仓库接口。
- * 实际上只有 {@link PagingAndSortingRepository} 和 {@link CrudRepository} 接口中的方法会被 REST 框架通过反射进行调用，
- * 对于 {@link QueryByExampleExecutor} 接口中的方法，不会被 REST 框架调用，只能通过自定义 Controller 及 Service 来手动调用。
+ * "permitAll()"
+ * <p>
+ * "denyAll()"
+ * <p>
+ * "isAnonymous()"
+ * <p>
+ * "isAuthenticated()"
+ * <p>
+ * "isRememberMe()"
+ * <p>
+ * "isFullyAuthenticated()"
+ * <p>
+ * "hasPermission(#target, 'read')" or "hasPermission(#target, 'admin')"
  *
  * @param <E> 实体类型。
+ * @see org.springframework.data.jpa.repository.JpaRepository 基于 JPA 规范的仓库接口。
+ * 实际上只有 {@link PagingAndSortingRepository} 和 {@link CrudRepository} 接口中的方法会被 REST 框架通过反射进行调用，
+ * 对于 {@link QueryByExampleExecutor} 接口中的方法，不会被 REST 框架调用。
+ * @see <a href="https://docs.spring.io/spring-data/jpa/docs/2.7.14/reference/html/#repositories">Spring Data JPA Repositories</a>
+ * @see <a href="https://docs.spring.io/spring-data/jpa/docs/2.7.14/reference/html/#core.web.basic.paging-and-sorting">Spring Data JPA Paging And Sorting</a>
+ * @see <a href="https://docs.spring.io/spring-data/rest/docs/3.7.14/reference/html/#repository-resources">Spring Data REST Repository-Resources</a>
  */
-@PreAuthorize(HAS_AUTHORITY_USER)
+@PreAuthorize("hasRole('ROLE_USER')")
 @Validated
 @NoRepositoryBean
-public interface BaseRepository<E extends BaseEntity> extends JpaRepository<E, Long> {
+public interface BaseRepository<E extends BaseEntity> extends JpaRepository<E, Long>, JpaSpecificationExecutor<E> {
 
     @Nonnull
     @Override
@@ -65,11 +76,11 @@ public interface BaseRepository<E extends BaseEntity> extends JpaRepository<E, L
     @Override
     List<E> findAll();
 
-    @PreAuthorize(HAS_AUTHORITY_ADMIN)
+    @PreAuthorize("hasRole('ADMIN')")
     @Override
     void deleteById(@Nonnull Long id);
 
-    @PreAuthorize(HAS_AUTHORITY_ADMIN)
+    @PreAuthorize("hasRole('ADMIN')")
     @Override
     void delete(@Nonnull E entity);
 

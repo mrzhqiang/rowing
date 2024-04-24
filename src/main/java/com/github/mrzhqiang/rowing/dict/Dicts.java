@@ -2,6 +2,7 @@ package com.github.mrzhqiang.rowing.dict;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
+import lombok.experimental.UtilityClass;
 import org.springframework.util.ObjectUtils;
 
 import java.util.List;
@@ -12,10 +13,8 @@ import java.util.regex.Pattern;
  * 数据字典工具。
  * <p>
  */
-public final class Dicts {
-    private Dicts() {
-        // no instances.
-    }
+@UtilityClass
+public class Dicts {
 
     /**
      * 数据字典文件名称。

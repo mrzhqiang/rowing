@@ -10,9 +10,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 操作。
+ * 操作注解。
  * <p>
- * 特别注意：这个注解只能在 web 请求相关的方法上执行，如果是由内部调用的方法，将因为找不到对应会话而抛出异常。
+ * 用于标记方法，记录操作日志。
  */
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
@@ -21,19 +21,10 @@ import java.lang.annotation.Target;
 public @interface Action {
 
     /**
-     * 操作名称。
-     * <p>
-     * 建议最大不超过 50 个字符。
+     * 操作值。
      *
-     * @return 获取操作名称，用来记录到 ActionLog 实体的 action 字段。
+     * @return 操作类型。使用枚举字典的国际化名称，作为操作名称。
      */
-    String value() default "";
-
-    /**
-     * 操作类型。
-     *
-     * @return 获取操作类型，用来记录到 ActionLog 实体的 type 字段。
-     */
-    ActionType type() default ActionType.NONE;
+    ActionType value() default ActionType.NONE;
 
 }

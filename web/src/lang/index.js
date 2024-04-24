@@ -2,11 +2,11 @@ import Vue from 'vue';
 import VueI18n from 'vue-i18n';
 import Cookies from 'js-cookie';
 import elementEnLocale from 'element-ui/lib/locale/lang/en'; // element-ui lang
-import elementZhLocale from 'element-ui/lib/locale/lang/zh-CN';// element-ui lang
+import elementZhCNLocale from 'element-ui/lib/locale/lang/zh-CN';// element-ui lang
 import elementEsLocale from 'element-ui/lib/locale/lang/es';// element-ui lang
 import elementJaLocale from 'element-ui/lib/locale/lang/ja';// element-ui lang
 import enLocale from './en';
-import zhLocale from './zh';
+import zhCNLocale from './zh-CN';
 import esLocale from './es';
 import jaLocale from './ja';
 
@@ -18,8 +18,8 @@ const messages = {
     ...elementEnLocale
   },
   zh: {
-    ...zhLocale,
-    ...elementZhLocale
+    ...zhCNLocale,
+    ...elementZhCNLocale
   },
   es: {
     ...esLocale,
