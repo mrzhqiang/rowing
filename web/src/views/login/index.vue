@@ -33,15 +33,15 @@
       </el-button>
       <div style="position:relative">
         <el-button class="third-button" type="primary" @click="showDialog=true">
-          {{ $t('login.thirdparty') }}
+          {{ $t('login.thirdParty') }}
         </el-button>
         <el-button style="margin-left: 0" type="primary" @click="openRegister">
-          {{ '注册' }}
+          {{ $t('register.title') }}
         </el-button>
       </div>
     </el-form>
-    <el-dialog :title="$t('login.thirdparty')" :visible.sync="showDialog">
-      {{ $t('login.thirdpartyTips') }}
+    <el-dialog :title="$t('login.thirdParty')" :visible.sync="showDialog">
+      {{ $t('login.thirdPartyTips') }}
       <br>
       <br>
       <br>
@@ -76,7 +76,7 @@ export default {
     return {
       loginForm: {
         username: 'admin',
-        password: '5edd133d-9286-4908-87bf-030ec2090ddb'
+        password: '8e5c6029-6e8f-4e73-a3b2-bf973276546b'
       },
       loginRules: {
         username: [{required: true, trigger: 'blur', validator: validateUsername}],

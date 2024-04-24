@@ -25,7 +25,7 @@
         <bitwalker.version>1.21</bitwalker.version>
         <geoip2.version>2.15.0</geoip2.version>
         <kaptcha-spring-boot-starter.version>2023.1.0</kaptcha-spring-boot-starter.version>
-        <helper.version>2023.1.0</helper.version>
+        <helper.version>2024.1.0</helper.version>
         <retrofit.version>2.9.0</retrofit.version>
 
         <snakeyaml.version>2.0</snakeyaml.version>
@@ -191,6 +191,11 @@
         <dependency>
             <groupId>com.github.mrzhqiang.helper</groupId>
             <artifactId>helper</artifactId>
+            <version>${helper.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.mrzhqiang.helper</groupId>
+            <artifactId>helper-captcha-simple</artifactId>
             <version>${helper.version}</version>
         </dependency>
         <dependency>

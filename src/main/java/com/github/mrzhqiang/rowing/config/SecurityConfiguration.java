@@ -5,6 +5,7 @@ import com.github.mrzhqiang.kaptcha.autoconfigure.KaptchaProperties;
 import com.github.mrzhqiang.rowing.account.LoginFailureHandler;
 import com.github.mrzhqiang.rowing.account.LoginSuccessHandler;
 import com.github.mrzhqiang.rowing.account.RSADecryptPasswordEncoder;
+import com.github.mrzhqiang.rowing.account.RegisterFailureHandler;
 import static com.github.mrzhqiang.rowing.config.RowingSecurityProperties.ADMIN_PATH;
 import static com.github.mrzhqiang.rowing.config.RowingSecurityProperties.EXPLORER_PATH;
 import static com.github.mrzhqiang.rowing.config.RowingSecurityProperties.SUB_PATH;
@@ -102,10 +103,12 @@ public class SecurityConfiguration {
      */
     @Bean
     public AuthenticationFilter registerKaptchaFilter(AuthenticationConfiguration configuration,
+                                                      RegisterFailureHandler registerFailureHandler,
                                                       KaptchaAuthenticationConverter kaptchaConverter) throws Exception {
         AuthenticationManager manager = configuration.getAuthenticationManager();
         AuthenticationFilter filter = new AuthenticationFilter(manager, kaptchaConverter);
         filter.setRequestMatcher(new AntPathRequestMatcher(properties.getRegisterPath(), HttpMethod.POST.name()));
+        filter.setFailureHandler(registerFailureHandler);
         return filter;
     }
 
@@ -142,12 +145,11 @@ public class SecurityConfiguration {
                                               AuthenticationFilter loginKaptchaFilter,
                                               LoginFailureHandler loginFailureHandler,
                                               LoginSuccessHandler loginSuccessHandler) throws Exception {
-        return http.requestMatchers(configurer -> configurer
-                        .antMatchers(kaptchaProperties.getPath())
-                        .antMatchers(properties.getPublicPath()))
-                .addFilterAfter(registerKaptchaFilter, AnonymousAuthenticationFilter.class)
+        return http.addFilterAfter(registerKaptchaFilter, AnonymousAuthenticationFilter.class)
                 .addFilterAfter(loginKaptchaFilter, AnonymousAuthenticationFilter.class)
                 .authorizeRequests(urlRegistry -> urlRegistry
+                        .antMatchers(kaptchaProperties.getPath()).permitAll()
+                        .antMatchers(properties.getPublicPath()).permitAll()
                         .antMatchers(generateAdminPaths()).hasRole(AccountType.ADMIN.name())
                         .anyRequest().authenticated())
                 .formLogin(loginConfigurer -> loginConfigurer
@@ -192,9 +194,9 @@ public class SecurityConfiguration {
     @Bean
     @Order(BASIC_AUTH_ORDER)
     public SecurityFilterChain basicFilterChain(HttpSecurity http) throws Exception {
-        return http.authorizeRequests()
-                .mvcMatchers(restProperties.getBasePath()).hasRole(RowingSecurityProperties.ROLE_BASIC)
-                .antMatchers(properties.getBasicPath()).hasRole(RowingSecurityProperties.ROLE_BASIC).and()
+        return http.authorizeRequests(urlRegistry -> urlRegistry
+                        .antMatchers(properties.getBasicPath()).hasRole(RowingSecurityProperties.ROLE_BASIC)
+                        .mvcMatchers(restProperties.getBasePath()).hasRole(RowingSecurityProperties.ROLE_BASIC))
                 .httpBasic().and()
                 .build();
     }

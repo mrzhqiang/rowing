@@ -59,9 +59,7 @@ rowing:
     register-path: "/register"
     ignore-path:
     public-path:
-      - "/register"
-      - "/login"
-      - "/logout"
+      - ${rowing.security.register-path}
       - "/error"
       - "/error/**"
     basic-path:

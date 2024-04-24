@@ -56,7 +56,7 @@ export const constantRoutes = [
   },
   {
     path: '/register',
-    component: () => import('@/views/register.vue'),
+    component: () => import('@/views/login/register.vue'),
     hidden: true
   },
   {

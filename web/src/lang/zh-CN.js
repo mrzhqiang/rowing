@@ -79,25 +79,25 @@ export default {
     theme: '换肤',
     size: '布局大小'
   },
+  form: {
+
+  },
   login: {
     title: '系统登录',
     logIn: '登录',
     username: '账号',
     password: '密码',
     any: '随便填',
-    thirdparty: '第三方登录',
-    thirdpartyTips: '本地不能模拟，请结合自己业务进行模拟！！！'
+    thirdParty: '第三方登录',
+    thirdPartyTips: '本地不能模拟，请结合自己业务进行模拟！！！'
   },
   register: {
     title: '注册账户',
-    register: '注册',
     username: '账号',
     password: '密码',
     confirmPassword: '确认密码',
-    nickname: '昵称',
-    email: '电子邮箱',
-    phoneNumber: '手机号码',
-    introduction: '简介',
+    kaptcha: '验证码',
+    submit: '注册',
   },
   documentation: {
     documentation: '文档',

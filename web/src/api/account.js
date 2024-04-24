@@ -5,7 +5,11 @@ import rest from '@/api/rest';
  * 注册账户。
  */
 export function register(form) {
-  return request.post('/account/register', form);
+  let url = '/register';
+  if (form.kaptcha) {
+    url = url + '?kaptcha=' + form.kaptcha;
+  }
+  return request.post(url, form);
 }
 
 /**
