@@ -52,14 +52,14 @@ public class InitTask extends AuditableEntity {
      */
     @NonNull
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, updatable = false, length = Domains.ENUM_NAME_LENGTH)
+    @Column(nullable = false, updatable = false, length = Domains.ENUM_LENGTH)
     private TaskType type;
     /**
      * 任务状态。
      */
     @NonNull
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = Domains.ENUM_NAME_LENGTH)
+    @Column(nullable = false, length = Domains.ENUM_LENGTH)
     private TaskStatus status;
     /**
      * 执行顺序。
@@ -72,7 +72,7 @@ public class InitTask extends AuditableEntity {
      */
     @NotNull
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = Domains.ENUM_NAME_LENGTH)
+    @Column(nullable = false, length = Domains.ENUM_LENGTH)
     private Logic discard;
 
     /**

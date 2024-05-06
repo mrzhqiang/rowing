@@ -10,6 +10,9 @@ import com.github.mrzhqiang.rowing.i18n.I18nHolder;
 import com.github.mrzhqiang.rowing.util.Cells;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import io.micrometer.core.annotation.Counted;
+import io.micrometer.core.annotation.Timed;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Row;
@@ -28,6 +31,7 @@ import java.util.List;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class DictISOServiceJpaImpl implements DictISOService {
 
     private final DictProperties properties;
@@ -35,16 +39,8 @@ public class DictISOServiceJpaImpl implements DictISOService {
     private final DictISO639Repository iso639Repository;
     private final DictISO3166Repository iso3166Repository;
 
-    public DictISOServiceJpaImpl(DictProperties properties,
-                                 DictGroupRepository groupRepository,
-                                 DictISO639Repository iso639Repository,
-                                 DictISO3166Repository iso3166Repository) {
-        this.properties = properties;
-        this.groupRepository = groupRepository;
-        this.iso639Repository = iso639Repository;
-        this.iso3166Repository = iso3166Repository;
-    }
-
+    @Timed(longTask = true)
+    @Counted
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void sync() {

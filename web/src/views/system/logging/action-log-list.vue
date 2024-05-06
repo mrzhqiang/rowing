@@ -1,8 +1,11 @@
 <template>
   <div class="app-container">
     <el-form ref="logSearchForm" v-model="logParams" inline>
-      <el-form-item :label="$t('操作')" prop="action">
-        <el-input v-model="logParams.action" clearable/>
+      <el-form-item :label="$t('操作')" prop="type">
+        <el-select v-model="logParams.type" clearable>
+          <el-option v-for="item in actionTypeDictItems"
+                     :key="item.value" :label="item.label" :value="item.value"/>
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" @click="onLogSearch">{{ $t('搜索') }}</el-button>
@@ -33,6 +36,7 @@
 </template>
 
 <script>
+import {DICT_CODES, searchDict} from '@/api/dict';
 import {searchActionLog} from '@/api/log';
 import Pagination from '@/components/Pagination';
 
@@ -42,19 +46,26 @@ export default {
   data() {
     return {
       logParams: {
-        action: '',
+        type: '',
         page: 0,
         size: 20,
       },
       logLoading: false,
       logList: [],
       logPage: {totalElements: 0, totalPages: 0},
+      actionTypeDictItems: [],
     };
   },
   created() {
     this.findLogList();
+    this.findActionType();
   },
   methods: {
+    findActionType() {
+      searchDict('code', {code: DICT_CODES.actionType}).then(response => {
+        this.actionTypeDictItems = response._embedded.items;
+      });
+    },
     findLogList() {
       this.logLoading = true;
       searchActionLog('page', this.logParams).then(response => {
@@ -69,7 +80,7 @@ export default {
     },
     onResetLogSearch() {
       this.logParams = {
-        action: '',
+        type: '',
         page: 0,
         size: 20,
       };

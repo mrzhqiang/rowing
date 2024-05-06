@@ -89,29 +89,23 @@ public abstract class AutoInitializer implements Initializer, Ordered {
     @Transactional(rollbackFor = InitializationException.class, propagation = Propagation.REQUIRES_NEW)
     @Override
     public void run() {
-        // 开始回调
         onStart();
         try {
-            // 执行回调
             onExecute();
         } catch (Exception e) {
-            // 错误回调
             onError(e);
             throw new InitializationException(e);
         }
-        // 完成回调
         onComplete();
     }
 
     @Override
     public TaskType getType() {
-        // 自动初始化器属于系统类型
         return TaskType.SYSTEM;
     }
 
     @Override
     public int getOrder() {
-        // 从注册登记中获得执行顺序，有执行要求的初始化器必须注册登记
         return InitializationOrderRegistration.find(this);
     }
 

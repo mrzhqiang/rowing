@@ -10,7 +10,7 @@ const tableRouter = {
   meta: {
     title: 'Table',
     icon: 'table',
-    roles: ['ADMIN']
+    roles: ['ROLE_ADMIN']
   },
   children: [
     {
@@ -19,7 +19,7 @@ const tableRouter = {
       name: 'DynamicTable',
       meta: {
         title: 'dynamicTable',
-        roles: ['ADMIN']
+        roles: ['ROLE_ADMIN']
       }
     },
     {
@@ -28,7 +28,7 @@ const tableRouter = {
       name: 'DragTable',
       meta: {
         title: 'dragTable',
-        roles: ['ADMIN']
+        roles: ['ROLE_ADMIN']
       }
     },
     {
@@ -37,7 +37,7 @@ const tableRouter = {
       name: 'InlineEditTable',
       meta: {
         title: 'inlineEditTable',
-        roles: ['ADMIN']
+        roles: ['ROLE_ADMIN']
       }
     },
     {
@@ -46,7 +46,7 @@ const tableRouter = {
       name: 'ComplexTable',
       meta: {
         title: 'complexTable',
-        roles: ['ADMIN']
+        roles: ['ROLE_ADMIN']
       }
     }
   ]

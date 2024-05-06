@@ -16,7 +16,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.servlet.http.HttpServletRequest;
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 /**
  * 异常日志。
@@ -66,7 +66,17 @@ public class ExceptionLog extends BaseEntity {
     /**
      * 请求方法。
      * <p>
-     * 一般是 GET POST PUT DELETE 这几种。
+     * 一般分为：
+     * <p>
+     * GET -- 获取资源
+     * <p>
+     * POST -- 创建或操作资源
+     * <p>
+     * PUT -- 创建或更新资源 -- 全量
+     * <p>
+     * PATCH -- 更新资源 -- 局部
+     * <p>
+     * DELETE -- 删除资源
      *
      * @see org.springframework.http.HttpMethod
      * @see HttpServletRequest#getMethod()
@@ -139,15 +149,10 @@ public class ExceptionLog extends BaseEntity {
     /**
      * 时间戳。
      * <p>
-     * 异常发生时的 UTC 时间戳。
-     * <p>
-     * 此时间戳在转为数据时，应变成本地时间并进行友好的格式化处理。
-     *
-     * @see Instant
-     * @see java.time.LocalDateTime
+     * 异常发生时的时间戳。
      */
     @CreatedDate
-    private Instant timestamp;
+    private LocalDateTime timestamp;
     /**
      * 操作人。
      * <p>

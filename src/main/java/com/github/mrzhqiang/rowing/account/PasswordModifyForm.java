@@ -24,8 +24,8 @@ public class PasswordModifyForm extends PasswordConfirmForm {
      * <p>
      * 用于验证是否具备修改权限，与 password 字段的校验规则及要求完全相同。
      */
-    @ToString.Exclude
     @NotBlank
+    @ToString.Exclude
     @Size(min = USERNAME_MIN_LENGTH, max = USERNAME_MAX_LENGTH)
     private String oldPassword;
 

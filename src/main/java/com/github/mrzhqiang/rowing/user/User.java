@@ -31,7 +31,7 @@ import static com.github.mrzhqiang.rowing.domain.Domains.PHONE_NUMBER_REGEXP;
  * <p>
  * 表示账户对应的用户信息，通常与账户为一对一关系。
  * <p>
- * 一般包含昵称、头像、性别、生日、电子邮箱、电话号码、简介等字段，属于非安全相关的用户信息。
+ * 一般包含昵称、头像、性别、生日、电子邮箱、电话号码、简介等字段。
  */
 @Getter
 @Setter
@@ -52,8 +52,8 @@ public class User extends AuditableEntity {
      * 用户信息可以自己修改，所以在实体字段上增加验证注解。
      */
     @NotBlank
-    @Size(max = Domains.USER_NICKNAME_LENGTH)
-    @Column(nullable = false, length = Domains.USER_NICKNAME_LENGTH)
+    @Size(max = Domains.MAX_USER_NICKNAME_LENGTH)
+    @Column(nullable = false, length = Domains.MAX_USER_NICKNAME_LENGTH)
     private String nickname;
     /**
      * 头像。
@@ -75,7 +75,7 @@ public class User extends AuditableEntity {
      */
     @Builder.Default
     @Enumerated(EnumType.STRING)
-    @Column(length = Domains.ENUM_NAME_LENGTH)
+    @Column(length = Domains.ENUM_LENGTH)
     private Gender gender = Gender.UNKNOWN;
     /**
      * 生日。
@@ -93,14 +93,11 @@ public class User extends AuditableEntity {
     /**
      * 电话号码。
      */
-    @Pattern(regexp = PHONE_NUMBER_REGEXP)
     @Size(max = Domains.PHONE_NUMBER_LENGTH)
     @Column(length = Domains.PHONE_NUMBER_LENGTH)
     private String phoneNumber;
     /**
      * 简介。
-     * <p>
-     * 简介的最大长度为 200 个字符。
      */
     @Size(max = Domains.USER_INTRODUCTION_LENGTH)
     @Column(length = Domains.USER_INTRODUCTION_LENGTH)

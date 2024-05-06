@@ -17,7 +17,7 @@ function checkPermission(el, binding) {
       }
     }
   } else {
-    throw new Error(`need roles! Like v-permission="['ADMIN','USER']"`);
+    throw new Error(`need roles! Like v-permission="['ROLE_ADMIN','ROLE_USER']"`);
   }
 }
 

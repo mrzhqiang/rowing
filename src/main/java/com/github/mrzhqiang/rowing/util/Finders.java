@@ -1,5 +1,6 @@
 package com.github.mrzhqiang.rowing.util;
 
+import lombok.experimental.UtilityClass;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.util.CollectionUtils;
 
@@ -8,10 +9,8 @@ import java.util.Optional;
 /**
  * 查询器。
  */
-public final class Finders {
-    private Finders() {
-        // no instances.
-    }
+@UtilityClass
+public class Finders {
 
     /**
      * 查询是否存在指定参数并且参数为 true 值。
@@ -42,4 +41,5 @@ public final class Finders {
                 .map(it -> it.contains(value))
                 .isPresent();
     }
+
 }

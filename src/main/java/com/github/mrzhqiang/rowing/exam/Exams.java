@@ -5,6 +5,7 @@ import com.github.mrzhqiang.helper.random.RandomStrings;
 import com.github.mrzhqiang.rowing.domain.ExamStatus;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import lombok.experimental.UtilityClass;
 import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
@@ -13,10 +14,8 @@ import java.time.LocalDateTime;
  * 考试工具。
  * <p>
  */
-public final class Exams {
-    private Exams() {
-        // no instances.
-    }
+@UtilityClass
+public class Exams {
 
     /**
      * 考试编码前缀。

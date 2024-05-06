@@ -2,6 +2,8 @@ package com.github.mrzhqiang.rowing.exception;
 
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 /**
  * 异常数据。
  * <p>
@@ -13,7 +15,7 @@ public class ExceptionLogData {
     /**
      * HTTP 状态码。
      */
-    private int status;
+    private Integer status;
     /**
      * HTTP 直接原因。
      * <p>
@@ -57,5 +59,6 @@ public class ExceptionLogData {
      * <p>
      * 异常发生时，记录中的数据为 UTC 时间戳，而这里通常是本地时间。
      */
-    private String timestamp;
+    private LocalDateTime timestamp;
+
 }

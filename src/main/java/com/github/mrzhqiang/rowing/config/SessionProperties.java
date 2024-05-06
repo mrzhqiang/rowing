@@ -35,7 +35,6 @@ public class SessionProperties {
      */
     @Getter
     @Setter
-    @ToString
     public static class RateLimiter {
 
         /**

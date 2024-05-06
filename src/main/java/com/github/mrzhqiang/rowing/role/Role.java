@@ -3,17 +3,14 @@ package com.github.mrzhqiang.rowing.role;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.mrzhqiang.rowing.account.Account;
 import com.github.mrzhqiang.rowing.domain.AuditableEntity;
+import com.github.mrzhqiang.rowing.domain.Domains;
 import com.github.mrzhqiang.rowing.menu.Menu;
 import com.github.mrzhqiang.rowing.menu.MenuResource;
-import com.github.mrzhqiang.rowing.domain.Domains;
-import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.data.rest.core.annotation.RestResource;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.GrantedAuthoritiesContainer;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -24,21 +21,20 @@ import javax.persistence.ManyToMany;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.Set;
 
 /**
  * 角色。
  * <p>
- * 角色可以视为一个分组，包含菜单及菜单资源列表，也包含账户列表。
+ * 角色可以视为一个账户分组，包含已授权的账户列表。
+ * <p>
+ * 同时，角色会分配相应的菜单列表和菜单资源列表，表示属于此角色的账户可访问哪些菜单和菜单资源。
  */
 @Getter
 @Setter
 @ToString(callSuper = true)
 @Entity
-public class Role extends AuditableEntity implements GrantedAuthoritiesContainer {
+public class Role extends AuditableEntity {
 
     private static final long serialVersionUID = -2682925657637319638L;
 
@@ -51,6 +47,8 @@ public class Role extends AuditableEntity implements GrantedAuthoritiesContainer
     private String name;
     /**
      * 角色代码。
+     * <p>
+     * 通常格式为 ROLE_XXX 字符串。
      */
     @NotBlank
     @Size(max = Domains.ROLE_CODE_LENGTH)
@@ -62,30 +60,34 @@ public class Role extends AuditableEntity implements GrantedAuthoritiesContainer
      * 不可变的角色属于内置角色，即 {@link com.github.mrzhqiang.rowing.domain.AccountType 账户类型}。
      */
     private Boolean immutable = false;
-
     /**
-     * 账户列表。
+     * 账户集合。
      */
     @JsonIgnore
     @ToString.Exclude
     @RestResource(path = "accounts")
-    @ManyToMany(mappedBy = "roles")
-    private List<Account> accounts = Lists.newArrayList();
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "role_accounts",
+            joinColumns = @JoinColumn(name = "role_id"),
+            inverseJoinColumns = @JoinColumn(name = "account_id"),
+            uniqueConstraints = @UniqueConstraint(columnNames = {"role_id", "account_id"}))
+    private Set<Account> accounts = Sets.newHashSet();
     /**
-     * 菜单列表。
+     * 菜单集合。
      */
     @JsonIgnore
     @ToString.Exclude
     @RestResource(path = "menus")
-    @ManyToMany()
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "role_menus",
             joinColumns = @JoinColumn(name = "role_id"),
             inverseJoinColumns = @JoinColumn(name = "menu_id"),
             uniqueConstraints = @UniqueConstraint(columnNames = {"role_id", "menu_id"}))
-    private List<Menu> menus = Lists.newArrayList();
+    private Set<Menu> menus = Sets.newHashSet();
     /**
-     * 菜单资源列表。
+     * 菜单资源集合。
      */
+    @Size(max = Domains.MAX_ROLE_AUTHORITY_SIZE)
     @JsonIgnore
     @ToString.Exclude
     @RestResource(path = "menu-resources")
@@ -94,14 +96,6 @@ public class Role extends AuditableEntity implements GrantedAuthoritiesContainer
             joinColumns = @JoinColumn(name = "role_id"),
             inverseJoinColumns = @JoinColumn(name = "menu_resource_id"),
             uniqueConstraints = @UniqueConstraint(columnNames = {"role_id", "menu_resource_id"}))
-    private List<MenuResource> menuResources = Lists.newArrayList();
-
-    @Override
-    public Collection<GrantedAuthority> getGrantedAuthorities() {
-        return Stream.concat(Stream.of(code), this.getMenuResources().stream()
-                        .map(MenuResource::getAuthority))
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
-    }
+    private Set<MenuResource> menuResources = Sets.newHashSet();
 
 }

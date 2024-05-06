@@ -53,7 +53,7 @@ public class ExamQuestion extends AuditableEntity {
      */
     @NotNull
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = Domains.ENUM_NAME_LENGTH)
+    @Column(nullable = false, length = Domains.ENUM_LENGTH)
     private ExamQuestionType type;
     /**
      * 难度。

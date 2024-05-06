@@ -3,12 +3,12 @@
     <switch-roles @change="handleRolesChange"/>
     <div :key="key" style="margin-top:30px;">
       <div>
-        <span v-permission="['ADMIN']" class="permission-alert">
+        <span v-permission="['ROLE_ADMIN']" class="permission-alert">
           Only
           <el-tag class="permission-tag" size="small">admin</el-tag> can see this
         </span>
-        <el-tag v-permission="['ADMIN']" class="permission-sourceCode" type="info">
-          v-permission="['ADMIN']"
+        <el-tag v-permission="['ROLE_ADMIN']" class="permission-sourceCode" type="info">
+          v-permission="['ROLE_ADMIN']"
         </el-tag>
       </div>
 
@@ -23,13 +23,13 @@
       </div>
 
       <div>
-        <span v-permission="['ADMIN','editor']" class="permission-alert">
+        <span v-permission="['ROLE_ADMIN','editor']" class="permission-alert">
           Both
           <el-tag class="permission-tag" size="small">admin</el-tag> and
           <el-tag class="permission-tag" size="small">editor</el-tag> can see this
         </span>
-        <el-tag v-permission="['ADMIN','editor']" class="permission-sourceCode" type="info">
-          v-permission="['ADMIN','editor']"
+        <el-tag v-permission="['ROLE_ADMIN','editor']" class="permission-sourceCode" type="info">
+          v-permission="['ROLE_ADMIN','editor']"
         </el-tag>
       </div>
     </div>
@@ -41,10 +41,10 @@
       </aside>
 
       <el-tabs type="border-card" style="width:550px;">
-        <el-tab-pane v-if="checkPermission(['ADMIN'])" label="Admin">
+        <el-tab-pane v-if="checkPermission(['ROLE_ADMIN'])" label="Admin">
           Admin can see this
           <el-tag class="permission-sourceCode" type="info">
-            v-if="checkPermission(['ADMIN'])"
+            v-if="checkPermission(['ROLE_ADMIN'])"
           </el-tag>
         </el-tab-pane>
 
@@ -55,10 +55,10 @@
           </el-tag>
         </el-tab-pane>
 
-        <el-tab-pane v-if="checkPermission(['ADMIN','editor'])" label="Admin-OR-Editor">
+        <el-tab-pane v-if="checkPermission(['ROLE_ADMIN','editor'])" label="Admin-OR-Editor">
           Both admin or editor can see this
           <el-tag class="permission-sourceCode" type="info">
-            v-if="checkPermission(['ADMIN','editor'])"
+            v-if="checkPermission(['ROLE_ADMIN','editor'])"
           </el-tag>
         </el-tab-pane>
       </el-tabs>

@@ -28,8 +28,14 @@ spring:
     connect-timeout: 10s
   # 账户中心是需要会话的，但不需要 Cookie 自动登录
   session:
-    # 1 hours
+    # 1 hour
     timeout: 3600
+  security:
+    user:
+      name: ${basic_username:user}
+      password: ${basic_password:123456}
+      roles:
+        - BASIC
 
 # 验证码配置
 kaptcha:

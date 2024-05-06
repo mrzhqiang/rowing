@@ -11,7 +11,7 @@ import java.util.Optional;
 /**
  * 审计配置。
  * <p>
- * 参考：<a href="https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#auditing">Spring Data JPA 审计文档</a>
+ * 参考：<a href="https://docs.spring.io/spring-data/jpa/docs/2.7.14/reference/html/#auditing">Spring Data JPA 审计文档</a>
  */
 @EnableJpaAuditing
 @Configuration

@@ -11,6 +11,9 @@ import com.github.mrzhqiang.rowing.util.Cells;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
+import io.micrometer.core.annotation.Counted;
+import io.micrometer.core.annotation.Timed;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Row;
@@ -30,20 +33,15 @@ import java.util.Map;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class DictGBTServiceJpaImpl implements DictGBTService {
 
     private final DictProperties properties;
     private final DictGroupRepository groupRepository;
     private final DictGBT2260Repository gbt2260Repository;
 
-    public DictGBTServiceJpaImpl(DictProperties properties,
-                                 DictGroupRepository groupRepository,
-                                 DictGBT2260Repository gbt2260Repository) {
-        this.properties = properties;
-        this.groupRepository = groupRepository;
-        this.gbt2260Repository = gbt2260Repository;
-    }
-
+    @Timed(longTask = true)
+    @Counted
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void sync() {

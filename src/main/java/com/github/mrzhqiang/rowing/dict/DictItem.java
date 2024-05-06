@@ -36,11 +36,11 @@ public class DictItem extends AuditableEntity {
      * <p>
      * 对于内置类型，一般以初始化时的系统本地语言为主，通过国际化语言文件转换而成。
      * <p>
-     * 对于自定义类型，则以管理员输入的内容为主。
+     * 对于自定义类型，则以管理输入的内容为主。
      */
     @NotBlank
-    @Size(max = Domains.DICT_LABEL_LENGTH)
-    @Column(nullable = false, length = Domains.DICT_LABEL_LENGTH)
+    @Size(max = Domains.DICT_ITEM_LABEL_LENGTH)
+    @Column(nullable = false, length = Domains.DICT_ITEM_LABEL_LENGTH)
     private String label;
     /**
      * 值。
@@ -48,8 +48,8 @@ public class DictItem extends AuditableEntity {
      * 字典项所代表的值。
      */
     @NotBlank
-    @Size(max = Domains.DICT_VALUE_LENGTH)
-    @Column(nullable = false, length = Domains.DICT_VALUE_LENGTH)
+    @Size(max = Domains.DICT_ITEM_VALUE_LENGTH)
+    @Column(nullable = false, length = Domains.DICT_ITEM_VALUE_LENGTH)
     private String value;
 
     /**

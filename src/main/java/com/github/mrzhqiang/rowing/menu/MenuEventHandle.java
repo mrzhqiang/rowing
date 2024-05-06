@@ -1,5 +1,6 @@
 package com.github.mrzhqiang.rowing.menu;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.rest.core.annotation.HandleBeforeCreate;
 import org.springframework.data.rest.core.annotation.HandleBeforeDelete;
 import org.springframework.data.rest.core.annotation.HandleBeforeSave;
@@ -17,13 +18,10 @@ import java.util.List;
  */
 @RepositoryEventHandler
 @Component
+@RequiredArgsConstructor
 public class MenuEventHandle {
 
     private final MenuRepository repository;
-
-    public MenuEventHandle(MenuRepository repository) {
-        this.repository = repository;
-    }
 
     @HandleBeforeCreate
     public void onBeforeCreate(Menu menu) {

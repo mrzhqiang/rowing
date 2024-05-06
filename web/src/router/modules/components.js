@@ -10,7 +10,7 @@ const componentsRouter = {
   meta: {
     title: 'components',
     icon: 'component',
-    roles: ['ADMIN']
+    roles: ['ROLE_ADMIN']
   },
   children: [
     {
@@ -19,7 +19,7 @@ const componentsRouter = {
       name: 'TinymceDemo',
       meta: {
         title: 'tinymce',
-        roles: ['ADMIN']
+        roles: ['ROLE_ADMIN']
       }
     },
     {
@@ -28,7 +28,7 @@ const componentsRouter = {
       name: 'MarkdownDemo',
       meta: {
         title: 'markdown',
-        roles: ['ADMIN']
+        roles: ['ROLE_ADMIN']
       }
     },
     {
@@ -37,7 +37,7 @@ const componentsRouter = {
       name: 'JsonEditorDemo',
       meta: {
         title: 'jsonEditor',
-        roles: ['ADMIN']
+        roles: ['ROLE_ADMIN']
       }
     },
     {
@@ -46,7 +46,7 @@ const componentsRouter = {
       name: 'SplitpaneDemo',
       meta: {
         title: 'splitPane',
-        roles: ['ADMIN']
+        roles: ['ROLE_ADMIN']
       }
     },
     {
@@ -55,7 +55,7 @@ const componentsRouter = {
       name: 'AvatarUploadDemo',
       meta: {
         title: 'avatarUpload',
-        roles: ['ADMIN']
+        roles: ['ROLE_ADMIN']
       }
     },
     {
@@ -64,7 +64,7 @@ const componentsRouter = {
       name: 'DropzoneDemo',
       meta: {
         title: 'dropzone',
-        roles: ['ADMIN']
+        roles: ['ROLE_ADMIN']
       }
     },
     {
@@ -73,7 +73,7 @@ const componentsRouter = {
       name: 'StickyDemo',
       meta: {
         title: 'sticky',
-        roles: ['ADMIN']
+        roles: ['ROLE_ADMIN']
       }
     },
     {
@@ -82,7 +82,7 @@ const componentsRouter = {
       name: 'CountToDemo',
       meta: {
         title: 'countTo',
-        roles: ['ADMIN']
+        roles: ['ROLE_ADMIN']
       }
     },
     {
@@ -91,7 +91,7 @@ const componentsRouter = {
       name: 'ComponentMixinDemo',
       meta: {
         title: 'componentMixin',
-        roles: ['ADMIN']
+        roles: ['ROLE_ADMIN']
       }
     },
     {
@@ -100,7 +100,7 @@ const componentsRouter = {
       name: 'BackToTopDemo',
       meta: {
         title: 'backToTop',
-        roles: ['ADMIN']
+        roles: ['ROLE_ADMIN']
       }
     },
     {
@@ -109,7 +109,7 @@ const componentsRouter = {
       name: 'DragDialogDemo',
       meta: {
         title: 'dragDialog',
-        roles: ['ADMIN']
+        roles: ['ROLE_ADMIN']
       }
     },
     {
@@ -118,7 +118,7 @@ const componentsRouter = {
       name: 'DragSelectDemo',
       meta: {
         title: 'dragSelect',
-        roles: ['ADMIN']
+        roles: ['ROLE_ADMIN']
       }
     },
     {
@@ -127,7 +127,7 @@ const componentsRouter = {
       name: 'DndListDemo',
       meta: {
         title: 'dndList',
-        roles: ['ADMIN']
+        roles: ['ROLE_ADMIN']
       }
     },
     {
@@ -136,7 +136,7 @@ const componentsRouter = {
       name: 'DragKanbanDemo',
       meta: {
         title: 'dragKanban',
-        roles: ['ADMIN']
+        roles: ['ROLE_ADMIN']
       }
     }
   ]

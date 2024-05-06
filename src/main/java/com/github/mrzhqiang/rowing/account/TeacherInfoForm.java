@@ -26,4 +26,5 @@ public class TeacherInfoForm {
      */
     @NotBlank
     private String idCard;
+
 }
