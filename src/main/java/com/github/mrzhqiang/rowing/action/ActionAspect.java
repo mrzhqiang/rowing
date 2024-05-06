@@ -97,12 +97,12 @@ public class ActionAspect {
         try {
             Object result = point.proceed();
             markState(actionLog, result);
+            appendActionLog(actionLog);
             return result;
         } catch (Throwable e) {
             markState(actionLog, e);
-            throw e;
-        } finally {
             appendActionLog(actionLog);
+            throw e;
         }
     }
 

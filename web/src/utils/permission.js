@@ -5,7 +5,7 @@ import store from '@/store';
  *
  * @type {string}
  */
-const MANAGER_ROLE = 'MANAGER';
+const MANAGER_ROLE = 'ROLE_ADMIN';
 
 /**
  * 权限标记。
@@ -121,7 +121,7 @@ export default function checkPermission(value) {
             return permissionRoles.includes(role);
         });
     } else {
-        console.error(`need roles! Like v-permission="['ADMIN','USER']"`);
+        console.error(`need roles! Like v-permission="['ROLE_ADMIN','ROLE_USER']"`);
         return false;
     }
 }

@@ -123,7 +123,7 @@ export const constantRoutes = [
         meta: {
           title: '接口工具',
           icon: 'link',
-          roles: ['MANAGER']
+          roles: ['ROLE_ADMIN']
         }
       }
     ]
@@ -144,7 +144,7 @@ export const asyncRoutes = [
     meta: {
       title: 'permission',
       icon: 'lock',
-      roles: ['ADMIN'] // you can set roles in root nav
+      roles: ['ROLE_ADMIN'] // you can set roles in root nav
     },
     children: [
       {
@@ -153,7 +153,7 @@ export const asyncRoutes = [
         name: 'PagePermission',
         meta: {
           title: 'pagePermission',
-          roles: ['ADMIN'] // or you can only set roles in sub nav
+          roles: ['ROLE_ADMIN'] // or you can only set roles in sub nav
         }
       },
       {
@@ -162,7 +162,7 @@ export const asyncRoutes = [
         name: 'DirectivePermission',
         meta: {
           title: 'directivePermission',
-          roles: ['ADMIN']
+          roles: ['ROLE_ADMIN']
           // if do not set roles, means: this page does not require permission
         }
       },
@@ -172,7 +172,7 @@ export const asyncRoutes = [
         name: 'RolePermission',
         meta: {
           title: 'rolePermission',
-          roles: ['ADMIN']
+          roles: ['ROLE_ADMIN']
         }
       }
     ]
@@ -190,7 +190,7 @@ export const asyncRoutes = [
           title: 'icons',
           icon: 'icon',
           noCache: true,
-          roles: ['ADMIN']
+          roles: ['ROLE_ADMIN']
         }
       }
     ]
@@ -212,7 +212,7 @@ export const asyncRoutes = [
         meta: {
           title: 'tab',
           icon: 'tab',
-          roles: ['ADMIN']
+          roles: ['ROLE_ADMIN']
         }
       }
     ]
@@ -226,7 +226,7 @@ export const asyncRoutes = [
     meta: {
       title: 'errorPages',
       icon: '404',
-      roles: ['ADMIN']
+      roles: ['ROLE_ADMIN']
     },
     children: [
       {
@@ -236,7 +236,7 @@ export const asyncRoutes = [
         meta: {
           title: 'page401',
           noCache: true,
-          roles: ['ADMIN']
+          roles: ['ROLE_ADMIN']
         }
       },
       {
@@ -246,7 +246,7 @@ export const asyncRoutes = [
         meta: {
           title: 'page404',
           noCache: true,
-          roles: ['ADMIN']
+          roles: ['ROLE_ADMIN']
         }
       }
     ]
@@ -263,7 +263,7 @@ export const asyncRoutes = [
         meta: {
           title: 'errorLog',
           icon: 'bug',
-          roles: ['ADMIN']
+          roles: ['ROLE_ADMIN']
         }
       }
     ]
@@ -277,7 +277,7 @@ export const asyncRoutes = [
     meta: {
       title: 'excel',
       icon: 'excel',
-      roles: ['ADMIN']
+      roles: ['ROLE_ADMIN']
     },
     children: [
       {
@@ -286,7 +286,7 @@ export const asyncRoutes = [
         name: 'ExportExcel',
         meta: {
           title: 'exportExcel',
-          roles: ['ADMIN']
+          roles: ['ROLE_ADMIN']
         }
       },
       {
@@ -295,7 +295,7 @@ export const asyncRoutes = [
         name: 'SelectExcel',
         meta: {
           title: 'selectExcel',
-          roles: ['ADMIN']
+          roles: ['ROLE_ADMIN']
         }
       },
       {
@@ -304,7 +304,7 @@ export const asyncRoutes = [
         name: 'MergeHeader',
         meta: {
           title: 'mergeHeader',
-          roles: ['ADMIN']
+          roles: ['ROLE_ADMIN']
         }
       },
       {
@@ -313,7 +313,7 @@ export const asyncRoutes = [
         name: 'UploadExcel',
         meta: {
           title: 'uploadExcel',
-          roles: ['ADMIN']
+          roles: ['ROLE_ADMIN']
         }
       }
     ]
@@ -328,7 +328,7 @@ export const asyncRoutes = [
     meta: {
       title: 'zip',
       icon: 'zip',
-      roles: ['ADMIN']
+      roles: ['ROLE_ADMIN']
     },
     children: [
       {
@@ -337,7 +337,7 @@ export const asyncRoutes = [
         name: 'ExportZip',
         meta: {
           title: 'exportZip',
-          roles: ['ADMIN']
+          roles: ['ROLE_ADMIN']
         }
       }
     ]
@@ -355,7 +355,7 @@ export const asyncRoutes = [
         meta: {
           title: 'pdf',
           icon: 'pdf',
-          roles: ['ADMIN']
+          roles: ['ROLE_ADMIN']
         }
       }
     ]
@@ -377,7 +377,7 @@ export const asyncRoutes = [
         meta: {
           title: 'theme',
           icon: 'theme',
-          roles: ['ADMIN']
+          roles: ['ROLE_ADMIN']
         }
       }
     ]
@@ -394,7 +394,7 @@ export const asyncRoutes = [
         meta: {
           title: 'clipboardDemo',
           icon: 'clipboard',
-          roles: ['ADMIN']
+          roles: ['ROLE_ADMIN']
         }
       }
     ]
@@ -411,7 +411,7 @@ export const asyncRoutes = [
         meta: {
           title: 'i18n',
           icon: 'international',
-          roles: ['ADMIN']
+          roles: ['ROLE_ADMIN']
         }
       }
     ]
@@ -426,7 +426,7 @@ export const asyncRoutes = [
         meta: {
           title: 'externalLink',
           icon: 'link',
-          roles: ['ADMIN']
+          roles: ['ROLE_ADMIN']
         }
       }
     ]

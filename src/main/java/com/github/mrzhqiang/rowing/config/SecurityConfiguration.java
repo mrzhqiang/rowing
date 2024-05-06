@@ -4,6 +4,7 @@ import com.github.mrzhqiang.kaptcha.autoconfigure.KaptchaAuthenticationConverter
 import com.github.mrzhqiang.kaptcha.autoconfigure.KaptchaProperties;
 import com.github.mrzhqiang.rowing.account.LoginFailureHandler;
 import com.github.mrzhqiang.rowing.account.LoginSuccessHandler;
+import com.github.mrzhqiang.rowing.account.LogoutActionHandler;
 import com.github.mrzhqiang.rowing.account.RSADecryptPasswordEncoder;
 import com.github.mrzhqiang.rowing.account.RegisterFailureHandler;
 import static com.github.mrzhqiang.rowing.config.RowingSecurityProperties.ADMIN_PATH;
@@ -144,7 +145,8 @@ public class SecurityConfiguration {
                                               AuthenticationFilter registerKaptchaFilter,
                                               AuthenticationFilter loginKaptchaFilter,
                                               LoginFailureHandler loginFailureHandler,
-                                              LoginSuccessHandler loginSuccessHandler) throws Exception {
+                                              LoginSuccessHandler loginSuccessHandler,
+                                              LogoutActionHandler logoutActionHandler) throws Exception {
         return http.addFilterAfter(registerKaptchaFilter, AnonymousAuthenticationFilter.class)
                 .addFilterAfter(loginKaptchaFilter, AnonymousAuthenticationFilter.class)
                 .authorizeRequests(urlRegistry -> urlRegistry
@@ -171,6 +173,7 @@ public class SecurityConfiguration {
                                                 "SecurityConfiguration.webFilterChain.expiredSessionStrategy",
                                                 "会话已过期，请重新登录")))))
                 .logout(logoutConfigurer -> logoutConfigurer
+                        .addLogoutHandler(logoutActionHandler)
                         .logoutUrl(properties.getLogoutPath())
                         .logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler())
                         .deleteCookies("JSESSIONID", "Rowing-Token"))

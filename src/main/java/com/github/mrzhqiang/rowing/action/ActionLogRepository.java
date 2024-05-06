@@ -2,15 +2,44 @@ package com.github.mrzhqiang.rowing.action;
 
 import com.github.mrzhqiang.rowing.domain.ActionType;
 import com.github.mrzhqiang.rowing.domain.BaseRepository;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
+import org.springframework.security.access.prepost.PreAuthorize;
+
+import java.util.List;
+import java.util.Optional;
 
 @RepositoryRestResource(path = "action-log", excerptProjection = ActionLogExcerpt.class)
 public interface ActionLogRepository extends BaseRepository<ActionLog> {
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @NotNull
+    @Override
+    Optional<ActionLog> findById(@NotNull Long id);
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @NotNull
+    @Override
+    Page<ActionLog> findAll(@NotNull Pageable pageable);
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @NotNull
+    @Override
+    List<ActionLog> findAll(@NotNull Sort sort);
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @NotNull
+    @Override
+    List<ActionLog> findAll();
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RestResource(path = "page", rel = "page")
-    Page<ActionLog> findAllByTypeContaining(ActionType actionType, Pageable pageable);
+    @Query("select a from ActionLog a where (:type is null or a.type = :type)")
+    Page<ActionLog> pageByActionType(ActionType type, Pageable pageable);
 
 }
