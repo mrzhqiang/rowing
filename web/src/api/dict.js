@@ -15,6 +15,7 @@ export const DICT_CODES = {
   examSubject: 'EXAM_SUBJECT',
   examModeStrategy: 'EXAM_MODE_STRATEGY',
   examQuestionType: 'EXAM_QUESTION_TYPE',
+  actionType: 'ACTION_TYPE',
 };
 
 export function pageDict(params) {

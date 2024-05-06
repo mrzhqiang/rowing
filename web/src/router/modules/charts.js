@@ -10,7 +10,7 @@ const chartsRouter = {
   meta: {
     title: 'charts',
     icon: 'chart',
-    roles: ['ADMIN']
+    roles: ['ROLE_ADMIN']
   },
   children: [
     {
@@ -20,7 +20,7 @@ const chartsRouter = {
       meta: {
         title: 'keyboardChart',
         noCache: true,
-        roles: ['ADMIN']
+        roles: ['ROLE_ADMIN']
       }
     },
     {
@@ -30,7 +30,7 @@ const chartsRouter = {
       meta: {
         title: 'lineChart',
         noCache: true,
-        roles: ['ADMIN']
+        roles: ['ROLE_ADMIN']
       }
     },
     {
@@ -40,7 +40,7 @@ const chartsRouter = {
       meta: {
         title: 'mixChart',
         noCache: true,
-        roles: ['ADMIN']
+        roles: ['ROLE_ADMIN']
       }
     }
   ]

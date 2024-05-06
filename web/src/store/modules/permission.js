@@ -115,7 +115,7 @@ const actions = {
     return new Promise(resolve => {
       findMenuRoutes().then(menus => {
         let accessedRoutes = parseRoutes(menus);
-        if (roles.includes('ADMIN')) {
+        if (roles.includes('ROLE_ADMIN')) {
           accessedRoutes = (accessedRoutes || []).concat(asyncRoutes);
         } else {
           accessedRoutes = filterAsyncRoutes(accessedRoutes, roles);

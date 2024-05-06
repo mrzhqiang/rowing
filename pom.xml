@@ -12,7 +12,7 @@
 
     <groupId>com.github.mrzhqiang</groupId>
     <artifactId>rowing</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>2024.1.0</version>
     <name>rowing</name>
     <description>
         学如逆水行舟，不进则退。这里是行舟在线考试系统的源代码仓库，行舟作为学习辅助工具，提供在线考试、自动阅卷、错题复习等功能。
