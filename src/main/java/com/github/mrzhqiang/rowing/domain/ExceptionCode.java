@@ -3,8 +3,8 @@ package com.github.mrzhqiang.rowing.domain;
 import com.google.common.base.Strings;
 import com.google.common.base.VerifyException;
 
-import javax.annotation.Nullable;
-import javax.validation.ValidationException;
+import jakarta.annotation.Nullable;
+import jakarta.validation.ValidationException;
 import java.io.IOException;
 import java.util.Optional;
 

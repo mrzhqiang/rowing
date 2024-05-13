@@ -9,7 +9,7 @@ import org.springframework.data.domain.Example;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Set;

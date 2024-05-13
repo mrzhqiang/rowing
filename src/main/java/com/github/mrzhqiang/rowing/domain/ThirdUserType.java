@@ -5,7 +5,7 @@ import com.google.common.base.Splitter;
 import lombok.Getter;
 import org.springframework.util.StringUtils;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.Iterator;
 import java.util.stream.Stream;
 

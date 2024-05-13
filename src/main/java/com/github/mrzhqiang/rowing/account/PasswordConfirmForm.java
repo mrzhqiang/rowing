@@ -4,9 +4,9 @@ import lombok.Data;
 import lombok.ToString;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
-import javax.validation.Validation;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import jakarta.validation.Validation;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import java.util.Objects;
 
 import static com.github.mrzhqiang.rowing.domain.Domains.DEF_PASSWORD_MAX_LENGTH;

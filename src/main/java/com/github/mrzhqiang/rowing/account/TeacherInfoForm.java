@@ -2,7 +2,7 @@ package com.github.mrzhqiang.rowing.account;
 
 import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 
 /**
  * 教师信息表单。

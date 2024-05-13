@@ -29,11 +29,13 @@ import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyUtils;
 import org.springframework.security.access.vote.RoleHierarchyVoter;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandlerImpl;
@@ -132,7 +134,7 @@ public class SecurityConfiguration {
     public WebSecurityCustomizer ignoring() {
         return web -> web.ignoring()
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
-                .antMatchers(properties.getIgnorePath());
+                .requestMatchers(properties.getIgnorePath());
     }
 
     /**
@@ -150,9 +152,9 @@ public class SecurityConfiguration {
         return http.addFilterAfter(registerKaptchaFilter, AnonymousAuthenticationFilter.class)
                 .addFilterAfter(loginKaptchaFilter, AnonymousAuthenticationFilter.class)
                 .authorizeRequests(urlRegistry -> urlRegistry
-                        .antMatchers(kaptchaProperties.getPath()).permitAll()
-                        .antMatchers(properties.getPublicPath()).permitAll()
-                        .antMatchers(generateAdminPaths()).hasRole(AccountType.ADMIN.name())
+                        .requestMatchers(kaptchaProperties.getPath()).permitAll()
+                        .requestMatchers(properties.getPublicPath()).permitAll()
+                        .requestMatchers(generateAdminPaths()).hasRole(AccountType.ADMIN.name())
                         .anyRequest().authenticated())
                 .formLogin(loginConfigurer -> loginConfigurer
                         .loginPage(properties.getLoginPath())
@@ -177,7 +179,7 @@ public class SecurityConfiguration {
                         .logoutUrl(properties.getLogoutPath())
                         .logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler())
                         .deleteCookies("JSESSIONID", "Rowing-Token"))
-                .csrf().disable()
+                .csrf(AbstractHttpConfigurer::disable)
                 .build();
     }
 
@@ -197,10 +199,10 @@ public class SecurityConfiguration {
     @Bean
     @Order(BASIC_AUTH_ORDER)
     public SecurityFilterChain basicFilterChain(HttpSecurity http) throws Exception {
-        return http.authorizeRequests(urlRegistry -> urlRegistry
-                        .antMatchers(properties.getBasicPath()).hasRole(RowingSecurityProperties.ROLE_BASIC)
-                        .mvcMatchers(restProperties.getBasePath()).hasRole(RowingSecurityProperties.ROLE_BASIC))
-                .httpBasic().and()
+        return http.authorizeHttpRequests(urlRegistry -> urlRegistry
+                        .requestMatchers(properties.getBasicPath()).hasRole(RowingSecurityProperties.ROLE_BASIC)
+                        .requestMatchers(restProperties.getBasePath()).hasRole(RowingSecurityProperties.ROLE_BASIC))
+                .httpBasic(Customizer.withDefaults())
                 .build();
     }
 
