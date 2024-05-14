@@ -1,7 +1,5 @@
 package com.github.mrzhqiang.rowing.config;
 
-import com.github.mrzhqiang.kaptcha.autoconfigure.KaptchaAuthenticationConverter;
-import com.github.mrzhqiang.kaptcha.autoconfigure.KaptchaProperties;
 import com.github.mrzhqiang.rowing.account.LoginFailureHandler;
 import com.github.mrzhqiang.rowing.account.LoginSuccessHandler;
 import com.github.mrzhqiang.rowing.account.LogoutActionHandler;
@@ -12,6 +10,8 @@ import static com.github.mrzhqiang.rowing.config.RowingSecurityProperties.EXPLOR
 import static com.github.mrzhqiang.rowing.config.RowingSecurityProperties.SUB_PATH;
 import com.github.mrzhqiang.rowing.domain.AccountType;
 import com.github.mrzhqiang.rowing.i18n.I18nHolder;
+import com.github.mrzhqiang.rowing.kaptcha.KaptchaAuthenticationConverter;
+import com.github.mrzhqiang.rowing.kaptcha.KaptchaProperties;
 import com.github.mrzhqiang.rowing.setting.SettingService;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -24,14 +24,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyUtils;
-import org.springframework.security.access.vote.RoleHierarchyVoter;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
@@ -54,7 +53,7 @@ import java.util.stream.Collectors;
  * 安全配置。
  */
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableMethodSecurity
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfiguration {
@@ -86,19 +85,16 @@ public class SecurityConfiguration {
                 .filter(it -> !AccountType.ADMIN.equals(it))
                 .map(AccountType::getAuthority)
                 .collect(Collectors.toList()));
-        RoleHierarchyImpl hierarchy = new RoleHierarchyImpl();
+        var hierarchy = new RoleHierarchyImpl();
         hierarchy.setHierarchy(RoleHierarchyUtils.roleHierarchyFromMap(map));
         return hierarchy;
     }
 
-    /**
-     * 角色层次结构投票人。
-     * <p>
-     * 声明这个实例，才能具有层次结构。
-     */
     @Bean
-    public RoleHierarchyVoter hierarchyVoter(RoleHierarchy hierarchy) {
-        return new RoleHierarchyVoter(hierarchy);
+    public DefaultMethodSecurityExpressionHandler methodSecurityExpressionHandler(RoleHierarchy roleHierarchy) {
+        DefaultMethodSecurityExpressionHandler methodSecurityExpressionHandler = new DefaultMethodSecurityExpressionHandler();
+        methodSecurityExpressionHandler.setRoleHierarchy(roleHierarchy);
+        return methodSecurityExpressionHandler;
     }
 
     /**
@@ -108,8 +104,8 @@ public class SecurityConfiguration {
     public AuthenticationFilter registerKaptchaFilter(AuthenticationConfiguration configuration,
                                                       RegisterFailureHandler registerFailureHandler,
                                                       KaptchaAuthenticationConverter kaptchaConverter) throws Exception {
-        AuthenticationManager manager = configuration.getAuthenticationManager();
-        AuthenticationFilter filter = new AuthenticationFilter(manager, kaptchaConverter);
+        var manager = configuration.getAuthenticationManager();
+        var filter = new AuthenticationFilter(manager, kaptchaConverter);
         filter.setRequestMatcher(new AntPathRequestMatcher(properties.getRegisterPath(), HttpMethod.POST.name()));
         filter.setFailureHandler(registerFailureHandler);
         return filter;
@@ -121,8 +117,8 @@ public class SecurityConfiguration {
     @Bean
     public AuthenticationFilter loginKaptchaFilter(AuthenticationConfiguration configuration,
                                                    KaptchaAuthenticationConverter kaptchaConverter) throws Exception {
-        AuthenticationManager manager = configuration.getAuthenticationManager();
-        AuthenticationFilter filter = new AuthenticationFilter(manager, kaptchaConverter);
+        var manager = configuration.getAuthenticationManager();
+        var filter = new AuthenticationFilter(manager, kaptchaConverter);
         filter.setRequestMatcher(new AntPathRequestMatcher(properties.getLoginPath(), HttpMethod.POST.name()));
         return filter;
     }
@@ -151,7 +147,7 @@ public class SecurityConfiguration {
                                               LogoutActionHandler logoutActionHandler) throws Exception {
         return http.addFilterAfter(registerKaptchaFilter, AnonymousAuthenticationFilter.class)
                 .addFilterAfter(loginKaptchaFilter, AnonymousAuthenticationFilter.class)
-                .authorizeRequests(urlRegistry -> urlRegistry
+                .authorizeHttpRequests(urlRegistry -> urlRegistry
                         .requestMatchers(kaptchaProperties.getPath()).permitAll()
                         .requestMatchers(properties.getPublicPath()).permitAll()
                         .requestMatchers(generateAdminPaths()).hasRole(AccountType.ADMIN.name())
@@ -185,11 +181,11 @@ public class SecurityConfiguration {
 
     private String[] generateAdminPaths() {
         // /admin/**
-        String adminSubPath = ADMIN_PATH + SUB_PATH;
+        var adminSubPath = ADMIN_PATH + SUB_PATH;
         // /api/explorer
-        String restExplorerPath = restProperties.getBasePath() + EXPLORER_PATH;
+        var restExplorerPath = restProperties.getBasePath() + EXPLORER_PATH;
         // /api/explorer/**
-        String restExplorerSubPath = restProperties.getBasePath() + EXPLORER_PATH + SUB_PATH;
+        var restExplorerSubPath = restProperties.getBasePath() + EXPLORER_PATH + SUB_PATH;
         return new String[]{adminSubPath, restExplorerPath, restExplorerSubPath};
     }
 

@@ -1,5 +1,6 @@
 package com.github.mrzhqiang.rowing.domain;
 
+import jakarta.annotation.Nonnull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -12,7 +13,6 @@ import org.springframework.data.repository.query.QueryByExampleExecutor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,7 +21,7 @@ import java.util.Optional;
  * <p>
  * 如果继承此基础仓库，必须使用 {@link BaseEntity 基础实体}，以规范主键和版本号字段。
  * <p>
- * 注意：这里声明所有的删除方法都需要 ROLE_MANAGER 权限，以避免非法的删除操作。
+ * 注意：这里声明所有的删除方法都需要 ROLE_ADMIN 权限，以避免非法的删除操作。
  * <p>
  * 权限判断方式，在 PreAuthorize 注解中添加以下字符串：
  * <p>
@@ -51,7 +51,6 @@ import java.util.Optional;
  * @see <a href="https://docs.spring.io/spring-data/jpa/docs/2.7.14/reference/html/#core.web.basic.paging-and-sorting">Spring Data JPA Paging And Sorting</a>
  * @see <a href="https://docs.spring.io/spring-data/rest/docs/3.7.14/reference/html/#repository-resources">Spring Data REST Repository-Resources</a>
  */
-@PreAuthorize("hasRole('ROLE_USER')")
 @Validated
 @NoRepositoryBean
 public interface BaseRepository<E extends BaseEntity> extends JpaRepository<E, Long>, JpaSpecificationExecutor<E> {

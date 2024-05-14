@@ -44,7 +44,6 @@ dependencies {
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.4.2.Final'
 
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
-    developmentOnly 'org.springframework.boot:spring-boot-docker-compose'
 
     runtimeOnly 'com.mysql:mysql-connector-j'
     runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
@@ -66,7 +65,6 @@ dependencies {
 
     implementation 'com.github.mrzhqiang.helper:helper:2024.1.0'
     implementation 'com.github.mrzhqiang.helper:helper-captcha-simple:2024.1.0'
-    implementation 'com.github.mrzhqiang:kaptcha-spring-boot-starter:2023.1.0'
 
     implementation 'eu.bitwalker:UserAgentUtils:1.21'
     implementation 'com.maxmind.geoip2:geoip2:2.15.0'
