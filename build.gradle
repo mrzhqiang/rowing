@@ -1,11 +1,11 @@
 plugins {
     id 'java'
     id 'org.springframework.boot' version '3.2.5'
-    id 'io.spring.dependency-management' version '1.1.4'
-    id 'org.hibernate.orm' version '6.4.4.Final'
     id 'org.graalvm.buildtools.native' version '0.9.28'
     id "org.asciidoctor.jvm.convert" version "3.3.2"
 }
+
+apply plugin: 'io.spring.dependency-management'
 
 group = 'com.github.mrzhqiang'
 version = '2024.2.0'
@@ -63,6 +63,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-data-rest'
 
+    runtimeOnly 'org.springframework.boot:spring-boot-properties-migrator'
+
     implementation 'com.github.mrzhqiang.helper:helper:2024.1.0'
     implementation 'com.github.mrzhqiang.helper:helper-captcha-simple:2024.1.0'
 
@@ -75,11 +77,13 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-scalars:2.9.0'
     implementation 'com.squareup.retrofit2:converter-jackson:2.9.0'
     implementation 'com.squareup.retrofit2:adapter-rxjava2:2.9.0'
-    implementation 'org.apache.poi:poi:5.2.2'
-    implementation 'org.apache.poi:poi-ooxml:5.2.2'
+    implementation 'org.apache.poi:poi:5.2.5'
+    implementation 'org.apache.poi:poi-ooxml:5.2.5'
+    // https://mvnrepository.com/artifact/org.apache.commons/commons-compress
+    implementation 'org.apache.commons:commons-compress:1.26.1'
     implementation 'org.apache.poi:poi-ooxml-schemas:4.1.2'
-    implementation 'org.apache.poi:poi-scratchpad:5.2.2'
-    implementation 'org.apache.poi:poi-excelant:5.2.2'
+    implementation 'org.apache.poi:poi-scratchpad:5.2.5'
+    implementation 'org.apache.poi:poi-excelant:5.2.5'
 
     testImplementation 'com.h2database:h2'
     testImplementation 'org.springframework.security:spring-security-test'

@@ -39,12 +39,13 @@ spring:
   jpa:
     # 是否打印 SQL 细节，其实就是 org.hibernate.SQL 配置项
     show-sql: false
-  redis:
-    client-type: lettuce
-    database: 1
-    host: localhost
-    #    password: 123456
-    connect-timeout: 10s
+  data:
+    redis:
+      client-type: lettuce
+      database: 1
+      host: localhost
+      #    password: 123456
+      connect-timeout: 10s
   codec:
     # 在 DEBUG 日志级别，打印信息包含请求的表单数据
     # 在 TRACE 日志级别，打印信息包含请求的 Header 信息

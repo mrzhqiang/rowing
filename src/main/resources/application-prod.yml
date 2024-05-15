@@ -20,12 +20,13 @@ spring:
     url: jdbc:mysql://${db_url:127.0.0.1}:${db_port:3306}/${db_schema:rowing}?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useUnicode=true&useSSL=false&allowMultiQueries=true
     username: ${db_username:root}
     password: ${db_password:123456}
-  redis:
-    client-type: lettuce
-    database: ${redis_db:0}
-    host: ${redis_host:127.0.0.1}
-    password: ${redis_password:123456}
-    connect-timeout: 10s
+  data:
+    redis:
+      client-type: lettuce
+      database: ${redis_db:0}
+      host: ${redis_host:127.0.0.1}
+      password: ${redis_password:123456}
+      connect-timeout: 10s
   # 账户中心是需要会话的，但不需要 Cookie 自动登录
   session:
     # 1 hour
