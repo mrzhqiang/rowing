@@ -190,7 +190,7 @@ export default {
       accountForm: {
         id: null,
         username: '',
-        type: 'ROLE_USER',
+        type: 'USER',
         expired: null,
         failedCount: 0,
         locked: null,
@@ -256,7 +256,7 @@ export default {
       this.accountForm = {
         id: null,
         username: '',
-        type: 'ROLE_USER',
+        type: 'USER',
         expired: null,
         failedCount: 0,
         locked: null,
