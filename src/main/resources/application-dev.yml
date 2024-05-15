@@ -8,7 +8,7 @@ logging:
     # 通过包名来自定义显示的日志级别，可以是前缀包含
     # 比如 com.github 包含所有的 com.github.** 包名
     rowing: DEBUG
-    org.hibernate.type: TRACE
+    org.hibernate.orm.jdbc.bind: TRACE
     org.hibernate.SQL: DEBUG
     org.springframework.security: DEBUG
   logback:
