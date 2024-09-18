@@ -2,20 +2,7 @@
 server:
   port: 8888
 
-# 日志配置
-logging:
-  level:
-    # 通过包名来自定义显示的日志级别，可以是前缀包含
-    # 比如 com.github 包含所有的 com.github.** 包名
-    rowing: DEBUG
-    org.hibernate.orm.jdbc.bind: TRACE
-    org.hibernate.SQL: DEBUG
-    org.springframework.security: DEBUG
-  logback:
-    rollingpolicy:
-      # 开发环境下，每次启动清理历史日志
-      clean-history-on-start: true
-
+# 运行模式配置
 # 开启调试模式，则 LoggingApplicationListener 会开启 web、sql 以及 org.springframework.boot 日志的调试模式
 debug: false
 # 开启跟踪模式，则 LoggingApplicationListener 会开启以下日志的跟踪模式：
@@ -25,20 +12,50 @@ debug: false
 # org.eclipse.jetty
 # org.hibernate.tool.hbm2ddl
 # 由于信息太多，一般情况下不开启跟踪模式，除非遇到疑难杂症无法定位问题
-#trace: true
+trace: false
+
+# 日志配置
+logging:
+  level:
+    root: INFO
+    web: DEBUG
+    sql: DEBUG
+    # 通过包名来自定义显示的日志级别，可以是前缀包含
+    # 比如 com.github 包含所有的 com.github.** 包名
+    rowing: DEBUG
+    org.springframework.security: DEBUG
+    # 方便在日志文件里面查询 SQL 的执行参数
+    org.hibernate.orm.jdbc.bind: TRACE
+  file:
+    name: ./logs/application.log
+  logback:
+    rollingpolicy:
+      # 开发环境下，每次启动清理历史日志
+      clean-history-on-start: true
 
 # Spring 配置
 spring:
   application:
     name: "Rowing Dev"
+  # 用于 Reactive 编解码器
+  codec:
+    # 在 DEBUG 日志级别，打印信息包含请求的表单数据
+    # 在 TRACE 日志级别，打印信息包含请求的 Header 信息
+    log-request-details: true
+  # 用于 Servlet 相关
+  mvc:
+    # 在 DEBUG 日志级别，打印信息包含请求的表单数据
+    # 在 TRACE 日志级别，打印信息包含请求的 Header 信息
+    log-request-details: true
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://127.0.0.1:3306/rowing?serverTimezone=Asia/Shanghai&characterEncoding=utf8&allowMultiQueries=true
     username: root
     password: 123456
   jpa:
-    # 是否打印 SQL 细节，其实就是 org.hibernate.SQL 配置项
-    show-sql: false
+    hibernate:
+      ddl-auto: update
+    generate-ddl: true
   data:
     redis:
       client-type: lettuce
@@ -46,10 +63,6 @@ spring:
       host: localhost
       #    password: 123456
       connect-timeout: 10s
-  codec:
-    # 在 DEBUG 日志级别，打印信息包含请求的表单数据
-    # 在 TRACE 日志级别，打印信息包含请求的 Header 信息
-    log-request-details: true
   session:
     store-type: redis
   devtools:

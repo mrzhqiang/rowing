@@ -2,6 +2,7 @@ package com.github.mrzhqiang.rowing.domain;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.SQLRestriction;
 import org.hibernate.annotations.Where;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -28,7 +29,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @MappedSuperclass
-@Where(clause = "deleted = 'NO'")
+@SQLRestriction("deleted = 'NO'")
 @EntityListeners(AuditingEntityListener.class)
 public abstract class SoftDeleteEntity extends BaseEntity {
 

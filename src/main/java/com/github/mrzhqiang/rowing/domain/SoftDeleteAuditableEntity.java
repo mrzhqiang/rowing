@@ -3,6 +3,7 @@ package com.github.mrzhqiang.rowing.domain;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.SQLRestriction;
 import org.hibernate.annotations.Where;
 
 import jakarta.persistence.Column;
@@ -20,7 +21,7 @@ import jakarta.persistence.MappedSuperclass;
 @Setter
 @ToString(callSuper = true)
 @MappedSuperclass
-@Where(clause = "deleted = 'NO'")
+@SQLRestriction("deleted = 'NO'")
 public abstract class SoftDeleteAuditableEntity extends AuditableEntity {
 
     /**
