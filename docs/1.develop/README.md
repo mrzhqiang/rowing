@@ -25,9 +25,9 @@
 - `IntelliJ IDEA 2024.1 (Ultimate Edition)`
 - `Redis server v=6.2.6`
 - `DBMS: MySQL (ver. 8.0.34)`
-- `node.js v16.13.2`
+- `node.js v20.12.2`
 - `npm 8.16.0`
-- `@vue/cli 5.0.8`
+- `vue 3.4.27`
 - `WebStorm 2024.1`
 
 ## 框架依赖
