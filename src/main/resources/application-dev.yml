@@ -18,14 +18,19 @@ trace: false
 logging:
   level:
     root: INFO
+    # web 的 DEBUG 级别将打印请求和响应，比如：
+    # GET "/api/user", parameters={}
+    # Writing [ResponseEntity(...]
     web: DEBUG
+    # sql 的 DEBUG 级别将打印 JPA 生成的 SQL 语句
+    # 搭配下面的 TRACE 级别，可以查看 SQL 语句的参数
+    org.hibernate.orm.jdbc.bind: TRACE
     sql: DEBUG
     # 通过包名来自定义显示的日志级别，可以是前缀包含
     # 比如 com.github 包含所有的 com.github.** 包名
     rowing: DEBUG
+    # 安全框架的调试日志
     org.springframework.security: DEBUG
-    # 方便在日志文件里面查询 SQL 的执行参数
-    org.hibernate.orm.jdbc.bind: TRACE
   file:
     name: ./logs/application.log
   logback:
@@ -47,6 +52,13 @@ spring:
     # 在 DEBUG 日志级别，打印信息包含请求的表单数据
     # 在 TRACE 日志级别，打印信息包含请求的 Header 信息
     log-request-details: true
+  # 文件上传
+  servlet:
+    multipart:
+      # 单个文件大小
+      max-file-size: 500MB
+      # 设置总上传的文件大小
+      max-request-size: 500MB
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://127.0.0.1:3306/rowing?serverTimezone=Asia/Shanghai&characterEncoding=utf8&allowMultiQueries=true

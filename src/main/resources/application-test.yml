@@ -7,16 +7,20 @@ logging:
   level:
     ROOT: INFO
     web: INFO
+    org.hibernate.orm.jdbc.bind: INFO
+    sql: INFO
+    rowing: INFO
+    org.springframework.security: INFO
   file:
-    name: application.log
+    name: application-test.log
     path: ./logs
   logback:
     rollingpolicy:
       # 默认最大历史 7
-      max-history: 180
+      max-history: 7
       # 默认单文件 10MB
-      max-file-size: 100MB
-      total-size-cap: 50GB
+      max-file-size: 10MB
+      total-size-cap: 1GB
 
 # Spring 配置
 spring:
@@ -24,15 +28,15 @@ spring:
     name: "Rowing Prod"
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://${db_url:127.0.0.1}:${db_port:3306}/${db_schema:rowing}?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useUnicode=true&useSSL=false&allowMultiQueries=true
-    username: ${db_username:root}
-    password: ${db_password:123456}
+    url: jdbc:mysql://127.0.0.1:3306/rowing?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useUnicode=true&useSSL=false&allowMultiQueries=true
+    username: root
+    password: 123456
   data:
     redis:
       client-type: lettuce
-      database: ${redis_db:0}
-      host: ${redis_host:127.0.0.1}
-      password: ${redis_password:123456}
+      database: 0
+      host: 127.0.0.1
+      password: 123456
       connect-timeout: 10s
   # 账户中心是需要会话的，但不需要 Cookie 自动登录
   session:
@@ -40,8 +44,8 @@ spring:
     timeout: 3600
   security:
     user:
-      name: ${basic_username:user}
-      password: ${basic_password:123456}
+      name: user
+      password: 123456
       roles:
         - BASIC
 

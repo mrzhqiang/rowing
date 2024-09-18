@@ -1,3 +1,12 @@
+## 配置参考：https://docs.spring.io/spring-boot/docs/3.2.5/reference/html/features.html#features.logging
+
+# 系统监控配置
+management:
+  endpoints:
+    web:
+      exposure:
+        include: [ "health","info","metrics","prometheus" ]
+
 # Spring 配置
 spring:
   profiles:
@@ -8,7 +17,7 @@ spring:
     fallback-to-system-locale: false
   cache:
     redis:
-      key-prefix: "rowing:"
+      key-prefix: "cache:"
       enable-statistics: true
       time-to-live: 1h
   sql:
@@ -44,12 +53,6 @@ spring:
       date: "yyyy-MM-dd"
       time: "HH:mm:ss"
       date-time: "yyyy-MM-dd HH:mm:ss"
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: [ "health","info","metrics","prometheus" ]
 
 # 项目配置
 rowing:
