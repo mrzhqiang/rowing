@@ -9,7 +9,7 @@ import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.List;
 import java.util.Optional;
 

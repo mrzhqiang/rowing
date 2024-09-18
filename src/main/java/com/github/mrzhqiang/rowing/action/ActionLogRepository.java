@@ -14,30 +14,31 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import java.util.List;
 import java.util.Optional;
 
+@PreAuthorize("hasRole('USER')")
 @RepositoryRestResource(path = "action-log", excerptProjection = ActionLogExcerpt.class)
 public interface ActionLogRepository extends BaseRepository<ActionLog> {
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @NotNull
     @Override
     Optional<ActionLog> findById(@NotNull Long id);
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @NotNull
     @Override
     Page<ActionLog> findAll(@NotNull Pageable pageable);
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @NotNull
     @Override
     List<ActionLog> findAll(@NotNull Sort sort);
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @NotNull
     @Override
     List<ActionLog> findAll();
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @RestResource(path = "page", rel = "page")
     @Query("select a from ActionLog a where (:type is null or a.type = :type)")
     Page<ActionLog> pageByActionType(ActionType type, Pageable pageable);

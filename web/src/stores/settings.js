@@ -1,5 +1,5 @@
 import variables from '@/styles/element-variables.scss';
-import defaultSettings from '@/settings';
+import defaultSettings from '@/settings.js';
 
 const {showSettings, tagsView, fixedHeader, sidebarLogo, supportPinyinSearch} = defaultSettings;
 

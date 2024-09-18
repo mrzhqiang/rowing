@@ -2,16 +2,17 @@ package com.github.mrzhqiang.rowing.domain;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.SQLRestriction;
 import org.hibernate.annotations.Where;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.Column;
-import javax.persistence.EntityListeners;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.MappedSuperclass;
+import jakarta.persistence.Column;
+import jakarta.persistence.EntityListeners;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.MappedSuperclass;
 import java.time.LocalDateTime;
 
 /**
@@ -28,7 +29,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @MappedSuperclass
-@Where(clause = "deleted = 'NO'")
+@SQLRestriction("deleted = 'NO'")
 @EntityListeners(AuditingEntityListener.class)
 public abstract class SoftDeleteEntity extends BaseEntity {
 

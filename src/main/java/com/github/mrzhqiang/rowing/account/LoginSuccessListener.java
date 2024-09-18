@@ -8,7 +8,7 @@ import org.springframework.security.authentication.event.AuthenticationSuccessEv
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @Component
 @RequiredArgsConstructor

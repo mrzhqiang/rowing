@@ -1,4 +1,4 @@
-import store from '@/store';
+import store from 'src/stores';
 
 const {body} = document;
 const WIDTH = 992; // refer to Bootstrap's responsive design
@@ -14,7 +14,7 @@ export default {
   beforeMount() {
     window.addEventListener('resize', this.$_resizeHandler);
   },
-  beforeDestroy() {
+  beforeMount() {
     window.removeEventListener('resize', this.$_resizeHandler);
   },
   mounted() {

@@ -33,5 +33,6 @@ build/
 .vscode/
 
 .cache/
-admin.txt
 .jpb/
+.gradle/
+admin.txt

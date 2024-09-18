@@ -1,6 +1,6 @@
-import {asyncRoutes, constantRoutes} from '@/router';
-import {findMenuRoutes} from '@/api/menu';
-import Layout from '@/layout/Layout';
+import {asyncRoutes, constantRoutes} from '@/router/index.js';
+import {findMenuRoutes} from '@/api/menu.js';
+import Layout from '@/layout/Layout.vue';
 
 /**
  * Use meta.role to determine if the current user has permission

@@ -1,4 +1,4 @@
-import store from '@/store';
+import store from 'src/stores';
 
 /**
  * 管理角色权限。

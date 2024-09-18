@@ -1,15 +1,9 @@
 package com.github.mrzhqiang.rowing.init;
 
-import com.github.mrzhqiang.rowing.account.RunAsSystem;
 import com.github.mrzhqiang.rowing.exception.ExceptionLog;
 import com.github.mrzhqiang.rowing.exception.ExceptionLogRepository;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Objects;
 import java.util.Optional;

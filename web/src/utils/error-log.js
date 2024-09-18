@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import store from '@/store';
+import store from 'src/stores';
 import {isString, isArray} from '@/utils/validate';
 import settings from '@/settings';
 

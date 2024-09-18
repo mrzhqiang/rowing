@@ -50,7 +50,7 @@ export default {
       this.initChart();
     });
   },
-  beforeDestroy() {
+  beforeMount() {
     if (!this.chart) {
       return;
     }

@@ -52,7 +52,7 @@ export default {
   mounted() {
     this.insertToBody();
   },
-  beforeDestroy() {
+  beforeMount() {
     const elx = this.$refs.rightPanel;
     elx.remove();
   },

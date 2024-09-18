@@ -3,7 +3,7 @@ package com.github.mrzhqiang.rowing.exam;
 import org.quartz.JobExecutionContext;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * 考试相关任务。

@@ -10,7 +10,7 @@ import org.springframework.security.authentication.event.AuthenticationFailureLo
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * 登录失败监听器。

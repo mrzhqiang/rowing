@@ -8,7 +8,7 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.util.unit.DataSize;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.nio.file.Paths;

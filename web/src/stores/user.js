@@ -1,7 +1,8 @@
-import {getInfo, login, logout} from '@/api/user';
-import {getToken, removeToken, setToken} from '@/utils/auth';
-import router, {resetRouter} from '@/router';
-import {encrypt} from '@/utils/security';
+import { defineStore } from "pinia";
+import {getInfo, login, logout} from '@/api/user.js';
+import {getToken, removeToken, setToken} from '@/utils/auth.js';
+import router, {resetRouter} from '@/router/index.js';
+import {encrypt} from '@/utils/security.js';
 
 const state = {
   token: getToken(),

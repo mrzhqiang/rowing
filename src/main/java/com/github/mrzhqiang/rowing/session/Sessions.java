@@ -7,7 +7,7 @@ import static org.springframework.web.context.request.RequestAttributes.SCOPE_SE
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpSession;
 import java.util.Optional;
 
 /**

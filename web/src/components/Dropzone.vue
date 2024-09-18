@@ -135,7 +135,7 @@ export default {
       },
       accept: (file, done) => {
         /* 七牛*/
-        // const token = this.$store.getters.token;
+        // const token = this.$stores.getters.token;
         // getToken(token).then(response => {
         //   file.token = response.data.qiniu_token;
         //   file.key = response.data.qiniu_key;

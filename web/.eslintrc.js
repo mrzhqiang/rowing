@@ -1,19 +1,37 @@
 module.exports = {
   root: true,
   parserOptions: {
-    parser: 'babel-eslint',
-    sourceType: 'module'
+    parser: '@typescript-eslint/parser',
+    ecmaVersion: 2020,
+    sourceType: 'module',
+    jsxPragma: 'React',
+    ecmaFeatures: {
+      jsx: true
+    }
   },
   env: {
     browser: true,
     node: true,
     es6: true,
   },
-  extends: ['plugin:vue/recommended', 'eslint:recommended'],
-
+  extends: [
+    'plugin:vue/vue3-recommended',
+    'plugin:@typescript-eslint/recommended',
+    'prettier',
+    'plugin:prettier/recommended'
+  ],
   // add your custom rules here
   //it is base on https://github.com/vuejs/eslint-config-vue
   rules: {
+    'vue/no-setup-props-destructure': 'off',
+    'vue/script-setup-uses-vars': 'error',
+    'vue/no-reserved-component-names': 'off',
+    '@typescript-eslint/ban-ts-ignore': 'off',
+    '@typescript-eslint/explicit-function-return-type': 'off',
+    '@typescript-eslint/no-explicit-any': 'off',
+    '@typescript-eslint/no-var-requires': 'off',
+    '@typescript-eslint/no-empty-function': 'off',
+    'vue/custom-event-name-casing': 'off',
     "vue/max-attributes-per-line": [2, {
       "singleline": 10,
       "multiline": {
@@ -27,6 +45,33 @@ module.exports = {
     "vue/html-closing-bracket-newline": 'off',
     "vue/name-property-casing": ["error", "PascalCase"],
     "vue/no-v-html": "off",
+    'no-use-before-define': 'off',
+    '@typescript-eslint/no-use-before-define': 'off',
+    '@typescript-eslint/ban-ts-comment': 'off',
+    '@typescript-eslint/ban-types': 'off',
+    '@typescript-eslint/no-non-null-assertion': 'off',
+    '@typescript-eslint/explicit-module-boundary-types': 'off',
+    '@typescript-eslint/no-unused-vars': 'off',
+    'space-before-function-paren': 'off',
+    'vue/attributes-order': 'off',
+    'vue/one-component-per-file': 'off',
+    'vue/attribute-hyphenation': 'off',
+    'vue/require-default-prop': 'off',
+    'vue/require-explicit-emits': 'off',
+    'vue/html-self-closing': [
+      'error',
+      {
+        html: {
+          void: 'always',
+          normal: 'never',
+          component: 'always'
+        },
+        svg: 'always',
+        math: 'always'
+      }
+    ],
+    'vue/multi-word-component-names': 'off',
+    'vue/require-toggle-inside-transition': 'off',
     'accessor-pairs': 2,
     'arrow-spacing': [2, {
       'before': true,

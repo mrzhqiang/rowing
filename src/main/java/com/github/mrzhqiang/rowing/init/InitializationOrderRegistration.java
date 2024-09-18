@@ -8,7 +8,7 @@ import com.github.mrzhqiang.rowing.role.RoleAutoInitializer;
 import com.github.mrzhqiang.rowing.setting.SettingAutoInitializer;
 import org.springframework.data.util.ProxyUtils;
 
-import javax.servlet.Filter;
+import jakarta.servlet.Filter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;

@@ -21,13 +21,13 @@
 ## 开发环境
 
 - `git version 2.27.0.windows.1`
-- `java version "1.8.0_301"`
+- `java version "17.0.8" 2023-07-18 LTS`
 - `IntelliJ IDEA 2024.1 (Ultimate Edition)`
 - `Redis server v=6.2.6`
 - `DBMS: MySQL (ver. 8.0.34)`
-- `node.js v16.13.2`
+- `node.js v20.12.2`
 - `npm 8.16.0`
-- `@vue/cli 5.0.8`
+- `vue 3.4.27`
 - `WebStorm 2024.1`
 
 ## 框架依赖
@@ -116,8 +116,8 @@
 ├─├─├─├─com.github.mrzhqiang.rowing
 ├─├─├─├─├─account                               ——账户
 ├─├─├─├─├─action                                ——操作
-├─├─├─├─├─aop                                   ——切面
 ├─├─├─├─├─config                                ——配置
+├─├─├─├─├─convert                               ——转换
 ├─├─├─├─├─dict                                  ——字典
 ├─├─├─├─├─domain                                ——领域
 ├─├─├─├─├─exam                                  ——考试
@@ -168,7 +168,7 @@
 ├─├─├─├─system                                ——系统
 ├─├─├─App.vue                               ——单页面文件
 ├─├─├─main.js                               ——执行入口
-├─├─├─permission.js                         ——权限相关
+├─├─├─routes.js                             ——路由相关
 ├─├─├─settings.js                           ——设置相关
 ├─├─tests                                 ——单元测试
 ├─├─package.json                          ——项目依赖

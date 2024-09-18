@@ -169,7 +169,7 @@ export default {
     //     const type = codeMap[this.auth_type]
     //     const codeName = code[type]
     //     if (codeName) {
-    //       this.$store.dispatch('LoginByThirdparty', codeName).then(() => {
+    //       this.$stores.dispatch('LoginByThirdparty', codeName).then(() => {
     //         this.$router.push({ path: this.redirect || '/' })
     //       })
     //     } else {

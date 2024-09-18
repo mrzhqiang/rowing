@@ -27,8 +27,8 @@ public class RSADecryptPasswordEncoder implements PasswordEncoder {
     @RunAsSystem
     @Override
     public boolean matches(CharSequence rawPassword, String encodedPassword) {
-        String passwordString = rawPassword.toString();
-        String password = settingService.findByCode(Settings.PASSWORD_RSA_PRIVATE_KEY)
+        var passwordString = rawPassword.toString();
+        var password = settingService.findByCode(Settings.PASSWORD_RSA_PRIVATE_KEY)
                 .map(Setting::getContent)
                 .map(RSADecrypts::parsePrivateKey)
                 .map(it -> RSADecrypts.decrypt(passwordString, it))

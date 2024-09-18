@@ -1,15 +1,16 @@
 package com.github.mrzhqiang.rowing.jre;
 
-import org.junit.Assert;
-import org.junit.Test;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class MathTest {
 
     @Test
     public void floorMod() {
         int n = Math.floorMod(-1000037421, 10000);
-        Assert.assertEquals(2579, n);
+        Assertions.assertEquals(2579, n);
         int a = Math.floorMod(1000037421, 10000);
-        Assert.assertEquals(7421, a);
+        Assertions.assertEquals(7421, a);
     }
 }

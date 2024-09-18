@@ -3,12 +3,13 @@ package com.github.mrzhqiang.rowing.domain;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.SQLRestriction;
 import org.hibernate.annotations.Where;
 
-import javax.persistence.Column;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.MappedSuperclass;
+import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.MappedSuperclass;
 
 /**
  * 抽象的软删除审计实体。
@@ -20,7 +21,7 @@ import javax.persistence.MappedSuperclass;
 @Setter
 @ToString(callSuper = true)
 @MappedSuperclass
-@Where(clause = "deleted = 'NO'")
+@SQLRestriction("deleted = 'NO'")
 public abstract class SoftDeleteAuditableEntity extends AuditableEntity {
 
     /**

@@ -3,7 +3,7 @@ package com.github.mrzhqiang.rowing.convert;
 import com.github.mrzhqiang.helper.time.DateTimes;
 import org.springframework.core.convert.converter.Converter;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.time.LocalDateTime;
 
 /**

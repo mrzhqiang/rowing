@@ -176,7 +176,7 @@ export default {
         // },
         // images_upload_handler(blobInfo, success, failure, progress) {
         //   progress(0);
-        //   const token = _this.$store.getters.token;
+        //   const token = _this.$stores.getters.token;
         //   getToken(token).then(response => {
         //     const url = response.data.qiniu_url;
         //     const formData = new FormData();
