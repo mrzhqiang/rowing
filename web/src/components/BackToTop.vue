@@ -51,7 +51,7 @@ export default {
   mounted() {
     window.addEventListener('scroll', this.handleScroll);
   },
-  beforeDestroy() {
+  beforeMount() {
     window.removeEventListener('scroll', this.handleScroll);
     if (this.interval) {
       clearInterval(this.interval);

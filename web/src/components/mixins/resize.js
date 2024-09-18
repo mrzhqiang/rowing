@@ -19,7 +19,7 @@ export default {
     // when keep-alive chart activated, auto resize
     this.resize();
   },
-  beforeDestroy() {
+  beforeMount() {
     this.destroyListener();
   },
   deactivated() {

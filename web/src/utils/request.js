@@ -1,4 +1,4 @@
-import store from '@/store';
+import store from 'src/stores';
 import {getToken} from '@/utils/auth';
 import axios from 'axios';
 import {Message, MessageBox} from 'element-ui';

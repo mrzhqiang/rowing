@@ -1,4 +1,4 @@
-import store from '@/store';
+import store from 'src/stores';
 
 function checkPermission(el, binding) {
   const {value} = binding;

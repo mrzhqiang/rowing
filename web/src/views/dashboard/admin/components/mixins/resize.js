@@ -16,7 +16,7 @@ export default {
     this.$_initResizeEvent();
     this.$_initSidebarResizeEvent();
   },
-  beforeDestroy() {
+  beforeMount() {
     this.$_destroyResizeEvent();
     this.$_destroySidebarResizeEvent();
   },
